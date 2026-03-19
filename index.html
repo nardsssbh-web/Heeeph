@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR">'
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,26 +37,12 @@
       padding: 4px 8px;
       border-radius: 6px;
       font-weight: bold;
-    }
-    .hero {
-  min-height: 520px;
-  position: relative;
-  background:
-    linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.55)),
-    url('Banner Principal.png') center center / cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 20px 80px;
-  overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(255,200,50,.14), transparent 40%);
-      pointer-events: none;
+    }.hero {
+  height: 520px;
+  background: url('Banner Principal.png') center center / contain no-repeat;
+  background-color: #000;
+}
+
     }
     .logo-wrap {
       position: relative;
