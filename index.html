@@ -223,6 +223,33 @@
     font-size: 12px;
     gap: 8px;
   }
+@media (max-width: 600px) {
+
+  .products {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .card {
+    min-width: 160px;
+    max-width: 160px;
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+  }
+
+  /* remove seta no mobile */
+  .arrow-btn {
+    display: none;
+  }
+
 }
   </style>
 </head>
@@ -308,6 +335,7 @@
 
 </body>
 </html>
+
 
 
 
