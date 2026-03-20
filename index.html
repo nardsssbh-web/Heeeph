@@ -146,8 +146,38 @@
       .hero {
         height: 250px;
       }
-    }
+  @media (max-width: 600px) {
 
+  .hero {
+    height: 220px;
+  }
+
+  .banner-secundario img {
+    max-height: 100px;
+  }
+
+  .produtos {
+    grid-template-columns: 1fr;
+  }
+
+  .destaque {
+    grid-template-columns: 1fr;
+  }
+
+  .seta {
+    display: none;
+  }
+
+  .categorias img {
+    max-width: 90%;
+  }
+
+  .menu {
+    font-size: 12px;
+    gap: 8px;
+  }
+
+}
   </style>
 </head>
 
@@ -232,5 +262,6 @@
 
 </body>
 </html>
+
 
 
