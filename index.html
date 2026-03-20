@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Categorias | Heeeph</title>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -43,7 +44,6 @@
 
     .cart {
       border: 2px solid #c00;
-      color: #fff;
       background: linear-gradient(180deg, #d40000, #820000);
       padding: 4px 8px;
       border-radius: 6px;
@@ -52,113 +52,70 @@
 
     .page-header {
       text-align: center;
-      padding: 40px 20px 20px;
-      background: #000;
+      padding: 40px 20px 10px;
     }
 
     .page-header h1 {
-      font-size: clamp(40px, 7vw, 76px);
+      font-size: clamp(40px, 7vw, 70px);
       color: #f0db35;
-      text-shadow: 0 0 16px rgba(240, 219, 53, 0.45);
+      text-shadow: 0 0 12px rgba(240,219,53,.4);
       font-family: Georgia, serif;
-      margin-bottom: 12px;
-    }
-
-    .page-header p {
-      color: #ddd;
-      font-size: 18px;
     }
 
     .categorias-grid {
-      max-width: 1300px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 30px 20px 60px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 24px;
+      gap: 22px;
     }
 
     .categoria-card {
-      display: block;
-      background: #000;
       border: 2px solid #f0d000;
-      border-radius: 22px;
-      padding: 14px;
-      box-shadow: 0 0 20px rgba(240, 208, 0, 0.18);
-      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+      border-radius: 20px;
+      padding: 10px;
+      background: #000;
+      transition: .2s;
     }
 
     .categoria-card:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 0 26px rgba(240, 208, 0, 0.35);
-      border-color: #fff000;
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(240,208,0,.3);
     }
 
     .categoria-card img {
       width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 14px;
-    }
-
-    .voltar-area {
-      text-align: center;
-      padding: 0 20px 50px;
-    }
-
-    .voltar-btn {
-      display: inline-block;
-      background: linear-gradient(180deg, #111, #000);
-      color: #fff000;
-      border: 2px solid #f0d000;
-      border-radius: 999px;
-      padding: 12px 24px;
-      font-weight: 900;
-      text-transform: uppercase;
-      box-shadow: 0 0 14px rgba(240,208,0,.25);
+      border-radius: 12px;
     }
 
     footer {
-      padding: 28px 16px;
+      padding: 25px;
       text-align: center;
-      color: #bbb;
-      background: #020202;
-      border-top: 2px solid #1b1b1b;
+      color: #aaa;
+      border-top: 1px solid #111;
     }
 
-    @media (max-width: 1100px) {
-      .categorias-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       .categorias-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
-    @media (max-width: 520px) {
-      .menu {
-        font-size: 12px;
-        gap: 10px;
-      }
-
+    @media (max-width: 500px) {
       .categorias-grid {
         grid-template-columns: 1fr;
-        gap: 18px;
-      }
-
-      .page-header p {
-        font-size: 16px;
       }
     }
   </style>
 </head>
+
 <body>
+
+  <!-- MENU -->
   <header class="topbar">
     <nav class="menu">
-      <a href="index.html#home">Home</a>
+      <a href="index.html">Home</a>
       <a href="categorias.html">Coleção</a>
       <a href="index.html#sobre">O que é Heeeph?</a>
       <a href="index.html#fotos">Fotos Reais</a>
@@ -167,67 +124,67 @@
     </nav>
   </header>
 
+  <!-- TÍTULO -->
   <section class="page-header">
     <h1>Categorias</h1>
-    <p>Escolha uma categoria para ver as placas</p>
   </section>
 
+  <!-- GRID DE BOTÕES -->
   <section class="categorias-grid">
+
     <a class="categoria-card" href="bands.html">
-      <img src="Bands.png" alt="Bands">
+      <img src="Bands.png">
     </a>
 
     <a class="categoria-card" href="drinks.html">
-      <img src="Drinks.png" alt="Drinks">
+      <img src="Drinks.png">
     </a>
 
     <a class="categoria-card" href="real-photos.html">
-      <img src="Real Photos.png" alt="Real Photos">
+      <img src="Real Photos.png">
     </a>
 
     <a class="categoria-card" href="games.html">
-      <img src="Games.png" alt="Games">
+      <img src="Games.png">
     </a>
 
     <a class="categoria-card" href="garage.html">
-      <img src="Garage.png" alt="Garage">
+      <img src="Garage.png">
     </a>
 
     <a class="categoria-card" href="home-phrases.html">
-      <img src="Home-Phrases.png" alt="Home Phrases">
+      <img src="Home-Phrases.png">
     </a>
 
     <a class="categoria-card" href="infantil.html">
-      <img src="Infantil.png" alt="Infantil">
+      <img src="Infantil.png">
     </a>
 
     <a class="categoria-card" href="motos.html">
-      <img src="Motos.png" alt="Motos">
+      <img src="Motos.png">
     </a>
 
     <a class="categoria-card" href="musica.html">
-      <img src="Musica.png" alt="Música">
+      <img src="Musica.png">
     </a>
 
     <a class="categoria-card" href="rpg.html">
-      <img src="RPG.png" alt="RPG">
+      <img src="RPG.png">
     </a>
 
     <a class="categoria-card" href="street.html">
-      <img src="Street.png" alt="Street">
+      <img src="Street.png">
     </a>
 
     <a class="categoria-card" href="trip.html">
-      <img src="TRIP.png" alt="Trip">
+      <img src="TRIP.png">
     </a>
+
   </section>
 
-  <div class="voltar-area">
-    <a class="voltar-btn" href="index.html">Voltar para a Home</a>
-  </div>
-
   <footer>
-    © 2026 Heeeph — Placas decorativas com personalidade.
+    © 2026 Heeeph — Placas decorativas
   </footer>
+
 </body>
 </html>
