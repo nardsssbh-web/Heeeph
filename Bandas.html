@@ -25,12 +25,14 @@
       padding: 12px;
       position: sticky;
       top: 0;
+      z-index: 999;
     }
 
     .menu {
       display: flex;
       justify-content: center;
       gap: 14px;
+      flex-wrap: wrap;
       font-size: 14px;
       text-transform: uppercase;
     }
@@ -59,6 +61,7 @@
       width: 100%;
       border-radius: 10px;
       border: 2px solid #fff;
+      display: block;
     }
 
     .zap {
@@ -66,10 +69,12 @@
       bottom: 20px;
       right: 20px;
       width: 120px;
+      z-index: 999;
     }
 
     .zap img {
       width: 100%;
+      display: block;
     }
 
     footer {
@@ -90,6 +95,12 @@
       .grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .zap {
+        width: 70px;
+        bottom: 15px;
+        right: 15px;
+      }
     }
   </style>
 </head>
@@ -101,29 +112,28 @@
       <a href="index.html">Home</a>
       <a href="categorias.html">Coleção</a>
       <a href="sobre.html">Sobre</a>
+      <a href="#">Contato</a>
     </nav>
   </header>
 
   <h1 class="titulo">Bandas</h1>
 
   <section class="grid">
-
     <div class="card">
-      <img src="placas/Placa GTA.png">
+      <img src="placas/Placa GTA.png" alt="Placa 1">
     </div>
 
     <div class="card">
-      <img src="placas/Placa Skatista.png">
+      <img src="placas/Placa Skatista.png" alt="Placa 2">
     </div>
 
     <div class="card">
-      <img src="placas/Placa roblox.png">
+      <img src="placas/Placa roblox.png" alt="Placa 3">
     </div>
 
     <div class="card">
-      <img src="placas/Placas Naipes.png">
+      <img src="placas/Placas Naipes.png" alt="Placa 4">
     </div>
-
   </section>
 
   <footer>
@@ -131,7 +141,7 @@
   </footer>
 
   <a href="https://wa.me/5511998302901" target="_blank" class="zap">
-    <img src="botoes/Whatsapp.png">
+    <img src="botoes/Whatsapp.png" alt="WhatsApp">
   </a>
 
 </body>
