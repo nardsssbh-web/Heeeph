@@ -19,18 +19,20 @@
       color: inherit;
     }
 
+    /* TOPO FIXO */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
       padding: 12px;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 999;
     }
 
     .menu {
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 14px;
       flex-wrap: wrap;
       font-size: 14px;
@@ -41,6 +43,17 @@
       color: #f0d000;
     }
 
+    .menu img {
+      height: 22px;
+      display: block;
+      transition: transform 0.2s ease;
+    }
+
+    .menu img:hover {
+      transform: scale(1.08);
+    }
+
+    /* BANNER PRINCIPAL */
     .hero {
       width: 100%;
       max-width: 1350px;
@@ -52,6 +65,7 @@
       display: block;
     }
 
+    /* BANNER MEDIDAS */
     .banner-secundario {
       display: flex;
       justify-content: center;
@@ -66,6 +80,7 @@
       display: block;
     }
 
+    /* DESTAQUE */
     .section {
       padding: 40px 20px;
       text-align: center;
@@ -121,6 +136,7 @@
       width: 260px;
     }
 
+    /* BOTÃO CATEGORIAS */
     .categorias {
       text-align: center;
       padding: 30px;
@@ -132,6 +148,7 @@
       display: inline-block;
     }
 
+    /* WHATSAPP */
     .zap {
       position: fixed;
       bottom: 20px;
@@ -153,10 +170,6 @@
     }
 
     @media (max-width: 900px) {
-      .hero img {
-        max-height: none;
-      }
-
       .banner-secundario img {
         max-height: 110px;
       }
@@ -179,6 +192,10 @@
 
       .zap {
         width: 70px;
+      }
+
+      .menu img {
+        height: 20px;
       }
     }
 
@@ -225,6 +242,10 @@
         bottom: 15px;
         right: 15px;
       }
+
+      .menu img {
+        height: 18px;
+      }
     }
   </style>
 </head>
@@ -236,18 +257,18 @@
       <a href="index.html">Home</a>
       <a href="categorias.html">Coleção</a>
       <a href="sobre.html">
-  <img src="botoes/sobre.png" alt="Sobre">
-</a>
+        <img src="botoes/sobre.png" alt="Sobre">
+      </a>
       <a href="#">Contato</a>
     </nav>
   </header>
 
   <section class="hero">
-    <img src="/Banner Principal.png" alt="Banner Principal">
+    <img src="Banner%20Principal.png" alt="Banner Principal">
   </section>
 
   <section class="banner-secundario">
-    <img src="/banner/Banner-Medidas.png" alt="Banner Medidas">
+    <img src="banner/Banner-Medidas.png" alt="Banner Medidas">
   </section>
 
   <section class="section">
@@ -276,7 +297,7 @@
 
   <section class="categorias">
     <a href="categorias.html">
-      <img src="/botoes/Acesse-Categorias.png" alt="Acesse Categorias">
+      <img src="botoes/Acesse-Categorias.png" alt="Acesse Categorias">
     </a>
   </section>
 
@@ -286,10 +307,10 @@
 
   <script>
     const placas = [
-      "/placas/Placa Skatista.png",
-      "/placas/Placa roblox.png",
-      "/placas/Placas Naipes.png",
-      "/placas/Placa GTA.png"
+      "placas/Placa Skatista.png",
+      "placas/Placa roblox.png",
+      "placas/Placas Naipes.png",
+      "placas/Placa GTA.png"
     ];
 
     let i = 0;
@@ -316,7 +337,7 @@
   </script>
 
   <a href="https://wa.me/5511998302901" target="_blank" class="zap">
-    <img src="/botoes/Whatsapp.png" alt="WhatsApp">
+    <img src="botoes/Whatsapp.png" alt="WhatsApp">
   </a>
 
 </body>
