@@ -14,12 +14,9 @@
       color: #fff;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
 
-    /* TOPO */
+    /* MENU */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
@@ -38,27 +35,22 @@
       text-transform: uppercase;
     }
 
-    .menu a:hover {
-      color: #f0d000;
-    }
+    .menu a:hover { color: #f0d000; }
 
-    /* BANNER PRINCIPAL */
+    /* HERO */
     .hero {
       width: 100%;
       max-width: 1350px;
       height: 520px;
       margin: 0 auto;
-      background: url('Banner Principal.png') center center / contain no-repeat;
-      background-color: #000;
+      background: url('Banner Principal.png') center / contain no-repeat;
     }
 
     /* BANNER MEDIDAS */
     .banner-secundario {
-      width: 100%;
       display: flex;
       justify-content: center;
-      padding: 6px 8px 0;
-      background: #000;
+      margin-top: 6px;
     }
 
     .banner-secundario img {
@@ -66,13 +58,11 @@
       max-width: 1350px;
       max-height: 150px;
       object-fit: contain;
-      display: block;
     }
 
-    /* SEÇÃO DESTAQUE */
+    /* DESTAQUE */
     .section {
       padding: 40px 20px;
-      background: #000;
       text-align: center;
     }
 
@@ -80,67 +70,58 @@
       font-size: 40px;
       color: #f0db35;
       margin-bottom: 30px;
-      font-family: Georgia, serif;
-      text-shadow: 0 0 10px rgba(240, 219, 53, 0.35);
     }
 
-    .destaque {
+    .destaque-carousel {
+      max-width: 1000px;
+      margin: auto;
       display: grid;
       grid-template-columns: 80px 1fr 80px;
       align-items: center;
-      gap: 10px;
-      max-width: 1100px;
-      margin: 0 auto;
     }
 
     .seta {
-      font-size: 42px;
+      font-size: 40px;
       cursor: pointer;
-      color: #fff;
-      user-select: none;
-      transition: transform .2s ease, color .2s ease;
     }
 
-    .seta:hover {
-      color: #f0d000;
-      transform: scale(1.08);
-    }
-
-    .produtos {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    .carousel-palco {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       gap: 20px;
-      align-items: stretch;
     }
 
-    .card {
-      border: 2px solid #a56c15;
-      padding: 10px;
-      border-radius: 10px;
-      background: #000;
-      box-shadow: 0 0 12px rgba(255, 166, 0, 0.16);
+    .mini-card {
+      transition: 0.3s;
+      opacity: 0.6;
     }
 
-    .card img {
-      width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
+    .mini-card img {
+      width: 180px;
       border: 2px solid #fff;
-      display: block;
-      border-radius: 4px;
+      border-radius: 8px;
     }
 
-    /* BOTÃO CATEGORIAS */
+    .centro {
+      transform: scale(1.2);
+      opacity: 1;
+      z-index: 2;
+    }
+
+    .centro img {
+      width: 260px;
+    }
+
+    /* CATEGORIAS */
     .categorias {
       text-align: center;
-      padding: 24px 20px 40px;
-      background: #000;
+      padding: 30px;
     }
 
     .categorias img {
+      max-width: 500px;
       width: 100%;
-      max-width: 600px;
-      display: inline-block;
       cursor: pointer;
     }
 
@@ -149,120 +130,13 @@
       padding: 20px;
       color: #aaa;
       border-top: 1px solid #111;
-      background: #000;
-    }
-
-    /* TABLET */
-    @media (max-width: 900px) {
-      .hero {
-        height: 340px;
-      }
-
-      .banner-secundario img {
-        max-height: 110px;
-      }
-
-      .destaque {
-        grid-template-columns: 1fr;
-      }
-
-      .seta {
-        display: none;
-      }
-
-      .produtos {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-      }
-
-      .card {
-        padding: 8px;
-      }
-
-      .categorias img {
-        max-width: 420px;
-      }
-    }
-
-    /* CELULAR */
-    @media (max-width: 600px) {
-      .menu {
-        font-size: 12px;
-        gap: 8px;
-      }
-
-      .hero {
-        height: 220px;
-      }
-
-      .banner-secundario img {
-        max-height: 90px;
-      }
-
-      .section {
-        padding: 28px 10px;
-      }
-
-      .section h2 {
-        font-size: 30px;
-        margin-bottom: 18px;
-      }
-
-      .destaque {
-        grid-template-columns: 1fr;
-      }
-
-      .seta {
-        display: none;
-      }
-
-      .produtos {
-        display: flex;
-        overflow-x: auto;
-        gap: 12px;
-        padding: 6px 6px 14px;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .produtos::-webkit-scrollbar {
-        height: 6px;
-      }
-
-      .produtos::-webkit-scrollbar-thumb {
-        background: #555;
-        border-radius: 999px;
-      }
-
-      .card {
-        min-width: 145px;
-        max-width: 145px;
-        flex: 0 0 auto;
-        scroll-snap-align: center;
-        padding: 6px;
-        margin: 0;
-      }
-
-      .card img {
-        width: 100%;
-        aspect-ratio: 3 / 4;
-        object-fit: cover;
-      }
-
-      .categorias {
-        padding: 20px 16px 28px;
-      }
-
-      .categorias img {
-        max-width: 260px;
-        width: 90%;
-      }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- MENU -->
   <header class="topbar">
     <nav class="menu">
       <a href="index.html">Home</a>
@@ -272,27 +146,32 @@
     </nav>
   </header>
 
+  <!-- BANNER -->
   <section class="hero"></section>
 
+  <!-- MEDIDAS -->
   <section class="banner-secundario">
-    <img src="Banner-Medidas.png" alt="Banner de medidas">
+    <img src="Banner-Medidas.png">
   </section>
 
+  <!-- DESTAQUE -->
   <section class="section">
     <h2>Destaque</h2>
 
-    <div class="destaque">
+    <div class="destaque-carousel">
       <div class="seta" onclick="voltar()">‹</div>
 
-      <div class="produtos">
-        <div class="card">
-          <img id="p1" alt="Produto 1">
+      <div class="carousel-palco">
+        <div class="mini-card">
+          <img id="img-esquerda">
         </div>
-        <div class="card">
-          <img id="p2" alt="Produto 2">
+
+        <div class="mini-card centro">
+          <img id="img-centro">
         </div>
-        <div class="card">
-          <img id="p3" alt="Produto 3">
+
+        <div class="mini-card">
+          <img id="img-direita">
         </div>
       </div>
 
@@ -300,9 +179,10 @@
     </div>
   </section>
 
+  <!-- CATEGORIAS -->
   <section class="categorias">
     <a href="categorias.html">
-      <img src="Acesse-Categorias.png" alt="Acesse categorias">
+      <img src="Acesse-Categorias.png">
     </a>
   </section>
 
@@ -310,6 +190,7 @@
     © 2026 Heeeph
   </footer>
 
+  <!-- SCRIPT -->
   <script>
     const placas = [
       "Placa Skatista.png",
@@ -321,19 +202,20 @@
     let i = 0;
 
     function atualizar() {
-      document.getElementById("p1").src = placas[i % placas.length];
-      document.getElementById("p2").src = placas[(i + 1) % placas.length];
-      document.getElementById("p3").src = placas[(i + 2) % placas.length];
+      document.getElementById("img-centro").src = placas[i];
+      document.getElementById("img-esquerda").src =
+        placas[(i - 1 + placas.length) % placas.length];
+      document.getElementById("img-direita").src =
+        placas[(i + 1) % placas.length];
     }
 
     function avancar() {
-      i++;
+      i = (i + 1) % placas.length;
       atualizar();
     }
 
     function voltar() {
-      i--;
-      if (i < 0) i = placas.length - 1;
+      i = (i - 1 + placas.length) % placas.length;
       atualizar();
     }
 
