@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heeeph</title>
+  <title>Sobre | Heeeph</title>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,247 +12,120 @@
       font-family: Arial, Helvetica, sans-serif;
       background: #000;
       color: #fff;
+      text-align: center;
     }
 
-    a { text-decoration: none; color: inherit; }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-    /* MENU */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
       padding: 12px;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 999;
     }
 
     .menu {
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 14px;
       flex-wrap: wrap;
       font-size: 14px;
       text-transform: uppercase;
     }
 
-    .menu a:hover { color: #f0d000; }
+    .menu a:hover {
+      color: #f0d000;
+    }
 
-    /* BANNER PRINCIPAL */
-    .hero {
+    .container {
       width: 100%;
-      max-width: 1350px;
-      height: 520px;
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px 40px;
+    }
+
+    .container img {
+      width: 100%;
+      max-width: 900px;
+      height: auto;
+      display: block;
       margin: 0 auto;
-      background: url('banner/Banner Principal.png') center / contain no-repeat;
+      border-radius: 12px;
     }
 
-    /* BANNER MEDIDAS */
-    .banner-secundario {
-      display: flex;
-      justify-content: center;
-      margin-top: 6px;
+    .voltar {
+      margin-top: 30px;
+      display: inline-block;
+      padding: 12px 22px;
+      border: 2px solid #f0d000;
+      border-radius: 999px;
+      color: #fff000;
+      font-weight: bold;
     }
 
-    .banner-secundario img {
-      width: 100%;
-      max-width: 1350px;
-      max-height: 150px;
-      object-fit: contain;
-    }
-
-    /* DESTAQUE */
-    .section {
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    .section h2 {
-      font-size: 40px;
-      color: #f0db35;
-      margin-bottom: 30px;
-    }
-
-    .destaque-carousel {
-      max-width: 1000px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: 80px 1fr 80px;
-      align-items: center;
-    }
-
-    .seta {
-      font-size: 40px;
-      cursor: pointer;
-    }
-
-    .carousel-palco {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .mini-card {
-      opacity: 0.6;
-    }
-
-    .mini-card img {
-      width: 180px;
-      border: 2px solid #fff;
-      border-radius: 8px;
-    }
-
-    .centro {
-      transform: scale(1.2);
-      opacity: 1;
-    }
-
-    .centro img {
-      width: 260px;
-    }
-
-    /* BOTÃO CATEGORIAS */
-    .categorias {
-      text-align: center;
-      padding: 30px;
-    }
-
-    .categorias img {
-      max-width: 500px;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    /* WHATSAPP */
     .zap {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 90px;
+      width: 80px;
       z-index: 999;
     }
 
     .zap img {
       width: 100%;
+      display: block;
     }
 
     footer {
-      text-align: center;
+      margin-top: 20px;
       padding: 20px;
       color: #aaa;
       border-top: 1px solid #111;
     }
 
-    /* RESPONSIVO */
     @media (max-width: 600px) {
-      .hero { height: 220px; }
-      .banner-secundario img { max-height: 90px; }
-
-      .destaque-carousel {
-        grid-template-columns: 1fr;
+      .menu {
+        font-size: 12px;
+        gap: 8px;
       }
 
-      .seta { display: none; }
-
-      .mini-card img { width: 100px; }
-      .centro img { width: 140px; }
-
-      .zap { width: 60px; }
+      .zap {
+        width: 58px;
+        bottom: 15px;
+        right: 15px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- MENU -->
   <header class="topbar">
     <nav class="menu">
       <a href="index.html">Home</a>
-      <a href="HTML/categorias.html">Coleção</a>
-      <a href="HTML/sobre.html">Sobre</a>
+      <a href="categorias.html">Coleção</a>
+      <a href="sobre.html">Sobre</a>
       <a href="#">Contato</a>
     </nav>
   </header>
 
-  <!-- BANNER PRINCIPAL -->
-  <section class="hero"></section>
-
-  <!-- BANNER MEDIDAS -->
-  <section class="banner-secundario">
-    <img src="banner/Banner-Medidas.png">
-  </section>
-
-  <!-- DESTAQUE -->
-  <section class="section">
-    <h2>Destaque</h2>
-
-    <div class="destaque-carousel">
-      <div class="seta" onclick="voltar()">‹</div>
-
-      <div class="carousel-palco">
-        <div class="mini-card">
-          <img id="img-esquerda">
-        </div>
-
-        <div class="mini-card centro">
-          <img id="img-centro">
-        </div>
-
-        <div class="mini-card">
-          <img id="img-direita">
-        </div>
-      </div>
-
-      <div class="seta" onclick="avancar()">›</div>
-    </div>
-  </section>
-
-  <!-- BOTÃO CATEGORIAS -->
-  <section class="categorias">
-    <a href="HTML/categorias.html">
-      <img src="botoes/Acesse-Categorias.png">
-    </a>
-  </section>
+  <div class="container">
+    <img src="/Sobre.png" alt="Sobre a Heeeph">
+    <a class="voltar" href="index.html">Voltar para Home</a>
+  </div>
 
   <footer>
     © 2026 Heeeph
   </footer>
 
-  <!-- SCRIPT -->
-  <script>
-    const placas = [
-      "placas/Placa Skatista.png",
-      "placas/Placa roblox.png",
-      "placas/Placas Naipes.png",
-      "placas/Placa GTA.png"
-    ];
-
-    let i = 0;
-
-    function atualizar() {
-      document.getElementById("img-centro").src = placas[i];
-      document.getElementById("img-esquerda").src =
-        placas[(i - 1 + placas.length) % placas.length];
-      document.getElementById("img-direita").src =
-        placas[(i + 1) % placas.length];
-    }
-
-    function avancar() {
-      i = (i + 1) % placas.length;
-      atualizar();
-    }
-
-    function voltar() {
-      i = (i - 1 + placas.length) % placas.length;
-      atualizar();
-    }
-
-    atualizar();
-  </script>
-
-  <!-- WHATSAPP -->
   <a href="https://wa.me/5511998302901" target="_blank" class="zap">
-    <img src="botoes/Whatsapp.png">
+    <img src="/botoes/Whatsapp.png" alt="WhatsApp">
   </a>
 
 </body>
