@@ -6,18 +6,6 @@
   <title>Heeeph</title>
 
   <style>
-     .zap {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 200px;
-  z-index: 999;
-}
-
-.zap img {
-  width: 100%;
-}
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -28,7 +16,6 @@
 
     a { text-decoration: none; color: inherit; }
 
-    /* MENU */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
@@ -47,18 +34,18 @@
       text-transform: uppercase;
     }
 
-    .menu a:hover { color: #f0d000; }
+    .menu a:hover {
+      color: #f0d000;
+    }
 
-    /* HERO */
     .hero {
       width: 100%;
       max-width: 1350px;
       height: 520px;
       margin: 0 auto;
-      background: url('Banner Principal.png') center / contain no-repeat;
+      background: url('banner/Banner Principal.png') center / contain no-repeat;
     }
 
-    /* BANNER MEDIDAS */
     .banner-secundario {
       display: flex;
       justify-content: center;
@@ -72,10 +59,10 @@
       object-fit: contain;
     }
 
-    /* DESTAQUE */
     .section {
       padding: 40px 20px;
       text-align: center;
+      background: #000;
     }
 
     .section h2 {
@@ -95,6 +82,7 @@
     .seta {
       font-size: 40px;
       cursor: pointer;
+      user-select: none;
     }
 
     .carousel-palco {
@@ -113,6 +101,7 @@
       width: 180px;
       border: 2px solid #fff;
       border-radius: 8px;
+      display: block;
     }
 
     .centro {
@@ -125,7 +114,6 @@
       width: 260px;
     }
 
-    /* CATEGORIAS */
     .categorias {
       text-align: center;
       padding: 30px;
@@ -137,18 +125,109 @@
       cursor: pointer;
     }
 
+    .zap {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 90px;
+      z-index: 999;
+    }
+
+    .zap img {
+      width: 100%;
+      display: block;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
       color: #aaa;
       border-top: 1px solid #111;
     }
+
+    @media (max-width: 900px) {
+      .hero {
+        height: 320px;
+      }
+
+      .banner-secundario img {
+        max-height: 110px;
+      }
+
+      .destaque-carousel {
+        grid-template-columns: 50px 1fr 50px;
+      }
+
+      .mini-card img {
+        width: 130px;
+      }
+
+      .centro img {
+        width: 190px;
+      }
+
+      .categorias img {
+        max-width: 380px;
+      }
+
+      .zap {
+        width: 70px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .menu {
+        font-size: 12px;
+        gap: 8px;
+      }
+
+      .hero {
+        height: 220px;
+      }
+
+      .banner-secundario img {
+        max-height: 90px;
+      }
+
+      .section h2 {
+        font-size: 30px;
+      }
+
+      .destaque-carousel {
+        grid-template-columns: 1fr;
+      }
+
+      .seta {
+        display: none;
+      }
+
+      .carousel-palco {
+        gap: 10px;
+      }
+
+      .mini-card img {
+        width: 90px;
+      }
+
+      .centro img {
+        width: 140px;
+      }
+
+      .categorias img {
+        max-width: 260px;
+      }
+
+      .zap {
+        width: 58px;
+        bottom: 15px;
+        right: 15px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- MENU -->
   <header class="topbar">
     <nav class="menu">
       <a href="index.html">Home</a>
@@ -158,15 +237,12 @@
     </nav>
   </header>
 
-  <!-- BANNER -->
   <section class="hero"></section>
 
-  <!-- MEDIDAS -->
   <section class="banner-secundario">
-    <img src="Banner-Medidas.png">
+    <img src="banner/Banner-Medidas.png" alt="Banner Medidas">
   </section>
 
-  <!-- DESTAQUE -->
   <section class="section">
     <h2>Destaque</h2>
 
@@ -175,15 +251,15 @@
 
       <div class="carousel-palco">
         <div class="mini-card">
-          <img id="img-esquerda">
+          <img id="img-esquerda" alt="Placa esquerda">
         </div>
 
         <div class="mini-card centro">
-          <img id="img-centro">
+          <img id="img-centro" alt="Placa destaque">
         </div>
 
         <div class="mini-card">
-          <img id="img-direita">
+          <img id="img-direita" alt="Placa direita">
         </div>
       </div>
 
@@ -191,10 +267,9 @@
     </div>
   </section>
 
-  <!-- CATEGORIAS -->
   <section class="categorias">
     <a href="categorias.html">
-      <img src="Acesse-Categorias.png">
+      <img src="botoes/Acesse-Categorias.png" alt="Acesse Categorias">
     </a>
   </section>
 
@@ -202,13 +277,12 @@
     © 2026 Heeeph
   </footer>
 
-  <!-- SCRIPT -->
   <script>
     const placas = [
-      "Placa Skatista.png",
-      "Placa roblox.png",
-      "Placas Naipes.png",
-      "Placa GTA.png"
+      "placas/Placa Skatista.png",
+      "placas/Placa roblox.png",
+      "placas/Placas Naipes.png",
+      "placas/Placa GTA.png"
     ];
 
     let i = 0;
@@ -233,8 +307,10 @@
 
     atualizar();
   </script>
-<a href="https://wa.me/5511998302901" target="_blank" class="zap">
-  <img src="Whatsapp.png">
-</a>
+
+  <a href="https://wa.me/5511998302901" target="_blank" class="zap">
+    <img src="botoes/Whatsapp.png" alt="WhatsApp">
+  </a>
+
 </body>
 </html>
