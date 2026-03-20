@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categorias | Heeeph</title>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #000;
+      color: #fff;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .topbar {
+      background: #050505;
+      border-bottom: 2px solid #1a1a1a;
+      padding: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .menu {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .menu a:hover {
+      color: #f0d000;
+    }
+
+    .titulo {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+
+    .titulo h1 {
+      font-size: 44px;
+      color: #f0db35;
+    }
+
+    .categorias-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .categoria-card {
+      display: block;
+      border: 2px solid #f0d000;
+      border-radius: 18px;
+      padding: 10px;
+      background: #000;
+      transition: .2s;
+    }
+
+    .categoria-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(240,208,0,.3);
+    }
+
+    .categoria-card img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #aaa;
+      border-top: 1px solid #111;
+    }
+
+    @media (max-width: 900px) {
+      .categorias-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .categorias-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <nav class="menu">
+      <a href="index.html">Home</a>
+      <a href="categorias.html">Coleção</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
+    </nav>
+  </header>
+
+  <section class="titulo">
+    <h1>Categorias</h1>
+  </section>
+
+  <section class="categorias-grid">
+    <a class="categoria-card" href="bands.html"><img src="Bands.png" alt="Bands"></a>
+    <a class="categoria-card" href="drinks.html"><img src="Drinks.png" alt="Drinks"></a>
+    <a class="categoria-card" href="real-photos.html"><img src="Real Photos.png" alt="Real Photos"></a>
+    <a class="categoria-card" href="games.html"><img src="Games.png" alt="Games"></a>
+    <a class="categoria-card" href="garage.html"><img src="Garage.png" alt="Garage"></a>
+    <a class="categoria-card" href="home-phrases.html"><img src="Home-Phrases.png" alt="Home Phrases"></a>
+    <a class="categoria-card" href="infantil.html"><img src="Infantil.png" alt="Infantil"></a>
+    <a class="categoria-card" href="motos.html"><img src="Motos.png" alt="Motos"></a>
+    <a class="categoria-card" href="musica.html"><img src="Musica.png" alt="Musica"></a>
+    <a class="categoria-card" href="rpg.html"><img src="RPG.png" alt="RPG"></a>
+    <a class="categoria-card" href="street.html"><img src="Street.png" alt="Street"></a>
+    <a class="categoria-card" href="trip.html"><img src="TRIP.png" alt="Trip"></a>
+  </section>
+
+  <footer>
+    © 2026 Heeeph
+  </footer>
+
+</body>
+</html>
