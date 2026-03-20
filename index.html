@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt-BR">'
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title></title>
+  <title>Heeeph</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: Arial, Helvetica, sans-serif;
       background: #000;
       color: #fff;
     }
-    a { text-decoration: none; color: inherit; }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
@@ -20,6 +26,7 @@
       top: 0;
       z-index: 20;
     }
+
     .menu {
       display: flex;
       gap: 14px;
@@ -29,7 +36,11 @@
       font-size: 14px;
       text-transform: uppercase;
     }
-    .menu a:hover { color: #f0d000; }
+
+    .menu a:hover {
+      color: #f0d000;
+    }
+
     .cart {
       border: 2px solid #c00;
       color: #fff;
@@ -37,58 +48,36 @@
       padding: 4px 8px;
       border-radius: 6px;
       font-weight: bold;
-    }.hero {
-  height: 520px;
-  background: url('Banner Principal.png') center center / contain no-repeat;
-  background-color: #000;
-}
+    }
 
+    .hero {
+      height: 520px;
+      background: url('Banner Principal.png') center center / contain no-repeat;
+      background-color: #000;
     }
-    .logo-wrap {
-      position: relative;
-      z-index: 2;
+
+    .banner-secundario {
+      width: 100%;
+      background: #000;
+      text-align: center;
+      padding: 6px 0;
     }
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 56px);
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 18px;
-      opacity: .95;
+
+    .banner-secundario img {
+      width: auto;
+      height: 80px;
+      display: block;
+      margin: 0 auto;
+      max-width: 95%;
     }
-    .mini-card {
-      width: 56px;
-      height: 56px;
-      border: 2px solid #d5b35a;
-      background: linear-gradient(135deg, #1b1b1b, #4c2f0c 65%, #a56714);
-      box-shadow: 0 0 10px rgba(255,170,0,.25);
-    }
-    .brand {
-      font-size: clamp(52px, 10vw, 110px);
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #ffdda8;
-      text-shadow:
-        -3px -3px 0 #5a1f00,
-        3px -3px 0 #5a1f00,
-        -3px 3px 0 #5a1f00,
-        3px 3px 0 #5a1f00,
-        0 0 18px rgba(255,180,0,.45);
-      transform: skew(-8deg);
-    }
-    .tagline {
-      margin-top: 18px;
-      font-size: clamp(24px, 4vw, 42px);
-      color: #1ea7ff;
-      font-weight: 800;
-      text-shadow: 2px 2px 0 #133d8a, 0 0 10px rgba(30,167,255,.6);
-    }
+
     .info-band {
       background: linear-gradient(180deg, #111, #000);
       border-top: 3px solid #e2c027;
       border-bottom: 3px solid #e2c027;
       padding: 18px 20px;
     }
+
     .info-inner {
       max-width: 1100px;
       margin: 0 auto;
@@ -97,12 +86,14 @@
       gap: 18px;
       align-items: center;
     }
+
     .size-box {
       color: #ffd400;
       font-weight: 900;
       font-size: 20px;
       line-height: 1.15;
     }
+
     .size-box small {
       display: block;
       color: #fff;
@@ -110,6 +101,7 @@
       margin-top: 6px;
       font-weight: 400;
     }
+
     .center-copy h2 {
       font-size: 34px;
       line-height: 1;
@@ -117,10 +109,12 @@
       margin-bottom: 8px;
       font-family: Georgia, serif;
     }
+
     .center-copy p {
       font-size: 16px;
       color: #f2f2f2;
     }
+
     .features {
       display: grid;
       grid-template-columns: repeat(2, minmax(120px, 1fr));
@@ -128,11 +122,13 @@
       margin-top: 12px;
       font-size: 14px;
     }
+
     .features span::before {
       content: '★';
       color: #f2c500;
       margin-right: 6px;
     }
+
     .section {
       padding: 44px 18px;
       background:
@@ -141,6 +137,7 @@
       border-top: 2px solid #1f1200;
       border-bottom: 2px solid #1f1200;
     }
+
     .section h3 {
       text-align: center;
       font-size: clamp(34px, 5vw, 52px);
@@ -149,26 +146,51 @@
       margin-bottom: 28px;
       font-family: Georgia, serif;
     }
+
     .products-wrap {
       max-width: 1100px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: 90px 1fr 90px;
-      gap: 10px;
+      gap: 14px;
       align-items: center;
     }
-    .arrow {
-      font-size: 84px;
-      line-height: 1;
+
+    .arrow-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid #f0d000;
+      background: linear-gradient(180deg, #111, #000);
       color: #fff;
-      text-align: center;
-      opacity: .85;
+      font-size: 42px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow: 0 0 16px rgba(240,208,0,.25);
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
     }
+
+    .arrow-btn:hover {
+      transform: scale(1.06);
+      border-color: #fff000;
+      box-shadow: 0 0 22px rgba(240,208,0,.45);
+    }
+
+    .arrow-btn:active {
+      transform: scale(.96);
+    }
+
     .products {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 22px;
+      align-items: stretch;
     }
+
     .card {
       background: rgba(0,0,0,.55);
       border: 2px solid #a56c15;
@@ -177,22 +199,28 @@
       text-align: center;
       box-shadow: 0 0 18px rgba(255,166,0,.18);
     }
+
     .card img {
       width: 100%;
-      aspect-ratio: 3/4;
+      aspect-ratio: 3 / 4;
       object-fit: cover;
       border: 2px solid #fff;
       display: block;
+      border-radius: 4px;
     }
+
     .price {
       margin-top: 8px;
       font-size: 15px;
       color: #e6e6e6;
+      font-weight: bold;
     }
+
     .categories-area {
       text-align: center;
       padding-bottom: 80px;
     }
+
     .cat-icons {
       display: flex;
       justify-content: center;
@@ -200,6 +228,7 @@
       flex-wrap: wrap;
       margin-bottom: 14px;
     }
+
     .cat-badge {
       background: radial-gradient(circle at top, #7f00ff, #1b0035 70%);
       color: #ffd500;
@@ -210,6 +239,7 @@
       font-weight: 800;
       box-shadow: 0 0 10px rgba(255, 213, 0, .3);
     }
+
     .cta-main {
       display: inline-flex;
       align-items: center;
@@ -225,6 +255,7 @@
       text-transform: uppercase;
       box-shadow: 0 0 18px rgba(240,208,0,.3);
     }
+
     .cta-main small {
       display: block;
       font-size: 12px;
@@ -233,7 +264,11 @@
       text-transform: none;
       font-weight: 700;
     }
-    .cta-main .arrow-right { font-size: 40px; }
+
+    .cta-main .arrow-right {
+      font-size: 40px;
+    }
+
     .whats-btn {
       display: inline-block;
       margin-top: 14px;
@@ -246,6 +281,7 @@
       text-transform: uppercase;
       box-shadow: 0 0 14px rgba(0,255,76,.35);
     }
+
     footer {
       padding: 28px 16px;
       text-align: center;
@@ -253,26 +289,54 @@
       background: #020202;
       border-top: 2px solid #1b1b1b;
     }
+
     @media (max-width: 900px) {
-      .mini-grid { grid-template-columns: repeat(5, 56px); }
-      .info-inner { grid-template-columns: 1fr; text-align: center; }
-      .features { justify-items: center; }
-      .products-wrap { grid-template-columns: 1fr; }
-      .arrow { display: none; }
-      .products { grid-template-columns: repeat(2, 1fr); }
+      .info-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .features {
+        justify-items: center;
+      }
+
+      .products-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .products {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .arrow-btn {
+        width: 64px;
+        height: 64px;
+        font-size: 36px;
+      }
     }
+
     @media (max-width: 560px) {
-      .products { grid-template-columns: 1fr; }
-      .cta-main { font-size: 22px; padding: 12px 16px; }
-      .brand { letter-spacing: 0; }
-      .menu { font-size: 12px; gap: 10px; }
+      .menu {
+        font-size: 12px;
+        gap: 10px;
+      }
+
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-main {
+        font-size: 22px;
+        padding: 12px 16px;
+      }
+
       .banner-secundario img {
-  width: 100%;
-  max-width: 700px;
-  max-height: 90px;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
+        height: 60px;
+      }
+
+      .hero {
+        height: 260px;
+      }
     }
   </style>
 </head>
@@ -288,14 +352,13 @@
     </nav>
   </header>
 
-  <section class="hero" id="home">
-</section>
+  <section class="hero" id="home"></section>
 
-<section class="banner-secundario">
-  <img src="Banner-Medidas.png" alt="Placas decorativas">
-</section>
+  <section class="banner-secundario">
+    <img src="Banner-Medidas.png" alt="Placas decorativas">
+  </section>
 
-<section class="info-band" id="colecao">
+  <section class="info-band" id="colecao">
     <div class="info-inner">
       <div class="size-box">
         20x28cm<br>28x20cm
@@ -321,22 +384,26 @@
   <section class="section">
     <h3>Destaque</h3>
     <div class="products-wrap">
-      <div class="arrow">‹</div>
+      <button class="arrow-btn" id="prevBtn" aria-label="Mostrar placas anteriores">‹</button>
+
       <div class="products">
         <article class="card">
-          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=700&auto=format&fit=crop" alt="Produto 1">
-          <div class="price">R$32,99</div>
+          <img id="produto1-img" src="" alt="Placa decorativa 1">
+          <div class="price" id="produto1-preco"></div>
         </article>
+
         <article class="card">
-          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=700&auto=format&fit=crop" alt="Produto 2">
-          <div class="price">R$32,99</div>
+          <img id="produto2-img" src="" alt="Placa decorativa 2">
+          <div class="price" id="produto2-preco"></div>
         </article>
+
         <article class="card">
-          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=700&auto=format&fit=crop" alt="Produto 3">
-          <div class="price">R$32,99</div>
+          <img id="produto3-img" src="" alt="Placa decorativa 3">
+          <div class="price" id="produto3-preco"></div>
         </article>
       </div>
-      <div class="arrow">›</div>
+
+      <button class="arrow-btn" id="nextBtn" aria-label="Mostrar próximas placas">›</button>
     </div>
   </section>
 
@@ -348,6 +415,7 @@
       <span class="cat-badge">Street</span>
       <span class="cat-badge">Música</span>
     </div>
+
     <a class="cta-main" href="#">
       <span>
         Acesse todas as categorias
@@ -355,12 +423,70 @@
       </span>
       <span class="arrow-right">➜</span>
     </a>
+
     <br>
+
     <a class="whats-btn" href="#contato">Personalize pelo WhatsApp</a>
   </section>
 
   <footer id="contato">
     © 2026 Heeeph — Placas decorativas com personalidade.
   </footer>
+
+  <script>
+    const placas = [
+      {
+        imagem: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=700&auto=format&fit=crop",
+        preco: "R$32,99"
+      },
+      {
+        imagem: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=700&auto=format&fit=crop",
+        preco: "R$32,99"
+      },
+      {
+        imagem: "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=700&auto=format&fit=crop",
+        preco: "R$32,99"
+      },
+      {
+        imagem: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=700&auto=format&fit=crop",
+        preco: "R$32,99"
+      },
+      {
+        imagem: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=700&auto=format&fit=crop",
+        preco: "R$32,99"
+      }
+    ];
+
+    let indiceAtual = 0;
+
+    function atualizarDestaques() {
+      const total = placas.length;
+
+      const p1 = placas[indiceAtual % total];
+      const p2 = placas[(indiceAtual + 1) % total];
+      const p3 = placas[(indiceAtual + 2) % total];
+
+      document.getElementById("produto1-img").src = p1.imagem;
+      document.getElementById("produto1-preco").textContent = p1.preco;
+
+      document.getElementById("produto2-img").src = p2.imagem;
+      document.getElementById("produto2-preco").textContent = p2.preco;
+
+      document.getElementById("produto3-img").src = p3.imagem;
+      document.getElementById("produto3-preco").textContent = p3.preco;
+    }
+
+    document.getElementById("prevBtn").addEventListener("click", function () {
+      indiceAtual = (indiceAtual - 1 + placas.length) % placas.length;
+      atualizarDestaques();
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", function () {
+      indiceAtual = (indiceAtual + 1) % placas.length;
+      atualizarDestaques();
+    });
+
+    atualizarDestaques();
+  </script>
 </body>
 </html>
