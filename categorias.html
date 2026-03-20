@@ -3,21 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Categorias | Heeeph</title>
+  <title>Coleção | Heeeph</title>
 
   <style>
-    .zap {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 200px;
-  z-index: 999;
-}
-
-.zap img {
-  width: 100%;
-}
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -36,7 +29,7 @@
       padding: 12px;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 999;
     }
 
     .menu {
@@ -67,7 +60,7 @@
       width: 100%;
       max-width: 220px;
       padding: 4px;
-      transition: transform .2s ease;
+      transition: transform 0.2s ease;
     }
 
     .categoria-card:hover {
@@ -78,6 +71,19 @@
       width: 100%;
       display: block;
       border-radius: 10px;
+    }
+
+    .zap {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 200px;
+      z-index: 999;
+    }
+
+    .zap img {
+      width: 100%;
+      display: block;
     }
 
     footer {
@@ -97,6 +103,10 @@
       .categoria-card {
         max-width: 180px;
       }
+
+      .zap {
+        width: 120px;
+      }
     }
 
     @media (max-width: 600px) {
@@ -113,6 +123,12 @@
 
       .categoria-card {
         max-width: 140px;
+      }
+
+      .zap {
+        width: 70px;
+        bottom: 15px;
+        right: 15px;
       }
     }
   </style>
@@ -132,61 +148,62 @@
   <section class="categorias-grid">
 
     <a class="categoria-card" href="bandas.html">
-      <img src="Bandas.png" alt="Bandas">
+      <img src="botoes/Bandas.png" alt="Bandas">
     </a>
 
     <a class="categoria-card" href="bebidas.html">
-      <img src="Bebidas.png" alt="Bebidas">
+      <img src="botoes/Bebidas.png" alt="Bebidas">
     </a>
 
     <a class="categoria-card" href="fotos-reais.html">
-      <img src="Fotos Reais.png" alt="Fotos Reais">
+      <img src="botoes/Fotos Reais.png" alt="Fotos Reais">
     </a>
 
-    <a class="categoria-card" href="Games.html">
-  <img src="Games.png" alt="Games">
-</a>
+    <a class="categoria-card" href="games.html">
+      <img src="botoes/Games.png" alt="Games">
+    </a>
 
     <a class="categoria-card" href="garage.html">
-      <img src="Garage.png" alt="Garage">
+      <img src="botoes/Garage.png" alt="Garage">
     </a>
 
-    <a class="categoria-card" href="Home- Frases.html">
-  <img src="Home- Frases.png" alt="Home- Frases">
-</a>
+    <a class="categoria-card" href="home-frases.html">
+      <img src="botoes/Home- Frases.png" alt="Home Frases">
+    </a>
 
     <a class="categoria-card" href="infantil.html">
-      <img src="Infantil.png" alt="Infantil">
+      <img src="botoes/Infantil.png" alt="Infantil">
     </a>
 
     <a class="categoria-card" href="motos.html">
-      <img src="Motos.png" alt="Motos">
+      <img src="botoes/Motos.png" alt="Motos">
     </a>
 
-    <a class="categoria-card" href="Musica.html">
-  <img src="Musica.png" alt="Musica">
-</a>
+    <a class="categoria-card" href="musica.html">
+      <img src="botoes/Musica.png" alt="Musica">
+    </a>
 
     <a class="categoria-card" href="rpg.html">
-      <img src="RPG.png" alt="RPG">
+      <img src="botoes/RPG.png" alt="RPG">
     </a>
 
     <a class="categoria-card" href="street.html">
-      <img src="Street.png" alt="Street">
+      <img src="botoes/Street.png" alt="Street">
     </a>
 
     <a class="categoria-card" href="trip.html">
-  <img src="TRIP.png" alt="Trip">
-</a>
+      <img src="botoes/TRIP.png" alt="Trip">
+    </a>
 
   </section>
 
   <footer>
     © 2026 Heeeph
   </footer>
-<a href="https://wa.me/5511998302901" target="_blank" class="zap">
-  <img src="Whatsapp.png">
-</a>
+
+  <a href="https://wa.me/5511998302901" target="_blank" class="zap">
+    <img src="botoes/Whatsapp.png" alt="WhatsApp">
+  </a>
 
 </body>
 </html>
