@@ -6,7 +6,11 @@
   <title>Heeeph</title>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -41,16 +45,6 @@
 
     .menu a:hover {
       color: #f0d000;
-    }
-
-    .menu img {
-      height: 22px;
-      display: block;
-      transition: transform 0.2s ease;
-    }
-
-    .menu img:hover {
-      transform: scale(1.08);
     }
 
     /* BANNER PRINCIPAL */
@@ -95,7 +89,7 @@
 
     .destaque-carousel {
       max-width: 1000px;
-      margin: auto;
+      margin: 0 auto;
       display: grid;
       grid-template-columns: 80px 1fr 80px;
       align-items: center;
@@ -193,10 +187,6 @@
       .zap {
         width: 70px;
       }
-
-      .menu img {
-        height: 20px;
-      }
     }
 
     @media (max-width: 600px) {
@@ -242,10 +232,6 @@
         bottom: 15px;
         right: 15px;
       }
-
-      .menu img {
-        height: 18px;
-      }
     }
   </style>
 </head>
@@ -262,7 +248,7 @@
   </header>
 
   <section class="hero">
-    <img src="Banner%20Principal.png" alt="Banner Principal">
+    <img src="Banner Principal.png" alt="Banner Principal">
   </section>
 
   <section class="banner-secundario">
