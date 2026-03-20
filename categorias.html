@@ -41,20 +41,11 @@
       color: #f0d000;
     }
 
-    .titulo {
-      text-align: center;
-      padding: 40px 20px 20px;
-    }
-
-    .titulo h1 {
-      font-size: 44px;
-      color: #f0db35;
-    }
-
+    /* GRID */
     .categorias-grid {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 30px 20px 60px;
+      padding: 40px 20px 60px;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 22px;
@@ -62,22 +53,18 @@
 
     .categoria-card {
       display: block;
-      border: 2px solid #f0d000;
-      border-radius: 18px;
-      padding: 10px;
-      background: #000;
+      padding: 6px;
       transition: .2s;
     }
 
     .categoria-card:hover {
       transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(240,208,0,.3);
     }
 
     .categoria-card img {
       width: 100%;
       display: block;
-      border-radius: 12px;
+      border-radius: 10px;
     }
 
     footer {
@@ -100,6 +87,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <header class="topbar">
@@ -111,23 +99,56 @@
     </nav>
   </header>
 
-  <section class="titulo">
-    <h1>Categorias</h1>
-  </section>
-
   <section class="categorias-grid">
-    <a class="categoria-card" href="Bandas.html"><img src="Bandas.png" alt="Bandas"></a>
-    <a class="categoria-card" href="Bebidas.html"><img src="Bebidas.png" alt="Bebidas"></a>
-    <a class="categoria-card" href="Fotos Reais.html"><img src="Fotos Reais.png" alt="Fotos Reais"></a>
-    <a class="categoria-card" href="games.html"><img src="Games.png" alt="Games"></a>
-    <a class="categoria-card" href="garage.html"><img src="Garage.png" alt="Garage"></a>
-    <a class="categoria-card" href="Home- Frases.html"><img src="Home- Frases.png" alt="Home- Frases"></a>
-    <a class="categoria-card" href="infantil.html"><img src="Infantil.png" alt="Infantil"></a>
-    <a class="categoria-card" href="motos.html"><img src="Motos.png" alt="Motos"></a>
-    <a class="categoria-card" href="musica.html"><img src="Musica.png" alt="Musica"></a>
-    <a class="categoria-card" href="rpg.html"><img src="RPG.png" alt="RPG"></a>
-    <a class="categoria-card" href="street.html"><img src="Street.png" alt="Street"></a>
-    <a class="categoria-card" href="trip.html"><img src="TRIP.png" alt="Trip"></a>
+
+    <a class="categoria-card" href="bands.html">
+      <img src="Bands.png">
+    </a>
+
+    <a class="categoria-card" href="drinks.html">
+      <img src="Drinks.png">
+    </a>
+
+    <a class="categoria-card" href="real-photos.html">
+      <img src="Real Photos.png">
+    </a>
+
+    <a class="categoria-card" href="games.html">
+      <img src="Games.png">
+    </a>
+
+    <a class="categoria-card" href="garage.html">
+      <img src="Garage.png">
+    </a>
+
+    <a class="categoria-card" href="home-phrases.html">
+      <img src="Home-Phrases.png">
+    </a>
+
+    <a class="categoria-card" href="infantil.html">
+      <img src="Infantil.png">
+    </a>
+
+    <a class="categoria-card" href="motos.html">
+      <img src="Motos.png">
+    </a>
+
+    <a class="categoria-card" href="musica.html">
+      <img src="Musica.png">
+    </a>
+
+    <a class="categoria-card" href="rpg.html">
+      <img src="RPG.png">
+    </a>
+
+    <a class="categoria-card" href="street.html">
+      <img src="Street.png">
+    </a>
+
+    <a class="categoria-card" href="trip.html">
+      <img src="TRIP.png">
+    </a>
+
   </section>
 
   <footer>
