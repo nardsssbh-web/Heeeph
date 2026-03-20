@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Categorias | Heeeph</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heeeph</title>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,10 +19,11 @@
       color: inherit;
     }
 
+    /* MENU */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
-      padding: 12px 18px;
+      padding: 12px;
       position: sticky;
       top: 0;
       z-index: 20;
@@ -30,9 +31,8 @@
 
     .menu {
       display: flex;
-      gap: 14px;
       justify-content: center;
-      align-items: center;
+      gap: 14px;
       flex-wrap: wrap;
       font-size: 14px;
       text-transform: uppercase;
@@ -42,71 +42,112 @@
       color: #f0d000;
     }
 
-    .cart {
-      border: 2px solid #c00;
-      background: linear-gradient(180deg, #d40000, #820000);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-
-    .page-header {
-      text-align: center;
-      padding: 40px 20px 10px;
-    }
-
-    .page-header h1 {
-      font-size: clamp(40px, 7vw, 70px);
-      color: #f0db35;
-      text-shadow: 0 0 12px rgba(240,219,53,.4);
-      font-family: Georgia, serif;
-    }
-
-    .categorias-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 30px 20px 60px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 22px;
-    }
-
-    .categoria-card {
-      border: 2px solid #f0d000;
-      border-radius: 20px;
-      padding: 10px;
-      background: #000;
-      transition: .2s;
-    }
-
-    .categoria-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(240,208,0,.3);
-    }
-
-    .categoria-card img {
+    /* HERO */
+    .hero {
       width: 100%;
-      border-radius: 12px;
+      max-width: 1350px;
+      height: 520px;
+      margin: 0 auto;
+      background: url('Banner Principal.png') center / contain no-repeat;
+    }
+
+    /* BANNER MEDIDAS */
+    .banner-secundario {
+      display: flex;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .banner-secundario img {
+      width: 100%;
+      max-width: 1350px;
+      max-height: 160px;
+      object-fit: contain;
+    }
+
+    /* DESTAQUE */
+    .section {
+      padding: 40px 20px;
+      background: #000;
+      text-align: center;
+    }
+
+    .section h2 {
+      font-size: 40px;
+      color: #f0db35;
+      margin-bottom: 30px;
+    }
+
+    .destaque {
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      align-items: center;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .seta {
+      font-size: 40px;
+      cursor: pointer;
+    }
+
+    .produtos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      border: 2px solid #a56c15;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+
+    /* BOTÃO CATEGORIAS */
+    .categorias {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .categorias img {
+      max-width: 600px;
+      width: 100%;
+      cursor: pointer;
     }
 
     footer {
-      padding: 25px;
       text-align: center;
+      padding: 20px;
       color: #aaa;
       border-top: 1px solid #111;
     }
 
-    @media (max-width: 900px) {
-      .categorias-grid {
-        grid-template-columns: repeat(2, 1fr);
+    /* RESPONSIVO */
+    @media (max-width: 800px) {
+      .produtos {
+        grid-template-columns: 1fr;
+      }
+
+      .destaque {
+        grid-template-columns: 1fr;
+      }
+
+      .seta {
+        display: none;
+      }
+
+      .hero {
+        height: 250px;
       }
     }
 
-    @media (max-width: 500px) {
-      .categorias-grid {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
 </head>
 
@@ -117,74 +158,77 @@
     <nav class="menu">
       <a href="index.html">Home</a>
       <a href="categorias.html">Coleção</a>
-      <a href="index.html#sobre">O que é Heeeph?</a>
-      <a href="index.html#fotos">Fotos Reais</a>
-      <a href="index.html#contato">Contatos</a>
-      <a class="cart" href="#">🛒</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
     </nav>
   </header>
 
-  <!-- TÍTULO -->
-  <section class="page-header">
-    <h1>Categorias</h1>
+  <!-- BANNER PRINCIPAL -->
+  <section class="hero"></section>
+
+  <!-- BANNER MEDIDAS -->
+  <section class="banner-secundario">
+    <img src="Banner-Medidas.png">
   </section>
 
-  <!-- GRID DE BOTÕES -->
-  <section class="categorias-grid">
+  <!-- DESTAQUE -->
+  <section class="section">
+    <h2>Destaque</h2>
 
-    <a class="categoria-card" href="bands.html">
-      <img src="Bands.png">
+    <div class="destaque">
+      <div class="seta" onclick="voltar()">‹</div>
+
+      <div class="produtos">
+        <div class="card"><img id="p1"></div>
+        <div class="card"><img id="p2"></div>
+        <div class="card"><img id="p3"></div>
+      </div>
+
+      <div class="seta" onclick="avancar()">›</div>
+    </div>
+  </section>
+
+  <!-- BOTÃO CATEGORIAS -->
+  <section class="categorias">
+    <a href="categorias.html">
+      <img src="Acesse-Categorias.png">
     </a>
-
-    <a class="categoria-card" href="drinks.html">
-      <img src="Drinks.png">
-    </a>
-
-    <a class="categoria-card" href="real-photos.html">
-      <img src="Real Photos.png">
-    </a>
-
-    <a class="categoria-card" href="games.html">
-      <img src="Games.png">
-    </a>
-
-    <a class="categoria-card" href="garage.html">
-      <img src="Garage.png">
-    </a>
-
-    <a class="categoria-card" href="home-phrases.html">
-      <img src="Home-Phrases.png">
-    </a>
-
-    <a class="categoria-card" href="infantil.html">
-      <img src="Infantil.png">
-    </a>
-
-    <a class="categoria-card" href="motos.html">
-      <img src="Motos.png">
-    </a>
-
-    <a class="categoria-card" href="musica.html">
-      <img src="Musica.png">
-    </a>
-
-    <a class="categoria-card" href="rpg.html">
-      <img src="RPG.png">
-    </a>
-
-    <a class="categoria-card" href="street.html">
-      <img src="Street.png">
-    </a>
-
-    <a class="categoria-card" href="trip.html">
-      <img src="TRIP.png">
-    </a>
-
   </section>
 
   <footer>
-    © 2026 Heeeph — Placas decorativas
+    © 2026 Heeeph
   </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const placas = [
+      "Placa Skatista.png",
+      "Placa roblox.png",
+      "Placas Naipes.png",
+      "Placa GTA.png"
+    ];
+
+    let i = 0;
+
+    function atualizar() {
+      document.getElementById("p1").src = placas[i % placas.length];
+      document.getElementById("p2").src = placas[(i+1) % placas.length];
+      document.getElementById("p3").src = placas[(i+2) % placas.length];
+    }
+
+    function avancar() {
+      i++;
+      atualizar();
+    }
+
+    function voltar() {
+      i--;
+      if(i < 0) i = placas.length - 1;
+      atualizar();
+    }
+
+    atualizar();
+  </script>
 
 </body>
 </html>
