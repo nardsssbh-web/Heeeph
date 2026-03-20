@@ -19,7 +19,7 @@
       color: inherit;
     }
 
-    /* MENU */
+    /* TOPO */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
@@ -42,30 +42,34 @@
       color: #f0d000;
     }
 
-    /* HERO */
+    /* BANNER PRINCIPAL */
     .hero {
       width: 100%;
       max-width: 1350px;
       height: 520px;
       margin: 0 auto;
-      background: url('Banner Principal.png') center / contain no-repeat;
+      background: url('Banner Principal.png') center center / contain no-repeat;
+      background-color: #000;
     }
 
     /* BANNER MEDIDAS */
     .banner-secundario {
+      width: 100%;
       display: flex;
       justify-content: center;
-      margin-top: 6px;
+      padding: 6px 8px 0;
+      background: #000;
     }
 
     .banner-secundario img {
       width: 100%;
       max-width: 1350px;
-      max-height: 160px;
+      max-height: 150px;
       object-fit: contain;
+      display: block;
     }
 
-    /* DESTAQUE */
+    /* SEÇÃO DESTAQUE */
     .section {
       padding: 40px 20px;
       background: #000;
@@ -76,49 +80,67 @@
       font-size: 40px;
       color: #f0db35;
       margin-bottom: 30px;
+      font-family: Georgia, serif;
+      text-shadow: 0 0 10px rgba(240, 219, 53, 0.35);
     }
 
     .destaque {
       display: grid;
       grid-template-columns: 80px 1fr 80px;
       align-items: center;
+      gap: 10px;
       max-width: 1100px;
-      margin: auto;
+      margin: 0 auto;
     }
 
     .seta {
-      font-size: 40px;
+      font-size: 42px;
       cursor: pointer;
+      color: #fff;
+      user-select: none;
+      transition: transform .2s ease, color .2s ease;
+    }
+
+    .seta:hover {
+      color: #f0d000;
+      transform: scale(1.08);
     }
 
     .produtos {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 20px;
+      align-items: stretch;
     }
 
     .card {
       border: 2px solid #a56c15;
       padding: 10px;
-      border-radius: 8px;
+      border-radius: 10px;
+      background: #000;
+      box-shadow: 0 0 12px rgba(255, 166, 0, 0.16);
     }
 
     .card img {
       width: 100%;
-      aspect-ratio: 3/4;
+      aspect-ratio: 3 / 4;
       object-fit: cover;
       border: 2px solid #fff;
+      display: block;
+      border-radius: 4px;
     }
 
     /* BOTÃO CATEGORIAS */
     .categorias {
       text-align: center;
-      padding: 30px;
+      padding: 24px 20px 40px;
+      background: #000;
     }
 
     .categorias img {
-      max-width: 600px;
       width: 100%;
+      max-width: 600px;
+      display: inline-block;
       cursor: pointer;
     }
 
@@ -127,12 +149,17 @@
       padding: 20px;
       color: #aaa;
       border-top: 1px solid #111;
+      background: #000;
     }
 
-    /* RESPONSIVO */
-    @media (max-width: 800px) {
-      .produtos {
-        grid-template-columns: 1fr;
+    /* TABLET */
+    @media (max-width: 900px) {
+      .hero {
+        height: 340px;
+      }
+
+      .banner-secundario img {
+        max-height: 110px;
       }
 
       .destaque {
@@ -143,138 +170,114 @@
         display: none;
       }
 
-      .hero {
-        height: 250px;
+      .produtos {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
       }
-  @media (max-width: 600px) {
 
-  .hero {
-    height: 220px;
-  }
+      .card {
+        padding: 8px;
+      }
 
-  .banner-secundario img {
-    max-height: 100px;
-  }
+      .categorias img {
+        max-width: 420px;
+      }
+    }
 
-  .produtos {
-    grid-template-columns: 1fr;
-  }
+    /* CELULAR */
+    @media (max-width: 600px) {
+      .menu {
+        font-size: 12px;
+        gap: 8px;
+      }
 
-  .destaque {
-    grid-template-columns: 1fr;
-  }
+      .hero {
+        height: 220px;
+      }
 
-  .seta {
-    display: none;
-  }
+      .banner-secundario img {
+        max-height: 90px;
+      }
 
-  .categorias img {
-    max-width: 90%;
-  }
+      .section {
+        padding: 28px 10px;
+      }
 
-  .menu {
-    font-size: 12px;
-    gap: 8px;
-  }
-@media (max-width: 600px) {
+      .section h2 {
+        font-size: 30px;
+        margin-bottom: 18px;
+      }
 
-  .hero {
-    height: 220px;
-  }
+      .destaque {
+        grid-template-columns: 1fr;
+      }
 
-  .banner-secundario img {
-    max-height: 90px;
-  }
+      .seta {
+        display: none;
+      }
 
-  .products {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
+      .produtos {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 6px 6px 14px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
 
-  .card {
-    max-width: 220px;
-    margin: 0 auto;
-    padding: 8px;
-  }
+      .produtos::-webkit-scrollbar {
+        height: 6px;
+      }
 
-  .card img {
-    aspect-ratio: 3 / 4;
-    object-fit: cover;
-  }
+      .produtos::-webkit-scrollbar-thumb {
+        background: #555;
+        border-radius: 999px;
+      }
 
-  .arrow-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 26px;
-  }
+      .card {
+        min-width: 145px;
+        max-width: 145px;
+        flex: 0 0 auto;
+        scroll-snap-align: center;
+        padding: 6px;
+        margin: 0;
+      }
 
-  .categorias-botao-link img {
-    max-width: 280px;
-    width: 90%;
-    height: auto;
-  }
+      .card img {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        object-fit: cover;
+      }
 
-  .whats-btn {
-    font-size: 12px;
-    padding: 8px 14px;
-  }
+      .categorias {
+        padding: 20px 16px 28px;
+      }
 
-  .menu {
-    font-size: 12px;
-    gap: 8px;
-  }
-@media (max-width: 600px) {
-
-  .products {
-    display: flex;
-    overflow-x: auto;
-    gap: 12px;
-    padding: 10px;
-    scroll-snap-type: x mandatory;
-  }
-
-  .card {
-    min-width: 160px;
-    max-width: 160px;
-    flex: 0 0 auto;
-    scroll-snap-align: center;
-  }
-
-  .card img {
-    width: 100%;
-    height: auto;
-  }
-
-  /* remove seta no mobile */
-  .arrow-btn {
-    display: none;
-  }
-
-}
+      .categorias img {
+        max-width: 260px;
+        width: 90%;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- MENU -->
   <header class="topbar">
     <nav class="menu">
       <a href="index.html">Home</a>
       <a href="categorias.html">Coleção</a>
-      <a href="sobre.html">sobre</a>
+      <a href="sobre.html">Sobre</a>
       <a href="#">Contato</a>
     </nav>
   </header>
 
-  <!-- BANNER PRINCIPAL -->
   <section class="hero"></section>
 
-  <!-- BANNER MEDIDAS -->
   <section class="banner-secundario">
-    <img src="Banner-Medidas.png">
+    <img src="Banner-Medidas.png" alt="Banner de medidas">
   </section>
 
-  <!-- DESTAQUE -->
   <section class="section">
     <h2>Destaque</h2>
 
@@ -282,19 +285,24 @@
       <div class="seta" onclick="voltar()">‹</div>
 
       <div class="produtos">
-        <div class="card"><img id="p1"></div>
-        <div class="card"><img id="p2"></div>
-        <div class="card"><img id="p3"></div>
+        <div class="card">
+          <img id="p1" alt="Produto 1">
+        </div>
+        <div class="card">
+          <img id="p2" alt="Produto 2">
+        </div>
+        <div class="card">
+          <img id="p3" alt="Produto 3">
+        </div>
       </div>
 
       <div class="seta" onclick="avancar()">›</div>
     </div>
   </section>
 
-  <!-- BOTÃO CATEGORIAS -->
   <section class="categorias">
     <a href="categorias.html">
-      <img src="Acesse-Categorias.png">
+      <img src="Acesse-Categorias.png" alt="Acesse categorias">
     </a>
   </section>
 
@@ -302,7 +310,6 @@
     © 2026 Heeeph
   </footer>
 
-  <!-- SCRIPT -->
   <script>
     const placas = [
       "Placa Skatista.png",
@@ -315,8 +322,8 @@
 
     function atualizar() {
       document.getElementById("p1").src = placas[i % placas.length];
-      document.getElementById("p2").src = placas[(i+1) % placas.length];
-      document.getElementById("p3").src = placas[(i+2) % placas.length];
+      document.getElementById("p2").src = placas[(i + 1) % placas.length];
+      document.getElementById("p3").src = placas[(i + 2) % placas.length];
     }
 
     function avancar() {
@@ -326,7 +333,7 @@
 
     function voltar() {
       i--;
-      if(i < 0) i = placas.length - 1;
+      if (i < 0) i = placas.length - 1;
       atualizar();
     }
 
@@ -335,8 +342,3 @@
 
 </body>
 </html>
-
-
-
-
-
