@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heeeph</title>
+  <title>Categorias | Heeeph</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -50,139 +50,72 @@
       font-weight: bold;
     }
 
-    .hero {
-      width: 100%;
-      max-width: 1350px;
-      height: 520px;
-      margin: 0 auto;
-      background: url('Banner Principal.png') center center / contain no-repeat;
-      background-color: #000;
-    }
-
-    .banner-secundario {
-      width: 100%;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      padding: 8px 0 0;
-    }
-
-    .banner-secundario img {
-      width: 100%;
-      max-width: 1350px;
-      height: auto;
-      max-height: 210px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .section {
-      padding: 44px 18px;
-      background: #000;
-      border-top: 2px solid #111;
-      border-bottom: 2px solid #111;
-    }
-
-    .section h3 {
+    .page-header {
       text-align: center;
-      font-size: clamp(34px, 5vw, 52px);
+      padding: 40px 20px 20px;
+      background: #000;
+    }
+
+    .page-header h1 {
+      font-size: clamp(40px, 7vw, 76px);
       color: #f0db35;
-      text-shadow: 0 0 10px rgba(240,219,53,.4);
-      margin-bottom: 28px;
+      text-shadow: 0 0 16px rgba(240, 219, 53, 0.45);
       font-family: Georgia, serif;
+      margin-bottom: 12px;
     }
 
-    .products-wrap {
-      max-width: 1100px;
+    .page-header p {
+      color: #ddd;
+      font-size: 18px;
+    }
+
+    .categorias-grid {
+      max-width: 1300px;
       margin: 0 auto;
+      padding: 30px 20px 60px;
       display: grid;
-      grid-template-columns: 90px 1fr 90px;
-      gap: 14px;
-      align-items: center;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
     }
 
-    .arrow-btn {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
+    .categoria-card {
+      display: block;
+      background: #000;
       border: 2px solid #f0d000;
-      background: linear-gradient(180deg, #111, #000);
-      color: #fff;
-      font-size: 42px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      box-shadow: 0 0 16px rgba(240,208,0,.25);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 0 20px rgba(240, 208, 0, 0.18);
       transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
     }
 
-    .arrow-btn:hover {
-      transform: scale(1.06);
+    .categoria-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 0 26px rgba(240, 208, 0, 0.35);
       border-color: #fff000;
-      box-shadow: 0 0 22px rgba(240,208,0,.45);
     }
 
-    .arrow-btn:active {
-      transform: scale(.96);
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-      align-items: stretch;
-    }
-
-    .card {
-      background: rgba(0,0,0,.55);
-      border: 2px solid #a56c15;
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
-      box-shadow: 0 0 18px rgba(255,166,0,.18);
-    }
-
-    .card img {
+    .categoria-card img {
       width: 100%;
-      aspect-ratio: 3 / 4;
-      object-fit: cover;
-      border: 2px solid #fff;
-      display: block;
-      border-radius: 4px;
-    }
-
-    .categorias-botao-area {
-      background: #000;
-      text-align: center;
-      padding: 28px 18px 50px;
-    }
-
-    .categorias-botao-link {
-      display: inline-block;
-    }
-
-    .categorias-botao-link img {
-      width: 100%;
-      max-width: 720px;
       height: auto;
       display: block;
-      margin: 0 auto;
+      border-radius: 14px;
     }
 
-    .whats-btn {
+    .voltar-area {
+      text-align: center;
+      padding: 0 20px 50px;
+    }
+
+    .voltar-btn {
       display: inline-block;
-      margin-top: 18px;
-      background: linear-gradient(180deg, #3cff3c, #008f20);
-      color: #fff;
-      border: 2px solid #d7ffd7;
-      padding: 10px 18px;
+      background: linear-gradient(180deg, #111, #000);
+      color: #fff000;
+      border: 2px solid #f0d000;
       border-radius: 999px;
+      padding: 12px 24px;
       font-weight: 900;
       text-transform: uppercase;
-      box-shadow: 0 0 14px rgba(0,255,76,.35);
+      box-shadow: 0 0 14px rgba(240,208,0,.25);
     }
 
     footer {
@@ -193,54 +126,31 @@
       border-top: 2px solid #1b1b1b;
     }
 
-    @media (max-width: 900px) {
-      .products-wrap {
-        grid-template-columns: 1fr;
-      }
-
-      .products {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .arrow-btn {
-        width: 64px;
-        height: 64px;
-        font-size: 36px;
-      }
-
-      .hero {
-        height: 380px;
-      }
-
-      .banner-secundario img {
-        max-height: 160px;
-      }
-
-      .categorias-botao-link img {
-        max-width: 560px;
+    @media (max-width: 1100px) {
+      .categorias-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 800px) {
+      .categorias-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
       .menu {
         font-size: 12px;
         gap: 10px;
       }
 
-      .products {
+      .categorias-grid {
         grid-template-columns: 1fr;
+        gap: 18px;
       }
 
-      .hero {
-        height: 250px;
-      }
-
-      .banner-secundario img {
-        max-height: 120px;
-      }
-
-      .categorias-botao-link img {
-        max-width: 95%;
+      .page-header p {
+        font-size: 16px;
       }
     }
   </style>
@@ -250,87 +160,74 @@
     <nav class="menu">
       <a href="index.html#home">Home</a>
       <a href="categorias.html">Coleção</a>
-      <a href="#sobre">O que é Heeeph?</a>
-      <a href="#fotos">Fotos Reais</a>
-      <a href="#contato">Contatos</a>
+      <a href="index.html#sobre">O que é Heeeph?</a>
+      <a href="index.html#fotos">Fotos Reais</a>
+      <a href="index.html#contato">Contatos</a>
       <a class="cart" href="#">🛒</a>
     </nav>
   </header>
 
-  <section class="hero" id="home"></section>
-
-  <section class="banner-secundario">
-    <img src="Banner-Medidas.png" alt="Medidas das placas">
+  <section class="page-header">
+    <h1>Categorias</h1>
+    <p>Escolha uma categoria para ver as placas</p>
   </section>
 
-  <section class="section">
-    <h3>Destaque</h3>
-    <div class="products-wrap">
-      <button class="arrow-btn" id="prevBtn" aria-label="Mostrar placas anteriores">‹</button>
-
-      <div class="products">
-        <article class="card">
-          <img id="produto1-img" src="" alt="Placa decorativa 1">
-        </article>
-
-        <article class="card">
-          <img id="produto2-img" src="" alt="Placa decorativa 2">
-        </article>
-
-        <article class="card">
-          <img id="produto3-img" src="" alt="Placa decorativa 3">
-        </article>
-      </div>
-
-      <button class="arrow-btn" id="nextBtn" aria-label="Mostrar próximas placas">›</button>
-    </div>
-  </section>
-
-  <section class="categorias-botao-area">
-    <a class="categorias-botao-link" href="categorias.html">
-      <img src="Acesse-Categorias.png" alt="Acesse todas as categorias">
+  <section class="categorias-grid">
+    <a class="categoria-card" href="bands.html">
+      <img src="Bands.png" alt="Bands">
     </a>
-    <br>
-    <a class="whats-btn" href="#contato">Personalize pelo WhatsApp</a>
+
+    <a class="categoria-card" href="drinks.html">
+      <img src="Drinks.png" alt="Drinks">
+    </a>
+
+    <a class="categoria-card" href="real-photos.html">
+      <img src="Real Photos.png" alt="Real Photos">
+    </a>
+
+    <a class="categoria-card" href="games.html">
+      <img src="Games.png" alt="Games">
+    </a>
+
+    <a class="categoria-card" href="garage.html">
+      <img src="Garage.png" alt="Garage">
+    </a>
+
+    <a class="categoria-card" href="home-phrases.html">
+      <img src="Home-Phrases.png" alt="Home Phrases">
+    </a>
+
+    <a class="categoria-card" href="infantil.html">
+      <img src="Infantil.png" alt="Infantil">
+    </a>
+
+    <a class="categoria-card" href="motos.html">
+      <img src="Motos.png" alt="Motos">
+    </a>
+
+    <a class="categoria-card" href="musica.html">
+      <img src="Musica.png" alt="Música">
+    </a>
+
+    <a class="categoria-card" href="rpg.html">
+      <img src="RPG.png" alt="RPG">
+    </a>
+
+    <a class="categoria-card" href="street.html">
+      <img src="Street.png" alt="Street">
+    </a>
+
+    <a class="categoria-card" href="trip.html">
+      <img src="TRIP.png" alt="Trip">
+    </a>
   </section>
 
-  <footer id="contato">
+  <div class="voltar-area">
+    <a class="voltar-btn" href="index.html">Voltar para a Home</a>
+  </div>
+
+  <footer>
     © 2026 Heeeph — Placas decorativas com personalidade.
   </footer>
-
-  <script>
-    const placas = [
-      { imagem: "Placa Skatista.png" },
-      { imagem: "Placa roblox.png" },
-      { imagem: "Placas Naipes.png" },
-      { imagem: "Placa GTA.png" }
-    ];
-
-    let indiceAtual = 0;
-
-    function atualizarDestaques() {
-      const total = placas.length;
-
-      const p1 = placas[indiceAtual % total];
-      const p2 = placas[(indiceAtual + 1) % total];
-      const p3 = placas[(indiceAtual + 2) % total];
-
-      document.getElementById("produto1-img").src = p1.imagem;
-      document.getElementById("produto2-img").src = p2.imagem;
-      document.getElementById("produto3-img").src = p3.imagem;
-    }
-
-    document.getElementById("prevBtn").addEventListener("click", function () {
-      indiceAtual = (indiceAtual - 1 + placas.length) % placas.length;
-      atualizarDestaques();
-    });
-
-    document.getElementById("nextBtn").addEventListener("click", function () {
-      indiceAtual = (indiceAtual + 1) % placas.length;
-      atualizarDestaques();
-    });
-
-    atualizarDestaques();
-  </script>
 </body>
 </html>
