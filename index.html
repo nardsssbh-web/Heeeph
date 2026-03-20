@@ -51,7 +51,10 @@
     }
 
     .hero {
+      width: 100%;
+      max-width: 1350px;
       height: 520px;
+      margin: 0 auto;
       background: url('Banner Principal.png') center center / contain no-repeat;
       background-color: #000;
     }
@@ -59,70 +62,18 @@
     .banner-secundario {
       width: 100%;
       background: #000;
+      display: flex;
+      justify-content: center;
+      padding: 8px 0 0;
     }
 
     .banner-secundario img {
       width: 100%;
+      max-width: 1350px;
       height: auto;
+      max-height: 210px;
+      object-fit: contain;
       display: block;
-    }
-
-    .info-band {
-      background: linear-gradient(180deg, #111, #000);
-      border-top: 3px solid #e2c027;
-      border-bottom: 3px solid #e2c027;
-      padding: 18px 20px;
-    }
-
-    .info-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1.3fr 1fr;
-      gap: 18px;
-      align-items: center;
-    }
-
-    .size-box {
-      color: #ffd400;
-      font-weight: 900;
-      font-size: 20px;
-      line-height: 1.15;
-    }
-
-    .size-box small {
-      display: block;
-      color: #fff;
-      font-size: 14px;
-      margin-top: 6px;
-      font-weight: 400;
-    }
-
-    .center-copy h2 {
-      font-size: 34px;
-      line-height: 1;
-      color: #fff;
-      margin-bottom: 8px;
-      font-family: Georgia, serif;
-    }
-
-    .center-copy p {
-      font-size: 16px;
-      color: #f2f2f2;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(120px, 1fr));
-      gap: 8px 14px;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    .features span::before {
-      content: '★';
-      color: #f2c500;
-      margin-right: 6px;
     }
 
     .section {
@@ -203,51 +154,27 @@
       border-radius: 4px;
     }
 
-    .price {
-      margin-top: 8px;
-      font-size: 15px;
-      color: #e6e6e6;
-      font-weight: bold;
-    }
-
-    .categories-area {
+    .categorias-botao-area {
+      background: #000;
       text-align: center;
-      padding-bottom: 80px;
+      padding: 28px 18px 50px;
     }
 
-    .cat-icons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .cat-badge {
-      background: radial-gradient(circle at top, #7f00ff, #1b0035 70%);
-      color: #ffd500;
-      border: 2px solid #ffcc00;
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-size: 13px;
-      font-weight: 800;
-      box-shadow: 0 0 10px rgba(255, 213, 0, .3);
-    }
-
-    .categorias-botao {
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    .categorias-botao img {
-      max-width: 100%;
-      height: auto;
+    .categorias-botao-link {
       display: inline-block;
+    }
+
+    .categorias-botao-link img {
+      width: 100%;
+      max-width: 720px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
     }
 
     .whats-btn {
       display: inline-block;
-      margin-top: 14px;
+      margin-top: 18px;
       background: linear-gradient(180deg, #3cff3c, #008f20);
       color: #fff;
       border: 2px solid #d7ffd7;
@@ -267,15 +194,6 @@
     }
 
     @media (max-width: 900px) {
-      .info-inner {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .features {
-        justify-items: center;
-      }
-
       .products-wrap {
         grid-template-columns: 1fr;
       }
@@ -288,6 +206,18 @@
         width: 64px;
         height: 64px;
         font-size: 36px;
+      }
+
+      .hero {
+        height: 380px;
+      }
+
+      .banner-secundario img {
+        max-height: 160px;
+      }
+
+      .categorias-botao-link img {
+        max-width: 560px;
       }
     }
 
@@ -302,7 +232,15 @@
       }
 
       .hero {
-        height: 260px;
+        height: 250px;
+      }
+
+      .banner-secundario img {
+        max-height: 120px;
+      }
+
+      .categorias-botao-link img {
+        max-width: 95%;
       }
     }
   </style>
@@ -310,8 +248,8 @@
 <body>
   <header class="topbar">
     <nav class="menu">
-      <a href="#home">Home</a>
-      <a href="#colecao">Coleção</a>
+      <a href="index.html#home">Home</a>
+      <a href="categorias.html">Coleção</a>
       <a href="#sobre">O que é Heeeph?</a>
       <a href="#fotos">Fotos Reais</a>
       <a href="#contato">Contatos</a>
@@ -324,7 +262,6 @@
   <section class="banner-secundario">
     <img src="Banner-Medidas.png" alt="Medidas das placas">
   </section>
-
 
   <section class="section">
     <h3>Destaque</h3>
@@ -349,22 +286,11 @@
     </div>
   </section>
 
-  <section class="section categories-area">
-    <h3>Categorias</h3>
-
-    <div class="cat-icons">
-      <span class="cat-badge">Games</span>
-      <span class="cat-badge">Novidades</span>
-      <span class="cat-badge">Street</span>
-      <span class="cat-badge">Música</span>
-    </div>
-
-    <div class="categorias-botao">
+  <section class="categorias-botao-area">
+    <a class="categorias-botao-link" href="categorias.html">
       <img src="Acesse-Categorias.png" alt="Acesse todas as categorias">
-    </div>
-
+    </a>
     <br>
-
     <a class="whats-btn" href="#contato">Personalize pelo WhatsApp</a>
   </section>
 
