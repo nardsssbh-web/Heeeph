@@ -19,7 +19,6 @@
       color: inherit;
     }
 
-    /* MENU */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
@@ -42,7 +41,6 @@
       color: #f0d000;
     }
 
-    /* BANNER PRINCIPAL */
     .hero {
       width: 100%;
       max-width: 1350px;
@@ -54,7 +52,6 @@
       display: block;
     }
 
-    /* BANNER MEDIDAS */
     .banner-secundario {
       display: flex;
       justify-content: center;
@@ -66,12 +63,13 @@
       max-width: 1350px;
       max-height: 150px;
       object-fit: contain;
+      display: block;
     }
 
-    /* DESTAQUE */
     .section {
       padding: 40px 20px;
       text-align: center;
+      background: #000;
     }
 
     .section h2 {
@@ -80,23 +78,49 @@
       margin-bottom: 30px;
     }
 
-    .carousel {
+    .destaque-carousel {
+      max-width: 1000px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 80px 1fr 80px;
+      align-items: center;
+    }
+
+    .seta {
+      font-size: 40px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .carousel-palco {
       display: flex;
       justify-content: center;
+      align-items: center;
       gap: 20px;
     }
 
-    .card img {
+    .mini-card {
+      transition: 0.3s;
+      opacity: 0.6;
+    }
+
+    .mini-card img {
       width: 180px;
       border: 2px solid #fff;
       border-radius: 8px;
+      display: block;
+    }
+
+    .centro {
+      transform: scale(1.2);
+      opacity: 1;
+      z-index: 2;
     }
 
     .centro img {
       width: 260px;
     }
 
-    /* BOTÃO CATEGORIAS */
     .categorias {
       text-align: center;
       padding: 30px;
@@ -105,18 +129,20 @@
     .categorias img {
       max-width: 400px;
       width: 100%;
+      display: inline-block;
     }
 
-    /* WHATSAPP */
     .zap {
       position: fixed;
       bottom: 20px;
       right: 20px;
       width: 80px;
+      z-index: 999;
     }
 
     .zap img {
       width: 100%;
+      display: block;
     }
 
     footer {
@@ -126,22 +152,78 @@
       border-top: 1px solid #111;
     }
 
+    @media (max-width: 900px) {
+      .hero img {
+        max-height: none;
+      }
+
+      .banner-secundario img {
+        max-height: 110px;
+      }
+
+      .destaque-carousel {
+        grid-template-columns: 50px 1fr 50px;
+      }
+
+      .mini-card img {
+        width: 130px;
+      }
+
+      .centro img {
+        width: 190px;
+      }
+
+      .categorias img {
+        max-width: 340px;
+      }
+
+      .zap {
+        width: 70px;
+      }
+    }
+
     @media (max-width: 600px) {
-      .carousel {
-        flex-direction: row;
+      .menu {
+        font-size: 12px;
+        gap: 8px;
+      }
+
+      .banner-secundario img {
+        max-height: 90px;
+      }
+
+      .section h2 {
+        font-size: 30px;
+      }
+
+      .destaque-carousel {
+        grid-template-columns: 1fr;
+      }
+
+      .seta {
+        display: none;
+      }
+
+      .carousel-palco {
         gap: 10px;
       }
 
-      .card img {
-        width: 100px;
+      .mini-card img {
+        width: 90px;
       }
 
       .centro img {
         width: 140px;
       }
 
+      .categorias img {
+        max-width: 260px;
+      }
+
       .zap {
-        width: 60px;
+        width: 58px;
+        bottom: 15px;
+        right: 15px;
       }
     }
   </style>
@@ -149,49 +231,50 @@
 
 <body>
 
-  <!-- MENU -->
   <header class="topbar">
     <nav class="menu">
       <a href="index.html">Home</a>
-      <a href="HTML/categorias.html">Coleção</a>
-      <a href="HTML/sobre.html">Sobre</a>
+      <a href="categorias.html">Coleção</a>
+      <a href="sobre.html">Sobre</a>
       <a href="#">Contato</a>
     </nav>
   </header>
 
-  <!-- BANNER PRINCIPAL -->
-<section class="hero">
-  <img src="Banner Principal.png" alt="Banner Principal">
-</section>
-
-  <!-- BANNER MEDIDAS -->
-  <section class="banner-secundario">
-    <img src="banner/Banner-Medidas.png" alt="Banner Medidas">
+  <section class="hero">
+    <img src="/banner/banner-principal.png" alt="Banner Principal">
   </section>
 
-  <!-- DESTAQUE -->
+  <section class="banner-secundario">
+    <img src="/banner/Banner-Medidas.png" alt="Banner Medidas">
+  </section>
+
   <section class="section">
     <h2>Destaque</h2>
 
-    <div class="carousel">
-      <div class="card">
-        <img src="placas/Placa Skatista.png">
+    <div class="destaque-carousel">
+      <div class="seta" onclick="voltar()">‹</div>
+
+      <div class="carousel-palco">
+        <div class="mini-card">
+          <img id="img-esquerda" alt="Placa esquerda">
+        </div>
+
+        <div class="mini-card centro">
+          <img id="img-centro" alt="Placa destaque">
+        </div>
+
+        <div class="mini-card">
+          <img id="img-direita" alt="Placa direita">
+        </div>
       </div>
 
-      <div class="card centro">
-        <img src="placas/Placa GTA.png">
-      </div>
-
-      <div class="card">
-        <img src="placas/Placa roblox.png">
-      </div>
+      <div class="seta" onclick="avancar()">›</div>
     </div>
   </section>
 
-  <!-- BOTÃO CATEGORIAS -->
   <section class="categorias">
-    <a href="HTML/categorias.html">
-      <img src="botoes/Acesse-Categorias.png">
+    <a href="categorias.html">
+      <img src="/botoes/Acesse-Categorias.png" alt="Acesse Categorias">
     </a>
   </section>
 
@@ -199,9 +282,39 @@
     © 2026 Heeeph
   </footer>
 
-  <!-- WHATSAPP -->
+  <script>
+    const placas = [
+      "/placas/Placa Skatista.png",
+      "/placas/Placa roblox.png",
+      "/placas/Placas Naipes.png",
+      "/placas/Placa GTA.png"
+    ];
+
+    let i = 0;
+
+    function atualizar() {
+      document.getElementById("img-centro").src = placas[i];
+      document.getElementById("img-esquerda").src =
+        placas[(i - 1 + placas.length) % placas.length];
+      document.getElementById("img-direita").src =
+        placas[(i + 1) % placas.length];
+    }
+
+    function avancar() {
+      i = (i + 1) % placas.length;
+      atualizar();
+    }
+
+    function voltar() {
+      i = (i - 1 + placas.length) % placas.length;
+      atualizar();
+    }
+
+    atualizar();
+  </script>
+
   <a href="https://wa.me/5511998302901" target="_blank" class="zap">
-    <img src="botoes/Whatsapp.png">
+    <img src="/botoes/Whatsapp.png" alt="WhatsApp">
   </a>
 
 </body>
