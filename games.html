@@ -1,1 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEEEPH | Games</title>
+  <link rel="stylesheet" href="style.css">
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #e6dfd3;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111;
+    }
+
+    header {
+      background-color: #111;
+      padding: 18px 20px;
+      text-align: center;
+      border-bottom: 3px solid #c9a227;
+    }
+
+    header h1 {
+      color: #f0c64c;
+      font-size: 28px;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .topo-categoria {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+
+    .topo-categoria h2 {
+      font-size: 34px;
+      margin-bottom: 10px;
+      color: #111;
+    }
+
+    .topo-categoria p {
+      font-size: 16px;
+      color: #333;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    .galeria {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    .grid-placas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
+    }
+
+    .placa {
+      background-color: #f8f4ec;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-align: center;
+      padding-bottom: 14px;
+    }
+
+    .placa:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .placa img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+      background-color: #d8d1c6;
+    }
+
+    .placa h3 {
+      font-size: 17px;
+      margin: 14px 10px 6px;
+      color: #111;
+    }
+
+    .placa p {
+      font-size: 14px;
+      color: #555;
+      padding: 0 12px;
+      line-height: 1.4;
+    }
+
+    .voltar-home {
+      text-align: center;
+      padding: 0 20px 50px;
+    }
+
+    .voltar-home a {
+      display: inline-block;
+      background-color: #111;
+      color: #f0c64c;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    .voltar-home a:hover {
+      background-color: #222;
+      transform: scale(1.03);
+    }
+
+    footer {
+      background-color: #111;
+      color: #d8c27a;
+      text-align: center;
+      padding: 18px 20px;
+      font-size: 14px;
+      border-top: 3px solid #c9a227;
+    }
+
+    @media (max-width: 768px) {
+      .topo-categoria h2 {
+        font-size: 28px;
+      }
+
+      .placa img {
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>HEEEPH</h1>
+  </header>
+
+  <section class="topo-categoria">
+    <h2>Games</h2>
+    <p>
+      Placas decorativas inspiradas no universo gamer, com estilo, personalidade e aquele clima que transforma qualquer cantinho em território de jogo.
+    </p>
+  </section>
+
+  <section class="galeria">
+    <div class="grid-placas">
+
+      <div class="placa">
+        <img src="placas/games/game1.png" alt="Game 1">
+        <h3>Placa Gamer 1</h3>
+        <p>Uma peça com presença para quem leva o setup a sério.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game2.png" alt="Game 2">
+        <h3>Placa Gamer 2</h3>
+        <p>Estilo forte para decorar quarto, escritório ou espaço gamer.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game3.png" alt="Game 3">
+        <h3>Placa Gamer 3</h3>
+        <p>Visual marcante para combinar com luz, tela e atitude.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game4.png" alt="Game 4">
+        <h3>Placa Gamer 4</h3>
+        <p>Decoração feita para quem vive entre partidas e vitórias.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game5.png" alt="Game 5">
+        <h3>Placa Gamer 5</h3>
+        <p>Mais personalidade na parede, mais alma no ambiente.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game6.png" alt="Game 6">
+        <h3>Placa Gamer 6</h3>
+        <p>Perfeita para criar um clima gamer forte e autêntico.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game7.png" alt="Game 7">
+        <h3>Placa Gamer 7</h3>
+        <p>Peça ideal para compor uma coleção cheia de estilo.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game8.png" alt="Game 8">
+        <h3>Placa Gamer 8</h3>
+        <p>Um toque de jogo, humor e identidade para sua parede.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game9.png" alt="Game 9">
+        <h3>Placa Gamer 9</h3>
+        <p>Visual moderno e direto, como deve ser no mundo gamer.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game10.png" alt="Game 10">
+        <h3>Placa Gamer 10</h3>
+        <p>Para quem quer mais que decoração: quer presença.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game11.png" alt="Game 11">
+        <h3>Placa Gamer 11</h3>
+        <p>Combina com ambientes criativos e setups cheios de atitude.</p>
+      </div>
+
+      <div class="placa">
+        <img src="placas/games/game12.png" alt="Game 12">
+        <h3>Placa Gamer 12</h3>
+        <p>Feita para destacar o espaço com personalidade gamer.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="voltar-home">
+    <a href="index.html">← Voltar para a Home</a>
+  </div>
+
+  <footer>
+    <p>© 2026 HEEEPH - Placas Decorativas</p>
+  </footer>
+
+</body>
+</html>
