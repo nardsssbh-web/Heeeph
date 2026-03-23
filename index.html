@@ -28,7 +28,6 @@
       max-width: 100%;
     }
 
-    /* TOPO FIXO */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
@@ -59,25 +58,28 @@
     /* BANNER PRINCIPAL */
     .hero {
       width: 100%;
-      max-width: 1350px;
+      max-width: 1180px;
       margin: 0 auto;
+      padding-top: 8px;
     }
 
     .hero img {
       width: 100%;
       height: auto;
+      margin: 0 auto;
     }
 
     /* BANNER MEDIDAS */
     .banner-secundario {
       width: 100%;
-      max-width: 1350px;
-      margin: 8px auto 0;
+      max-width: 1180px;
+      margin: 12px auto 0;
     }
 
     .banner-secundario img {
       width: 100%;
       height: auto;
+      margin: 0 auto;
     }
 
     /* DESTAQUE */
@@ -94,7 +96,7 @@
     }
 
     .destaque-carousel {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: 140px 1fr 140px;
@@ -129,6 +131,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      background: #000;
     }
 
     .mini-card img {
@@ -150,6 +153,8 @@
     .centro img {
       width: 220px;
       height: 300px;
+      object-fit: contain;
+      background: #000;
     }
 
     /* BOTÃO CATEGORIAS */
@@ -159,7 +164,7 @@
     }
 
     .categorias img {
-      max-width: 500px;
+      max-width: 420px;
       width: 100%;
       margin: 0 auto;
     }
@@ -186,8 +191,12 @@
       margin-top: 10px;
     }
 
-    /* RESPONSIVO */
     @media (max-width: 900px) {
+      .hero,
+      .banner-secundario {
+        max-width: 92%;
+      }
+
       .destaque-carousel {
         grid-template-columns: 90px 1fr 90px;
       }
@@ -288,15 +297,15 @@
 
       <div class="carousel-palco">
         <div class="mini-card">
-          <img id="img-esquerda" alt="Placa esquerda" draggable="false">
+          <img id="img-esquerda" src="placas/bandas/bls.png" alt="Placa esquerda" draggable="false">
         </div>
 
         <div class="mini-card centro">
-          <img id="img-centro" alt="Placa destaque" draggable="false">
+          <img id="img-centro" src="placas/bandas/bs-master.png" alt="Placa destaque" draggable="false">
         </div>
 
         <div class="mini-card">
-          <img id="img-direita" alt="Placa direita" draggable="false">
+          <img id="img-direita" src="placas/bandas/bs-hell.png" alt="Placa direita" draggable="false">
         </div>
       </div>
 
@@ -306,7 +315,7 @@
 
   <section class="categorias">
     <a href="categorias.html">
-      <img src="botoes/buscar-produto.png" alt="Acesso a todas categorias">
+      <img src="botoes/buscar-produto.png" alt="Categorias">
     </a>
   </section>
 
