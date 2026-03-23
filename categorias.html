@@ -1,1 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categorias - HEEEPH</title>
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --preto: #0b0b0b;
+      --preto-2: #171717;
+      --amarelo: #d8a12e;
+      --amarelo-claro: #f0cd63;
+      --bege: #efe7d9;
+      --branco: #ffffff;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bege);
+      color: #111;
+      overflow-x: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1200px, 94%);
+      margin: 0 auto;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      background: #000;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.28);
+    }
+
+    .header-container {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      color: #fff;
+      font-size: 2.1rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      white-space: nowrap;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .menu a {
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      transition: 0.2s;
+    }
+
+    .menu a:hover,
+    .menu a.ativo {
+      color: var(--amarelo-claro);
+    }
+
+    .cart-icon {
+      color: #fff;
+      font-size: 1.25rem;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .hero-categorias {
+      background: linear-gradient(to bottom, #151515 0%, #1b1b1b 100%);
+      padding: 38px 0 30px;
+      text-align: center;
+    }
+
+    .hero-categorias h1 {
+      color: #fff;
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .hero-categorias p {
+      color: #ddd;
+      font-size: 1.05rem;
+      max-width: 820px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .secao-botoes {
+      padding: 48px 0 70px;
+      background: var(--bege);
+    }
+
+    .grid-categorias {
+      width: min(1120px, 94%);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .grid-categorias a {
+      min-height: 110px;
+      background: rgba(255,255,255,0.78);
+      border-radius: 18px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .grid-categorias a:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    }
+
+    .grid-categorias img {
+      max-height: 72px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .rodape-atalho {
+      text-align: center;
+      padding-top: 35px;
+    }
+
+    .rodape-atalho a {
+      display: inline-block;
+      background: #111;
+      color: var(--amarelo-claro);
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: 0.2s ease;
+    }
+
+    .rodape-atalho a:hover {
+      transform: translateY(-2px);
+    }
+
+    .footer {
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 22px 14px;
+      font-size: 0.95rem;
+    }
+
+    .whatsapp-fixo {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 3000;
+      width: 240px;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .whatsapp-fixo img {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.28));
+    }
+
+    @media (max-width: 1024px) {
+      .header-container {
+        flex-direction: column;
+        padding: 14px 0;
+      }
+
+      .grid-categorias {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .whatsapp-fixo {
+        width: 180px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .menu {
+        gap: 14px;
+      }
+
+      .menu a {
+        font-size: 0.82rem;
+      }
+
+      .grid-categorias {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-categorias h1 {
+        font-size: 2rem;
+      }
+
+      .whatsapp-fixo {
+        width: 130px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .logo {
+        font-size: 1.6rem;
+      }
+
+      .grid-categorias {
+        grid-template-columns: 1fr;
+      }
+
+      .whatsapp-fixo {
+        width: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-container">
+      <div class="logo">HEEEPH</div>
+
+      <nav class="menu">
+        <a href="index.html">HOME</a>
+        <a href="categorias.html" class="ativo">COLEÇÃO</a>
+        <a href="sobre.html">O QUE É HEEEPH?</a>
+        <a href="fotos-reais.html">FOTOS REAIS</a>
+        <a href="https://wa.me/5511998302901" target="_blank">CONTATOS</a>
+      </nav>
+
+      <div class="cart-icon">🛒</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-categorias">
+      <div class="container">
+        <h1>Galeria de Categorias</h1>
+        <p>
+          Escolha o tema e entre direto na coleção. Aqui a parede ganha voz:
+          rock, garagem, moto, street, trip, música, infantil, bebidas e muito mais.
+        </p>
+      </div>
+    </section>
+
+    <section class="secao-botoes">
+      <div class="grid-categorias">
+        <a href="bandas.html"><img src="botoes/bandas.png" alt="Bandas"></a>
+        <a href="bebidas.html"><img src="botoes/bebidas.png" alt="Bebidas"></a>
+        <a href="fotos-reais.html"><img src="botoes/fotos-reais.png" alt="Fotos Reais"></a>
+        <a href="games.html"><img src="botoes/games.png" alt="Games"></a>
+
+        <a href="garage.html"><img src="botoes/garage.png" alt="Garage"></a>
+        <a href="home-frases.html"><img src="botoes/home-frases.png" alt="Home Frases"></a>
+        <a href="infantil.html"><img src="botoes/infantil.png" alt="Infantil"></a>
+        <a href="motos.html"><img src="botoes/motos.png" alt="Motos"></a>
+
+        <a href="musica.html"><img src="botoes/musica.png" alt="Música"></a>
+        <a href="rpg.html"><img src="botoes/rpg.png" alt="RPG"></a>
+        <a href="street.html"><img src="botoes/sreet.png" alt="Street"></a>
+        <a href="trip.html"><img src="botoes/trip.png" alt="Trip"></a>
+      </div>
+
+      <div class="rodape-atalho">
+        <a href="index.html">Voltar para a Home</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 HEEEPH - Placas Decorativas</p>
+  </footer>
+
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" aria-label="WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp">
+  </a>
+
+</body>
+</html>
