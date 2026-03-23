@@ -1,372 +1,89 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heeeph</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #000;
-      color: #fff;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    img {
-      display: block;
-      max-width: 100%;
-    }
-
-    .topbar {
-      background: #050505;
-      border-bottom: 2px solid #1a1a1a;
-      padding: 12px 16px;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-    }
-
-    .menu {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 18px;
-      flex-wrap: wrap;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-
-    .menu a {
-      transition: 0.2s ease;
-    }
-
-    .menu a:hover {
-      color: #f0d000;
-    }
-
-    /* BANNER PRINCIPAL */
-    .hero {
-      width: 1000%;
-      max-width: 1180px;
-      margin: 0 auto;
-      padding-top: 8px;
-    }
-
-    .hero img {
-      width: 50%;
-      height: auto;
-      margin: 0 auto;
-    }
-
-    /* BANNER MEDIDAS */
-    .banner-secundario {
-      width: 100%;
-      max-width: 1180px;
-      margin: 12px auto 0;
-    }
-
-    .banner-secundario img {
-      width: 100%;
-      height: auto;
-      margin: 0 auto;
-    }
-
-    /* DESTAQUE */
-    .section {
-      padding: 40px 20px;
-      text-align: center;
-      background: #000;
-    }
-
-    .section h2 {
-      font-size: 38px;
-      color: #f0db35;
-      margin-bottom: 30px;
-    }
-
-    .destaque-carousel {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 140px 1fr 140px;
-      align-items: center;
-    }
-
-    .seta {
-      font-size: 90px;
-      line-height: 1;
-      cursor: pointer;
-      user-select: none;
-      color: #f0d000;
-      text-align: center;
-      transition: 0.2s ease;
-    }
-
-    .seta:hover {
-      transform: scale(1.12);
-    }
-
-    .carousel-palco {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      min-height: 340px;
-    }
-
-    .mini-card {
-      transition: 0.3s ease;
-      opacity: 0.6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #000;
-    }
-
-    .mini-card img {
-      width: 170px;
-      height: 240px;
-      object-fit: contain;
-      border: 2px solid #fff;
-      border-radius: 10px;
-      background: #000;
-      padding: 4px;
-    }
-
-    .centro {
-      transform: scale(1.15);
-      opacity: 1;
-      z-index: 2;
-    }
-
-    .centro img {
-      width: 220px;
-      height: 300px;
-      object-fit: contain;
-      background: #000;
-    }
-
-    /* BOTÃO CATEGORIAS */
-    .categorias {
-      text-align: center;
-      padding: 20px 20px 40px;
-    }
-
-    .categorias img {
-      max-width: 420px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    /* WHATSAPP */
-    .zap {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 110px;
-      z-index: 999;
-    }
-
-    .zap img {
-      width: 100%;
-      height: auto;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #aaa;
-      border-top: 1px solid #111;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 900px) {
-      .hero,
-      .banner-secundario {
-        max-width: 92%;
-      }
-
-      .destaque-carousel {
-        grid-template-columns: 90px 1fr 90px;
-      }
-
-      .seta {
-        font-size: 60px;
-      }
-
-      .mini-card img {
-        width: 120px;
-        height: 180px;
-      }
-
-      .centro img {
-        width: 170px;
-        height: 240px;
-      }
-
-      .carousel-palco {
-        min-height: 260px;
-      }
-
-      .zap {
-        width: 85px;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .menu {
-        font-size: 12px;
-        gap: 10px;
-      }
-
-      .section h2 {
-        font-size: 30px;
-      }
-
-      .destaque-carousel {
-        grid-template-columns: 1fr;
-      }
-
-      .seta {
-        display: none;
-      }
-
-      .carousel-palco {
-        gap: 10px;
-        min-height: auto;
-      }
-
-      .mini-card img {
-        width: 85px;
-        height: 130px;
-      }
-
-      .centro img {
-        width: 120px;
-        height: 180px;
-      }
-
-      .categorias img {
-        max-width: 280px;
-      }
-
-      .zap {
-        width: 120px;
-        bottom: 15px;
-        right: 15px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEEEPH - Placas Decorativas</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
-  <header class="topbar">
-    <nav class="menu">
-      <a href="index.html">Home</a>
-      <a href="categorias.html">Coleção</a>
-      <a href="sobre.html">Sobre</a>
-      <a href="https://wa.me/5511998302901" target="_blank">Contato</a>
-    </nav>
-  </header>
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">HEEEPH</h1>
 
-  <section class="hero">
-    <img src="banner/banner-principal.png" alt="Banner Principal">
-  </section>
+            <nav class="menu">
+                <a href="#sobre">Sobre</a>
+                <a href="#colecao">Coleção</a>
+            </nav>
+        </div>
+    </header>
 
-  <section class="banner-secundario">
-    <img src="banner/banner-medidas.png" alt="Banner Medidas">
-  </section>
+    <!-- WHATSAPP FIXO -->
+    <a href="https://wa.me/55SEUNUMERO" class="whatsapp" target="_blank">WhatsApp</a>
 
-  <section class="section">
-    <h2>Destaque</h2>
+    <!-- BANNER PRINCIPAL -->
+    <section class="banner-principal">
+        <img src="Heeeph/banner/banner-principal.png" alt="Banner principal HEEEPH">
+    </section>
 
-    <div class="destaque-carousel">
-      <div class="seta" onclick="voltar()">❮</div>
+    <!-- BANNER MEDIDAS -->
+    <section class="banner-secundario">
+        <img src="Heeeph/banner/banner-medidas.png" alt="Banner com medidas das placas">
+    </section>
 
-      <div class="carousel-palco">
-        <div class="mini-card">
-          <img id="img-esquerda" src="placas/bandas/bls.png" alt="Placa esquerda" draggable="false">
+    <!-- DESTAQUES -->
+    <section class="destaques" id="colecao">
+        <h2>Destaques</h2>
+
+        <div class="carrossel">
+            <div class="item">
+                <img src="Heeeph/placas/skatista.png" alt="Placa skatista">
+            </div>
+
+            <div class="item">
+                <img src="Heeeph/placas/naipes.png" alt="Placa naipes">
+            </div>
         </div>
 
-        <div class="mini-card centro">
-          <img id="img-centro" src="placas/bandas/bs-master.png" alt="Placa destaque" draggable="false">
+        <div class="btn-categorias">
+            <a href="#categorias">TODAS AS CATEGORIAS</a>
         </div>
+    </section>
 
-        <div class="mini-card">
-          <img id="img-direita" src="placas/bandas/bs-hell.png" alt="Placa direita" draggable="false">
+    <!-- SOBRE -->
+    <section id="sobre" class="sobre">
+        <div class="texto">
+            <h2>Sobre a HEEEPH</h2>
+            <p>
+                A HEEEPH reúne placas decorativas com atitude, personalidade e estilo.
+                Arte pra quem curte ambiente com identidade, do rock ao street, do clássico ao alternativo.
+            </p>
         </div>
-      </div>
+    </section>
 
-      <div class="seta" onclick="avancar()">❯</div>
-    </div>
-  </section>
+    <!-- CATEGORIAS -->
+    <section id="categorias" class="categorias">
+        <h2>Categorias</h2>
 
-  <section class="categorias">
-    <a href="categorias.html">
-      <img src="botoes/buscar-produto.png" alt="Categorias">
-    </a>
-  </section>
+        <div class="grid-categorias">
+            <div class="card-categoria">Bandas</div>
+            <div class="card-categoria">Garage</div>
+            <div class="card-categoria">Música</div>
+            <div class="card-categoria">Games</div>
+            <div class="card-categoria">Infantil</div>
+            <div class="card-categoria">Motos</div>
+            <div class="card-categoria">Trip</div>
+            <div class="card-categoria">RPG</div>
+            <div class="card-categoria">Street</div>
+        </div>
+    </section>
 
-  <footer>
-    © 2026 Heeeph
-  </footer>
-
-  <script>
-    const placas = [
-      "placas/bandas/Angra.png",
-      "placas/bandas/accept.png",
-      "placas/bandas/acdc1.png",
-      "placas/bandas/arp.png",
-      "placas/bandas/bls.png",
-      "placas/bandas/bs-caravan.png",
-      "placas/bandas/bs-hell.png",
-      "placas/bandas/bs-master.png",
-      "placas/bandas/cannibal.png",
-      "placas/bandas/cannibal1.png"
-    ];
-
-    let i = 0;
-
-    function atualizar() {
-      document.getElementById("img-centro").src = placas[i];
-      document.getElementById("img-esquerda").src =
-        placas[(i - 1 + placas.length) % placas.length];
-      document.getElementById("img-direita").src =
-        placas[(i + 1) % placas.length];
-    }
-
-    function avancar() {
-      i = (i + 1) % placas.length;
-      atualizar();
-    }
-
-    function voltar() {
-      i = (i - 1 + placas.length) % placas.length;
-      atualizar();
-    }
-
-    atualizar();
-
-    document.addEventListener("contextmenu", function(e) {
-      e.preventDefault();
-    });
-  </script>
-
-  <a href="https://wa.me/5511998302901" target="_blank" class="zap">
-    <img src="botoes/whatsapp.png" alt="WhatsApp">
-  </a>
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>© 2026 HEEEPH - Placas Decorativas</p>
+    </footer>
 
 </body>
 </html>
