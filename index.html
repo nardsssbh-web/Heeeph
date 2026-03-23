@@ -23,11 +23,16 @@
       color: inherit;
     }
 
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
     /* TOPO FIXO */
     .topbar {
       background: #050505;
       border-bottom: 2px solid #1a1a1a;
-      padding: 12px;
+      padding: 12px 16px;
       position: sticky;
       top: 0;
       z-index: 999;
@@ -37,10 +42,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 14px;
+      gap: 18px;
       flex-wrap: wrap;
       font-size: 14px;
       text-transform: uppercase;
+    }
+
+    .menu a {
+      transition: 0.2s ease;
     }
 
     .menu a:hover {
@@ -56,22 +65,19 @@
 
     .hero img {
       width: 100%;
-      display: block;
+      height: auto;
     }
 
     /* BANNER MEDIDAS */
     .banner-secundario {
-      display: flex;
-      justify-content: center;
-      margin-top: 6px;
+      width: 100%;
+      max-width: 1350px;
+      margin: 8px auto 0;
     }
 
     .banner-secundario img {
       width: 100%;
-      max-width: 1350px;
-      max-height: 150px;
-      object-fit: contain;
-      display: block;
+      height: auto;
     }
 
     /* DESTAQUE */
@@ -82,27 +88,31 @@
     }
 
     .section h2 {
-      font-size: 36px;
+      font-size: 38px;
       color: #f0db35;
       margin-bottom: 30px;
     }
 
     .destaque-carousel {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: 180px 1fr 180px;
+      grid-template-columns: 140px 1fr 140px;
       align-items: center;
     }
 
     .seta {
-      font-size: 120px;
-      cursor: pointer;
+      font-size: 90px;
       line-height: 1;
-  cursor: pointer;
-  user-select: none;
-  color: #f0d000;
-  text-align: center;
+      cursor: pointer;
+      user-select: none;
+      color: #f0d000;
+      text-align: center;
+      transition: 0.2s ease;
+    }
+
+    .seta:hover {
+      transform: scale(1.12);
     }
 
     .carousel-palco {
@@ -110,40 +120,48 @@
       justify-content: center;
       align-items: center;
       gap: 20px;
+      min-height: 340px;
     }
 
     .mini-card {
-      transition: 0.3s;
+      transition: 0.3s ease;
       opacity: 0.6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .mini-card img {
-      width: 180px;
+      width: 170px;
+      height: 240px;
+      object-fit: contain;
       border: 2px solid #fff;
-      border-radius: 8px;
-      display: block;
+      border-radius: 10px;
+      background: #000;
+      padding: 4px;
     }
 
     .centro {
-      transform: scale(1.2);
+      transform: scale(1.15);
       opacity: 1;
       z-index: 2;
     }
 
     .centro img {
-      width: 260px;
+      width: 220px;
+      height: 300px;
     }
 
     /* BOTÃO CATEGORIAS */
     .categorias {
       text-align: center;
-      padding: 30px;
+      padding: 20px 20px 40px;
     }
 
     .categorias img {
-      max-width: 400px;
+      max-width: 500px;
       width: 100%;
-      display: inline-block;
+      margin: 0 auto;
     }
 
     /* WHATSAPP */
@@ -151,13 +169,13 @@
       position: fixed;
       bottom: 20px;
       right: 20px;
-      width: 220px;
+      width: 110px;
       z-index: 999;
     }
 
     .zap img {
       width: 100%;
-      display: block;
+      height: auto;
     }
 
     footer {
@@ -165,42 +183,42 @@
       padding: 20px;
       color: #aaa;
       border-top: 1px solid #111;
+      margin-top: 10px;
     }
 
+    /* RESPONSIVO */
     @media (max-width: 900px) {
-      .banner-secundario img {
-        max-height: 110px;
+      .destaque-carousel {
+        grid-template-columns: 90px 1fr 90px;
       }
 
-      .destaque-carousel {
-        grid-template-columns: 50px 1fr 50px;
+      .seta {
+        font-size: 60px;
       }
 
       .mini-card img {
-        width: 130px;
+        width: 120px;
+        height: 180px;
       }
 
       .centro img {
-        width: 190px;
+        width: 170px;
+        height: 240px;
       }
 
-      .categorias img {
-        max-width: 340px;
+      .carousel-palco {
+        min-height: 260px;
       }
 
       .zap {
-        width: 70px;
+        width: 85px;
       }
     }
 
     @media (max-width: 600px) {
       .menu {
         font-size: 12px;
-        gap: 8px;
-      }
-
-      .banner-secundario img {
-        max-height: 90px;
+        gap: 10px;
       }
 
       .section h2 {
@@ -217,22 +235,25 @@
 
       .carousel-palco {
         gap: 10px;
+        min-height: auto;
       }
 
       .mini-card img {
-        width: 90px;
+        width: 85px;
+        height: 130px;
       }
 
       .centro img {
-        width: 140px;
+        width: 120px;
+        height: 180px;
       }
 
       .categorias img {
-        max-width: 260px;
+        max-width: 280px;
       }
 
       .zap {
-        width: 58px;
+        width: 65px;
         bottom: 15px;
         right: 15px;
       }
@@ -247,45 +268,45 @@
       <a href="index.html">Home</a>
       <a href="categorias.html">Coleção</a>
       <a href="sobre.html">Sobre</a>
-      <a href="#">Contato</a>
+      <a href="https://wa.me/5511998302901" target="_blank">Contato</a>
     </nav>
   </header>
 
   <section class="hero">
-    <img src="Banner Principal.png" alt="Banner Principal">
+    <img src="banner/banner-principal.png" alt="Banner Principal">
   </section>
 
   <section class="banner-secundario">
-    <img src="banner/Banner-Medidas.png" alt="Banner Medidas">
+    <img src="banner/banner-medidas.png" alt="Banner Medidas">
   </section>
 
   <section class="section">
     <h2>Destaque</h2>
 
     <div class="destaque-carousel">
-      <div class="seta" onclick="voltar()">‹</div>
+      <div class="seta" onclick="voltar()">❮</div>
 
       <div class="carousel-palco">
         <div class="mini-card">
-          <img id="img-esquerda" alt="Placa esquerda">
+          <img id="img-esquerda" alt="Placa esquerda" draggable="false">
         </div>
 
         <div class="mini-card centro">
-          <img id="img-centro" alt="Placa destaque">
+          <img id="img-centro" alt="Placa destaque" draggable="false">
         </div>
 
         <div class="mini-card">
-          <img id="img-direita" alt="Placa direita">
+          <img id="img-direita" alt="Placa direita" draggable="false">
         </div>
       </div>
 
-      <div class="seta" onclick="avancar()">›</div>
+      <div class="seta" onclick="avancar()">❯</div>
     </div>
   </section>
 
   <section class="categorias">
     <a href="categorias.html">
-      <img src="botoes/Acesse-Categorias.png" alt="Acesse Categorias">
+      <img src="botoes/buscar-produto.png" alt="Acesso a todas categorias">
     </a>
   </section>
 
@@ -295,10 +316,16 @@
 
   <script>
     const placas = [
-      "placas/Placa Skatista.png",
-      "placas/Placa roblox.png",
-      "placas/Placas Naipes.png",
-      "placas/Placa GTA.png"
+      "placas/bandas/Angra.png",
+      "placas/bandas/accept.png",
+      "placas/bandas/acdc1.png",
+      "placas/bandas/arp.png",
+      "placas/bandas/bls.png",
+      "placas/bandas/bs-caravan.png",
+      "placas/bandas/bs-hell.png",
+      "placas/bandas/bs-master.png",
+      "placas/bandas/cannibal.png",
+      "placas/bandas/cannibal1.png"
     ];
 
     let i = 0;
@@ -322,10 +349,14 @@
     }
 
     atualizar();
+
+    document.addEventListener("contextmenu", function(e) {
+      e.preventDefault();
+    });
   </script>
 
   <a href="https://wa.me/5511998302901" target="_blank" class="zap">
-    <img src="botoes/Whatsapp.png" alt="WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp">
   </a>
 
 </body>
