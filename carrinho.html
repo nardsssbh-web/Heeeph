@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BANDAS | HEEEPH</title>
+  <title>Carrinho - HEEEPH</title>
   <style>
     * {
       margin: 0;
@@ -11,503 +11,834 @@
       box-sizing: border-box;
     }
 
-    body {
-      background: #000;
-      color: #fff;
-      font-family: Arial, Helvetica, sans-serif;
+    :root {
+      --preto: #050505;
+      --preto-suave: #111111;
+      --grafite: #1a1a1a;
+      --grafite-2: #222222;
+      --dourado: #f0c400;
+      --dourado-forte: #ffd700;
+      --branco: #ffffff;
+      --cinza: #cfcfcf;
+      --cinza-2: #9a9a9a;
+      --madeira: #3b2a1f;
+      --madeira-2: #4a3326;
+      --madeira-3: #2b1d15;
+      --verde: #25d366;
+      --vermelho: #d64545;
+      --sombra: rgba(0, 0, 0, 0.35);
     }
 
-    header {
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #141414 0%, #2a1d15 100%);
+      color: var(--branco);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    /* TOPO */
+    .topo {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(0, 0, 0, 0.96);
-      border-bottom: 1px solid #222;
+      width: 100%;
+      background: #000;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    .topo {
-      max-width: 1300px;
+    .topo .wrap {
+      max-width: 1600px;
       margin: 0 auto;
-      padding: 18px 20px;
+      padding: 16px 28px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      gap: 20px;
+      gap: 24px;
     }
 
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 3px;
+    .logo a {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 2px;
       color: #fff;
-      text-decoration: none;
+      white-space: nowrap;
     }
 
-    nav {
+    .menu-area {
       display: flex;
-      gap: 22px;
-      flex-wrap: wrap;
       align-items: center;
-    }
-
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      transition: 0.2s;
-    }
-
-    nav a:hover {
-      color: #f0d000;
-    }
-
-    .carrinho-topo {
-      background: #f0d000;
-      color: #000;
-      padding: 10px 16px;
-      border-radius: 10px;
-      font-weight: bold;
-    }
-
-    .carrinho-topo:hover {
-      background: #fff;
-      color: #000;
-    }
-
-    .pagina {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    .titulo {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .titulo h1 {
-      font-size: 42px;
-      letter-spacing: 3px;
-      margin-bottom: 10px;
-      color: #f0d000;
-    }
-
-    .titulo p {
-      font-size: 16px;
-      color: #ccc;
-    }
-
-    .grade-placas {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 28px;
+      margin-left: auto;
     }
 
-    .item-placa {
+    .menu {
       display: flex;
-      flex-direction: column;
       align-items: center;
+      gap: 34px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
-    .link-placa {
-      width: 100%;
-      text-decoration: none;
-      color: inherit;
-      display: block;
+    .menu a {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      transition: 0.2s ease;
+      white-space: nowrap;
     }
 
-    .placa {
-      width: 100%;
-      background: #e9e5dd;
-      border-radius: 20px;
-      padding: 14px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      cursor: pointer;
+    .menu a:hover,
+    .menu a.ativo {
+      color: var(--dourado);
     }
 
-    .placa:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.20);
+    .cart-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
     }
 
-    .img-box {
-      width: 100%;
-      aspect-ratio: 1 / 1;
+    .cart-link img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -6px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--dourado);
+      color: #000;
+      font-size: 12px;
+      font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #fff;
-      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    }
+
+    /* HERO */
+    .hero-carrinho {
+      padding: 46px 20px 20px;
+      text-align: center;
+    }
+
+    .hero-carrinho h1 {
+      font-size: 58px;
+      line-height: 1;
+      color: var(--dourado);
+      text-transform: uppercase;
+      font-weight: 900;
+      margin-bottom: 12px;
+      text-shadow: 0 4px 18px rgba(0,0,0,0.35);
+    }
+
+    .hero-carrinho p {
+      font-size: 22px;
+      color: #f1e7db;
+    }
+
+    /* CONTAINER */
+    .container {
+      width: min(94%, 1380px);
+      margin: 0 auto;
+    }
+
+    .carrinho-layout {
+      display: grid;
+      grid-template-columns: 1.5fr 0.9fr;
+      gap: 28px;
+      padding: 30px 0 90px;
+      align-items: start;
+    }
+
+    .bloco {
+      background: linear-gradient(to bottom, rgba(57,38,28,0.92), rgba(31,22,17,0.96));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      box-shadow: 0 16px 35px rgba(0,0,0,0.28);
       overflow: hidden;
     }
 
-    .placa img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      display: block;
-      border-radius: 10px;
-      background: #ddd;
+    .bloco-header {
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.18);
     }
 
-    .preco-placa {
-      margin-top: 12px;
+    .bloco-header h2 {
+      font-size: 26px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .carrinho-lista {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .item-carrinho {
+      display: grid;
+      grid-template-columns: 110px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .item-imagem {
+      width: 110px;
+      height: 150px;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #e7e1d7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .item-imagem img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-info {
+      min-width: 0;
+    }
+
+    .item-info h3 {
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .item-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: #eadfce;
+    }
+
+    .item-preco {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--dourado);
+    }
+
+    .item-acoes {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 14px;
+    }
+
+    .quantidade-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.18);
+      border-radius: 999px;
+      padding: 6px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .qtd-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: var(--dourado);
+      color: #000;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .qtd-btn:hover {
+      transform: scale(1.05);
+      filter: brightness(1.04);
+    }
+
+    .qtd-numero {
+      min-width: 34px;
+      text-align: center;
       font-size: 18px;
-      font-weight: bold;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .remover-btn {
+      border: none;
+      background: var(--vermelho);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .remover-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
+
+    .item-subtotal {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff4c4;
+    }
+
+    .resumo {
+      padding: 22px;
+    }
+
+    .resumo-linhas {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .resumo-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 18px;
+      color: #f0e8dc;
+    }
+
+    .resumo-linha.total {
+      margin-top: 6px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--dourado);
+    }
+
+    .resumo-observacao {
+      font-size: 14px;
+      color: #d9ccb8;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .acoes-resumo {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-principal,
+    .btn-secundario,
+    .btn-limpar {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      transition: 0.2s ease;
+    }
+
+    .btn-principal {
+      background: var(--verde);
+      color: #fff;
+    }
+
+    .btn-secundario {
+      background: var(--dourado);
+      color: #000;
+    }
+
+    .btn-limpar {
+      background: #2b2b2b;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-principal:hover,
+    .btn-secundario:hover,
+    .btn-limpar:hover {
+      transform: translateY(-2px);
+    }
+
+    .vazio {
+      padding: 55px 24px 60px;
+      text-align: center;
+    }
+
+    .vazio h3 {
+      font-size: 34px;
+      color: var(--dourado);
+      margin-bottom: 12px;
+    }
+
+    .vazio p {
+      font-size: 19px;
+      color: #f0e6d9;
+      margin-bottom: 28px;
+    }
+
+    .vazio .btn-secundario {
+      max-width: 320px;
+      margin: 0 auto;
+      display: block;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    footer {
+      background: #000;
       color: #fff;
       text-align: center;
+      padding: 26px 15px;
+      font-size: 17px;
     }
 
-    .voltar {
-      text-align: center;
-      margin-top: 45px;
-    }
-
-    .voltar a {
-      display: inline-block;
-      text-decoration: none;
-      color: #000;
-      background: #f0d000;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: bold;
-      transition: 0.2s;
-    }
-
-    .voltar a:hover {
-      background: #fff;
-    }
-
-    .zap {
+    /* WHATSAPP */
+    .whatsapp-fixo {
       position: fixed;
       right: 18px;
       bottom: 18px;
       z-index: 999;
-      width: 68px;
-      height: 68px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .zap img {
-      width: 100%;
-      height: 100%;
+    .whatsapp-fixo img {
+      width: 250px;
+      max-width: 250px;
+      height: auto;
       display: block;
     }
 
-    @media (max-width: 768px) {
-      .topo {
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .logo {
-        font-size: 24px;
-      }
-
-      nav {
-        justify-content: center;
-        gap: 16px;
-      }
-
-      .titulo h1 {
-        font-size: 30px;
-      }
-
-      .titulo p {
-        font-size: 14px;
-      }
-
-      .grade-placas {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 18px;
-      }
-
-      .preco-placa {
-        font-size: 16px;
-      }
-
-      .zap {
-        width: 58px;
-        height: 58px;
+    /* RESPONSIVO */
+    @media (max-width: 1100px) {
+      .carrinho-layout {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 520px) {
-      .grade-placas {
-        grid-template-columns: 1fr 1fr;
+    @media (max-width: 980px) {
+      .topo .wrap {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
       }
 
-      .pagina {
-        padding: 30px 14px 80px;
+      .menu-area {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        gap: 18px;
       }
 
-      .placa {
-        padding: 10px;
+      .menu {
+        gap: 18px;
       }
 
-      .img-box {
-        border-radius: 10px;
+      .hero-carrinho h1 {
+        font-size: 46px;
       }
 
-      .preco-placa {
-        font-size: 15px;
+      .whatsapp-fixo img {
+        width: 220px;
+        max-width: 220px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .logo a {
+        font-size: 28px;
+      }
+
+      .menu {
+        gap: 14px;
+      }
+
+      .menu a {
+        font-size: 14px;
+      }
+
+      .hero-carrinho {
+        padding-top: 38px;
+      }
+
+      .hero-carrinho h1 {
+        font-size: 36px;
+      }
+
+      .hero-carrinho p {
+        font-size: 18px;
+      }
+
+      .item-carrinho {
+        grid-template-columns: 1fr;
+      }
+
+      .item-imagem {
+        width: 100%;
+        max-width: 220px;
+        height: 290px;
+        margin: 0 auto;
+      }
+
+      .item-acoes {
+        align-items: stretch;
+      }
+
+      .quantidade-box {
+        justify-content: center;
+      }
+
+      .whatsapp-fixo {
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .whatsapp-fixo img {
+        width: 190px;
+        max-width: 190px;
       }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="topo">
-      <a href="index.html" class="logo">HEEEPH</a>
-      <nav>
-        <a href="index.html">HOME</a>
-        <a href="categorias.html">COLEÇÃO</a>
-        <a href="sobre.html">SOBRE</a>
-        <a href="carrinho.html" class="carrinho-topo">CARRINHO</a>
-      </nav>
+  <header class="topo">
+    <div class="wrap">
+      <div class="logo">
+        <a href="index.html">HEEEPH</a>
+      </div>
+
+      <div class="menu-area">
+        <nav class="menu">
+          <a href="index.html">HOME</a>
+          <a href="categorias.html">COLEÇÃO</a>
+          <a href="sobre.html">O QUE É HEEEPH?</a>
+          <a href="fotos-reais.html">FOTOS REAIS</a>
+          <a href="contatos.html">CONTATOS</a>
+        </nav>
+
+        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+          <img src="botoes/botao-carrinho.png" alt="Carrinho">
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
     </div>
   </header>
 
-  <main class="pagina">
-    <section class="titulo">
-      <h1>BANDAS</h1>
-      <p>Placas decorativas com tema rock e metal</p>
+  <main>
+    <section class="hero-carrinho">
+      <h1>Carrinho</h1>
+      <p>Confira suas placas e feche seu pedido</p>
     </section>
 
-    <section class="grade-placas">
+    <div class="container">
+      <section class="carrinho-layout" id="carrinhoLayout">
+        <div class="bloco">
+          <div class="bloco-header">
+            <h2>Seus produtos</h2>
+          </div>
 
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/accept.png" alt="accept">
+          <div id="carrinhoConteudo"></div>
+        </div>
+
+        <aside class="bloco">
+          <div class="bloco-header">
+            <h2>Resumo do pedido</h2>
+          </div>
+
+          <div class="resumo">
+            <div class="resumo-linhas">
+              <div class="resumo-linha">
+                <span>Itens</span>
+                <span id="resumoItens">0</span>
+              </div>
+
+              <div class="resumo-linha">
+                <span>Subtotal</span>
+                <span id="resumoSubtotal">R$ 0,00</span>
+              </div>
+
+              <div class="resumo-linha">
+                <span>Entrega</span>
+                <span>A combinar</span>
+              </div>
+
+              <div class="resumo-linha total">
+                <span>Total</span>
+                <span id="resumoTotal">R$ 0,00</span>
+              </div>
+            </div>
+
+            <p class="resumo-observacao">
+              O pedido será enviado pelo WhatsApp com os itens selecionados. Depois você ajusta frete, pagamento e detalhes com o cliente.
+            </p>
+
+            <div class="acoes-resumo">
+              <button class="btn-principal" onclick="finalizarPedidoWhatsApp()">Finalizar no WhatsApp</button>
+              <a class="btn-secundario" href="categorias.html" style="display:flex;align-items:center;justify-content:center;">Continuar comprando</a>
+              <button class="btn-limpar" onclick="limparCarrinho()">Limpar carrinho</button>
             </div>
           </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/acdc-bb.png" alt="acdc-bb">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/aerosmith.png" alt="aerosmith">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/angra.png" alt="angra">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/black-sabbath.png" alt="black-sabbath">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/bs-caravan.png" alt="bs-caravan">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/deep-purple.png" alt="deep-purple">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/guns-n-roses.png" alt="guns-n-roses">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/iron-maiden.png" alt="iron-maiden">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/judas-priest.png" alt="judas-priest">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/kiss.png" alt="kiss">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/led-zeppelin.png" alt="led-zeppelin">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/metallica.png" alt="metallica">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/motorhead.png" alt="motorhead">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/nirvana.png" alt="nirvana">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/pink-floyd.png" alt="pink-floyd">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/queen.png" alt="queen">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/rammstein.png" alt="rammstein">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/slayer.png" alt="slayer">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/system-of-a-down.png" alt="system-of-a-down">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-    </section>
-
-    <div class="voltar">
-      <a href="categorias.html">VOLTAR PARA CATEGORIAS</a>
+        </aside>
+      </section>
     </div>
   </main>
 
-  <a class="zap" href="https://wa.me/5511000000000" target="_blank">
-    <img src="/botoes/whatsapp.png" alt="WhatsApp">
+  <footer>
+    © 2026 HEEEPH - Placas Decorativas
+  </footer>
+
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
   </a>
 
+  <script>
+    const PHONE_NUMBER = '5511998302901';
+
+    function getCart() {
+      return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('heeeph_cart', JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const countEl = document.getElementById('cartCount');
+      if (countEl) countEl.textContent = total;
+    }
+
+    function parsePrice(preco) {
+      if (!preco) return 0;
+
+      if (typeof preco === 'number') return preco;
+
+      const texto = String(preco).trim().toLowerCase();
+
+      if (
+        texto.includes('preço aqui') ||
+        texto.includes('preco aqui') ||
+        texto.includes('a combinar')
+      ) {
+        return 0;
+      }
+
+      let valor = texto
+        .replace('r$', '')
+        .replace(/\s/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.');
+
+      const numero = parseFloat(valor);
+      return isNaN(numero) ? 0 : numero;
+    }
+
+    function formatBRL(value) {
+      return value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+    }
+
+    function getDisplayPrice(item) {
+      const valor = parsePrice(item.preco);
+      if (valor > 0) return formatBRL(valor);
+      return item.preco || 'preço aqui';
+    }
+
+    function renderCarrinho() {
+      const cart = getCart();
+      const carrinhoConteudo = document.getElementById('carrinhoConteudo');
+
+      if (!cart.length) {
+        carrinhoConteudo.innerHTML = `
+          <div class="vazio">
+            <h3>Seu carrinho está vazio</h3>
+            <p>Escolha suas placas e monte sua coleção. Uma parede sem personalidade é só parede, meu amigo.</p>
+            <a href="categorias.html" class="btn-secundario">Ir para as categorias</a>
+          </div>
+        `;
+
+        updateResumo(cart);
+        return;
+      }
+
+      carrinhoConteudo.innerHTML = `
+        <div class="carrinho-lista">
+          ${cart.map(item => {
+            const subtotalNumerico = parsePrice(item.preco) * (item.quantity || 1);
+            const subtotalTexto = subtotalNumerico > 0 ? formatBRL(subtotalNumerico) : 'a combinar';
+
+            return `
+              <div class="item-carrinho">
+                <div class="item-imagem">
+                  <img src="${item.imagem}" alt="${item.nome}">
+                </div>
+
+                <div class="item-info">
+                  <h3>${item.nome}</h3>
+
+                  <div class="item-meta">
+                    <span><strong>ID:</strong> ${item.id || '-'}</span>
+                    <span><strong>Preço unitário:</strong> ${getDisplayPrice(item)}</span>
+                  </div>
+
+                  <div class="item-preco">${getDisplayPrice(item)}</div>
+                </div>
+
+                <div class="item-acoes">
+                  <div class="quantidade-box">
+                    <button class="qtd-btn" onclick="diminuirQuantidade('${item.id}')">−</button>
+                    <span class="qtd-numero">${item.quantity || 1}</span>
+                    <button class="qtd-btn" onclick="aumentarQuantidade('${item.id}')">+</button>
+                  </div>
+
+                  <div class="item-subtotal">Subtotal: ${subtotalTexto}</div>
+
+                  <button class="remover-btn" onclick="removerItem('${item.id}')">Remover</button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      updateResumo(cart);
+    }
+
+    function updateResumo(cart) {
+      const totalItens = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const subtotal = cart.reduce((acc, item) => {
+        return acc + (parsePrice(item.preco) * (item.quantity || 1));
+      }, 0);
+
+      document.getElementById('resumoItens').textContent = totalItens;
+      document.getElementById('resumoSubtotal').textContent = subtotal > 0 ? formatBRL(subtotal) : 'A combinar';
+      document.getElementById('resumoTotal').textContent = subtotal > 0 ? formatBRL(subtotal) : 'A combinar';
+
+      updateCartCount();
+    }
+
+    function aumentarQuantidade(id) {
+      const cart = getCart();
+      const index = cart.findIndex(item => item.id === id);
+
+      if (index > -1) {
+        cart[index].quantity = (cart[index].quantity || 1) + 1;
+        saveCart(cart);
+        renderCarrinho();
+      }
+    }
+
+    function diminuirQuantidade(id) {
+      const cart = getCart();
+      const index = cart.findIndex(item => item.id === id);
+
+      if (index > -1) {
+        if ((cart[index].quantity || 1) > 1) {
+          cart[index].quantity -= 1;
+        } else {
+          cart.splice(index, 1);
+        }
+
+        saveCart(cart);
+        renderCarrinho();
+      }
+    }
+
+    function removerItem(id) {
+      const cart = getCart().filter(item => item.id !== id);
+      saveCart(cart);
+      renderCarrinho();
+    }
+
+    function limparCarrinho() {
+      localStorage.removeItem('heeeph_cart');
+      updateCartCount();
+      renderCarrinho();
+    }
+
+    function finalizarPedidoWhatsApp() {
+      const cart = getCart();
+
+      if (!cart.length) {
+        alert('Seu carrinho está vazio.');
+        return;
+      }
+
+      let mensagem = 'Olá! Quero fazer um pedido na HEEEPH:%0A%0A';
+
+      cart.forEach((item, index) => {
+        const precoTexto = getDisplayPrice(item);
+        const subtotal = parsePrice(item.preco) * (item.quantity || 1);
+        const subtotalTexto = subtotal > 0 ? formatBRL(subtotal) : 'a combinar';
+
+        mensagem += `${index + 1}. ${item.nome}%0A`;
+        mensagem += `Quantidade: ${item.quantity || 1}%0A`;
+        mensagem += `Preço unitário: ${precoTexto}%0A`;
+        mensagem += `Subtotal: ${subtotalTexto}%0A`;
+        mensagem += `Imagem: ${window.location.origin}/${item.imagem}%0A%0A`;
+      });
+
+      const total = cart.reduce((acc, item) => acc + (parsePrice(item.preco) * (item.quantity || 1)), 0);
+      mensagem += `Total do pedido: ${total > 0 ? formatBRL(total) : 'a combinar'}%0A`;
+      mensagem += `%0AQuero combinar pagamento e entrega.`;
+
+      const url = `https://wa.me/${PHONE_NUMBER}?text=${mensagem}`;
+      window.open(url, '_blank');
+    }
+
+    updateCartCount();
+    renderCarrinho();
+  </script>
 </body>
 </html>
