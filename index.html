@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HEEEPH - Placas Decorativas</title>
-
   <style>
     * {
       margin: 0;
@@ -13,23 +12,26 @@
     }
 
     :root {
-      --preto: #0b0b0b;
-      --preto-2: #171717;
-      --amarelo: #d8a12e;
-      --amarelo-claro: #f0cd63;
-      --bege: #efe7d9;
+      --preto: #050505;
+      --preto-suave: #111111;
+      --dourado: #f0c400;
+      --dourado-forte: #ffd700;
+      --bege: #dcd4c6;
       --branco: #ffffff;
-    }
-
-    html {
-      scroll-behavior: smooth;
+      --cinza: #cfcfcf;
+      --sombra: rgba(0, 0, 0, 0.35);
     }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
       background: var(--bege);
-      color: #111;
+      color: var(--branco);
       overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
     img {
@@ -37,414 +39,604 @@
       display: block;
     }
 
-    a {
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(1200px, 94%);
-      margin: 0 auto;
-    }
-
-    .header {
+    /* TOPO */
+    .topo {
       position: sticky;
       top: 0;
-      z-index: 2000;
+      z-index: 1000;
+      width: 100%;
       background: #000;
-      box-shadow: 0 2px 14px rgba(0,0,0,0.28);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    .header-container {
-      min-height: 76px;
+    .topo .wrap {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 16px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 24px;
     }
 
-    .logo {
-      color: #fff;
-      font-size: 2.1rem;
+    .logo a {
+      font-size: 34px;
       font-weight: 900;
       letter-spacing: 2px;
+      color: #fff;
       white-space: nowrap;
+    }
+
+    .menu-area {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-left: auto;
     }
 
     .menu {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 30px;
+      gap: 34px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .menu a {
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 16px;
       font-weight: 800;
       text-transform: uppercase;
-      transition: 0.2s;
-    }
-
-    .menu a:hover {
-      color: var(--amarelo-claro);
-    }
-
-    .cart-icon {
-      color: #fff;
-      font-size: 1.25rem;
-      line-height: 1;
+      transition: 0.2s ease;
       white-space: nowrap;
     }
 
-    .hero {
-      background: linear-gradient(to bottom, #151515 0%, #1b1b1b 100%);
-      padding: 22px 0 28px;
+    .menu a:hover,
+    .menu a.ativo {
+      color: var(--dourado);
     }
 
-    .banner-principal,
-    .banner-medidas {
-      width: min(1160px, 94%);
+    .cart-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+    }
+
+    .cart-link img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -6px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--dourado);
+      color: #000;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    }
+
+    /* CONTEÚDO */
+    .site-bg {
+      background: linear-gradient(to bottom, #0f0f0f 0%, #1c1c1c 100%);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .container {
+      width: min(94%, 1500px);
       margin: 0 auto;
-      border-radius: 24px;
+    }
+
+    .hero {
+      padding-top: 28px;
+    }
+
+    .banner-principal {
+      width: 100%;
+      border-radius: 22px;
       overflow: hidden;
       box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     }
 
-    .banner-principal {
-      margin-bottom: 22px;
+    .banner-principal img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
-    .destaques {
-      background: #1a1a1a;
-      padding: 48px 0 58px;
+    .banner-secundario {
+      width: 86%;
+      max-width: 1280px;
+      margin: 22px auto 0;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     }
 
-    .titulo-secao {
-      color: #fff;
+    .banner-secundario img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .destaque {
+      padding: 55px 0 30px;
+    }
+
+    .destaque h2 {
       text-align: center;
-      font-size: 2rem;
+      font-size: 32px;
+      color: #fff;
       margin-bottom: 28px;
-      letter-spacing: 1px;
+      font-weight: 800;
     }
 
-    .carousel-wrapper {
-      width: min(1120px, 94%);
-      margin: 0 auto;
-      display: flex;
+    .carousel-wrap {
+      display: grid;
+      grid-template-columns: 90px 1fr 90px;
       align-items: center;
-      justify-content: center;
-      gap: 18px;
+      gap: 20px;
+      max-width: 1180px;
+      margin: 0 auto;
     }
 
     .carousel-btn {
-      width: 58px;
-      height: 58px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
       border: none;
-      border-radius: 999px;
-      background: var(--amarelo);
-      color: #111;
-      font-size: 1.8rem;
+      background: #d9a62a;
+      color: #000;
+      font-size: 34px;
       font-weight: 900;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.28);
-      transition: transform 0.2s ease;
-      flex-shrink: 0;
+      margin: 0 auto;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
     }
 
     .carousel-btn:hover {
       transform: scale(1.06);
+      filter: brightness(1.05);
     }
 
-    .carousel-stage {
-      flex: 1;
-      max-width: 940px;
-      min-height: 450px;
+    .carousel-track {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 20px;
-      overflow: hidden;
+      gap: 36px;
+      min-height: 430px;
     }
 
-    .carousel-card {
-      background: #262626;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+    .destaque-card {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      transition: all 0.35s ease;
+      transition: 0.25s ease;
     }
 
-    .carousel-card img {
-      width: 100%;
-      height: 100%;
+    .destaque-card button {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .destaque-card img {
+      display: block;
+      border-radius: 18px;
       object-fit: cover;
-      background: #111;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
+      border: 2px solid rgba(255, 208, 0, 0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .carousel-card.side {
-      width: 215px;
-      height: 305px;
-      opacity: 0.78;
-      transform: scale(0.92);
+    .destaque-card button:hover img {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.42);
     }
 
-    .carousel-card.center {
-      width: 330px;
-      height: 440px;
-      opacity: 1;
-      border: 3px solid rgba(240, 205, 99, 0.55);
+    .destaque-card.side img {
+      width: 180px;
+      height: 255px;
     }
 
-    .btn-categorias {
-      margin-top: 30px;
+    .destaque-card.center img {
+      width: 340px;
+      height: 480px;
+    }
+
+    .destaque-info {
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    .destaque-info h3 {
+      font-size: 18px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .destaque-info p {
+      font-size: 18px;
+      color: var(--dourado);
+      font-weight: 800;
+    }
+
+    .botao-categorias {
       display: flex;
       justify-content: center;
-      align-items: center;
+      margin-top: 30px;
     }
 
-    .btn-categorias a {
-      display: block;
-      width: min(600px, 95%);
+    .botao-categorias a {
+      display: inline-block;
+      transition: transform 0.2s ease;
     }
 
-    .btn-categorias img {
-      display: block;
-      width: 100%;
+    .botao-categorias a:hover {
+      transform: scale(1.02);
+    }
+
+    .botao-categorias img {
+      width: min(100%, 520px);
       height: auto;
     }
 
-    .espaco-livre {
+    .faixa-clara {
       background: var(--bege);
       min-height: 320px;
+      margin-top: 45px;
     }
 
-    .footer {
-      background: #111;
+    footer {
+      background: #000;
       color: #fff;
       text-align: center;
-      padding: 22px 14px;
-      font-size: 0.95rem;
+      padding: 26px 15px;
+      font-size: 17px;
     }
 
+    /* WHATSAPP */
     .whatsapp-fixo {
       position: fixed;
       right: 18px;
       bottom: 18px;
-      z-index: 3000;
-      width: 240px;
-      height: auto;
-      display: flex;
+      z-index: 999;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
     .whatsapp-fixo img {
-      width: 100%;
+      width: 250px;
+      max-width: 250px;
       height: auto;
-      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.28));
+      display: block;
     }
 
-    @media (max-width: 1024px) {
-      .header-container {
+    /* RESPONSIVO */
+    @media (max-width: 1200px) {
+      .menu {
+        gap: 22px;
+      }
+
+      .destaque-card.center img {
+        width: 280px;
+        height: 400px;
+      }
+
+      .destaque-card.side img {
+        width: 150px;
+        height: 215px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .topo .wrap {
         flex-direction: column;
-        padding: 14px 0;
+        align-items: center;
+        gap: 14px;
       }
 
-      .carousel-stage {
-        min-height: 380px;
+      .menu-area {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        gap: 18px;
       }
 
-      .carousel-card.side {
-        width: 170px;
-        height: 245px;
+      .menu {
+        gap: 18px;
       }
 
-      .carousel-card.center {
-        width: 260px;
-        height: 360px;
+      .carousel-wrap {
+        grid-template-columns: 70px 1fr 70px;
+        gap: 8px;
       }
 
-      .whatsapp-fixo {
-        width: 180px;
+      .carousel-track {
+        gap: 18px;
+      }
+
+      .destaque-card.center img {
+        width: 230px;
+        height: 330px;
+      }
+
+      .destaque-card.side img {
+        width: 120px;
+        height: 170px;
+      }
+
+      .whatsapp-fixo img {
+        width: 220px;
+        max-width: 220px;
       }
     }
 
     @media (max-width: 700px) {
+      .logo a {
+        font-size: 28px;
+      }
+
       .menu {
         gap: 14px;
       }
 
       .menu a {
-        font-size: 0.82rem;
+        font-size: 14px;
       }
 
-      .carousel-wrapper {
-        gap: 10px;
+      .banner-secundario {
+        width: 94%;
       }
 
-      .carousel-stage {
-        min-height: 315px;
-        gap: 10px;
+      .destaque h2 {
+        font-size: 28px;
       }
 
-      .carousel-card.side {
-        width: 105px;
-        height: 165px;
-      }
-
-      .carousel-card.center {
-        width: 190px;
-        height: 290px;
+      .carousel-wrap {
+        grid-template-columns: 56px 1fr 56px;
       }
 
       .carousel-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 1.3rem;
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
       }
 
-      .whatsapp-fixo {
-        width: 130px;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .logo {
-        font-size: 1.6rem;
+      .carousel-track {
+        gap: 10px;
+        min-height: 320px;
       }
 
-      .carousel-card.side {
+      .destaque-card.side {
         display: none;
       }
 
-      .carousel-stage {
-        min-height: 290px;
-      }
-
-      .carousel-card.center {
-        width: 205px;
-        height: 285px;
+      .destaque-card.center img {
+        width: 220px;
+        height: 310px;
       }
 
       .whatsapp-fixo {
-        width: 100px;
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .whatsapp-fixo img {
+        width: 190px;
+        max-width: 190px;
       }
     }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <div class="container header-container">
-      <div class="logo">HEEEPH</div>
+  <header class="topo">
+    <div class="wrap">
+      <div class="logo">
+        <a href="index.html">HEEEPH</a>
+      </div>
 
-      <nav class="menu">
-        <a href="index.html">HOME</a>
-        <a href="categorias.html">COLEÇÃO</a>
-        <a href="sobre.html">O QUE É HEEEPH?</a>
-        <a href="fotos-reais.html">FOTOS REAIS</a>
-        <a href="https://wa.me/5511998302901" target="_blank">CONTATOS</a>
-      </nav>
+      <div class="menu-area">
+        <nav class="menu">
+          <a href="index.html" class="ativo">HOME</a>
+          <a href="categorias.html">COLEÇÃO</a>
+          <a href="sobre.html">O QUE É HEEEPH?</a>
+          <a href="fotos-reais.html">FOTOS REAIS</a>
+          <a href="contatos.html">CONTATOS</a>
+        </nav>
 
-      <div class="cart-icon">🛒</div>
+        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+          <img src="botoes/botao-carrinho.png" alt="Carrinho">
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
     </div>
   </header>
 
-  <main>
+  <main class="site-bg">
     <section class="hero">
-      <div class="banner-principal">
-        <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
-      </div>
-
-      <div class="banner-medidas">
-        <img src="banner/banner-medidas.png" alt="Banner com medidas das placas">
-      </div>
-    </section>
-
-    <section class="destaques" id="destaques">
-      <h2 class="titulo-secao">Destaque</h2>
-
-      <div class="carousel-wrapper">
-        <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#10094;</button>
-
-        <div class="carousel-stage">
-          <div class="carousel-card side" id="leftCard">
-            <img src="" alt="Placa lateral esquerda">
-          </div>
-
-          <div class="carousel-card center" id="centerCard">
-            <img src="" alt="Placa em destaque">
-          </div>
-
-          <div class="carousel-card side" id="rightCard">
-            <img src="" alt="Placa lateral direita">
-          </div>
+      <div class="container">
+        <div class="banner-principal">
+          <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
         </div>
 
-        <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#10095;</button>
-      </div>
-
-      <div class="btn-categorias">
-        <a href="categorias.html">
-          <img src="./botoes/categorias.png" alt="Categorias">
-        </a>
+        <div class="banner-secundario">
+          <img src="banner/banner-secundario.png" alt="Medidas das placas decorativas">
+        </div>
       </div>
     </section>
 
-    <section class="espaco-livre"></section>
+    <section class="destaque">
+      <div class="container">
+        <h2>Destaque</h2>
+
+        <div class="carousel-wrap">
+          <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
+
+          <div class="carousel-track" id="carouselTrack"></div>
+
+          <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
+        </div>
+
+        <div class="botao-categorias">
+          <a href="categorias.html">
+            <img src="botoes/acesse-todas-categorias.png" alt="Acesse todas as categorias">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="faixa-clara"></div>
   </main>
 
-  <footer class="footer">
-    <p>© 2026 HEEEPH - Placas Decorativas</p>
+  <footer>
+    © 2026 HEEEPH - Placas Decorativas
   </footer>
 
-  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" aria-label="WhatsApp">
-    <img src="botoes/whatsapp.png" alt="WhatsApp">
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
   </a>
 
   <script>
-    const imagens = [
-      "placas/trip/meditando.png",
-      "placas/street/naipess.png",
-      "placas/street/skatista.png",
-      "placas/games/gta-sa.png",
-      "placas/games/roblox.png"
-    ];
+    /* =========================
+       CARRINHO - LOCALSTORAGE
+    ========================== */
 
-    let indexAtual = 2;
-
-    const leftImg = document.querySelector("#leftCard img");
-    const centerImg = document.querySelector("#centerCard img");
-    const rightImg = document.querySelector("#rightCard img");
-
-    function atualizarCarousel() {
-      const total = imagens.length;
-      const esquerda = (indexAtual - 1 + total) % total;
-      const direita = (indexAtual + 1) % total;
-
-      leftImg.src = imagens[esquerda];
-      centerImg.src = imagens[indexAtual];
-      rightImg.src = imagens[direita];
+    function getCart() {
+      return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
     }
 
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      indexAtual = (indexAtual - 1 + imagens.length) % imagens.length;
-      atualizarCarousel();
+    function saveCart(cart) {
+      localStorage.setItem('heeeph_cart', JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const countEl = document.getElementById('cartCount');
+      if (countEl) countEl.textContent = total;
+    }
+
+    function addToCart(item) {
+      const cart = getCart();
+      const existingIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+
+      if (existingIndex > -1) {
+        cart[existingIndex].quantity += 1;
+      } else {
+        cart.push({
+          ...item,
+          quantity: 1
+        });
+      }
+
+      saveCart(cart);
+      window.location.href = 'carrinho.html';
+    }
+
+    updateCartCount();
+
+    /* =========================
+       CARROSSEL DE DESTAQUE
+    ========================== */
+
+    const produtosDestaque = [
+      {
+        id: 'destaque-naipes',
+        nome: 'Placa Naipes',
+        preco: 'preço aqui',
+        imagem: 'placas/destaque/placa-naipes.png'
+      },
+      {
+        id: 'destaque-skatista',
+        nome: 'Placa Skatista',
+        preco: 'preço aqui',
+        imagem: 'placas/destaque/placa-skatista.png'
+      },
+      {
+        id: 'destaque-gta',
+        nome: 'Placa GTA',
+        preco: 'preço aqui',
+        imagem: 'placas/destaque/placa-gta.png'
+      },
+      {
+        id: 'destaque-rock',
+        nome: 'Placa Rock',
+        preco: 'preço aqui',
+        imagem: 'placas/destaque/placa-rock.png'
+      },
+      {
+        id: 'destaque-games',
+        nome: 'Placa Games',
+        preco: 'preço aqui',
+        imagem: 'placas/destaque/placa-games.png'
+      }
+    ];
+
+    let currentIndex = 1;
+
+    function renderCarousel() {
+      const track = document.getElementById('carouselTrack');
+      track.innerHTML = '';
+
+      const total = produtosDestaque.length;
+      const prevIndex = (currentIndex - 1 + total) % total;
+      const nextIndex = (currentIndex + 1) % total;
+
+      const itens = [
+        { ...produtosDestaque[prevIndex], classe: 'side' },
+        { ...produtosDestaque[currentIndex], classe: 'center' },
+        { ...produtosDestaque[nextIndex], classe: 'side' }
+      ];
+
+      itens.forEach(produto => {
+        const card = document.createElement('div');
+        card.className = `destaque-card ${produto.classe}`;
+
+        card.innerHTML = `
+          <button type="button" onclick='addToCart(${JSON.stringify(produto).replace(/'/g, "&apos;")})'>
+            <img src="${produto.imagem}" alt="${produto.nome}">
+          </button>
+          <div class="destaque-info">
+            <h3>${produto.nome}</h3>
+            <p>${produto.preco}</p>
+          </div>
+        `;
+
+        track.appendChild(card);
+      });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
+      renderCarousel();
     });
 
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      indexAtual = (indexAtual + 1) % imagens.length;
-      atualizarCarousel();
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % produtosDestaque.length;
+      renderCarousel();
     });
 
-    atualizarCarousel();
+    renderCarousel();
   </script>
 
 </body>
