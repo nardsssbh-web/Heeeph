@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BANDAS | HEEEPH</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.96);
+      border-bottom: 1px solid #222;
+    }
+
+    .topo {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 22px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: 0.2s;
+    }
+
+    nav a:hover {
+      color: #f0d000;
+    }
+
+    .carrinho-topo {
+      background: #f0d000;
+      color: #000;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .carrinho-topo:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .pagina {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .titulo {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .titulo h1 {
+      font-size: 42px;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      color: #f0d000;
+    }
+
+    .titulo p {
+      font-size: 16px;
+      color: #ccc;
+    }
+
+    .grade-placas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+    }
+
+    .item-placa {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .link-placa {
+      width: 100%;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .placa {
+      width: 100%;
+      background: #e9e5dd;
+      border-radius: 20px;
+      padding: 14px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .placa:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.20);
+    }
+
+    .img-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .placa img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      background: #ddd;
+    }
+
+    .preco-placa {
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+    }
+
+    .voltar {
+      text-align: center;
+      margin-top: 45px;
+    }
+
+    .voltar a {
+      display: inline-block;
+      text-decoration: none;
+      color: #000;
+      background: #f0d000;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .voltar a:hover {
+      background: #fff;
+    }
+
+    .zap {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 999;
+      width: 68px;
+      height: 68px;
+    }
+
+    .zap img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .topo {
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .logo {
+        font-size: 24px;
+      }
+
+      nav {
+        justify-content: center;
+        gap: 16px;
+      }
+
+      .titulo h1 {
+        font-size: 30px;
+      }
+
+      .titulo p {
+        font-size: 14px;
+      }
+
+      .grade-placas {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+
+      .preco-placa {
+        font-size: 16px;
+      }
+
+      .zap {
+        width: 58px;
+        height: 58px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .grade-placas {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pagina {
+        padding: 30px 14px 80px;
+      }
+
+      .placa {
+        padding: 10px;
+      }
+
+      .img-box {
+        border-radius: 10px;
+      }
+
+      .preco-placa {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="topo">
+      <a href="index.html" class="logo">HEEEPH</a>
+      <nav>
+        <a href="index.html">HOME</a>
+        <a href="categorias.html">COLEÇÃO</a>
+        <a href="sobre.html">SOBRE</a>
+        <a href="carrinho.html" class="carrinho-topo">CARRINHO</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="pagina">
+    <section class="titulo">
+      <h1>BANDAS</h1>
+      <p>Placas decorativas com tema rock e metal</p>
+    </section>
+
+    <section class="grade-placas">
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/accept.png" alt="accept">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/acdc-bb.png" alt="acdc-bb">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/aerosmith.png" alt="aerosmith">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/angra.png" alt="angra">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/black-sabbath.png" alt="black-sabbath">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/bs-caravan.png" alt="bs-caravan">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/deep-purple.png" alt="deep-purple">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/guns-n-roses.png" alt="guns-n-roses">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/iron-maiden.png" alt="iron-maiden">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/judas-priest.png" alt="judas-priest">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/kiss.png" alt="kiss">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/led-zeppelin.png" alt="led-zeppelin">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/metallica.png" alt="metallica">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/motorhead.png" alt="motorhead">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/nirvana.png" alt="nirvana">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/pink-floyd.png" alt="pink-floyd">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/queen.png" alt="queen">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/rammstein.png" alt="rammstein">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/slayer.png" alt="slayer">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/system-of-a-down.png" alt="system-of-a-down">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+    </section>
+
+    <div class="voltar">
+      <a href="categorias.html">VOLTAR PARA CATEGORIAS</a>
+    </div>
+  </main>
+
+  <a class="zap" href="https://wa.me/5511000000000" target="_blank">
+    <img src="/botoes/whatsapp.png" alt="WhatsApp">
+  </a>
+
+</body>
+</html>
