@@ -1,1 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEEEPH | Trip</title>
 
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background-color: #e6dfd3;
+      color: #111;
+    }
+
+    header {
+      background-color: #111;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 3px solid #c9a227;
+    }
+
+    header h1 {
+      color: #f0c64c;
+      font-size: 28px;
+      letter-spacing: 2px;
+    }
+
+    .topo-categoria {
+      text-align: center;
+      padding: 40px 20px 20px;
+    }
+
+    .topo-categoria h2 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .topo-categoria p {
+      font-size: 16px;
+      color: #333;
+      max-width: 750px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    .galeria {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    .grid-placas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
+    }
+
+    .placa {
+      background-color: #f8f4ec;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+      text-align: center;
+      padding-bottom: 14px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .placa:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .placa img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+      background-color: #d8d1c6;
+    }
+
+    .placa h3 {
+      font-size: 17px;
+      margin: 14px 10px 6px;
+      color: #111;
+    }
+
+    .placa p {
+      font-size: 14px;
+      color: #555;
+      padding: 0 12px;
+      line-height: 1.4;
+    }
+
+    .botoes-voltar {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 0 20px 50px;
+    }
+
+    .botoes-voltar a {
+      display: inline-block;
+      background-color: #111;
+      color: #f0c64c;
+      text-decoration: none;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 14px;
+      transition: 0.2s ease;
+    }
+
+    .botoes-voltar a:hover {
+      background-color: #222;
+      transform: scale(1.03);
+    }
+
+    footer {
+      background-color: #111;
+      color: #d8c27a;
+      text-align: center;
+      padding: 18px 20px;
+      font-size: 14px;
+      border-top: 3px solid #c9a227;
+    }
+
+    @media (max-width: 768px) {
+      .topo-categoria h2 {
+        font-size: 28px;
+      }
+
+      .placa img {
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>HEEEPH</h1>
+  </header>
+
+  <section class="topo-categoria">
+    <h2>Trip</h2>
+    <p>
+      Placas decorativas com clima psicodélico, surreal e viajado, feitas para quem gosta
+      de cores, sensações, arte solta e ambientes que fogem do óbvio.
+    </p>
+  </section>
+
+  <section class="galeria">
+    <div class="grid-placas">
+
+      <div class="placa">
+        <img src="/placas/trip/trip1.png" alt="Trip 1">
+        <h3>Placa Trip 1</h3>
+        <p>Uma peça para quem gosta de cor, viagem visual e identidade forte.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip2.png" alt="Trip 2">
+        <h3>Placa Trip 2</h3>
+        <p>Perfeita para ambientes criativos, ousados e fora do comum.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip3.png" alt="Trip 3">
+        <h3>Placa Trip 3</h3>
+        <p>Um toque psicodélico para uma parede com personalidade.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip4.png" alt="Trip 4">
+        <h3>Placa Trip 4</h3>
+        <p>Visual intenso para quem gosta de arte livre e expressão.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip5.png" alt="Trip 5">
+        <h3>Placa Trip 5</h3>
+        <p>Mais cor, mais imaginação e mais alma para o ambiente.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip6.png" alt="Trip 6">
+        <h3>Placa Trip 6</h3>
+        <p>Feita para quem curte um clima diferente, artístico e viajante.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip7.png" alt="Trip 7">
+        <h3>Placa Trip 7</h3>
+        <p>Uma peça decorativa com vibração forte e fora do padrão.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip8.png" alt="Trip 8">
+        <h3>Placa Trip 8</h3>
+        <p>Ideal para espaços que pedem arte, cor e liberdade.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip9.png" alt="Trip 9">
+        <h3>Placa Trip 9</h3>
+        <p>Uma composição que transforma o ambiente com clima psicodélico.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip10.png" alt="Trip 10">
+        <h3>Placa Trip 10</h3>
+        <p>Um detalhe marcante para paredes com estilo próprio.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip11.png" alt="Trip 11">
+        <h3>Placa Trip 11</h3>
+        <p>Presença visual para quem gosta de fugir do óbvio.</p>
+      </div>
+
+      <div class="placa">
+        <img src="/placas/trip/trip12.png" alt="Trip 12">
+        <h3>Placa Trip 12</h3>
+        <p>Feita para dar vida, cor e estranheza boa ao espaço.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="botoes-voltar">
+    <a href="categorias.html">VOLTAR PARA CATEGORIAS</a>
+    <a href="index.html">VOLTAR PARA HOME</a>
+  </div>
+
+  <footer>
+    <p>© 2026 HEEEPH - Placas Decorativas</p>
+  </footer>
+
+</body>
+</html>
