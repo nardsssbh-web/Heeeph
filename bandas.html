@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bandas - HEEEPH</title>
-
+  <title>BANDAS | HEEEPH</title>
   <style>
     * {
       margin: 0;
@@ -12,376 +11,502 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --preto: #0b0b0b;
-      --amarelo: #d8a12e;
-      --amarelo-claro: #f0cd63;
-      --bege: #efe7d9;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
+      background: #000;
+      color: #fff;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bege);
-      color: #111;
-      overflow-x: hidden;
     }
 
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(1200px, 94%);
-      margin: 0 auto;
-    }
-
-    .header {
+    header {
       position: sticky;
       top: 0;
-      z-index: 2000;
-      background: #000;
-      box-shadow: 0 2px 14px rgba(0,0,0,0.28);
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.96);
+      border-bottom: 1px solid #222;
     }
 
-    .header-container {
-      min-height: 76px;
+    .topo {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 18px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 20px;
     }
 
     .logo {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 3px;
       color: #fff;
-      font-size: 2.1rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      white-space: nowrap;
+      text-decoration: none;
     }
 
-    .menu {
+    nav {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 30px;
+      gap: 22px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
-    .menu a {
+    nav a {
       color: #fff;
-      font-size: 0.95rem;
-      font-weight: 800;
-      text-transform: uppercase;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 1px;
       transition: 0.2s;
     }
 
-    .menu a:hover,
-    .menu a.ativo {
-      color: var(--amarelo-claro);
+    nav a:hover {
+      color: #f0d000;
     }
 
-    .cart-icon {
-      color: #fff;
-      font-size: 1.25rem;
-      line-height: 1;
-      white-space: nowrap;
+    .carrinho-topo {
+      background: #f0d000;
+      color: #000;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: bold;
     }
 
-    .hero-categoria {
-      background: linear-gradient(to bottom, #151515 0%, #1b1b1b 100%);
-      padding: 38px 0 30px;
+    .carrinho-topo:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .pagina {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .titulo {
       text-align: center;
+      margin-bottom: 40px;
     }
 
-    .hero-categoria h1 {
-      color: #fff;
-      font-size: 2.4rem;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
+    .titulo h1 {
+      font-size: 42px;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      color: #f0d000;
     }
 
-    .hero-categoria p {
-      color: #ddd;
-      font-size: 1.05rem;
-      max-width: 820px;
-      margin: 0 auto;
-      line-height: 1.7;
+    .titulo p {
+      font-size: 16px;
+      color: #ccc;
     }
 
-    .galeria {
-      padding: 48px 0 70px;
-      background: var(--bege);
-    }
-
-    .grid-placas {
-      width: min(1120px, 94%);
-      margin: 0 auto;
+    .grade-placas {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+    }
+
+    .item-placa {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .link-placa {
+      width: 100%;
+      text-decoration: none;
+      color: inherit;
+      display: block;
     }
 
     .placa {
-      background: rgba(255,255,255,0.82);
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+      width: 100%;
+      background: #e9e5dd;
+      border-radius: 20px;
+      padding: 14px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
     }
 
-  .placa:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
-}
-
-.placa img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 12px;
-  background: #ddd;
-}
-
-.placa.horizontal img {
-  aspect-ratio: 14 / 10;
-  object-fit: cover;
-  background: #ddd;
-}
-    .atalhos {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 36px;
+    .placa:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.20);
     }
 
-    .atalhos a {
-      display: inline-block;
-      background: #111;
-      color: var(--amarelo-claro);
-      padding: 14px 24px;
-      border-radius: 999px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: 0.2s ease;
-    }
-
-    .atalhos a:hover {
-      transform: translateY(-2px);
-    }
-
-    .footer {
-      background: #111;
-      color: #fff;
-      text-align: center;
-      padding: 22px 14px;
-      font-size: 0.95rem;
-    }
-
-    .whatsapp-fixo {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 3000;
-      width: 240px;
-      height: auto;
+    .img-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
     }
 
-    .whatsapp-fixo img {
+    .placa img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+      background: #ddd;
+    }
+
+    .preco-placa {
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      text-align: center;
+    }
+
+    .voltar {
+      text-align: center;
+      margin-top: 45px;
+    }
+
+    .voltar a {
+      display: inline-block;
+      text-decoration: none;
+      color: #000;
+      background: #f0d000;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .voltar a:hover {
+      background: #fff;
+    }
+
+    .zap {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 999;
+      width: 68px;
+      height: 68px;
+    }
+
+    .zap img {
       width: 100%;
-      height: auto;
-      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.28));
+      height: 100%;
+      display: block;
     }
 
-    @media (max-width: 1024px) {
-      .header-container {
+    @media (max-width: 768px) {
+      .topo {
         flex-direction: column;
-        padding: 14px 0;
+        justify-content: center;
       }
 
-      .grid-placas {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .whatsapp-fixo {
-        width: 180px;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .menu {
-        gap: 14px;
-      }
-
-      .menu a {
-        font-size: 0.82rem;
-      }
-
-      .grid-placas {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .hero-categoria h1 {
-        font-size: 2rem;
-      }
-
-      .whatsapp-fixo {
-        width: 130px;
-      }
-    }
-
-    @media (max-width: 430px) {
       .logo {
-        font-size: 1.6rem;
+        font-size: 24px;
       }
 
-      .grid-placas {
-        grid-template-columns: 1fr;
+      nav {
+        justify-content: center;
+        gap: 16px;
       }
 
-      .whatsapp-fixo {
-        width: 100px;
+      .titulo h1 {
+        font-size: 30px;
+      }
+
+      .titulo p {
+        font-size: 14px;
+      }
+
+      .grade-placas {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+
+      .preco-placa {
+        font-size: 16px;
+      }
+
+      .zap {
+        width: 58px;
+        height: 58px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .grade-placas {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pagina {
+        padding: 30px 14px 80px;
+      }
+
+      .placa {
+        padding: 10px;
+      }
+
+      .img-box {
+        border-radius: 10px;
+      }
+
+      .preco-placa {
+        font-size: 15px;
       }
     }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <div class="container header-container">
-      <div class="logo">HEEEPH</div>
-
-      <nav class="menu">
+  <header>
+    <div class="topo">
+      <a href="index.html" class="logo">HEEEPH</a>
+      <nav>
         <a href="index.html">HOME</a>
         <a href="categorias.html">COLEÇÃO</a>
-        <a href="sobre.html">O QUE É HEEEPH?</a>
-        <a href="fotos-reais.html">FOTOS REAIS</a>
-        <a href="https://wa.me/5511998302901" target="_blank">CONTATOS</a>
+        <a href="sobre.html">SOBRE</a>
+        <a href="carrinho.html" class="carrinho-topo">CARRINHO</a>
       </nav>
-
-      <div class="cart-icon">🛒</div>
     </div>
   </header>
 
-  <main>
-    <section class="hero-categoria">
-      <div class="container">
-        <h1>Bandas</h1>
-        <p>
-          Placas decorativas com peso, atitude e alma de palco. Do clássico ao pancadão,
-          aqui a parede fala alto.
-        </p>
-      </div>
+  <main class="pagina">
+    <section class="titulo">
+      <h1>BANDAS</h1>
+      <p>Placas decorativas com tema rock e metal</p>
     </section>
 
-    <section class="galeria">
-      <div class="grid-placas">
+    <section class="grade-placas">
 
-        <div class="placa"><img src="/placas/bandas/accept.png" alt="accept"></div>
-        <div class="placa horizontal"><img src="/placas/bandas/acdc-bb.png" alt="acdc-bb"></div>
-        <div class="placa"><img src="/placas/bandas/angra.png" alt="angra"></div>
-        <div class="placa"><img src="/placas/bandas/arp.png" alt="arp"></div>
-
-        <div class="placa"><img src="/placas/bandas/bls.png" alt="bls"></div>
-        <div class="placa horizontal"><img src="/placas/bandas/bs-caravan.png" alt="bs-caravan"></div>
-        <div class="placa"><img src="/placas/bandas/bs-hell.png" alt="bs-hell"></div>
-        <div class="placa"><img src="/placas/bandas/bs-master.png" alt="bs-master"></div>
-
-        <div class="placa"><img src="/placas/bandas/cannibal.png" alt="cannibal"></div>
-       <div class="placa horizontal"><img src="/placas/bandas/cannibal1.png" alt="cannibal1"></div>
-        <div class="placa"><img src="/placas/bandas/chindrenofbodom.png" alt="chindrenofbodom"></div>
-        <div class="placa horizontal"><img src="/placas/bandas/creedence.png" alt="creedence"></div>
-
-        <div class="placa horizontal"><img src="/placas/bandas/death.png" alt="death"></div>
-        <div class="placa horizontal"><img src="/placas/bandas/deep-purple.png" alt="deep-purple"></div>
-        <div class="placa"><img src="/placas/bandas/def-leppard.png" alt="def-leppard"></div>
-        <div class="placa"><img src="/placas/bandas/dio-holy.png" alt="dio-holy"></div>
-
-        <div class="placa"><img src="/placas/bandas/dire-straits-brother.png" alt="dire-straits-brother"></div>
-        <div class="placa"><img src="/placas/bandas/dream-theater.png" alt="dream-theater"></div>
-        <div class="placa"><img src="/placas/bandas/helloween-keeper1.png" alt="helloween-keeper1"></div>
-        <div class="placa"><img src="/placas/bandas/helloween-keeper2.png" alt="helloween-keeper2"></div>
-
-        <div class="placa"><img src="/placas/bandas/helloween1.png" alt="helloween1"></div>
-        <div class="placa"><img src="/placas/bandas/helloween2.png" alt="helloween2"></div>
-        <div class="placa"><img src="/placas/bandas/helloween3.png" alt="helloween3"></div>
-        <div class="placa"><img src="/placas/bandas/iron-killers.png" alt="iron-killers"></div>
-
-        <div class="placa"><img src="/placas/bandas/iron1.png" alt="iron1"></div>
-        <div class="placa"><img src="/placas/bandas/iron2.png" alt="iron2"></div>
-        <div class="placa"><img src="/placas/bandas/judas-priest.png" alt="judas-priest"></div>
-        <div class="placa"><img src="/placas/bandas/kiss.png" alt="kiss"></div>
-
-        <div class="placa"><img src="/placas/bandas/korn-issues.png" alt="korn-issues"></div>
-        <div class="placa"><img src="/placas/bandas/korn.png" alt="korn"></div>
-        <div class="placa"><img src="/placas/bandas/led1.png" alt="led1"></div>
-        <div class="placa"><img src="/placas/bandas/led2.png" alt="led2"></div>
-
-        <div class="placa"><img src="/placas/bandas/machine-head.png" alt="machine-head"></div>
-        <div class="placa"><img src="/placas/bandas/megatheath-rust.png" alt="megatheath-rust"></div>
-        <div class="placa"><img src="/placas/bandas/metallica-justice.png" alt="metallica-justice"></div>
-        <div class="placa"><img src="/placas/bandas/metallica-master.png" alt="metallica-master"></div>
-
-        <div class="placa"><img src="/placas/bandas/metallica-reload.png" alt="metallica-reload"></div>
-        <div class="placa"><img src="/placas/bandas/motohead-1916.png" alt="motohead-1916"></div>
-        <div class="placa"><img src="/placas/bandas/motorhead-no remorse.png" alt="motorhead-no remorse"></div>
-        <div class="placa"><img src="/placas/bandas/pantera-far.png" alt="pantera-far"></div>
-
-        <div class="placa"><img src="/placas/bandas/pantera-hell.png" alt="pantera-hell"></div>
-        <div class="placa"><img src="/placas/bandas/pantera-vulgar.png" alt="pantera-vulgar"></div>
-        <div class="placa"><img src="/placas/bandas/pink-floyd-the wall.png" alt="pink-floyd-the wall"></div>
-        <div class="placa"><img src="/placas/bandas/pink-floyd.png" alt="pink-floyd"></div>
-
-        <div class="placa"><img src="/placas/bandas/planet-hemp-sagaz.png" alt="planet-hemp-sagaz"></div>
-        <div class="placa"><img src="/placas/bandas/planet-hemp-usuarios.png" alt="planet-hemp-usuarios"></div>
-        <div class="placa"><img src="/placas/bandas/planet-hemp.png" alt="planet-hemp"></div>
-        <div class="placa"><img src="/placas/bandas/rammstein.png" alt="rammstein"></div>
-
-        <div class="placa"><img src="/placas/bandas/rammstein2.png" alt="rammstein2"></div>
-        <div class="placa"><img src="/placas/bandas/ratm-los.png" alt="ratm-los"></div>
-        <div class="placa"><img src="/placas/bandas/saxon-banda.png" alt="saxon-banda"></div>
-        <div class="placa"><img src="/placas/bandas/saxon.png" alt="saxon"></div>
-
-        <div class="placa"><img src="/placas/bandas/sepultura-caos.png" alt="sepultura-caos"></div>
-        <div class="placa"><img src="/placas/bandas/sepultura-inner.png" alt="sepultura-inner"></div>
-        <div class="placa"><img src="/placas/bandas/sepultura-roots.png" alt="sepultura-roots"></div>
-        <div class="placa"><img src="/placas/bandas/skid-row.png" alt="skid-row"></div>
-
-        <div class="placa horizontal"><img src="/placas/bandas/slayer.png" alt="slayer"></div>
-        <div class="placa"><img src="/placas/bandas/slipknot-logo.png" alt="slipknot-logo"></div>
-        <div class="placa"><img src="/placas/bandas/suicide-silence.png" alt="suicide-silence"></div>
-        <div class="placa"><img src="/placas/bandas/twisted-sister.png" alt="twisted-sister"></div>
-
-        <div class="placa"><img src="/placas/bandas/whitesnake-1987.png" alt="whitesnake-1987"></div>
-
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/accept.png" alt="accept">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
       </div>
 
-      <div class="atalhos">
-        <a href="categorias.html">Voltar para Categorias</a>
-        <a href="index.html">Voltar para Home</a>
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/acdc-bb.png" alt="acdc-bb">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
       </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/aerosmith.png" alt="aerosmith">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/angra.png" alt="angra">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/black-sabbath.png" alt="black-sabbath">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/bs-caravan.png" alt="bs-caravan">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/deep-purple.png" alt="deep-purple">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/guns-n-roses.png" alt="guns-n-roses">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/iron-maiden.png" alt="iron-maiden">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/judas-priest.png" alt="judas-priest">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/kiss.png" alt="kiss">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/led-zeppelin.png" alt="led-zeppelin">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/metallica.png" alt="metallica">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/motorhead.png" alt="motorhead">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/nirvana.png" alt="nirvana">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/pink-floyd.png" alt="pink-floyd">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/queen.png" alt="queen">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/rammstein.png" alt="rammstein">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/slayer.png" alt="slayer">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="carrinho.html" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/system-of-a-down.png" alt="system-of-a-down">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
     </section>
+
+    <div class="voltar">
+      <a href="categorias.html">VOLTAR PARA CATEGORIAS</a>
+    </div>
   </main>
 
-  <footer class="footer">
-    <p>© 2026 HEEEPH - Placas Decorativas</p>
-  </footer>
-
-  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" aria-label="WhatsApp">
-    <img src="botoes/whatsapp.png" alt="WhatsApp">
+  <a class="zap" href="https://wa.me/5511000000000" target="_blank">
+    <img src="/botoes/whatsapp.png" alt="WhatsApp">
   </a>
 
 </body>
