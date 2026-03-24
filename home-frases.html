@@ -3,25 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HEEEPH | Home / Frases</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Home / Frases - HEEEPH</title>
 
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
       background-color: #e6dfd3;
-      font-family: Arial, Helvetica, sans-serif;
       color: #111;
     }
 
     header {
       background-color: #111;
-      padding: 18px 20px;
+      padding: 20px;
       text-align: center;
       border-bottom: 3px solid #c9a227;
     }
@@ -30,7 +29,6 @@
       color: #f0c64c;
       font-size: 28px;
       letter-spacing: 2px;
-      margin: 0;
     }
 
     .topo-categoria {
@@ -41,13 +39,12 @@
     .topo-categoria h2 {
       font-size: 34px;
       margin-bottom: 10px;
-      color: #111;
     }
 
     .topo-categoria p {
       font-size: 16px;
       color: #333;
-      max-width: 700px;
+      max-width: 750px;
       margin: 0 auto;
       line-height: 1.5;
     }
@@ -70,8 +67,7 @@
       overflow: hidden;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      text-align: center;
-      padding-bottom: 14px;
+      padding: 10px;
     }
 
     .placa:hover {
@@ -81,42 +77,34 @@
 
     .placa img {
       width: 100%;
-      height: 260px;
+      aspect-ratio: 10 / 14;
       object-fit: cover;
       display: block;
+      border-radius: 8px;
       background-color: #d8d1c6;
     }
 
-    .placa h3 {
-      font-size: 17px;
-      margin: 14px 10px 6px;
-      color: #111;
-    }
-
-    .placa p {
-      font-size: 14px;
-      color: #555;
-      padding: 0 12px;
-      line-height: 1.4;
-    }
-
-    .voltar-home {
-      text-align: center;
+    .botoes-voltar {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
       padding: 0 20px 50px;
     }
 
-    .voltar-home a {
+    .botoes-voltar a {
       display: inline-block;
       background-color: #111;
       color: #f0c64c;
       text-decoration: none;
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
       font-weight: bold;
+      font-size: 14px;
       transition: 0.2s ease;
     }
 
-    .voltar-home a:hover {
+    .botoes-voltar a:hover {
       background-color: #222;
       transform: scale(1.03);
     }
@@ -134,10 +122,6 @@
       .topo-categoria h2 {
         font-size: 28px;
       }
-
-      .placa img {
-        height: 220px;
-      }
     }
   </style>
 </head>
@@ -151,90 +135,31 @@
     <h2>Home / Frases</h2>
     <p>
       Placas decorativas com frases marcantes, divertidas e cheias de personalidade.
-      Escolha o estilo que combina com seu canto, seu bar, sua sala ou seu jeito de ver a vida.
+      Feitas para dar voz à parede e deixar o ambiente com mais presença.
     </p>
   </section>
 
   <section class="galeria">
     <div class="grid-placas">
 
-      <div class="placa">
-        <img src="placas/frases/frase1.png" alt="Frase 1">
-        <h3>Frase Decorativa 1</h3>
-        <p>Modelo de placa com frase para decorar com atitude.</p>
-      </div>
+      <div class="placa"><img src="/placas/home-frases/amigo-familia.png" alt="amigo-familia"></div>
+      <div class="placa"><img src="/placas/home-frases/amizade.png" alt="amizade"></div>
+      <div class="placa"><img src="/placas/home-frases/beleza.png" alt="beleza"></div>
+      <div class="placa"><img src="/placas/home-frases/frase1.png" alt="frase1"></div>
 
-      <div class="placa">
-        <img src="placas/frases/frase2.png" alt="Frase 2">
-        <h3>Frase Decorativa 2</h3>
-        <p>Uma peça cheia de estilo para deixar o ambiente mais vivo.</p>
-      </div>
+      <div class="placa"><img src="/placas/home-frases/frase2.png" alt="frase2"></div>
+      <div class="placa"><img src="/placas/home-frases/frase3.png" alt="frase3"></div>
+      <div class="placa"><img src="/placas/home-frases/frase4.png" alt="frase4"></div>
+      <div class="placa"><img src="/placas/home-frases/frase5.png" alt="frase5"></div>
 
-      <div class="placa">
-        <img src="placas/frases/frase3.png" alt="Frase 3">
-        <h3>Frase Decorativa 3</h3>
-        <p>Frases que conversam com a alma da casa e com a personalidade do dono.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase4.png" alt="Frase 4">
-        <h3>Frase Decorativa 4</h3>
-        <p>Ideal para cozinha, bar, sala ou aquele cantinho especial.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase5.png" alt="Frase 5">
-        <h3>Frase Decorativa 5</h3>
-        <p>Uma frase boa no lugar certo muda o ambiente inteiro.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase6.png" alt="Frase 6">
-        <h3>Frase Decorativa 6</h3>
-        <p>Visual forte, presença marcante e personalidade de sobra.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase7.png" alt="Frase 7">
-        <h3>Frase Decorativa 7</h3>
-        <p>Perfeita para quem gosta de ambiente autêntico e cheio de identidade.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase8.png" alt="Frase 8">
-        <h3>Frase Decorativa 8</h3>
-        <p>Mais que decoração, uma mensagem com presença.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase9.png" alt="Frase 9">
-        <h3>Frase Decorativa 9</h3>
-        <p>Uma placa feita para dar charme, humor ou reflexão ao espaço.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase10.png" alt="Frase 10">
-        <h3>Frase Decorativa 10</h3>
-        <p>Estilo clássico de quem entende que detalhe bem feito vale ouro.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase11.png" alt="Frase 11">
-        <h3>Frase Decorativa 11</h3>
-        <p>Mais uma opção para compor seu ambiente com originalidade.</p>
-      </div>
-
-      <div class="placa">
-        <img src="placas/frases/frase12.png" alt="Frase 12">
-        <h3>Frase Decorativa 12</h3>
-        <p>Charmosa, expressiva e pronta para chamar atenção na parede.</p>
-      </div>
+      <div class="placa"><img src="/placas/home-frases/frase6.png" alt="frase6"></div>
 
     </div>
   </section>
 
-  <div class="voltar-home">
-    <a href="index.html">← Voltar para a Home</a>
+  <div class="botoes-voltar">
+    <a href="categorias.html">VOLTAR PARA CATEGORIAS</a>
+    <a href="index.html">VOLTAR PARA HOME</a>
   </div>
 
   <footer>
