@@ -220,81 +220,9 @@
       height: auto;
     }
 
-    .sobre {
-      background: var(--preto);
-      padding: 58px 0;
-    }
-
-    .sobre-box {
-      width: min(1120px, 94%);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.05fr 1fr;
-      gap: 30px;
-      align-items: center;
-    }
-
-    .sobre-imagem {
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
-      background: #ddd;
-    }
-
-    .sobre-texto h2 {
-      font-size: 2rem;
-      margin-bottom: 16px;
-      color: #111;
-    }
-
-    .sobre-texto p {
-      font-size: 1.06rem;
-      line-height: 1.75;
-      margin-bottom: 14px;
-      color: #222;
-    }
-
-    .categorias {
-      background: #f6f0e4;
-      padding: 56px 0 68px;
-    }
-
-    .categorias h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 28px;
-      color: #111;
-    }
-
-    .grid-categorias {
-      width: min(1120px, 94%);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
-    }
-
-    .grid-categorias a {
-      min-height: 98px;
-      background: rgba(255,255,255,0.75);
-      border-radius: 18px;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .grid-categorias a:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.12);
-    }
-
-    .grid-categorias img {
-      max-height: 68px;
-      width: auto;
-      object-fit: contain;
+    .espaco-livre {
+      background: var(--bege);
+      min-height: 320px;
     }
 
     .footer {
@@ -310,7 +238,7 @@
       right: 18px;
       bottom: 18px;
       z-index: 3000;
-      width: 240px; /* 4x maior */
+      width: 240px;
       height: auto;
       display: flex;
       align-items: center;
@@ -329,10 +257,6 @@
         padding: 14px 0;
       }
 
-      .sobre-box {
-        grid-template-columns: 1fr;
-      }
-
       .carousel-stage {
         min-height: 380px;
       }
@@ -345,10 +269,6 @@
       .carousel-card.center {
         width: 260px;
         height: 360px;
-      }
-
-      .grid-categorias {
-        grid-template-columns: repeat(3, 1fr);
       }
 
       .whatsapp-fixo {
@@ -390,10 +310,6 @@
         font-size: 1.3rem;
       }
 
-      .grid-categorias {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .whatsapp-fixo {
         width: 130px;
       }
@@ -417,10 +333,6 @@
         height: 285px;
       }
 
-      .grid-categorias {
-        grid-template-columns: 1fr;
-      }
-
       .whatsapp-fixo {
         width: 100px;
       }
@@ -436,7 +348,7 @@
       <nav class="menu">
         <a href="index.html">HOME</a>
         <a href="categorias.html">COLEÇÃO</a>
-        <a href="#sobre">O QUE É HEEEPH?</a>
+        <a href="sobre.html">O QUE É HEEEPH?</a>
         <a href="fotos-reais.html">FOTOS REAIS</a>
         <a href="https://wa.me/5511998302901" target="_blank">CONTATOS</a>
       </nav>
@@ -481,51 +393,12 @@
 
       <div class="btn-categorias">
         <a href="categorias.html">
-          <img src="./botoes/categorias.png" alt="">
+          <img src="./botoes/categorias.png" alt="Categorias">
         </a>
       </div>
     </section>
 
-    <section class="sobre" id="sobre">
-      <div class="sobre-box">
-        <div class="sobre-imagem">
-          <img src="banner/sobre.png" alt="Sobre a HEEEPH">
-        </div>
-
-        <div class="sobre-texto">
-          <h2>O que é HEEEPH?</h2>
-          <p>
-            A HEEEPH nasceu para levar personalidade para a parede. Não é só decoração.
-            É presença, estilo e atitude. É placa com alma de rua, garagem, música, humor e memória boa.
-          </p>
-          <p>
-            A proposta é simples e forte: transformar ambiente comum em espaço com identidade.
-            Do quarto ao bar, da oficina ao cantinho gamer, a parede deixa de ser vazia e passa a falar.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="categorias" id="categorias">
-      <h2>Coleção</h2>
-
-      <div class="grid-categorias">
-        <a href="bandas.html"><img src="botoes/bandas.png" alt="Bandas"></a>
-        <a href="bebidas.html"><img src="botoes/bebidas.png" alt="Bebidas"></a>
-        <a href="fotos-reais.html"><img src="botoes/fotos-reais.png" alt="Fotos Reais"></a>
-        <a href="games.html"><img src="botoes/games.png" alt="Games"></a>
-
-        <a href="garage.html"><img src="botoes/garage.png" alt="Garage"></a>
-        <a href="home-frases.html"><img src="botoes/home-frases.png" alt="Home Frases"></a>
-        <a href="infantil.html"><img src="botoes/infantil.png" alt="Infantil"></a>
-        <a href="motos.html"><img src="botoes/motos.png" alt="Motos"></a>
-
-        <a href="musica.html"><img src="botoes/musica.png" alt="Música"></a>
-        <a href="rpg.html"><img src="botoes/rpg.png" alt="RPG"></a>
-        <a href="street.html"><img src="botoes/sreet.png" alt="Street"></a>
-        <a href="trip.html"><img src="botoes/trip.png" alt="Trip"></a>
-      </div>
-    </section>
+    <section class="espaco-livre"></section>
   </main>
 
   <footer class="footer">
@@ -538,8 +411,8 @@
 
   <script>
     const imagens = [
-      "placas/street/meditando.png",
-      "placas/street/naipes.png",
+      "placas/trip/meditando.png",
+      "placas/street/naipess.png",
       "placas/street/skatista.png",
       "placas/games/gta-sa.png",
       "placas/games/roblox.png"
