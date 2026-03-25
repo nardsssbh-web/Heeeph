@@ -1,18 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sobre | Heeeph</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O QUE É HEEEPH? - HEEEPH</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --preto: #050505;
+      --dourado: #f0c400;
+      --bege: #dcd4c6;
+      --branco: #ffffff;
+    }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: #000;
-      color: #fff;
-      text-align: center;
+      background: var(--bege);
+      color: var(--branco);
+      overflow-x: hidden;
     }
 
     a {
@@ -20,113 +30,254 @@
       color: inherit;
     }
 
-    .topbar {
-      background: #050505;
-      border-bottom: 2px solid #1a1a1a;
-      padding: 12px;
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .topo {
       position: sticky;
       top: 0;
-      z-index: 999;
+      z-index: 1000;
+      width: 100%;
+      background: #000;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .topo .wrap {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo a {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .menu-area {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-left: auto;
     }
 
     .menu {
       display: flex;
-      justify-content: center;
       align-items: center;
-      gap: 14px;
+      gap: 34px;
       flex-wrap: wrap;
-      font-size: 14px;
-      text-transform: uppercase;
+      justify-content: center;
     }
 
-    .menu a:hover {
-      color: #f0d000;
+    .menu a {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .menu a:hover,
+    .menu a.ativo {
+      color: var(--dourado);
+    }
+
+    .cart-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+    }
+
+    .cart-link img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -6px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: var(--dourado);
+      color: #000;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    }
+
+    .site-bg {
+      background: linear-gradient(to bottom, #0f0f0f 0%, #1c1c1c 100%);
+      min-height: 100vh;
+      padding: 30px 0 80px;
     }
 
     .container {
-      width: 100%;
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px 40px;
-    }
-
-    .container img {
-      width: 100%;
-      max-width: 900px;
-      height: auto;
-      display: block;
+      width: min(94%, 1500px);
       margin: 0 auto;
-      border-radius: 12px;
     }
 
-    .voltar {
-      margin-top: 30px;
-      display: inline-block;
-      padding: 12px 22px;
-      border: 2px solid #f0d000;
-      border-radius: 999px;
-      color: #fff000;
-      font-weight: bold;
-    }
-
-    .zap {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 220px;
-      z-index: 999;
-    }
-
-    .zap img {
+    .sobre-banner {
       width: 100%;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    .sobre-banner img {
+      width: 100%;
+      height: auto;
       display: block;
     }
 
     footer {
-      margin-top: 20px;
-      padding: 20px;
-      color: #aaa;
-      border-top: 1px solid #111;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 26px 15px;
+      font-size: 17px;
     }
 
-    @media (max-width: 600px) {
-      .menu {
-        font-size: 12px;
-        gap: 8px;
+    .whatsapp-fixo {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 999;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .whatsapp-fixo img {
+      width: 250px;
+      max-width: 250px;
+      height: auto;
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .topo .wrap {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
       }
 
-      .zap {
-        width: 58px;
-        bottom: 15px;
-        right: 15px;
+      .menu-area {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        gap: 18px;
+      }
+
+      .menu {
+        gap: 18px;
+      }
+
+      .whatsapp-fixo img {
+        width: 220px;
+        max-width: 220px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .logo a {
+        font-size: 28px;
+      }
+
+      .menu {
+        gap: 14px;
+      }
+
+      .menu a {
+        font-size: 14px;
+      }
+
+      .whatsapp-fixo {
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .whatsapp-fixo img {
+        width: 190px;
+        max-width: 190px;
       }
     }
   </style>
 </head>
-
 <body>
 
-  <header class="topbar">
-    <nav class="menu">
-  <a href="index.html">Home</a>
-  <a href="categorias.html">Coleção</a>
-  <a href="sobre.html">Sobre</a>
-   <a href="#">Contato</a>
-</nav>
+  <header class="topo">
+    <div class="wrap">
+      <div class="logo">
+        <a href="index.html">HEEEPH</a>
+      </div>
+
+      <div class="menu-area">
+        <nav class="menu">
+          <a href="index.html">HOME</a>
+          <a href="categorias.html">COLEÇÃO</a>
+          <a href="sobre.html" class="ativo">O QUE É HEEEPH?</a>
+          <a href="fotos-reais.html">FOTOS REAIS</a>
+          <a href="contatos.html">CONTATOS</a>
+        </nav>
+
+        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+          <img src="botoes/botao-carrinho.png" alt="Carrinho">
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
   </header>
 
-  <div class="container">
-    <img src="/Sobre.png" alt="Sobre a Heeeph">
-    <a class="voltar" href="index.html">Voltar para Home</a>
-  </div>
+  <main class="site-bg">
+    <div class="container">
+      <div class="sobre-banner">
+        <img src="banner/sobre.png" alt="Sobre a HEEEPH">
+      </div>
+    </div>
+  </main>
 
   <footer>
-    © 2026 Heeeph
+    © 2026 HEEEPH - Placas Decorativas
   </footer>
 
-  <a href="https://wa.me/5511998302901" target="_blank" class="zap">
-    <img src="/botoes/Whatsapp.png" alt="WhatsApp">
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
   </a>
+
+  <script>
+    function getCart() {
+      return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const countEl = document.getElementById('cartCount');
+      if (countEl) countEl.textContent = total;
+    }
+
+    updateCartCount();
+  </script>
 
 </body>
 </html>
