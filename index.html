@@ -24,7 +24,7 @@
       font-family: Arial, Helvetica, sans-serif;
       color: var(--text);
       background:
-        linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.72)),
+        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.38)),
         url("banner/fundo.png") center top / cover no-repeat fixed;
       background-color: #000;
       overflow-x: hidden;
@@ -176,14 +176,14 @@
       height: auto;
     }
 
-    /* BLOCO ÚNICO */
-    .banner-vitrine {
+    /* BLOCO PRINCIPAL */
+    .vitrine-principal {
       width: min(90%, 1120px);
       margin: 10px auto 0;
       padding: 12px 18px 18px;
       border-radius: 14px;
       background:
-        linear-gradient(180deg, rgba(18,10,7,.95), rgba(8,8,8,.96)),
+        linear-gradient(180deg, rgba(18,10,7,.92), rgba(8,8,8,.94)),
         url("banner/fundo.png") center center / cover no-repeat;
       box-shadow:
         0 10px 24px rgba(0,0,0,.30),
@@ -192,7 +192,7 @@
       overflow: hidden;
     }
 
-    .banner-vitrine::before {
+    .vitrine-principal::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -201,7 +201,7 @@
       pointer-events: none;
     }
 
-    .banner-topo {
+    .vitrine-topo {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: start;
@@ -295,9 +295,9 @@
       font-weight: 700;
     }
 
-    .banner-centro-img {
-      width: 150px;
-      height: 210px;
+    .placa-central-wrap {
+      width: 180px;
+      height: 250px;
       border-radius: 10px;
       overflow: hidden;
       background: #111;
@@ -305,14 +305,15 @@
       box-shadow: 0 8px 20px rgba(0,0,0,.28);
     }
 
-    .banner-centro-img img {
+    .placa-central-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
+    /* PARTE DE BAIXO */
     .vitrine-rodape {
-      margin-top: 14px;
+      margin-top: 16px;
       display: grid;
       grid-template-columns: 70px 1fr 70px;
       align-items: center;
@@ -344,6 +345,13 @@
 
     .info-placa {
       text-align: center;
+      background: rgba(0,0,0,.40);
+      border-radius: 18px;
+      padding: 10px 18px 14px;
+      border: 1px solid rgba(180,110,35,.6);
+      box-shadow: 0 10px 18px rgba(0,0,0,.22);
+      max-width: 360px;
+      margin: 0 auto;
     }
 
     .info-placa h2 {
@@ -378,6 +386,30 @@
       font-size: 17px;
       color: var(--gold);
       font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .btn-comprar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 230px;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f7cf4f, #d89d07);
+      color: #000;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.28);
+      transition: transform .2s ease, filter .2s ease;
+    }
+
+    .btn-comprar:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
     }
 
     .botao-categorias {
@@ -432,7 +464,7 @@
     }
 
     @media (max-width: 1200px) {
-      .banner-topo {
+      .vitrine-topo {
         grid-template-columns: 1fr;
         gap: 16px;
       }
@@ -466,9 +498,9 @@
         font-size: 22px;
       }
 
-      .banner-centro-img {
-        width: 140px;
-        height: 195px;
+      .placa-central-wrap {
+        width: 165px;
+        height: 230px;
       }
 
       .whatsapp-fixo img {
@@ -508,7 +540,7 @@
         border-radius: 12px;
       }
 
-      .banner-vitrine {
+      .vitrine-principal {
         width: 94%;
         padding: 12px 10px 16px;
         border-radius: 12px;
@@ -530,9 +562,9 @@
         font-size: 18px;
       }
 
-      .banner-centro-img {
-        width: 130px;
-        height: 180px;
+      .placa-central-wrap {
+        width: 150px;
+        height: 210px;
       }
 
       .vitrine-rodape {
@@ -555,6 +587,12 @@
 
       .preco-placa {
         font-size: 15px;
+      }
+
+      .btn-comprar {
+        min-width: 190px;
+        font-size: 14px;
+        padding: 10px 14px;
       }
 
       .botao-categorias img {
@@ -608,8 +646,8 @@
           </div>
         </div>
 
-        <div class="banner-vitrine">
-          <div class="banner-topo">
+        <div class="vitrine-principal">
+          <div class="vitrine-topo">
             <div class="coluna esq">
               <div class="medidas">
                 <div>20x28cm</div>
@@ -633,7 +671,7 @@
                 <span class="l2">Placas Personalizadas</span>
               </div>
 
-              <div class="banner-centro-img">
+              <div class="placa-central-wrap">
                 <img id="placaPrincipal" src="placas/street/naipess.png" alt="Placa em destaque">
               </div>
             </div>
@@ -664,6 +702,7 @@
               <div class="medida-atual" id="medidaAtual">20x28cm</div>
               <div class="nome-placa" id="nomeAtual">Placa Naipes</div>
               <div class="preco-placa" id="precoAtual">preço aqui</div>
+              <button class="btn-comprar" id="btnComprar">Comprar agora</button>
             </div>
 
             <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
@@ -693,11 +732,33 @@
       return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
     }
 
+    function saveCart(cart) {
+      localStorage.setItem('heeeph_cart', JSON.stringify(cart));
+      updateCartCount();
+    }
+
     function updateCartCount() {
       const cart = getCart();
       const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
       const countEl = document.getElementById('cartCount');
       if (countEl) countEl.textContent = total;
+    }
+
+    function addToCart(item) {
+      const cart = getCart();
+      const existingIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+
+      if (existingIndex > -1) {
+        cart[existingIndex].quantity += 1;
+      } else {
+        cart.push({
+          ...item,
+          quantity: 1
+        });
+      }
+
+      saveCart(cart);
+      window.location.href = 'carrinho.html';
     }
 
     updateCartCount();
@@ -760,6 +821,10 @@
     document.getElementById('nextBtn').addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % produtosDestaque.length;
       renderCarouselPrincipal();
+    });
+
+    document.getElementById('btnComprar').addEventListener('click', () => {
+      addToCart(produtosDestaque[currentIndex]);
     });
 
     setInterval(() => {
