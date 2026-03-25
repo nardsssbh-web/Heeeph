@@ -479,7 +479,7 @@
         </div>
 
         <div class="banner-secundario">
-          <img src="banner/banner-secundario.png" alt="Medidas das placas decorativas">
+          <img src="banner/banner-medidas.png" alt="Medidas das placas decorativas">
         </div>
       </div>
     </section>
@@ -498,7 +498,7 @@
 
         <div class="botao-categorias">
           <a href="categorias.html">
-            <img src="botoes/acesse-todas-categorias.png" alt="Acesse todas as categorias">
+            <img src="botoes/categorias.png" alt="Categorias">
           </a>
         </div>
       </div>
@@ -516,10 +516,6 @@
   </a>
 
   <script>
-    /* =========================
-       CARRINHO - LOCALSTORAGE
-    ========================== */
-
     function getCart() {
       return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
     }
@@ -555,40 +551,36 @@
 
     updateCartCount();
 
-    /* =========================
-       CARROSSEL DE DESTAQUE
-    ========================== */
-
     const produtosDestaque = [
       {
-        id: 'destaque-naipes',
-        nome: 'Placa Naipes 10x15cm',
-        preco: 'preço aqui',
-        imagem: 'placas/destaque/naipes.png'
-      },
-      {
         id: 'destaque-skatista',
-        nome: 'Placa Skatista 20x28cm',
+        nome: 'Placa Skatista',
         preco: 'preço aqui',
-        imagem: 'placas/destaque/skatista.png'
+        imagem: 'placas/street/skatista.png'
       },
       {
-        id: 'destaque-gta',
-        nome: 'Placa GTA',
+        id: 'destaque-naipes',
+        nome: 'Placa Naipes',
         preco: 'preço aqui',
-        imagem: 'placas/destaque/gta-5.png'
+        imagem: 'placas/street/naipes.png'
       },
       {
-        id: 'destaque-rock',
-        nome: 'Placa Rock',
+        id: 'destaque-gta-sa',
+        nome: 'Placa GTA SA',
         preco: 'preço aqui',
-        imagem: 'placas/destaque/placa-rock.png'
+        imagem: 'placas/games/gta-sa.png'
       },
       {
-        id: 'destaque-games',
-        nome: 'Placa Games',
+        id: 'destaque-velho',
+        nome: 'Placa Velho',
         preco: 'preço aqui',
-        imagem: 'placas/destaque/placa-games.png'
+        imagem: 'placas/motos/velho.png'
+      },
+      {
+        id: 'destaque-beleza',
+        nome: 'Placa Beleza',
+        preco: 'preço aqui',
+        imagem: 'placas/home-frases/beleza.png'
       }
     ];
 
@@ -612,16 +604,24 @@
         const card = document.createElement('div');
         card.className = `destaque-card ${produto.classe}`;
 
-        card.innerHTML = `
-          <button type="button" onclick='addToCart(${JSON.stringify(produto).replace(/'/g, "&apos;")})'>
-            <img src="${produto.imagem}" alt="${produto.nome}">
-          </button>
-          <div class="destaque-info">
-            <h3>${produto.nome}</h3>
-            <p>${produto.preco}</p>
-          </div>
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.addEventListener('click', () => addToCart(produto));
+
+        const img = document.createElement('img');
+        img.src = produto.imagem;
+        img.alt = produto.nome;
+
+        const info = document.createElement('div');
+        info.className = 'destaque-info';
+        info.innerHTML = `
+          <h3>${produto.nome}</h3>
+          <p>${produto.preco}</p>
         `;
 
+        button.appendChild(img);
+        card.appendChild(button);
+        card.appendChild(info);
         track.appendChild(card);
       });
     }
