@@ -12,41 +12,28 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --preto: #050505;
-      --preto-2: #0b0b0b;
-      --dourado: #f0c400;
-      --dourado-claro: #ffd74a;
-      --branco: #ffffff;
-      --sombra: rgba(0,0,0,0.35);
+    :root{
+      --gold: #f0c400;
+      --gold2: #ffd84d;
+      --bg: #070707;
+      --text: #fff;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      color: var(--branco);
+      color: var(--text);
       background:
-        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.72)),
+        linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.72)),
         url("banner/fundo.png") center top / cover no-repeat fixed;
+      background-color: #000;
       overflow-x: hidden;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    button {
-      font-family: inherit;
-    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    button { font-family: inherit; }
 
     .container {
       width: min(94%, 1500px);
@@ -58,22 +45,21 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: rgba(0, 0, 0, 0.96);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(0,0,0,.96);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
     }
 
     .topo::after {
       content: "";
       display: block;
-      width: 100%;
       height: 2px;
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(240,196,0,0.9) 10%,
-        rgba(240,196,0,0.14) 50%,
-        rgba(240,196,0,0.9) 90%,
+        rgba(240,196,0,.95) 10%,
+        rgba(240,196,0,.12) 50%,
+        rgba(240,196,0,.95) 90%,
         transparent 100%
       );
     }
@@ -106,9 +92,9 @@
     .menu {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 28px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .menu a {
@@ -116,22 +102,20 @@
       font-size: 16px;
       font-weight: 800;
       text-transform: uppercase;
-      transition: 0.2s ease;
       white-space: nowrap;
+      transition: .2s ease;
     }
 
     .menu a:hover,
-    .menu a.ativo {
-      color: var(--dourado);
-    }
+    .menu a.ativo { color: var(--gold); }
 
     .cart-link {
       position: relative;
+      width: 52px;
+      height: 52px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 52px;
-      height: 52px;
       flex-shrink: 0;
     }
 
@@ -149,193 +133,172 @@
       height: 22px;
       padding: 0 6px;
       border-radius: 999px;
-      background: var(--dourado);
+      background: var(--gold);
       color: #000;
       font-size: 12px;
       font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
     }
 
-    /* CONTEÚDO */
-    .site-bg {
-      min-height: 100vh;
-      padding-bottom: 80px;
-    }
-
+    /* HERO */
     .hero {
-      padding-top: 22px;
+      padding-top: 8px;
     }
 
-    /* BANNER PRINCIPAL */
     .banner-principal-wrap {
       position: relative;
-      border-radius: 30px;
-      padding: 10px;
-      background:
-        linear-gradient(145deg, rgba(94,56,18,0.95), rgba(13,10,8,0.95));
-      box-shadow:
-        0 18px 42px rgba(0,0,0,0.35),
-        inset 0 0 0 2px rgba(255,206,84,0.14);
+      border-radius: 22px;
+      padding: 6px;
+      background: linear-gradient(145deg, rgba(110,69,22,.95), rgba(10,8,7,.96));
+      box-shadow: 0 14px 30px rgba(0,0,0,.34);
     }
 
     .banner-principal-wrap::before {
       content: "";
       position: absolute;
-      inset: 5px;
-      border-radius: 24px;
-      border: 2px solid rgba(125, 78, 31, 0.9);
+      inset: 3px;
+      border-radius: 18px;
+      border: 2px solid rgba(130, 82, 30, .85);
+      box-shadow: inset 0 0 0 1px rgba(255,213,89,.10);
       pointer-events: none;
-      box-shadow:
-        inset 0 0 0 1px rgba(255,210,80,0.10),
-        0 0 18px rgba(0,0,0,0.25);
     }
 
     .banner-principal {
-      position: relative;
-      border-radius: 22px;
       overflow: hidden;
+      border-radius: 16px;
       background: #111;
     }
 
     .banner-principal img {
       width: 100%;
       height: auto;
-      display: block;
     }
 
-    /* BANNER SECUNDÁRIO NOVO */
-    .banner-rotativo {
-      width: min(92%, 1280px);
-      margin: 22px auto 0;
+    /* BANNER SECUNDÁRIO */
+    .banner-info {
+      width: min(90%, 1120px);
+      margin: 10px auto 0;
+      padding: 12px 18px;
+      border-radius: 14px;
       background:
-        linear-gradient(180deg, rgba(28,16,10,0.96), rgba(10,8,7,0.96)),
+        linear-gradient(180deg, rgba(18,10,7,.95), rgba(8,8,8,.96)),
         url("banner/fundo.png") center center / cover no-repeat;
-      border-radius: 18px;
-      padding: 18px 26px;
+      box-shadow:
+        0 10px 24px rgba(0,0,0,.30),
+        inset 0 0 0 1px rgba(255,208,0,.06);
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      gap: 24px;
-      box-shadow:
-        0 16px 34px rgba(0,0,0,0.35),
-        inset 0 0 0 1px rgba(255,208,0,0.08);
+      gap: 18px;
       position: relative;
       overflow: hidden;
     }
 
-    .banner-rotativo::before {
+    .banner-info::before {
       content: "";
       position: absolute;
       inset: 0;
-      border-radius: 18px;
-      box-shadow: inset 0 0 0 2px rgba(153,92,31,0.55);
+      border-radius: 14px;
+      box-shadow: inset 0 0 0 1px rgba(153,92,31,.45);
       pointer-events: none;
     }
 
-    .banner-coluna {
+    .coluna {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      min-width: 0;
+      gap: 8px;
     }
 
-    .banner-coluna.esquerda {
+    .coluna.esq {
       align-items: flex-start;
       text-align: left;
     }
 
-    .banner-coluna.direita {
+    .coluna.dir {
       align-items: flex-end;
       text-align: right;
     }
 
     .medidas {
-      font-size: 34px;
-      line-height: 1.02;
+      font-size: 26px;
       font-weight: 900;
-      color: var(--dourado-claro);
-      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
+      line-height: 1.02;
+      color: var(--gold2);
+      text-shadow: 0 2px 8px rgba(0,0,0,.35);
     }
 
     .frase-lado {
-      font-size: 22px;
-      line-height: 1.15;
-      color: #f6f1e4;
-      font-weight: 700;
+      font-size: 16px;
       font-style: italic;
+      font-weight: 700;
+      line-height: 1.15;
+      color: #f7f1e3;
     }
 
-    .frase-lado .destaque-txt {
-      color: var(--dourado);
+    .frase-lado .amarelo {
+      color: var(--gold);
     }
 
-    .lista-beneficios {
+    .beneficios {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 5px;
     }
 
-    .lista-beneficios li {
+    .beneficios li {
       display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 16px;
+      gap: 7px;
+      font-size: 13px;
       font-weight: 700;
+      line-height: 1.1;
       color: #fff;
-      line-height: 1.15;
     }
 
-    .lista-beneficios li::before {
+    .beneficios li::before {
       content: "★";
-      color: var(--dourado);
+      color: var(--gold);
       flex-shrink: 0;
-      margin-top: -1px;
     }
 
-    .banner-centro {
+    .centro {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      min-width: 260px;
+      gap: 8px;
+      min-width: 190px;
     }
 
     .titulo-centro {
       text-align: center;
       color: #f2dfb4;
       font-family: Georgia, "Times New Roman", serif;
+      text-shadow: 0 2px 8px rgba(0,0,0,.35);
       line-height: 1.02;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.35);
     }
 
-    .titulo-centro .linha-1 {
+    .titulo-centro .l1 {
       display: block;
-      font-size: 26px;
+      font-size: 18px;
       font-weight: 500;
     }
 
-    .titulo-centro .linha-2 {
+    .titulo-centro .l2 {
       display: block;
-      font-size: 28px;
+      font-size: 20px;
       font-weight: 700;
     }
 
     .banner-centro-img {
-      width: 240px;
-      height: 330px;
-      border-radius: 14px;
+      width: 150px;
+      height: 210px;
+      border-radius: 10px;
       overflow: hidden;
       background: #111;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
-      border: 2px solid rgba(255,208,0,0.10);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: 2px solid rgba(255,208,0,.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,.28);
     }
 
     .banner-centro-img img {
@@ -346,40 +309,40 @@
 
     /* DESTAQUE */
     .destaque {
-      padding: 42px 0 20px;
+      padding: 18px 0 14px;
     }
 
     .destaque h2 {
       text-align: center;
-      font-size: 32px;
+      font-size: 24px;
       color: #fff;
-      margin-bottom: 28px;
+      margin-bottom: 14px;
       font-weight: 900;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 10px rgba(0,0,0,.3);
     }
 
     .carousel-wrap {
       display: grid;
-      grid-template-columns: 90px 1fr 90px;
+      grid-template-columns: 60px 1fr 60px;
       align-items: center;
-      gap: 20px;
-      max-width: 1180px;
+      gap: 12px;
+      max-width: 900px;
       margin: 0 auto;
     }
 
     .carousel-btn {
-      width: 64px;
-      height: 64px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: none;
       background: #d9a62a;
       color: #000;
-      font-size: 34px;
+      font-size: 22px;
       font-weight: 900;
       cursor: pointer;
       margin: 0 auto;
-      transition: transform 0.2s ease, filter 0.2s ease;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+      transition: transform .2s ease, filter .2s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,.25);
     }
 
     .carousel-btn:hover {
@@ -391,15 +354,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 36px;
-      min-height: 430px;
+      gap: 20px;
+      min-height: 290px;
     }
 
     .destaque-card {
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: 0.25s ease;
     }
 
     .destaque-card button {
@@ -409,45 +371,44 @@
     }
 
     .destaque-card img {
-      display: block;
-      border-radius: 18px;
+      border-radius: 10px;
       object-fit: cover;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.35);
-      border: 2px solid rgba(255, 208, 0, 0.15);
+      box-shadow: 0 10px 22px rgba(0,0,0,.35);
+      border: 2px solid rgba(255,208,0,.10);
       background: #111;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform .2s ease, box-shadow .2s ease;
     }
 
     .destaque-card button:hover img {
       transform: translateY(-4px);
-      box-shadow: 0 16px 32px rgba(0,0,0,0.42);
+      box-shadow: 0 14px 26px rgba(0,0,0,.42);
     }
 
     .destaque-card.side img {
-      width: 180px;
-      height: 255px;
+      width: 95px;
+      height: 140px;
     }
 
     .destaque-card.center img {
-      width: 340px;
-      height: 480px;
+      width: 170px;
+      height: 245px;
     }
 
     .destaque-info {
       text-align: center;
-      margin-top: 12px;
+      margin-top: 8px;
     }
 
     .destaque-info h3 {
-      font-size: 18px;
+      font-size: 13px;
       color: #fff;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       font-weight: 800;
     }
 
     .destaque-info p {
-      font-size: 18px;
-      color: var(--dourado);
+      font-size: 13px;
+      color: var(--gold);
       font-weight: 900;
     }
 
@@ -456,14 +417,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 28px;
+      margin-top: 16px;
     }
 
     .botao-categorias a {
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      transition: transform 0.2s ease;
+      transition: transform .2s ease;
     }
 
     .botao-categorias a:hover {
@@ -471,8 +432,7 @@
     }
 
     .botao-categorias img {
-      display: block;
-      width: min(100%, 520px);
+      width: min(100%, 360px);
       height: auto;
       margin: 0 auto;
     }
@@ -481,16 +441,16 @@
       background: #000;
       color: #fff;
       text-align: center;
-      padding: 26px 15px;
-      font-size: 17px;
-      margin-top: 40px;
+      padding: 18px 15px;
+      font-size: 14px;
+      margin-top: 26px;
     }
 
     /* WHATSAPP FIXO */
     .whatsapp-fixo {
       position: fixed;
-      right: 18px;
-      bottom: 18px;
+      right: 14px;
+      bottom: 16px;
       z-index: 999;
       display: inline-flex;
       align-items: center;
@@ -498,38 +458,24 @@
     }
 
     .whatsapp-fixo img {
-      width: 250px;
-      max-width: 250px;
+      width: 155px;
+      max-width: 155px;
       height: auto;
       display: block;
     }
 
     /* RESPONSIVO */
     @media (max-width: 1200px) {
-      .menu {
-        gap: 22px;
-      }
-
-      .banner-rotativo {
+      .banner-info {
         grid-template-columns: 1fr;
         text-align: center;
-        gap: 22px;
+        gap: 16px;
       }
 
-      .banner-coluna.esquerda,
-      .banner-coluna.direita {
+      .coluna.esq,
+      .coluna.dir {
         align-items: center;
         text-align: center;
-      }
-
-      .destaque-card.center img {
-        width: 280px;
-        height: 400px;
-      }
-
-      .destaque-card.side img {
-        width: 150px;
-        height: 215px;
       }
     }
 
@@ -551,37 +497,18 @@
         gap: 18px;
       }
 
-      .carousel-wrap {
-        grid-template-columns: 70px 1fr 70px;
-        gap: 8px;
-      }
-
-      .carousel-track {
-        gap: 18px;
-      }
-
-      .destaque-card.center img {
-        width: 230px;
-        height: 330px;
-      }
-
-      .destaque-card.side img {
-        width: 120px;
-        height: 170px;
-      }
-
-      .whatsapp-fixo img {
-        width: 220px;
-        max-width: 220px;
-      }
-
       .medidas {
-        font-size: 28px;
+        font-size: 22px;
       }
 
       .banner-centro-img {
-        width: 220px;
-        height: 300px;
+        width: 140px;
+        height: 195px;
+      }
+
+      .whatsapp-fixo img {
+        width: 140px;
+        max-width: 140px;
       }
     }
 
@@ -599,46 +526,63 @@
       }
 
       .hero {
-        padding-top: 14px;
+        padding-top: 10px;
       }
 
       .banner-principal-wrap {
-        border-radius: 20px;
-        padding: 7px;
+        border-radius: 18px;
+        padding: 5px;
       }
 
       .banner-principal-wrap::before {
-        inset: 4px;
-        border-radius: 16px;
+        inset: 3px;
+        border-radius: 14px;
       }
 
       .banner-principal {
-        border-radius: 14px;
+        border-radius: 12px;
       }
 
-      .banner-rotativo {
+      .banner-info {
         width: 94%;
-        padding: 16px 14px;
-        border-radius: 14px;
+        padding: 12px 10px;
+        border-radius: 12px;
       }
 
-      .destaque h2 {
-        font-size: 28px;
+      .medidas {
+        font-size: 20px;
+      }
+
+      .frase-lado {
+        font-size: 15px;
+      }
+
+      .titulo-centro .l1 {
+        font-size: 17px;
+      }
+
+      .titulo-centro .l2 {
+        font-size: 18px;
+      }
+
+      .banner-centro-img {
+        width: 130px;
+        height: 180px;
       }
 
       .carousel-wrap {
-        grid-template-columns: 56px 1fr 56px;
+        grid-template-columns: 52px 1fr 52px;
       }
 
       .carousel-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
       }
 
       .carousel-track {
         gap: 10px;
-        min-height: 320px;
+        min-height: 250px;
       }
 
       .destaque-card.side {
@@ -646,8 +590,12 @@
       }
 
       .destaque-card.center img {
-        width: 220px;
-        height: 310px;
+        width: 155px;
+        height: 220px;
+      }
+
+      .botao-categorias img {
+        width: min(100%, 300px);
       }
 
       .whatsapp-fixo {
@@ -656,29 +604,8 @@
       }
 
       .whatsapp-fixo img {
-        width: 190px;
-        max-width: 190px;
-      }
-
-      .medidas {
-        font-size: 24px;
-      }
-
-      .frase-lado {
-        font-size: 18px;
-      }
-
-      .titulo-centro .linha-1 {
-        font-size: 22px;
-      }
-
-      .titulo-centro .linha-2 {
-        font-size: 24px;
-      }
-
-      .banner-centro-img {
-        width: 190px;
-        height: 265px;
+        width: 125px;
+        max-width: 125px;
       }
     }
   </style>
@@ -708,7 +635,7 @@
     </div>
   </header>
 
-  <main class="site-bg">
+  <main>
     <section class="hero">
       <div class="container">
 
@@ -718,46 +645,46 @@
           </div>
         </div>
 
-        <div class="banner-rotativo">
-          <div class="banner-coluna esquerda">
+        <div class="banner-info">
+          <div class="coluna esq">
             <div class="medidas">
               <div>20x28cm</div>
               <div>28x20cm</div>
             </div>
 
             <div class="frase-lado">
-              O tamanho que<br><span class="destaque-txt">chama atenção!</span>
+              O tamanho que<br><span class="amarelo">chama atenção!</span>
             </div>
 
-            <ul class="lista-beneficios">
+            <ul class="beneficios">
               <li>MDF Resistente</li>
               <li>Impressão HD</li>
               <li>Laminação de proteção</li>
             </ul>
           </div>
 
-          <div class="banner-centro">
+          <div class="centro">
             <div class="titulo-centro">
-              <span class="linha-1">Placas Decorativas</span>
-              <span class="linha-2">Placas Personalizadas</span>
+              <span class="l1">Placas Decorativas</span>
+              <span class="l2">Placas Personalizadas</span>
             </div>
 
             <div class="banner-centro-img">
-              <img id="bannerRotativoImg" src="placas/street/naipess.png" alt="Placa em destaque">
+              <img id="bannerRotativoImg" src="placas/home-frases/beleza.png" alt="Placa em destaque">
             </div>
           </div>
 
-          <div class="banner-coluna direita">
+          <div class="coluna dir">
             <div class="medidas">
               <div>10x15cm</div>
               <div>15x10cm</div>
             </div>
 
             <div class="frase-lado">
-              Monte a sua<br><span class="destaque-txt">coleção!</span>
+              Monte a sua<br><span class="amarelo">coleção!</span>
             </div>
 
-            <ul class="lista-beneficios">
+            <ul class="beneficios">
               <li>MDF Resistente</li>
               <li>Impressão HD</li>
               <li>Fácil Aplicação e Limpeza</li>
@@ -833,24 +760,6 @@
 
     const produtosDestaque = [
       {
-        id: 'destaque-skatista',
-        nome: 'Placa Skatista',
-        preco: 'preço aqui',
-        imagem: 'placas/street/skatista.png'
-      },
-      {
-        id: 'destaque-naipes',
-        nome: 'Placa Naipes',
-        preco: 'preço aqui',
-        imagem: 'placas/street/naipess.png'
-      },
-      {
-        id: 'destaque-gta-sa',
-        nome: 'Placa GTA SA',
-        preco: 'preço aqui',
-        imagem: 'placas/games/gta-sa.png'
-      },
-      {
         id: 'destaque-velho',
         nome: 'Placa Velho',
         preco: 'preço aqui',
@@ -861,10 +770,36 @@
         nome: 'Placa Beleza',
         preco: 'preço aqui',
         imagem: 'placas/home-frases/beleza.png'
+      },
+      {
+        id: 'destaque-skatista',
+        nome: 'Placa Skatista',
+        preco: 'preço aqui',
+        imagem: 'placas/street/skatista.png'
+      },
+      {
+        id: 'destaque-gta-sa',
+        nome: 'Placa GTA SA',
+        preco: 'preço aqui',
+        imagem: 'placas/games/gta-sa.png'
+      },
+      {
+        id: 'destaque-naipes',
+        nome: 'Placa Naipes',
+        preco: 'preço aqui',
+        imagem: 'placas/street/naipess.png'
       }
     ];
 
     let currentIndex = 1;
+
+    function atualizarBannerRotativo() {
+      const img = document.getElementById('bannerRotativoImg');
+      if (img) {
+        img.src = produtosDestaque[currentIndex].imagem;
+        img.alt = produtosDestaque[currentIndex].nome;
+      }
+    }
 
     function renderCarousel() {
       const track = document.getElementById('carouselTrack');
@@ -908,14 +843,6 @@
       atualizarBannerRotativo();
     }
 
-    function atualizarBannerRotativo() {
-      const img = document.getElementById('bannerRotativoImg');
-      if (img) {
-        img.src = produtosDestaque[currentIndex].imagem;
-        img.alt = produtosDestaque[currentIndex].nome;
-      }
-    }
-
     document.getElementById('prevBtn').addEventListener('click', () => {
       currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
       renderCarousel();
@@ -933,6 +860,5 @@
 
     renderCarousel();
   </script>
-
 </body>
 </html>
