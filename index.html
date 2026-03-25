@@ -176,7 +176,7 @@
       height: auto;
     }
 
-    /* BLOCO ÚNICO COM CARROSSEL */
+    /* BLOCO ÚNICO */
     .banner-vitrine {
       width: min(90%, 1120px);
       margin: 10px auto 0;
@@ -311,7 +311,6 @@
       object-fit: cover;
     }
 
-    /* RODAPÉ DO CARROSSEL */
     .vitrine-rodape {
       margin-top: 14px;
       display: grid;
@@ -692,11 +691,6 @@
   <script>
     function getCart() {
       return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
-    }
-
-    function saveCart(cart) {
-      localStorage.setItem('heeeph_cart', JSON.stringify(cart));
-      updateCartCount();
     }
 
     function updateCartCount() {
