@@ -6,54 +6,67 @@
   <title>HEEEPH - Placas Decorativas</title>
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
 
     :root{
-      --gold: #f0c400;
-      --gold2: #ffd84d;
-      --text: #fff;
+      --gold:#f0c400;
+      --gold2:#ffd84d;
+      --gold3:#b87413;
+      --text:#fff;
     }
 
-    html { scroll-behavior: smooth; }
+    html{
+      scroll-behavior:smooth;
+    }
 
-    body {
+    body{
       font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
+      color:var(--text);
       background:
-        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.38)),
+        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.36)),
         url("banner/fundo.png") center top / cover no-repeat fixed;
-      background-color: #000;
-      overflow-x: hidden;
+      background-color:#000;
+      overflow-x:hidden;
     }
 
-    a { text-decoration: none; color: inherit; }
-    img { display: block; max-width: 100%; }
-    button { font-family: inherit; }
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
 
-    .container {
-      width: min(94%, 1500px);
-      margin: 0 auto;
+    img{
+      display:block;
+      max-width:100%;
+    }
+
+    button{
+      font-family:inherit;
+    }
+
+    .container{
+      width:min(94%, 1500px);
+      margin:0 auto;
     }
 
     /* TOPO */
-    .topo {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(0,0,0,.96);
-      border-bottom: 1px solid rgba(255,255,255,.05);
-      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+    .topo{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(0,0,0,.96);
+      border-bottom:1px solid rgba(255,255,255,.05);
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
     }
 
-    .topo::after {
-      content: "";
-      display: block;
-      height: 2px;
-      background: linear-gradient(
+    .topo::after{
+      content:"";
+      display:block;
+      height:2px;
+      background:linear-gradient(
         90deg,
         transparent 0%,
         rgba(240,196,0,.95) 10%,
@@ -63,550 +76,694 @@
       );
     }
 
-    .topo .wrap {
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 16px 24px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 22px;
+    .topo .wrap{
+      max-width:1500px;
+      margin:0 auto;
+      padding:16px 24px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:22px;
     }
 
-    .logo a {
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #fff;
-      white-space: nowrap;
+    .logo a{
+      font-size:34px;
+      font-weight:900;
+      letter-spacing:2px;
+      color:#fff;
+      white-space:nowrap;
     }
 
-    .menu-area {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-      margin-left: auto;
+    .menu-area{
+      display:flex;
+      align-items:center;
+      gap:22px;
+      margin-left:auto;
     }
 
-    .menu {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      flex-wrap: wrap;
-      justify-content: center;
+    .menu{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      flex-wrap:wrap;
+      justify-content:center;
     }
 
-    .menu a {
-      color: #fff;
-      font-size: 16px;
-      font-weight: 800;
-      text-transform: uppercase;
-      white-space: nowrap;
-      transition: .2s ease;
+    .menu a{
+      color:#fff;
+      font-size:16px;
+      font-weight:800;
+      text-transform:uppercase;
+      white-space:nowrap;
+      transition:.2s ease;
     }
 
     .menu a:hover,
-    .menu a.ativo { color: var(--gold); }
-
-    .cart-link {
-      position: relative;
-      width: 52px;
-      height: 52px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+    .menu a.ativo{
+      color:var(--gold);
     }
 
-    .cart-link img {
-      width: 44px;
-      height: 44px;
-      object-fit: contain;
+    .cart-link{
+      position:relative;
+      width:52px;
+      height:52px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
     }
 
-    .cart-count {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      min-width: 22px;
-      height: 22px;
-      padding: 0 6px;
-      border-radius: 999px;
-      background: var(--gold);
-      color: #000;
-      font-size: 12px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .cart-link img{
+      width:44px;
+      height:44px;
+      object-fit:contain;
+    }
+
+    .cart-count{
+      position:absolute;
+      top:-4px;
+      right:-4px;
+      min-width:22px;
+      height:22px;
+      padding:0 6px;
+      border-radius:999px;
+      background:var(--gold);
+      color:#000;
+      font-size:12px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
 
     /* HERO */
-    .hero {
-      padding-top: 8px;
-      padding-bottom: 20px;
+    .hero{
+      padding-top:10px;
+      padding-bottom:24px;
     }
 
-    .banner-principal-wrap {
-      position: relative;
-      border-radius: 22px;
-      padding: 6px;
-      background: linear-gradient(145deg, rgba(110,69,22,.95), rgba(10,8,7,.96));
-      box-shadow: 0 14px 30px rgba(0,0,0,.34);
+    .banner-principal-wrap{
+      position:relative;
+      border-radius:22px;
+      padding:6px;
+      background:linear-gradient(145deg, rgba(110,69,22,.95), rgba(10,8,7,.96));
+      box-shadow:0 14px 30px rgba(0,0,0,.34);
     }
 
-    .banner-principal-wrap::before {
-      content: "";
-      position: absolute;
-      inset: 3px;
-      border-radius: 18px;
-      border: 2px solid rgba(130, 82, 30, .85);
-      box-shadow: inset 0 0 0 1px rgba(255,213,89,.10);
-      pointer-events: none;
+    .banner-principal-wrap::before{
+      content:"";
+      position:absolute;
+      inset:3px;
+      border-radius:18px;
+      border:2px solid rgba(130,82,30,.85);
+      box-shadow:inset 0 0 0 1px rgba(255,213,89,.10);
+      pointer-events:none;
     }
 
-    .banner-principal {
-      overflow: hidden;
-      border-radius: 16px;
-      background: #111;
+    .banner-principal{
+      overflow:hidden;
+      border-radius:16px;
+      background:#111;
     }
 
-    .banner-principal img {
-      width: 100%;
-      height: auto;
+    .banner-principal img{
+      width:100%;
+      height:auto;
     }
 
-    /* BLOCO PRINCIPAL */
-    .vitrine-principal {
-      width: min(90%, 1120px);
-      margin: 10px auto 0;
-      padding: 12px 18px 18px;
-      border-radius: 14px;
+    /* BLOCO IGUAL REFERÊNCIA */
+    .vitrine-principal{
+      width:min(90%, 1180px);
+      margin:10px auto 0;
+      padding:14px 20px 18px;
+      border-radius:18px;
       background:
-        linear-gradient(180deg, rgba(18,10,7,.92), rgba(8,8,8,.94)),
+        radial-gradient(circle at center, rgba(0,0,0,.35) 0%, rgba(0,0,0,.82) 72%, rgba(0,0,0,.92) 100%),
         url("banner/fundo.png") center center / cover no-repeat;
+      position:relative;
+      overflow:hidden;
       box-shadow:
-        0 10px 24px rgba(0,0,0,.30),
-        inset 0 0 0 1px rgba(255,208,0,.06);
-      position: relative;
-      overflow: hidden;
+        0 12px 28px rgba(0,0,0,.32),
+        inset 0 0 0 1px rgba(255,208,0,.05);
     }
 
-    .vitrine-principal::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-      box-shadow: inset 0 0 0 1px rgba(153,92,31,.45);
-      pointer-events: none;
+    .vitrine-principal::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:18px;
+      box-shadow:inset 0 0 0 2px rgba(142,86,25,.55);
+      pointer-events:none;
     }
 
-    .vitrine-topo {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: start;
-      gap: 18px;
+    .vitrine-topo{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:start;
+      gap:22px;
+      position:relative;
     }
 
-    .coluna {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding-top: 6px;
+    .vitrine-topo::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:-16px;
+      height:2px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(205,143,41,.85) 8%,
+          rgba(205,143,41,.28) 20%,
+          rgba(205,143,41,.12) 50%,
+          rgba(205,143,41,.28) 80%,
+          rgba(205,143,41,.85) 92%,
+          transparent 100%
+        );
     }
 
-    .coluna.esq {
-      align-items: flex-start;
-      text-align: left;
+    .coluna{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding-top:2px;
+      position:relative;
+      min-height:235px;
     }
 
-    .coluna.dir {
-      align-items: flex-end;
-      text-align: right;
+    .coluna.esq{
+      align-items:flex-start;
+      text-align:left;
     }
 
-    .medidas {
-      font-size: 26px;
-      font-weight: 900;
-      line-height: 1.02;
-      color: var(--gold2);
-      text-shadow: 0 2px 8px rgba(0,0,0,.35);
+    .coluna.dir{
+      align-items:flex-end;
+      text-align:right;
     }
 
-    .frase-lado {
-      font-size: 16px;
-      font-style: italic;
-      font-weight: 700;
-      line-height: 1.15;
-      color: #f7f1e3;
+    .coluna::before{
+      content:"";
+      position:absolute;
+      top:66px;
+      width:100%;
+      height:1px;
+      background:linear-gradient(90deg, rgba(205,143,41,.28), rgba(205,143,41,.65), rgba(205,143,41,.28));
+      opacity:.8;
     }
 
-    .frase-lado .amarelo {
-      color: var(--gold);
+    .coluna.dir::before{
+      right:0;
     }
 
-    .beneficios {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
+    .medidas{
+      font-size:30px;
+      font-weight:900;
+      line-height:1.02;
+      color:var(--gold2);
+      text-shadow:0 2px 8px rgba(0,0,0,.35);
+      position:relative;
+      z-index:2;
     }
 
-    .beneficios li {
-      display: flex;
-      gap: 7px;
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.1;
-      color: #fff;
+    .frase-lado{
+      font-size:17px;
+      font-style:italic;
+      font-weight:700;
+      line-height:1.15;
+      color:#f7f1e3;
+      margin-top:22px;
+      position:relative;
+      z-index:2;
     }
 
-    .beneficios li::before {
-      content: "★";
-      color: var(--gold);
-      flex-shrink: 0;
+    .frase-lado .amarelo{
+      color:var(--gold);
     }
 
-    .centro {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      min-width: 190px;
+    .beneficios{
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-top:4px;
+      position:relative;
+      z-index:2;
     }
 
-    .titulo-centro {
-      text-align: center;
-      color: #f2dfb4;
-      font-family: Georgia, "Times New Roman", serif;
-      text-shadow: 0 2px 8px rgba(0,0,0,.35);
-      line-height: 1.02;
+    .beneficios li{
+      display:flex;
+      gap:8px;
+      font-size:14px;
+      font-weight:700;
+      line-height:1.1;
+      color:#fff;
     }
 
-    .titulo-centro .l1 {
-      display: block;
-      font-size: 18px;
-      font-weight: 500;
+    .beneficios li::before{
+      content:"■";
+      color:var(--gold);
+      flex-shrink:0;
+      font-size:11px;
+      margin-top:1px;
     }
 
-    .titulo-centro .l2 {
-      display: block;
-      font-size: 20px;
-      font-weight: 700;
+    .centro{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      min-width:245px;
+      position:relative;
+      z-index:2;
     }
 
-    .placa-central-wrap {
-      width: 180px;
-      height: 250px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #111;
-      border: 2px solid rgba(255,208,0,.08);
-      box-shadow: 0 8px 20px rgba(0,0,0,.28);
+    .titulo-centro{
+      text-align:center;
+      color:#f2dfb4;
+      font-family:Georgia, "Times New Roman", serif;
+      text-shadow:0 2px 8px rgba(0,0,0,.35);
+      line-height:1.02;
     }
 
-    .placa-central-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .titulo-centro .l1{
+      display:block;
+      font-size:18px;
+      font-weight:500;
     }
 
-    /* PARTE DE BAIXO */
-    .vitrine-rodape {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: 70px 1fr 70px;
-      align-items: center;
-      gap: 12px;
-      max-width: 760px;
-      margin-left: auto;
-      margin-right: auto;
+    .titulo-centro .l2{
+      display:block;
+      font-size:19px;
+      font-weight:700;
     }
 
-    .carousel-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: none;
-      background: #d9a62a;
-      color: #000;
-      font-size: 22px;
-      font-weight: 900;
-      cursor: pointer;
-      margin: 0 auto;
-      transition: transform .2s ease, filter .2s ease;
-      box-shadow: 0 8px 18px rgba(0,0,0,.25);
+    .placa-central-wrap{
+      width:215px;
+      height:300px;
+      border-radius:10px;
+      overflow:hidden;
+      background:#111;
+      border:2px solid rgba(255,208,0,.08);
+      box-shadow:0 8px 20px rgba(0,0,0,.28);
+      cursor:pointer;
+      transition:transform .2s ease, box-shadow .2s ease;
     }
 
-    .carousel-btn:hover {
-      transform: scale(1.06);
-      filter: brightness(1.05);
+    .placa-central-wrap:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 28px rgba(0,0,0,.35);
     }
 
-    .info-placa {
-      text-align: center;
-      background: rgba(0,0,0,.40);
-      border-radius: 18px;
-      padding: 10px 18px 14px;
-      border: 1px solid rgba(180,110,35,.6);
-      box-shadow: 0 10px 18px rgba(0,0,0,.22);
-      max-width: 360px;
-      margin: 0 auto;
+    .placa-central-wrap img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
     }
 
-    .info-placa h2 {
-      font-size: 24px;
-      line-height: 1;
-      margin-bottom: 8px;
-      color: #fff;
-      font-weight: 900;
-      text-shadow: 0 2px 10px rgba(0,0,0,.3);
+    /* LINHA DOURADA + DESTAQUE */
+    .faixa-destaque{
+      margin-top:28px;
+      position:relative;
+      text-align:center;
     }
 
-    .medida-atual {
-      display: inline-block;
-      background: linear-gradient(180deg, #f2c93d, #d8a510);
-      color: #000;
-      font-weight: 900;
-      font-size: 15px;
-      padding: 7px 18px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,.25);
-      margin-bottom: 8px;
+    .faixa-destaque::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      transform:translateY(-50%);
+      height:2px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(205,143,41,.85) 8%,
+          rgba(205,143,41,.22) 22%,
+          rgba(205,143,41,.10) 50%,
+          rgba(205,143,41,.22) 78%,
+          rgba(205,143,41,.85) 92%,
+          transparent 100%
+        );
     }
 
-    .nome-placa {
-      font-size: 18px;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 4px;
+    .faixa-destaque h2{
+      display:inline-block;
+      position:relative;
+      z-index:2;
+      padding:0 18px;
+      background:transparent;
+      font-size:26px;
+      font-weight:900;
+      color:var(--gold2);
+      text-shadow:0 2px 10px rgba(0,0,0,.35);
     }
 
-    .preco-placa {
-      font-size: 17px;
-      color: var(--gold);
-      font-weight: 900;
-      margin-bottom: 10px;
+    /* RODAPÉ COM SETAS E INFO */
+    .vitrine-rodape{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:90px 1fr 90px;
+      align-items:center;
+      gap:14px;
+      max-width:760px;
+      margin-left:auto;
+      margin-right:auto;
     }
 
-    .btn-comprar {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 230px;
-      padding: 12px 18px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(180deg, #f7cf4f, #d89d07);
-      color: #000;
-      font-size: 16px;
-      font-weight: 900;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,.28);
-      transition: transform .2s ease, filter .2s ease;
+    .carousel-btn{
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      border:none;
+      background:linear-gradient(180deg, #f2c93d, #d89d07);
+      color:#000;
+      font-size:30px;
+      font-weight:900;
+      cursor:pointer;
+      margin:0 auto;
+      transition:transform .2s ease, filter .2s ease;
+      box-shadow:0 8px 18px rgba(0,0,0,.25);
     }
 
-    .btn-comprar:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.04);
+    .carousel-btn:hover{
+      transform:scale(1.06);
+      filter:brightness(1.05);
     }
 
-    .botao-categorias {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 18px;
+    .info-placa{
+      text-align:center;
+      background:rgba(0,0,0,.38);
+      border-radius:18px;
+      padding:12px 20px 16px;
+      border:1px solid rgba(180,110,35,.6);
+      box-shadow:0 10px 18px rgba(0,0,0,.22);
+      max-width:360px;
+      margin:0 auto;
+      position:relative;
     }
 
-    .botao-categorias a {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      transition: transform .2s ease;
+    .info-placa::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:18px;
+      box-shadow:inset 0 0 0 2px rgba(128,77,24,.35);
+      pointer-events:none;
     }
 
-    .botao-categorias a:hover {
-      transform: scale(1.02);
+    .medida-atual{
+      display:inline-block;
+      background:linear-gradient(180deg, #f2c93d, #d8a510);
+      color:#000;
+      font-weight:900;
+      font-size:15px;
+      padding:7px 18px;
+      border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,.25);
+      margin-bottom:10px;
     }
 
-    .botao-categorias img {
-      width: min(100%, 360px);
-      height: auto;
-      margin: 0 auto;
+    .nome-placa{
+      font-size:18px;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:4px;
     }
 
-    footer {
-      background: #000;
-      color: #fff;
-      text-align: center;
-      padding: 18px 15px;
-      font-size: 14px;
-      margin-top: 26px;
+    .preco-wrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:12px;
     }
 
-    .whatsapp-fixo {
-      position: fixed;
-      right: 14px;
-      bottom: 16px;
-      z-index: 999;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .preco-wrap::before,
+    .preco-wrap::after{
+      content:"";
+      width:56px;
+      height:2px;
+      background:linear-gradient(90deg, transparent, rgba(205,143,41,.9), transparent);
     }
 
-    .whatsapp-fixo img {
-      width: 155px;
-      max-width: 155px;
-      height: auto;
-      display: block;
+    .preco-placa{
+      font-size:17px;
+      color:var(--gold);
+      font-weight:900;
+      white-space:nowrap;
     }
 
-    @media (max-width: 1200px) {
-      .vitrine-topo {
-        grid-template-columns: 1fr;
-        gap: 16px;
+    .btn-comprar{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:240px;
+      padding:12px 18px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(180deg, #f7cf4f, #d89d07);
+      color:#000;
+      font-size:16px;
+      font-weight:900;
+      text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,.28);
+      transition:transform .2s ease, filter .2s ease;
+    }
+
+    .btn-comprar:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.04);
+    }
+
+    .faixa-acoes{
+      margin-top:18px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .botao-categorias a{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      transition:transform .2s ease;
+    }
+
+    .botao-categorias a:hover{
+      transform:scale(1.02);
+    }
+
+    .botao-categorias img{
+      width:min(100%, 430px);
+      height:auto;
+      margin:0 auto;
+    }
+
+    .zap-inline a{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      transition:transform .2s ease;
+    }
+
+    .zap-inline a:hover{
+      transform:scale(1.02);
+    }
+
+    .zap-inline img{
+      width:250px;
+      max-width:250px;
+      height:auto;
+      display:block;
+    }
+
+    footer{
+      background:#000;
+      color:#fff;
+      text-align:center;
+      padding:18px 15px;
+      font-size:14px;
+      margin-top:26px;
+    }
+
+    .whatsapp-fixo{
+      position:fixed;
+      right:14px;
+      bottom:16px;
+      z-index:999;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .whatsapp-fixo img{
+      width:155px;
+      max-width:155px;
+      height:auto;
+      display:block;
+    }
+
+    @media (max-width:1200px){
+      .vitrine-topo{
+        grid-template-columns:1fr;
+        gap:16px;
       }
 
       .coluna.esq,
-      .coluna.dir {
-        align-items: center;
-        text-align: center;
+      .coluna.dir{
+        align-items:center;
+        text-align:center;
       }
     }
 
-    @media (max-width: 980px) {
-      .topo .wrap {
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
+    @media (max-width:980px){
+      .topo .wrap{
+        flex-direction:column;
+        align-items:center;
+        gap:14px;
       }
 
-      .menu-area {
-        width: 100%;
-        justify-content: center;
-        margin-left: 0;
-        gap: 18px;
+      .menu-area{
+        width:100%;
+        justify-content:center;
+        margin-left:0;
+        gap:18px;
       }
 
-      .menu {
-        gap: 18px;
+      .menu{
+        gap:18px;
       }
 
-      .medidas {
-        font-size: 22px;
+      .medidas{
+        font-size:22px;
       }
 
-      .placa-central-wrap {
-        width: 165px;
-        height: 230px;
+      .placa-central-wrap{
+        width:185px;
+        height:260px;
       }
 
-      .whatsapp-fixo img {
-        width: 140px;
-        max-width: 140px;
+      .zap-inline img{
+        width:220px;
+        max-width:220px;
+      }
+
+      .whatsapp-fixo img{
+        width:140px;
+        max-width:140px;
       }
     }
 
-    @media (max-width: 700px) {
-      .logo a {
-        font-size: 28px;
+    @media (max-width:700px){
+      .logo a{
+        font-size:28px;
       }
 
-      .menu {
-        gap: 14px;
+      .menu{
+        gap:14px;
       }
 
-      .menu a {
-        font-size: 14px;
+      .menu a{
+        font-size:14px;
       }
 
-      .hero {
-        padding-top: 10px;
+      .hero{
+        padding-top:10px;
       }
 
-      .banner-principal-wrap {
-        border-radius: 18px;
-        padding: 5px;
+      .banner-principal-wrap{
+        border-radius:18px;
+        padding:5px;
       }
 
-      .banner-principal-wrap::before {
-        inset: 3px;
-        border-radius: 14px;
+      .banner-principal-wrap::before{
+        inset:3px;
+        border-radius:14px;
       }
 
-      .banner-principal {
-        border-radius: 12px;
+      .banner-principal{
+        border-radius:12px;
       }
 
-      .vitrine-principal {
-        width: 94%;
-        padding: 12px 10px 16px;
-        border-radius: 12px;
+      .vitrine-principal{
+        width:94%;
+        padding:12px 10px 16px;
+        border-radius:12px;
       }
 
-      .medidas {
-        font-size: 20px;
+      .medidas{
+        font-size:20px;
       }
 
-      .frase-lado {
-        font-size: 15px;
+      .frase-lado{
+        font-size:15px;
       }
 
-      .titulo-centro .l1 {
-        font-size: 17px;
+      .titulo-centro .l1{
+        font-size:17px;
       }
 
-      .titulo-centro .l2 {
-        font-size: 18px;
+      .titulo-centro .l2{
+        font-size:18px;
       }
 
-      .placa-central-wrap {
-        width: 150px;
-        height: 210px;
+      .placa-central-wrap{
+        width:165px;
+        height:230px;
       }
 
-      .vitrine-rodape {
-        grid-template-columns: 52px 1fr 52px;
+      .vitrine-rodape{
+        grid-template-columns:60px 1fr 60px;
       }
 
-      .carousel-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
+      .carousel-btn{
+        width:44px;
+        height:44px;
+        font-size:24px;
       }
 
-      .info-placa h2 {
-        font-size: 20px;
+      .faixa-destaque h2{
+        font-size:22px;
       }
 
-      .nome-placa {
-        font-size: 16px;
+      .nome-placa{
+        font-size:16px;
       }
 
-      .preco-placa {
-        font-size: 15px;
+      .preco-placa{
+        font-size:15px;
       }
 
-      .btn-comprar {
-        min-width: 190px;
-        font-size: 14px;
-        padding: 10px 14px;
+      .btn-comprar{
+        min-width:200px;
+        font-size:14px;
+        padding:10px 14px;
       }
 
-      .botao-categorias img {
-        width: min(100%, 300px);
+      .botao-categorias img{
+        width:min(100%, 300px);
       }
 
-      .whatsapp-fixo {
-        right: 10px;
-        bottom: 10px;
+      .zap-inline img{
+        width:210px;
+        max-width:210px;
       }
 
-      .whatsapp-fixo img {
-        width: 125px;
-        max-width: 125px;
+      .whatsapp-fixo{
+        right:10px;
+        bottom:10px;
+      }
+
+      .whatsapp-fixo img{
+        width:125px;
+        max-width:125px;
       }
     }
   </style>
@@ -671,7 +828,7 @@
                 <span class="l2">Placas Personalizadas</span>
               </div>
 
-              <div class="placa-central-wrap">
+              <div class="placa-central-wrap" id="placaClick">
                 <img id="placaPrincipal" src="placas/street/naipess.png" alt="Placa em destaque">
               </div>
             </div>
@@ -694,24 +851,37 @@
             </div>
           </div>
 
+          <div class="faixa-destaque">
+            <h2>Destaque</h2>
+          </div>
+
           <div class="vitrine-rodape">
             <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
 
             <div class="info-placa">
-              <h2>Destaque</h2>
               <div class="medida-atual" id="medidaAtual">20x28cm</div>
               <div class="nome-placa" id="nomeAtual">Placa Naipes</div>
-              <div class="preco-placa" id="precoAtual">preço aqui</div>
-              <button class="btn-comprar" id="btnComprar">Comprar agora</button>
+              <div class="preco-wrap">
+                <div class="preco-placa" id="precoAtual">R$ 29,90</div>
+              </div>
+              <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
             </div>
 
             <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
           </div>
 
-          <div class="botao-categorias">
-            <a href="categorias.html">
-              <img src="botoes/categorias.png" alt="Categorias">
-            </a>
+          <div class="faixa-acoes">
+            <div class="botao-categorias">
+              <a href="categorias.html">
+                <img src="botoes/categorias.png" alt="Categorias">
+              </a>
+            </div>
+
+            <div class="zap-inline">
+              <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+                <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
+              </a>
+            </div>
           </div>
         </div>
 
@@ -767,7 +937,7 @@
       {
         id: 'destaque-naipes',
         nome: 'Placa Naipes',
-        preco: 'preço aqui',
+        preco: 'R$ 29,90',
         medida: '20x28cm',
         imagem: 'placas/street/naipess.png'
       },
@@ -824,6 +994,10 @@
     });
 
     document.getElementById('btnComprar').addEventListener('click', () => {
+      addToCart(produtosDestaque[currentIndex]);
+    });
+
+    document.getElementById('placaClick').addEventListener('click', () => {
       addToCart(produtosDestaque[currentIndex]);
     });
 
