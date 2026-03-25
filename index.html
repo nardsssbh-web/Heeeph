@@ -176,7 +176,7 @@
       height: auto;
     }
 
-    /* BANNER SECUNDÁRIO */
+    /* BANNER INFO */
     .banner-info {
       width: min(90%, 1120px);
       margin: 10px auto 0;
@@ -352,7 +352,7 @@
 
     .carousel-track {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
       gap: 20px;
       min-height: 290px;
@@ -446,7 +446,6 @@
       margin-top: 26px;
     }
 
-    /* WHATSAPP FIXO */
     .whatsapp-fixo {
       position: fixed;
       right: 14px;
@@ -464,7 +463,6 @@
       display: block;
     }
 
-    /* RESPONSIVO */
     @media (max-width: 1200px) {
       .banner-info {
         grid-template-columns: 1fr;
@@ -670,7 +668,7 @@
             </div>
 
             <div class="banner-centro-img">
-              <img id="bannerRotativoImg" src="placas/home-frases/beleza.png" alt="Placa em destaque">
+              <img id="bannerRotativoImg" src="placas/street/naipess.png" alt="Placa em destaque">
             </div>
           </div>
 
@@ -760,24 +758,6 @@
 
     const produtosDestaque = [
       {
-        id: 'destaque-velho',
-        nome: 'Placa Velho',
-        preco: 'preço aqui',
-        imagem: 'placas/motos/velho.png'
-      },
-      {
-        id: 'destaque-beleza',
-        nome: 'Placa Beleza',
-        preco: 'preço aqui',
-        imagem: 'placas/home-frases/beleza.png'
-      },
-      {
-        id: 'destaque-skatista',
-        nome: 'Placa Skatista',
-        preco: 'preço aqui',
-        imagem: 'placas/street/skatista.png'
-      },
-      {
         id: 'destaque-gta-sa',
         nome: 'Placa GTA SA',
         preco: 'preço aqui',
@@ -788,6 +768,24 @@
         nome: 'Placa Naipes',
         preco: 'preço aqui',
         imagem: 'placas/street/naipess.png'
+      },
+      {
+        id: 'destaque-velho',
+        nome: 'Placa Velho',
+        preco: 'preço aqui',
+        imagem: 'placas/motos/velho.png'
+      },
+      {
+        id: 'destaque-skatista',
+        nome: 'Placa Skatista',
+        preco: 'preço aqui',
+        imagem: 'placas/street/skatista.png'
+      },
+      {
+        id: 'destaque-beleza',
+        nome: 'Placa Beleza',
+        preco: 'preço aqui',
+        imagem: 'placas/home-frases/beleza.png'
       }
     ];
 
