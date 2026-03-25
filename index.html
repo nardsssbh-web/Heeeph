@@ -276,26 +276,31 @@
       color: var(--dourado);
       font-weight: 800;
     }
+.botao-categorias {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
 
-    .botao-categorias {
-      display: flex;
-      justify-content: center;
-      margin-top: 30px;
-    }
+.botao-categorias a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
 
-    .botao-categorias a {
-      display: inline-block;
-      transition: transform 0.2s ease;
-    }
+.botao-categorias a:hover {
+  transform: scale(1.02);
+}
 
-    .botao-categorias a:hover {
-      transform: scale(1.02);
-    }
-
-    .botao-categorias img {
-      width: min(100%, 520px);
-      height: auto;
-    }
+.botao-categorias img {
+  display: block;
+  width: min(100%, 520px);
+  height: auto;
+  margin: 0 auto;
+}
 
     .faixa-clara {
       background: var(--bege);
