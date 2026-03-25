@@ -11,10 +11,30 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --preto: #050505;
+      --dourado: #f0d000;
+      --branco: #ffffff;
+      --cafe-madeira: #2f2118;
+      --cafe-madeira-2: #3a291e;
+      --bege-claro: #e9e5dd;
+    }
+
     body {
-      background: #000;
+      background: linear-gradient(to bottom, #111111 0%, #231811 100%);
       color: #fff;
       font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
     }
 
     header {
@@ -41,6 +61,7 @@
       letter-spacing: 3px;
       color: #fff;
       text-decoration: none;
+      white-space: nowrap;
     }
 
     nav {
@@ -60,20 +81,40 @@
     }
 
     nav a:hover {
-      color: #f0d000;
+      color: var(--dourado);
     }
 
     .carrinho-topo {
-      background: #f0d000;
+      background: var(--dourado);
       color: #000;
       padding: 10px 16px;
       border-radius: 10px;
       font-weight: bold;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .carrinho-topo:hover {
       background: #fff;
       color: #000;
+    }
+
+    .cart-count {
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #000;
+      color: var(--dourado);
+      font-size: 12px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
     }
 
     .pagina {
@@ -91,7 +132,7 @@
       font-size: 42px;
       letter-spacing: 3px;
       margin-bottom: 10px;
-      color: #f0d000;
+      color: var(--dourado);
     }
 
     .titulo p {
@@ -120,11 +161,12 @@
 
     .placa {
       width: 100%;
-      background: #e9e5dd;
-      border-radius: 20px;
-      padding: 14px;
+      background: linear-gradient(to bottom, #d7d1c6 0%, #cfc6b9 100%);
+      border-radius: 16px;
+      padding: 8px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
     }
 
     .placa:hover {
@@ -138,17 +180,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #fff;
-      border-radius: 12px;
+      background: var(--cafe-madeira-2);
+      border-radius: 10px;
       overflow: hidden;
     }
 
     .placa img {
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
       display: block;
-      border-radius: 10px;
+      border-radius: 8px;
       background: #ddd;
     }
 
@@ -169,7 +211,7 @@
       display: inline-block;
       text-decoration: none;
       color: #000;
-      background: #f0d000;
+      background: var(--dourado);
       padding: 12px 24px;
       border-radius: 10px;
       font-weight: bold;
@@ -180,22 +222,29 @@
       background: #fff;
     }
 
-  .zap {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 999;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
+    .zap {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 999;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.zap img {
-  width: 250px;
-  max-width: 250px;
-  height: auto;
-  display: block;
-}
+    .zap img {
+      width: 250px;
+      max-width: 250px;
+      height: auto;
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .zap img {
+        width: 220px;
+        max-width: 220px;
+      }
+    }
 
     @media (max-width: 768px) {
       .topo {
@@ -228,25 +277,19 @@
       .preco-placa {
         font-size: 16px;
       }
+    }
 
-    @media (max-width: 980px) {
-  .zap img {
-    width: 220px;
-    max-width: 220px;
-  }
-}
+    @media (max-width: 760px) {
+      .zap {
+        right: 10px;
+        bottom: 10px;
+      }
 
-@media (max-width: 760px) {
-  .zap {
-    right: 10px;
-    bottom: 10px;
-  }
-
-  .zap img {
-    width: 190px;
-    max-width: 190px;
-  }
-}
+      .zap img {
+        width: 190px;
+        max-width: 190px;
+      }
+    }
 
     @media (max-width: 520px) {
       .grade-placas {
@@ -258,7 +301,7 @@
       }
 
       .placa {
-        padding: 10px;
+        padding: 8px;
       }
 
       .img-box {
@@ -280,7 +323,10 @@
         <a href="index.html">HOME</a>
         <a href="categorias.html">COLEÇÃO</a>
         <a href="sobre.html">SOBRE</a>
-        <a href="carrinho.html" class="carrinho-topo">CARRINHO</a>
+        <a href="carrinho.html" class="carrinho-topo">
+          CARRINHO
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
       </nav>
     </div>
   </header>
@@ -294,7 +340,7 @@
     <section class="grade-placas">
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/accept.png" alt="accept">
@@ -305,7 +351,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/acdc-bb.png" alt="acdc-bb">
@@ -316,10 +362,10 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
-              <img src="/placas/bandas/cannibal.png" alt="cannibal">
+              <img src="/placas/bandas/aerosmith.png" alt="aerosmith">
             </div>
           </div>
         </a>
@@ -327,7 +373,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/angra.png" alt="angra">
@@ -338,7 +384,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/arp.png" alt="arp">
@@ -349,7 +395,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/bs-caravan.png" alt="bs-caravan">
@@ -360,10 +406,10 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
-              <img src="/placas/bandas/deep-purple.png" alt="deep-purple">
+              <img src="/placas/bandas/cannibal.png" alt="cannibal">
             </div>
           </div>
         </a>
@@ -371,84 +417,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/def-leppard.png" alt="def-leppard">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/dio-holy.png" alt="dio-holy">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/dire-straits-brother.png" alt="dire-straits-brother">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/dire-straits-brother.png" alt="dire-straits-brother">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/helloween-keeper1.png" alt="helloween-keeper1">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/helloween-keeper2.png" alt="helloween-keeper2">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
-          <div class="placa">
-            <div class="img-box">
-              <img src="/placas/bandas/helloween1.png" alt="helloween1">
-            </div>
-          </div>
-        </a>
-        <div class="preco-placa">preço aqui</div>
-      </div>
-
-      <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/helloween2.png" alt="helloween2">
@@ -459,7 +428,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/helloween3.png" alt="helloween3">
@@ -470,7 +439,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/iron-killers.png" alt="iron-killers">
@@ -481,7 +450,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/iron1.png" alt="iron1">
@@ -492,7 +461,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/iron2.png" alt="iron2">
@@ -503,7 +472,18 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/iron-maiden.png" alt="iron-maiden">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/judas-priest.png" alt="judas-priest">
@@ -514,7 +494,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/kiss.png" alt="kiss">
@@ -525,7 +505,7 @@
       </div>
 
       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/korn-issues.png" alt="korn-issue">
@@ -535,8 +515,8 @@
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/led1.png" alt="led1">
@@ -546,8 +526,8 @@
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/led2.png" alt="led2">
@@ -557,8 +537,19 @@
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/led-zeppelin.png" alt="led-zeppelin">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/machine-head.png" alt="machine-head">
@@ -568,8 +559,8 @@
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
               <img src="/placas/bandas/megatheath-rust.png" alt="megatheath-rust">
@@ -579,50 +570,83 @@
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
-              <img src="/placas/bandas/metallica-justice.png" alt="metallica-justice">
+              <img src="/placas/bandas/metallica.png" alt="metallica">
             </div>
           </div>
         </a>
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
-              <img src="/placas/bandas/metallica-master.png" alt="metallica-master">
+              <img src="/placas/bandas/motorhead.png" alt="motorhead">
             </div>
           </div>
         </a>
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
-              <img src="/placas/bandas/metallica-reload.png" alt="metallica-reload">
+              <img src="/placas/bandas/nirvana.png" alt="nirvana">
             </div>
           </div>
         </a>
         <div class="preco-placa">preço aqui</div>
       </div>
 
-       <div class="item-placa">
-        <a href="carrinho.html" class="link-placa">
+      <div class="item-placa">
+        <a href="#" class="link-placa">
           <div class="placa">
             <div class="img-box">
-              <img src="/placas/bandas/motohead-1916.png" alt="motohead-1916">
+              <img src="/placas/bandas/pink-floyd.png" alt="pink-floyd">
             </div>
           </div>
         </a>
         <div class="preco-placa">preço aqui</div>
       </div>
-      
+
+      <div class="item-placa">
+        <a href="#" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/rammstein.png" alt="rammstein">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="#" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/slayer.png" alt="slayer">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
+      <div class="item-placa">
+        <a href="#" class="link-placa">
+          <div class="placa">
+            <div class="img-box">
+              <img src="/placas/bandas/system-of-a-down.png" alt="system-of-a-down">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">preço aqui</div>
+      </div>
+
     </section>
 
     <div class="voltar">
@@ -630,9 +654,93 @@
     </div>
   </main>
 
-  <a class="zap" href="https://wa.me/5511000000000" target="_blank">
+  <a class="zap" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">
     <img src="/botoes/whatsapp.png" alt="WhatsApp">
   </a>
+
+  <script>
+    function getCart() {
+      return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('heeeph_cart', JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const countEl = document.getElementById('cartCount');
+      if (countEl) countEl.textContent = total;
+    }
+
+    function addToCart(item) {
+      const cart = getCart();
+      const existingIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+
+      if (existingIndex > -1) {
+        cart[existingIndex].quantity += 1;
+      } else {
+        cart.push({
+          ...item,
+          quantity: 1
+        });
+      }
+
+      saveCart(cart);
+      window.location.href = 'carrinho.html';
+    }
+
+    function criarIdPeloCaminho(src) {
+      return src
+        .replace(/^https?:\/\/[^/]+/i, '')
+        .replace(/^\/+/, '')
+        .replace(/\.[^.]+$/, '')
+        .replace(/[\/\s]+/g, '-')
+        .toLowerCase();
+    }
+
+    function formatarNome(alt, src) {
+      if (alt && alt.trim()) return alt.trim();
+
+      const arquivo = src.split('/').pop().replace(/\.[^.]+$/, '');
+      return arquivo
+        .replace(/[-_]+/g, ' ')
+        .replace(/\b\w/g, letra => letra.toUpperCase());
+    }
+
+    function ativarPlacasDaPagina() {
+      const placas = document.querySelectorAll('.item-placa');
+
+      placas.forEach(itemPlaca => {
+        const link = itemPlaca.querySelector('.link-placa');
+        const img = itemPlaca.querySelector('img');
+        const precoEl = itemPlaca.querySelector('.preco-placa');
+
+        if (!link || !img) return;
+
+        link.addEventListener('click', function (event) {
+          event.preventDefault();
+
+          const imagem = img.getAttribute('src');
+          const nome = formatarNome(img.getAttribute('alt'), imagem);
+          const preco = precoEl ? precoEl.textContent.trim() : 'preço aqui';
+          const id = criarIdPeloCaminho(imagem);
+
+          addToCart({
+            id: id,
+            nome: nome,
+            preco: preco,
+            imagem: imagem
+          });
+        });
+      });
+    }
+
+    updateCartCount();
+    ativarPlacasDaPagina();
+  </script>
 
 </body>
 </html>
