@@ -25,6 +25,7 @@
 
     html{
       scroll-behavior:smooth;
+      overflow-x:hidden;
     }
 
     body{
@@ -35,6 +36,8 @@
         url("banner/fundo.png") center top / cover no-repeat fixed;
       background-color:#000;
       overflow-x:hidden;
+      width:100%;
+      max-width:100%;
     }
 
     a{
@@ -96,6 +99,10 @@
       gap:22px;
     }
 
+    .logo{
+      flex:0 0 auto;
+    }
+
     .logo a{
       font-size:34px;
       font-weight:900;
@@ -109,6 +116,7 @@
       align-items:center;
       gap:22px;
       margin-left:auto;
+      min-width:0;
     }
 
     .menu{
@@ -117,6 +125,7 @@
       gap:28px;
       flex-wrap:wrap;
       justify-content:center;
+      min-width:0;
     }
 
     .menu a{
@@ -609,40 +618,88 @@
       }
     }
 
-    /* TELEFONE - SEM ESCALA GERAL */
-    .topo .wrap{
-  flex-direction:row;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:nowrap;
-}
+    /* TELEFONE */
+    @media (max-width: 780px){
+      :root{ --site-scale: 1; }
 
-.menu-area{
-  width:auto;
-  margin-left:auto;
-  gap:10px;
-  flex-wrap:nowrap;
-}
+      html, body{
+        overflow-x:hidden;
+        width:100%;
+        max-width:100%;
+      }
 
-.menu{
-  gap:10px;
-  flex-wrap:nowrap;
-}
+      .site-escala{
+        width:100%;
+        transform:none;
+      }
 
-.menu a{
-  font-size:11px;
-}
+      .topo{
+        overflow:hidden;
+      }
 
-.logo a{
-  font-size:20px;
-}
-      .menu a{
-        font-size:13px;
+      .topo .wrap{
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        padding:10px 10px 10px;
+        flex-wrap:nowrap;
+      }
+
+      .logo{
+        flex:0 0 auto;
+        min-width:0;
       }
 
       .logo a{
-        font-size:28px;
+        font-size:18px;
+        letter-spacing:1px;
+      }
+
+      .menu-area{
+        width:auto;
+        margin-left:auto;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        flex:1 1 auto;
+        justify-content:flex-end;
+      }
+
+      .menu{
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        overflow:hidden;
+      }
+
+      .menu a{
+        font-size:9px;
+        white-space:nowrap;
+        letter-spacing:0;
+      }
+
+      .cart-link{
+        width:34px;
+        height:34px;
+        flex:0 0 auto;
+      }
+
+      .cart-link img{
+        width:26px;
+        height:26px;
+      }
+
+      .cart-count{
+        top:-2px;
+        right:-2px;
+        min-width:16px;
+        height:16px;
+        font-size:9px;
+        padding:0 4px;
       }
 
       .banner-principal-wrap{
@@ -664,6 +721,7 @@
         padding:8px 8px 18px;
       }
 
+      /* CONTINUA HORIZONTAL */
       .topo-vitrine{
         grid-template-columns: 1fr 170px 1fr;
         gap:10px;
@@ -801,6 +859,45 @@
     }
 
     @media (max-width: 480px){
+      html, body{
+        overflow-x:hidden;
+        width:100%;
+        max-width:100%;
+      }
+
+      .topo .wrap{
+        padding:8px 8px 8px;
+        gap:6px;
+      }
+
+      .logo a{
+        font-size:16px;
+      }
+
+      .menu{
+        gap:6px;
+      }
+
+      .menu a{
+        font-size:8px;
+      }
+
+      .cart-link{
+        width:30px;
+        height:30px;
+      }
+
+      .cart-link img{
+        width:22px;
+        height:22px;
+      }
+
+      .cart-count{
+        min-width:14px;
+        height:14px;
+        font-size:8px;
+      }
+
       .topo-vitrine{
         grid-template-columns: 1fr 140px 1fr;
         gap:8px;
