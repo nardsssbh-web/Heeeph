@@ -20,6 +20,7 @@
       --gold:#f0c400;
       --gold2:#ffd84d;
       --text:#fff;
+      --site-scale: 0.8;
     }
 
     html{
@@ -48,6 +49,12 @@
 
     button{
       font-family:inherit;
+    }
+
+    .site-escala{
+      width: calc(100% / var(--site-scale));
+      transform: scale(var(--site-scale));
+      transform-origin: top left;
     }
 
     .container{
@@ -262,23 +269,24 @@
       z-index:2;
     }
 
-.frase-lado{
-  margin-top:34px;
-  font-family:'Allura', cursive;
-  font-size:32px;
-  font-weight:700;
-  line-height:1.05;
-  color:#f5f0e5;
-  position:relative;
-  z-index:2;
-  text-shadow:
-    0 1px 0 rgba(0,0,0,0.35),
-    0 2px 6px rgba(0,0,0,0.30);
-}
+    .frase-lado{
+      margin-top:34px;
+      font-family:'Allura', cursive;
+      font-size:34px;
+      font-weight:700;
+      line-height:1.05;
+      color:#f5f0e5;
+      position:relative;
+      z-index:2;
+      text-shadow:
+        0 1px 0 rgba(0,0,0,0.45),
+        0 2px 6px rgba(0,0,0,0.35);
+    }
+
     .frase-lado .amarelo{
-  color:var(--gold);
-  font-weight:700;
-}
+      color:var(--gold);
+      font-weight:700;
+    }
 
     .beneficios{
       list-style:none;
@@ -581,6 +589,8 @@
 
     /* TABLET */
     @media (max-width: 1100px){
+      :root{ --site-scale: 0.86; }
+
       .topo-vitrine{
         gap:18px;
       }
@@ -595,12 +605,14 @@
       }
 
       .frase-lado{
-        font-size:24px;
+        font-size:30px;
       }
     }
 
-    /* TELEFONE */
+    /* TELEFONE - SEM ESCALA GERAL */
     @media (max-width: 780px){
+      :root{ --site-scale: 1; }
+
       .topo .wrap{
         flex-direction:column;
         align-items:center;
@@ -645,7 +657,6 @@
         padding:8px 8px 18px;
       }
 
-      /* CONTINUA HORIZONTAL NO CELULAR */
       .topo-vitrine{
         grid-template-columns: 1fr 170px 1fr;
         gap:10px;
@@ -782,7 +793,6 @@
       }
     }
 
-    /* TELEFONE MENOR */
     @media (max-width: 480px){
       .topo-vitrine{
         grid-template-columns: 1fr 140px 1fr;
@@ -831,122 +841,124 @@
 </head>
 <body>
 
-  <header class="topo">
-    <div class="wrap">
-      <div class="logo">
-        <a href="index.html">HEEEPH</a>
-      </div>
-
-      <div class="menu-area">
-        <nav class="menu">
-          <a href="index.html" class="ativo">HOME</a>
-          <a href="categorias.html">COLEÇÃO</a>
-          <a href="sobre.html">O QUE É HEEEPH?</a>
-          <a href="fotos-reais.html">FOTOS REAIS</a>
-          <a href="contatos.html">CONTATOS</a>
-        </nav>
-
-        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
-          <img src="botoes/botao-carrinho.png" alt="Carrinho">
-          <span class="cart-count" id="cartCount">0</span>
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container">
-
-        <div class="banner-principal-wrap">
-          <div class="banner-principal">
-            <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
-          </div>
+  <div class="site-escala">
+    <header class="topo">
+      <div class="wrap">
+        <div class="logo">
+          <a href="index.html">HEEEPH</a>
         </div>
 
-        <div class="area-unica">
-          <div class="topo-vitrine">
-            <div class="painel-lateral esq">
-              <div class="medidas">
-                <div>20x28cm</div>
-                <div>28x20cm</div>
-              </div>
+        <div class="menu-area">
+          <nav class="menu">
+            <a href="index.html" class="ativo">HOME</a>
+            <a href="categorias.html">COLEÇÃO</a>
+            <a href="sobre.html">O QUE É HEEEPH?</a>
+            <a href="fotos-reais.html">FOTOS REAIS</a>
+            <a href="contatos.html">CONTATOS</a>
+          </nav>
 
-              <div class="frase-lado">
-                O tamanho que<br><span class="amarelo">chama atenção!</span>
-              </div>
-
-              <ul class="beneficios">
-                <li>MDF Resistente</li>
-                <li>Impressão HD</li>
-                <li>Laminação de proteção</li>
-              </ul>
-            </div>
-
-            <div class="centro-vitrine">
-              <div class="titulo-centro">
-                <span class="l1">Placas Decorativas</span>
-                <span class="l2">Placas Personalizadas</span>
-              </div>
-
-              <div class="placa-central-wrap" id="placaClick">
-                <img id="placaPrincipal" src="placas/street/naipess.png" alt="Placa em destaque">
-              </div>
-            </div>
-
-            <div class="painel-lateral dir">
-              <div class="medidas">
-                <div>10x15cm</div>
-                <div>15x10cm</div>
-              </div>
-
-              <div class="frase-lado">
-                Monte a sua<br><span class="amarelo">coleção!</span>
-              </div>
-
-              <ul class="beneficios">
-                <li>MDF Resistente</li>
-                <li>Impressão HD</li>
-                <li>Fácil Aplicação e Limpeza</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="faixa-destaque">
-            <h2>Destaque</h2>
-          </div>
-
-          <div class="vitrine-rodape">
-            <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
-
-            <div class="info-placa">
-              <div class="medida-atual" id="medidaAtual">20x28cm</div>
-              <div class="nome-placa" id="nomeAtual">Placa Naipes</div>
-              <div class="preco-wrap">
-                <div class="preco-placa" id="precoAtual">R$ 29,90</div>
-              </div>
-              <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
-            </div>
-
-            <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
-          </div>
-
-          <div class="faixa-acoes">
-            <div class="botao-categorias">
-              <a href="categorias.html">
-                <img src="botoes/categorias.png" alt="Categorias">
-              </a>
-            </div>
-          </div>
+          <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+            <img src="botoes/botao-carrinho.png" alt="Carrinho">
+            <span class="cart-count" id="cartCount">0</span>
+          </a>
         </div>
-
       </div>
-    </section>
-  </main>
+    </header>
 
-  <footer>
-    © 2026 HEEEPH - Placas Decorativas
-  </footer>
+    <main>
+      <section class="hero">
+        <div class="container">
+
+          <div class="banner-principal-wrap">
+            <div class="banner-principal">
+              <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
+            </div>
+          </div>
+
+          <div class="area-unica">
+            <div class="topo-vitrine">
+              <div class="painel-lateral esq">
+                <div class="medidas">
+                  <div>20x28cm</div>
+                  <div>28x20cm</div>
+                </div>
+
+                <div class="frase-lado">
+                  O tamanho que<br><span class="amarelo">chama atenção!</span>
+                </div>
+
+                <ul class="beneficios">
+                  <li>MDF Resistente</li>
+                  <li>Impressão HD</li>
+                  <li>Laminação de proteção</li>
+                </ul>
+              </div>
+
+              <div class="centro-vitrine">
+                <div class="titulo-centro">
+                  <span class="l1">Placas Decorativas</span>
+                  <span class="l2">Placas Personalizadas</span>
+                </div>
+
+                <div class="placa-central-wrap" id="placaClick">
+                  <img id="placaPrincipal" src="placas/street/naipess.png" alt="Placa em destaque">
+                </div>
+              </div>
+
+              <div class="painel-lateral dir">
+                <div class="medidas">
+                  <div>10x15cm</div>
+                  <div>15x10cm</div>
+                </div>
+
+                <div class="frase-lado">
+                  Monte a sua<br><span class="amarelo">coleção!</span>
+                </div>
+
+                <ul class="beneficios">
+                  <li>MDF Resistente</li>
+                  <li>Impressão HD</li>
+                  <li>Fácil Aplicação e Limpeza</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="faixa-destaque">
+              <h2>Destaque</h2>
+            </div>
+
+            <div class="vitrine-rodape">
+              <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
+
+              <div class="info-placa">
+                <div class="medida-atual" id="medidaAtual">20x28cm</div>
+                <div class="nome-placa" id="nomeAtual">Placa Naipes</div>
+                <div class="preco-wrap">
+                  <div class="preco-placa" id="precoAtual">R$ 29,90</div>
+                </div>
+                <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
+              </div>
+
+              <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
+            </div>
+
+            <div class="faixa-acoes">
+              <div class="botao-categorias">
+                <a href="categorias.html">
+                  <img src="botoes/categorias.png" alt="Categorias">
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © 2026 HEEEPH - Placas Decorativas
+    </footer>
+  </div>
 
   <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
     <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
