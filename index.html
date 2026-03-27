@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HEEEPH - Placas Decorativas</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
     *{
       margin:0;
@@ -231,9 +235,10 @@
       position:relative;
       padding:16px 20px 18px;
       border-radius:18px;
-      min-height:280px;
+      min-height:285px;
       background:transparent;
       box-shadow:inset 0 0 0 2px rgba(146,88,24,.55);
+      text-align:center;
     }
 
     .painel-lateral::before{
@@ -246,26 +251,10 @@
       background:linear-gradient(90deg, rgba(205,143,41,.18), rgba(205,143,41,.75), rgba(205,143,41,.18));
     }
 
-    .painel-lateral.esq{
-      text-align:left;
-    }
-
-    .painel-lateral.dir{
-      text-align:right;
-    }
-
-    .painel-lateral.esq .beneficios li{
-      justify-content:flex-start;
-    }
-
-    .painel-lateral.dir .beneficios li{
-      justify-content:flex-end;
-      flex-direction:row-reverse;
-    }
-
     .medidas{
+      font-family:'Oswald', sans-serif;
       font-size:34px;
-      font-weight:900;
+      font-weight:700;
       line-height:1.02;
       color:var(--gold2);
       text-shadow:0 2px 8px rgba(0,0,0,.35);
@@ -275,10 +264,11 @@
 
     .frase-lado{
       margin-top:34px;
-      font-size:17px;
-      font-style:italic;
-      font-weight:700;
-      line-height:1.15;
+      font-family:'Allura', cursive;
+      font-size:28px;
+      font-style:normal;
+      font-weight:400;
+      line-height:1.05;
       color:#f5f0e5;
       position:relative;
       z-index:2;
@@ -301,7 +291,9 @@
     .beneficios li{
       display:flex;
       align-items:flex-start;
+      justify-content:center;
       gap:10px;
+      font-family:'Oswald', sans-serif;
       font-size:14px;
       font-weight:700;
       line-height:1.1;
@@ -526,14 +518,19 @@
       filter:brightness(1.04);
     }
 
-    /* AÇÕES */
     .faixa-acoes{
       margin-top:18px;
       display:flex;
       align-items:flex-end;
-      justify-content:center;
+      justify-content:flex-start;
       gap:20px;
       flex-wrap:wrap;
+    }
+
+    .botao-categorias{
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
     }
 
     .botao-categorias a{
@@ -552,26 +549,23 @@
       height:auto;
     }
 
-    /* ZAP FIXO FLUTUANTE */
+    /* ZAP FIXO */
     .whatsapp-fixo{
-  position:fixed;
-  right:14px;
-  bottom:18px;
-  z-index:999;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
+      position:fixed;
+      right:14px;
+      bottom:18px;
+      z-index:999;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-.whatsapp-fixo img{
-  width:190px;
-  max-width:190px;
-  height:auto;
-  display:block;
-  filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
-}
-    .zap-inline{
-      display:none;
+    .whatsapp-fixo img{
+      width:190px;
+      max-width:190px;
+      height:auto;
+      display:block;
+      filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
     }
 
     footer{
@@ -583,44 +577,10 @@
       margin-top:26px;
     }
 
-    @media (max-width:1200px){
+    /* TABLET */
+    @media (max-width: 1100px){
       .topo-vitrine{
-        grid-template-columns:1fr;
         gap:18px;
-      }
-
-      .painel-lateral.esq,
-      .painel-lateral.dir{
-        text-align:center;
-      }
-
-      .painel-lateral.dir .beneficios li,
-      .painel-lateral.esq .beneficios li{
-        justify-content:center;
-        flex-direction:row;
-      }
-    }
-
-    @media (max-width:980px){
-      .topo .wrap{
-        flex-direction:column;
-        align-items:center;
-        gap:14px;
-      }
-
-      .menu-area{
-        width:100%;
-        justify-content:center;
-        margin-left:0;
-        gap:18px;
-      }
-
-      .menu{
-        gap:18px;
-      }
-
-      .medidas{
-        font-size:26px;
       }
 
       .placa-central-wrap{
@@ -628,15 +588,28 @@
         height:290px;
       }
 
-      .whatsapp-fixo img{
-        width:165px;
-        max-width:165px;
+      .medidas{
+        font-size:28px;
+      }
+
+      .frase-lado{
+        font-size:24px;
       }
     }
 
-    @media (max-width:700px){
-      .logo a{
-        font-size:28px;
+    /* TELEFONE */
+    @media (max-width: 780px){
+      .topo .wrap{
+        flex-direction:column;
+        align-items:center;
+        gap:12px;
+      }
+
+      .menu-area{
+        width:100%;
+        justify-content:center;
+        margin-left:0;
+        gap:14px;
       }
 
       .menu{
@@ -644,7 +617,11 @@
       }
 
       .menu a{
-        font-size:14px;
+        font-size:13px;
+      }
+
+      .logo a{
+        font-size:28px;
       }
 
       .banner-principal-wrap{
@@ -662,63 +639,130 @@
       }
 
       .area-unica{
-        width:95%;
-        padding:8px 10px 18px;
+        width:96%;
+        padding:8px 8px 18px;
+      }
+
+      /* CONTINUA HORIZONTAL NO CELULAR */
+      .topo-vitrine{
+        grid-template-columns: 1fr 170px 1fr;
+        gap:10px;
+        align-items:start;
       }
 
       .painel-lateral{
         min-height:auto;
-        padding:14px 14px 16px;
+        padding:10px 8px 12px;
+        border-radius:12px;
+      }
+
+      .painel-lateral::before{
+        left:8px;
+        right:8px;
+        top:70px;
       }
 
       .medidas{
-        font-size:22px;
+        font-size:17px;
+        line-height:1;
       }
 
       .frase-lado{
+        margin-top:20px;
         font-size:15px;
-        margin-top:28px;
+        line-height:1;
+      }
+
+      .beneficios{
+        margin-top:12px;
+        gap:6px;
+      }
+
+      .beneficios li{
+        font-size:10px;
+        gap:6px;
+      }
+
+      .beneficios li::before{
+        font-size:8px;
+        margin-top:1px;
+      }
+
+      .centro-vitrine{
+        min-width:auto;
+        gap:6px;
       }
 
       .titulo-centro .l1{
-        font-size:18px;
-      }
-
-      .titulo-centro .l2{
-        font-size:20px;
-      }
-
-      .placa-central-wrap{
-        width:180px;
-        height:250px;
-      }
-
-      .vitrine-rodape{
-        grid-template-columns:60px 1fr 60px;
-      }
-
-      .carousel-btn{
-        width:44px;
-        height:44px;
-        font-size:24px;
-      }
-
-      .faixa-destaque h2{
-        font-size:24px;
-      }
-
-      .nome-placa{
-        font-size:16px;
-      }
-
-      .preco-placa{
         font-size:15px;
       }
 
-      .btn-comprar{
-        min-width:200px;
+      .titulo-centro .l2{
+        font-size:16px;
+      }
+
+      .placa-central-wrap{
+        width:160px;
+        height:220px;
+      }
+
+      .faixa-destaque{
+        margin-top:16px;
+      }
+
+      .faixa-destaque h2{
+        font-size:22px;
+      }
+
+      .vitrine-rodape{
+        grid-template-columns:52px 1fr 52px;
+        gap:8px;
+        max-width:100%;
+      }
+
+      .carousel-btn{
+        width:42px;
+        height:42px;
+        font-size:22px;
+      }
+
+      .info-placa{
+        max-width:260px;
+        padding:10px 10px 12px;
+        border-radius:14px;
+      }
+
+      .medida-atual{
+        font-size:13px;
+        padding:6px 14px;
+      }
+
+      .nome-placa{
+        font-size:15px;
+      }
+
+      .preco-wrap::before,
+      .preco-wrap::after{
+        width:28px;
+      }
+
+      .preco-placa{
         font-size:14px;
-        padding:10px 14px;
+      }
+
+      .btn-comprar{
+        min-width:180px;
+        font-size:13px;
+        padding:10px 12px;
+      }
+
+      .faixa-acoes{
+        justify-content:center;
+      }
+
+      .botao-categorias{
+        justify-content:center;
+        width:100%;
       }
 
       .botao-categorias img{
@@ -727,11 +771,58 @@
 
       .whatsapp-fixo{
         right:8px;
+        bottom:8px;
       }
 
       .whatsapp-fixo img{
         width:145px;
         max-width:145px;
+      }
+    }
+
+    /* TELEFONE MENOR */
+    @media (max-width: 480px){
+      .topo-vitrine{
+        grid-template-columns: 1fr 140px 1fr;
+        gap:8px;
+      }
+
+      .medidas{
+        font-size:15px;
+      }
+
+      .frase-lado{
+        font-size:13px;
+      }
+
+      .beneficios li{
+        font-size:9px;
+      }
+
+      .placa-central-wrap{
+        width:130px;
+        height:185px;
+      }
+
+      .titulo-centro .l1{
+        font-size:13px;
+      }
+
+      .titulo-centro .l2{
+        font-size:14px;
+      }
+
+      .info-placa{
+        max-width:220px;
+      }
+
+      .btn-comprar{
+        min-width:160px;
+      }
+
+      .whatsapp-fixo img{
+        width:130px;
+        max-width:130px;
       }
     }
   </style>
