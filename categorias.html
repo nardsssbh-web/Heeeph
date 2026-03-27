@@ -201,20 +201,20 @@
 
     /* ÁREA DAS CATEGORIAS */
     .categorias-area{
-      padding:30px 0 34px;
+      padding:34px 0 34px;
     }
 
     .categorias-grid{
       display:grid;
       grid-template-columns:repeat(4, minmax(180px, 1fr));
-      gap:28px 22px;
+      gap:32px 24px;
       align-items:stretch;
     }
 
     .categoria-card{
       position:relative;
-      min-height:122px;
-      border-radius:24px;
+      min-height:150px;
+      border-radius:28px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -225,19 +225,25 @@
 
     .categoria-card:hover{
       transform:translateY(-4px);
-      filter:brightness(1.05);
+      filter:brightness(1.08);
     }
 
-    /* brilho atrás do botão */
+    /* brilho maior atrás do botão */
     .categoria-card::before{
       content:"";
       position:absolute;
-      width:72%;
-      height:72%;
+      width:86%;
+      height:86%;
       border-radius:999px;
       background:
-        radial-gradient(circle, rgba(255,255,255,.22) 0%, rgba(255,255,255,.10) 28%, rgba(255,216,77,.12) 48%, rgba(255,216,77,.04) 64%, transparent 78%);
-      filter:blur(10px);
+        radial-gradient(circle,
+          rgba(255,255,255,.34) 0%,
+          rgba(255,255,255,.18) 18%,
+          rgba(255,216,77,.22) 34%,
+          rgba(255,216,77,.10) 52%,
+          rgba(255,216,77,.03) 70%,
+          transparent 84%);
+      filter:blur(18px);
       z-index:1;
       pointer-events:none;
     }
@@ -254,21 +260,21 @@
     }
 
     .categoria-card img{
-      max-width:160px;
-      max-height:84px;
+      max-width:210px;
+      max-height:112px;
       width:auto;
       height:auto;
       object-fit:contain;
-      filter:drop-shadow(0 6px 16px rgba(0,0,0,.45));
+      filter:drop-shadow(0 8px 20px rgba(0,0,0,.48));
       transition:transform .18s ease;
     }
 
     .categoria-card:hover img{
-      transform:scale(1.04);
+      transform:scale(1.05);
     }
 
     .acoes-finais{
-      margin-top:34px;
+      margin-top:38px;
       display:flex;
       justify-content:center;
       align-items:center;
@@ -308,7 +314,7 @@
       margin-top:10px;
     }
 
-    /* ZAP FIXO */
+    /* ZAP FIXO MAIOR */
     .whatsapp-fixo{
       position:fixed;
       right:14px;
@@ -320,8 +326,8 @@
     }
 
     .whatsapp-fixo img{
-      width:190px;
-      max-width:190px;
+      width:230px;
+      max-width:230px;
       height:auto;
       display:block;
       filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
@@ -420,22 +426,28 @@
       }
 
       .categorias-area{
-        padding:20px 0 24px;
+        padding:22px 0 24px;
       }
 
       .categorias-grid{
         grid-template-columns:repeat(2, minmax(130px, 1fr));
-        gap:18px 12px;
+        gap:20px 12px;
       }
 
       .categoria-card{
-        min-height:98px;
-        border-radius:18px;
+        min-height:118px;
+        border-radius:20px;
+      }
+
+      .categoria-card::before{
+        width:92%;
+        height:92%;
+        filter:blur(16px);
       }
 
       .categoria-card img{
-        max-width:126px;
-        max-height:64px;
+        max-width:150px;
+        max-height:78px;
       }
 
       .voltar-home{
@@ -451,8 +463,8 @@
       }
 
       .whatsapp-fixo img{
-        width:145px;
-        max-width:145px;
+        width:175px;
+        max-width:175px;
       }
     }
 
@@ -492,16 +504,16 @@
 
       .categorias-grid{
         grid-template-columns:1fr 1fr;
-        gap:14px 10px;
+        gap:16px 10px;
       }
 
       .categoria-card{
-        min-height:86px;
+        min-height:104px;
       }
 
       .categoria-card img{
-        max-width:110px;
-        max-height:56px;
+        max-width:132px;
+        max-height:68px;
       }
 
       .voltar-home{
@@ -511,8 +523,8 @@
       }
 
       .whatsapp-fixo img{
-        width:130px;
-        max-width:130px;
+        width:155px;
+        max-width:155px;
       }
     }
   </style>
