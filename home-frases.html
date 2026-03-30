@@ -93,6 +93,7 @@
       width: 42px;
       height: 42px;
       flex-shrink: 0;
+      text-decoration: none;
     }
 
     .cart-link img {
@@ -231,6 +232,13 @@
       background: #fff;
     }
 
+    .vazio {
+      text-align: center;
+      padding: 50px 20px;
+      color: #fff;
+      font-size: 20px;
+    }
+
     .zap {
       position: fixed;
       right: 18px;
@@ -251,7 +259,7 @@
     @media (max-width: 980px) {
       .topo .wrap {
         flex-direction: column;
-    align-items: center;
+        align-items: center;
         gap: 14px;
       }
 
@@ -475,7 +483,6 @@
         <a href="categorias.html" class="ativo">COLEÇÃO</a>
         <a href="sobre.html">O QUE É HEEEPH?</a>
         <a href="fotos-reais.html">FOTOS REAIS</a>
-        <a href="contatos.html">CONTATOS</a>
       </nav>
 
       <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
@@ -491,108 +498,7 @@
 </section>
 
 <main class="pagina">
-  <section class="grade-placas">
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa horizontal">
-          <div class="img-box">
-            <img src="placas/home-frases/amigo-familia.png" alt="amigo-familia">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/amizade.png" alt="amizade">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/beleza.png" alt="beleza">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/frase1.png" alt="frase1">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/frase2.png" alt="frase2">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/frase3.png" alt="frase3">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/frase4.png" alt="frase4">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/frase5.png" alt="frase5">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-    <div class="item-placa">
-      <a href="#" class="link-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="placas/home-frases/frase6.png" alt="frase6">
-          </div>
-        </div>
-      </a>
-      <div class="preco-placa">preço aqui</div>
-    </div>
-
-  </section>
+  <section class="grade-placas" id="gradeProdutos"></section>
 
   <div class="voltar">
     <a href="categorias.html">VOLTAR PARA CATEGORIAS</a>
@@ -603,88 +509,63 @@
   <img src="botoes/whatsapp.png" alt="WhatsApp">
 </a>
 
+<script src="produtos.js"></script>
 <script>
-  function getCart() {
-    return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
-  }
-
-  function saveCart(cart) {
-    localStorage.setItem('heeeph_cart', JSON.stringify(cart));
-    updateCartCount();
-  }
+  const categoriaAtual = "home-frases";
 
   function updateCartCount() {
-    const cart = getCart();
-    const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
-    const countEl = document.getElementById('cartCount');
-    if (countEl) countEl.textContent = total;
+    const countEl = document.getElementById("cartCount");
+    if (countEl && typeof contarItensCarrinho === "function") {
+      countEl.textContent = contarItensCarrinho();
+    }
   }
 
-  function addToCart(item) {
-    const cart = getCart();
-    const existingIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+  function isHorizontal(item) {
+    const horizontais = ["amigo-familia"];
+    return horizontais.some(nome => item.imagem.includes(nome));
+  }
 
-    if (existingIndex > -1) {
-      cart[existingIndex].quantity += 1;
-    } else {
-      cart.push({
-        ...item,
-        quantity: 1
-      });
+  function renderProdutos() {
+    const grade = document.getElementById("gradeProdutos");
+
+    if (typeof PRODUTOS === "undefined") {
+      grade.innerHTML = '<div class="vazio">Arquivo produtos.js não encontrado.</div>';
+      return;
     }
 
-    saveCart(cart);
-    window.location.href = 'carrinho.html';
+    const itens = PRODUTOS[categoriaAtual] || [];
+
+    if (!itens.length) {
+      grade.innerHTML = '<div class="vazio">Nenhuma placa encontrada nesta categoria.</div>';
+      return;
+    }
+
+    grade.innerHTML = itens.map(item => `
+      <div class="item-placa">
+        <a href="#" class="link-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
+          <div class="placa ${isHorizontal(item) ? "horizontal" : ""}">
+            <div class="img-box">
+              <img src="${item.imagem}" alt="${item.nome}">
+            </div>
+          </div>
+        </a>
+        <div class="preco-placa">${item.preco}</div>
+      </div>
+    `).join("");
   }
 
-  function criarIdPeloCaminho(src) {
-    return src
-      .replace(/^https?:\/\/[^/]+/i, '')
-      .replace(/^\/+/, '')
-      .replace(/\.[^.]+$/, '')
-      .replace(/[\/\s]+/g, '-')
-      .toLowerCase();
-  }
+  function adicionarProdutoAoCarrinho(event, id) {
+    event.preventDefault();
 
-  function formatarNome(alt, src) {
-    if (alt && alt.trim()) return alt.trim();
-
-    const arquivo = src.split('/').pop().replace(/\.[^.]+$/, '');
-    return arquivo
-      .replace(/[-_]+/g, ' ')
-      .replace(/\b\w/g, letra => letra.toUpperCase());
-  }
-
-  function ativarPlacasDaPagina() {
-    const placas = document.querySelectorAll('.item-placa');
-
-    placas.forEach(itemPlaca => {
-      const link = itemPlaca.querySelector('.link-placa');
-      const img = itemPlaca.querySelector('.img-box img');
-      const precoEl = itemPlaca.querySelector('.preco-placa');
-
-      if (!link || !img) return;
-
-      link.addEventListener('click', function (event) {
-        event.preventDefault();
-
-        const imagem = img.getAttribute('src');
-        const nome = formatarNome(img.getAttribute('alt'), imagem);
-        const preco = precoEl ? precoEl.textContent.trim() : 'preço aqui';
-        const id = criarIdPeloCaminho(imagem);
-
-        addToCart({
-          id: id,
-          nome: nome,
-          preco: preco,
-          imagem: imagem
-        });
-      });
-    });
+    if (typeof adicionarAoCarrinho === "function") {
+      adicionarAoCarrinho(id);
+      updateCartCount();
+      window.location.href = "carrinho.html";
+    }
   }
 
   updateCartCount();
-  ativarPlacasDaPagina();
+  renderProdutos();
 </script>
 
 </body>
