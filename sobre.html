@@ -12,15 +12,13 @@
     }
 
     :root {
-      --preto: #050505;
       --dourado: #f0c400;
-      --bege: #dcd4c6;
       --branco: #ffffff;
     }
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: #000;
+      background: #000 url("banner/fundo.png") center top / cover no-repeat fixed;
       color: var(--branco);
       overflow-x: hidden;
     }
@@ -127,19 +125,37 @@
 
     .site-bg {
       min-height: calc(100vh - 92px);
-      background:
-        linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
-        url("banner/quem-somos.png") center top / contain no-repeat,
-        #000;
-      padding: 20px 0 40px;
+      padding: 18px 0 34px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .sobre-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 0 10px;
+    }
+
+    .sobre-banner {
+      width: min(96vw, 1500px);
+    }
+
+    .sobre-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0;
+      box-shadow: none;
     }
 
     footer {
       background: #000;
       color: #fff;
       text-align: center;
-      padding: 26px 15px;
-      font-size: 17px;
+      padding: 20px 15px;
+      font-size: 15px;
       border-top: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -181,6 +197,10 @@
       .whatsapp-fixo img {
         width: 220px;
         max-width: 220px;
+      }
+
+      .sobre-banner {
+        width: min(97vw, 1100px);
       }
     }
 
@@ -241,12 +261,15 @@
       }
 
       .site-bg {
-        min-height: auto;
-        background:
-          linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
-          url("banner/quem-somos.png") center top / contain no-repeat,
-          #000;
-        padding: 14px 0 24px;
+        padding: 10px 0 20px;
+      }
+
+      .sobre-wrap {
+        padding: 0 4px;
+      }
+
+      .sobre-banner {
+        width: 99vw;
       }
 
       .whatsapp-fixo {
@@ -291,7 +314,13 @@
     </div>
   </header>
 
-  <main class="site-bg"></main>
+  <main class="site-bg">
+    <div class="sobre-wrap">
+      <div class="sobre-banner">
+        <img src="banner/quem-somos.png" alt="Quem somos HEEEPH">
+      </div>
+    </div>
+  </main>
 
   <footer>
     © 2026 HEEEPH - Placas Decorativas
