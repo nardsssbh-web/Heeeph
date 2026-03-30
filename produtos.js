@@ -173,6 +173,7 @@ const PRODUTOS = {
     { id: "street-som", nome: "Som", imagem: "placas/street/som.png", preco: "preço aqui" },
     { id: "street-voz", nome: "Voz", imagem: "placas/street/voz.png", preco: "preço aqui" },
     { id: "street-zap-mineiro", nome: "Zap Mineiro", imagem: "placas/street/zap-mineiro.png", preco: "preço aqui" }
+    { id: "street-sakete-rua", nome: "Skate Rua", imagem: "placas/street/skate-rua.png", preco: "preço aqui" }
   ],
 
   trip: [
