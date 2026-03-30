@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bebidas - HEEEPH</title>
-
+  <title>BEBIDAS | HEEEPH</title>
   <style>
     * {
       margin: 0;
@@ -12,313 +11,659 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --preto: #0b0b0b;
-      --amarelo: #d8a12e;
-      --amarelo-claro: #f0cd63;
-      --bege: #efe7d9;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
+      background:
+        linear-gradient(rgba(0,0,0,.10), rgba(0,0,0,.18)),
+        url("banner/fundo.png") center top / cover no-repeat fixed;
+      background-color: #000;
+      color: #fff;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bege);
-      color: #111;
       overflow-x: hidden;
     }
 
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    .container {
-      width: min(1200px, 94%);
-      margin: 0 auto;
-    }
-
-    .header {
+    .topo {
       position: sticky;
       top: 0;
-      z-index: 2000;
+      z-index: 1000;
+      width: 100%;
       background: #000;
-      box-shadow: 0 2px 14px rgba(0,0,0,0.28);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    .header-container {
-      min-height: 76px;
+    .topo .wrap {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 16px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 24px;
     }
 
     .logo {
-      color: #fff;
-      font-size: 2.1rem;
+      flex: 0 0 auto;
+    }
+
+    .logo a {
+      font-size: 34px;
       font-weight: 900;
       letter-spacing: 2px;
+      color: #fff;
       white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .menu-area {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-left: auto;
+      min-width: 0;
     }
 
     .menu {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 30px;
+      gap: 34px;
       flex-wrap: wrap;
+      justify-content: center;
+      min-width: 0;
     }
 
     .menu a {
       color: #fff;
-      font-size: 0.95rem;
+      font-size: 16px;
       font-weight: 800;
       text-transform: uppercase;
-      transition: 0.2s;
+      transition: 0.2s ease;
+      white-space: nowrap;
+      text-decoration: none;
     }
 
     .menu a:hover,
     .menu a.ativo {
-      color: var(--amarelo-claro);
+      color: #f0c400;
     }
 
-    .cart-icon {
-      color: #fff;
-      font-size: 1.25rem;
-      line-height: 1;
-      white-space: nowrap;
+    .cart-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
     }
 
-    .hero-categoria {
-      background: linear-gradient(to bottom, #151515 0%, #1b1b1b 100%);
-      padding: 38px 0 30px;
-      text-align: center;
+    .cart-link img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
     }
 
-    .hero-categoria h1 {
-      color: #fff;
-      font-size: 2.4rem;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
+    .cart-count {
+      position: absolute;
+      top: -5px;
+      right: -6px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #f0c400;
+      color: #000;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
     }
 
-    .hero-categoria p {
-      color: #ddd;
-      font-size: 1.05rem;
-      max-width: 820px;
+    .banner-topo {
+      max-width: 1300px;
+      margin: 18px auto 8px;
+      padding: 0 20px;
+    }
+
+    .banner-topo img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+    }
+
+    .pagina {
+      max-width: 1300px;
       margin: 0 auto;
-      line-height: 1.7;
+      padding: 18px 20px 80px;
     }
 
-    .galeria {
-      padding: 48px 0 70px;
-      background: var(--bege);
-    }
-
-    .grid-placas {
-      width: min(1120px, 94%);
-      margin: 0 auto;
+    .grade-placas {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 28px;
+    }
+
+    .item-placa {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .link-placa {
+      width: 100%;
+      text-decoration: none;
+      color: inherit;
+      display: block;
     }
 
     .placa {
-      background: rgba(255,255,255,0.82);
-      border-radius: 18px;
-      padding: 12px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+      width: 100%;
+      background: #e9e5dd;
+      border-radius: 20px;
+      padding: 14px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
     }
 
     .placa:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.20);
+    }
+
+    .img-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      padding: 10px;
     }
 
     .placa img {
-      width: 100%;
-      aspect-ratio: 10 / 14;
-      object-fit: cover;
-      border-radius: 12px;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
       background: #ddd;
     }
 
-    .atalhos {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 36px;
-    }
-
-    .atalhos a {
-      display: inline-block;
-      background: #111;
-      color: var(--amarelo-claro);
-      padding: 14px 24px;
-      border-radius: 999px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: 0.2s ease;
-    }
-
-    .atalhos a:hover {
-      transform: translateY(-2px);
-    }
-
-    .footer {
-      background: #111;
+    .preco-placa {
+      margin-top: 12px;
+      font-size: 18px;
+      font-weight: bold;
       color: #fff;
       text-align: center;
-      padding: 22px 14px;
-      font-size: 0.95rem;
     }
 
-    .whatsapp-fixo {
+    .voltar {
+      text-align: center;
+      margin-top: 45px;
+    }
+
+    .voltar a {
+      display: inline-block;
+      text-decoration: none;
+      color: #000;
+      background: #f0d000;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .voltar a:hover {
+      background: #fff;
+    }
+
+    .zap {
       position: fixed;
       right: 18px;
       bottom: 18px;
-      z-index: 3000;
-      width: 240px;
-      height: auto;
-      display: flex;
+      z-index: 999;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
-    .whatsapp-fixo img {
-      width: 100%;
+    .zap img {
+      width: 250px;
+      max-width: 250px;
       height: auto;
-      filter: drop-shadow(0 8px 18px rgba(0,0,0,0.28));
+      display: block;
     }
 
-    @media (max-width: 1024px) {
-      .header-container {
+    @media (max-width: 980px) {
+      .topo .wrap {
         flex-direction: column;
-        padding: 14px 0;
+        align-items: center;
+        gap: 14px;
       }
 
-      .grid-placas {
-        grid-template-columns: repeat(3, 1fr);
+      .menu-area {
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+        gap: 18px;
       }
 
-      .whatsapp-fixo {
-        width: 180px;
+      .menu {
+        gap: 18px;
+      }
+
+      .zap img {
+        width: 220px;
+        max-width: 220px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .zap {
+        right: 10px;
+        bottom: 10px;
+      }
+
+      .zap img {
+        width: 190px;
+        max-width: 190px;
       }
     }
 
     @media (max-width: 700px) {
+      .topo .wrap {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 10px 8px;
+        flex-wrap: nowrap;
+      }
+
+      .logo a {
+        font-size: 18px;
+        letter-spacing: 1px;
+      }
+
+      .menu-area {
+        width: auto;
+        justify-content: flex-end;
+        margin-left: auto;
+        gap: 6px;
+        flex-wrap: nowrap;
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+
       .menu {
-        gap: 14px;
+        gap: 6px;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        overflow: hidden;
       }
 
       .menu a {
-        font-size: 0.82rem;
+        font-size: 8px;
+        letter-spacing: 0;
       }
 
-      .grid-placas {
+      .cart-link {
+        width: 30px;
+        height: 30px;
+      }
+
+      .cart-link img {
+        width: 21px;
+        height: 21px;
+      }
+
+      .cart-count {
+        top: -2px;
+        right: -2px;
+        min-width: 14px;
+        height: 14px;
+        font-size: 8px;
+        padding: 0 4px;
+      }
+
+      .grade-placas {
         grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
       }
 
-      .hero-categoria h1 {
-        font-size: 2rem;
-      }
-
-      .whatsapp-fixo {
-        width: 130px;
+      .preco-placa {
+        font-size: 16px;
       }
     }
 
-    @media (max-width: 430px) {
-      .logo {
-        font-size: 1.6rem;
+    @media (max-width: 520px) {
+      .banner-topo {
+        padding: 0 14px;
+        margin-top: 12px;
       }
 
-      .grid-placas {
-        grid-template-columns: 1fr;
+      .grade-placas {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
       }
 
-      .whatsapp-fixo {
-        width: 100px;
+      .pagina {
+        padding: 18px 14px 80px;
+      }
+
+      .placa {
+        padding: 8px;
+        border-radius: 16px;
+      }
+
+      .img-box {
+        border-radius: 10px;
+        padding: 12px;
+      }
+
+      .placa img {
+        max-width: 88%;
+        max-height: 88%;
+      }
+
+      .preco-placa {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .topo .wrap {
+        gap: 4px;
+        padding: 8px 6px;
+      }
+
+      .logo a {
+        font-size: 16px;
+      }
+
+      .menu {
+        gap: 4px;
+      }
+
+      .menu a {
+        font-size: 7px;
+      }
+
+      .cart-link {
+        width: 28px;
+        height: 28px;
+      }
+
+      .cart-link img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .cart-count {
+        min-width: 13px;
+        height: 13px;
+        font-size: 7px;
+      }
+
+      .pagina {
+        padding: 16px 10px 80px;
+      }
+
+      .grade-placas {
+        gap: 12px;
+      }
+
+      .placa {
+        padding: 7px;
+      }
+
+      .img-box {
+        padding: 14px;
+      }
+
+      .placa img {
+        max-width: 84%;
+        max-height: 84%;
+      }
+
+      .preco-placa {
+        font-size: 14px;
+      }
+
+      .zap img {
+        width: 170px;
+        max-width: 170px;
       }
     }
   </style>
 </head>
 <body>
 
-  <header class="header">
-    <div class="container header-container">
-      <div class="logo">HEEEPH</div>
+<header class="topo">
+  <div class="wrap">
+    <div class="logo">
+      <a href="index.html">HEEEPH</a>
+    </div>
 
+    <div class="menu-area">
       <nav class="menu">
         <a href="index.html">HOME</a>
-        <a href="categorias.html">COLEÇÃO</a>
+        <a href="categorias.html" class="ativo">COLEÇÃO</a>
         <a href="sobre.html">O QUE É HEEEPH?</a>
         <a href="fotos-reais.html">FOTOS REAIS</a>
-        <a href="https://wa.me/5511998302901" target="_blank">CONTATOS</a>
+        <a href="contatos.html">CONTATOS</a>
       </nav>
 
-      <div class="cart-icon">🛒</div>
+      <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+        <img src="botoes/botao-carrinho.png" alt="Carrinho">
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
     </div>
-  </header>
+  </div>
+</header>
 
-  <main>
-    <section class="hero-categoria">
-      <div class="container">
-        <h1>Bebidas</h1>
-        <p>
-          Placas decorativas com clima de bar, humor, balcão, conversa boa e copo cheio.
-          Escolha a arte e dê personalidade ao ambiente.
-        </p>
-      </div>
-    </section>
+<section class="banner-topo">
+  <img src="banner/heeeph-bebidas.png" alt="Banner Bebidas HEEEPH">
+</section>
 
-    <section class="galeria">
-      <div class="grid-placas">
+<main class="pagina">
+  <section class="grade-placas">
 
-        <div class="placa"><img src="/placas/bebida/cachaçah.png" alt="cachaçah"></div>
-        <div class="placa"><img src="/placas/bebida/cachaçam.png" alt="cachaçam"></div>
-        <div class="placa"><img src="/placas/bebida/caipirinha-lovers.png" alt="caipirinha-lovers"></div>
-        <div class="placa"><img src="/placas/bebida/cocktails.png" alt="cocktails"></div>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/cachaçah.png" alt="cachaçah"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
 
-        <div class="placa"><img src="/placas/bebida/drink-beer.png" alt="drink-beer"></div>
-        <div class="placa"><img src="/placas/bebida/drink-cocktails.png" alt="drink-cocktails"></div>
-        <div class="placa"><img src="/placas/bebida/drink-tequila.png" alt="drink-tequila"></div>
-        <div class="placa"><img src="/placas/bebida/drink-whiskey.png" alt="drink-whiskey"></div>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/cachaçam.png" alt="cachaçam"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
 
-        <div class="placa"><img src="/placas/bebida/good-beer.png" alt="good-beer"></div>
-        <div class="placa"><img src="/placas/bebida/in-vino.png" alt="in-vino"></div>
-        <div class="placa"><img src="/placas/bebida/rum.png" alt="rum"></div>
-        <div class="placa"><img src="/placas/bebida/tequila.png" alt="tequila"></div>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/caipirinha-lovers.png" alt="caipirinha-lovers"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
 
-        <div class="placa"><img src="/placas/bebida/vodka.png" alt="vodka"></div>
-        <div class="placa"><img src="/placas/bebida/whiskey.png" alt="whiskey"></div>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/cocktails.png" alt="cocktails"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
 
-      </div>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/drink-beer.png" alt="drink-beer"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
 
-      <div class="atalhos">
-        <a href="categorias.html">Voltar para Categorias</a>
-        <a href="index.html">Voltar para Home</a>
-      </div>
-    </section>
-  </main>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/drink-cocktails.png" alt="drink-cocktails"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
 
-  <footer class="footer">
-    <p>© 2026 HEEEPH - Placas Decorativas</p>
-  </footer>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/drink-tequila.png" alt="drink-tequila"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
 
-  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" aria-label="WhatsApp">
-    <img src="botoes/whatsapp.png" alt="WhatsApp">
-  </a>
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/drink-whiskey.png" alt="drink-whiskey"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
+
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/good-beer.png" alt="good-beer"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
+
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/in-vino.png" alt="in-vino"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
+
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/rum.png" alt="rum"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
+
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/tequila.png" alt="tequila"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
+
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/vodka.png" alt="vodka"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
+
+    <div class="item-placa">
+      <a href="#" class="link-placa">
+        <div class="placa"><div class="img-box"><img src="placas/bebida/whiskey.png" alt="whiskey"></div></div>
+      </a>
+      <div class="preco-placa">preço aqui</div>
+    </div>
+
+  </section>
+
+  <div class="voltar">
+    <a href="categorias.html">VOLTAR PARA CATEGORIAS</a>
+  </div>
+</main>
+
+<a class="zap" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">
+  <img src="botoes/whatsapp.png" alt="WhatsApp">
+</a>
+
+<script>
+  function getCart() {
+    return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
+  }
+
+  function saveCart(cart) {
+    localStorage.setItem('heeeph_cart', JSON.stringify(cart));
+    updateCartCount();
+  }
+
+  function updateCartCount() {
+    const cart = getCart();
+    const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+    const countEl = document.getElementById('cartCount');
+    if (countEl) countEl.textContent = total;
+  }
+
+  function addToCart(item) {
+    const cart = getCart();
+    const existingIndex = cart.findIndex(cartItem => cartItem.id === item.id);
+
+    if (existingIndex > -1) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push({
+        ...item,
+        quantity: 1
+      });
+    }
+
+    saveCart(cart);
+    window.location.href = 'carrinho.html';
+  }
+
+  function criarIdPeloCaminho(src) {
+    return src
+      .replace(/^https?:\/\/[^/]+/i, '')
+      .replace(/^\/+/, '')
+      .replace(/\.[^.]+$/, '')
+      .replace(/[\/\s]+/g, '-')
+      .toLowerCase();
+  }
+
+  function formatarNome(alt, src) {
+    if (alt && alt.trim()) return alt.trim();
+
+    const arquivo = src.split('/').pop().replace(/\.[^.]+$/, '');
+    return arquivo
+      .replace(/[-_]+/g, ' ')
+      .replace(/\b\w/g, letra => letra.toUpperCase());
+  }
+
+  function ativarPlacasDaPagina() {
+    const placas = document.querySelectorAll('.item-placa');
+
+    placas.forEach(itemPlaca => {
+      const link = itemPlaca.querySelector('.link-placa');
+      const img = itemPlaca.querySelector('.img-box img');
+      const precoEl = itemPlaca.querySelector('.preco-placa');
+
+      if (!link || !img) return;
+
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        const imagem = img.getAttribute('src');
+        const nome = formatarNome(img.getAttribute('alt'), imagem);
+        const preco = precoEl ? precoEl.textContent.trim() : 'preço aqui';
+        const id = criarIdPeloCaminho(imagem);
+
+        addToCart({
+          id: id,
+          nome: nome,
+          preco: preco,
+          imagem: imagem
+        });
+      });
+    });
+  }
+
+  updateCartCount();
+  ativarPlacasDaPagina();
+</script>
 
 </body>
 </html>
