@@ -54,7 +54,6 @@
       margin:0 auto;
     }
 
-    /* TOPO */
     .topo{
       position:sticky;
       top:0;
@@ -164,7 +163,6 @@
       justify-content:center;
     }
 
-    /* HERO */
     .hero{
       padding:14px 0 10px;
     }
@@ -199,7 +197,6 @@
       display:block;
     }
 
-    /* ÁREA DAS CATEGORIAS */
     .categorias-area{
       padding:34px 0 34px;
     }
@@ -213,7 +210,7 @@
 
     .categoria-card{
       position:relative;
-      min-height:150px;
+      min-height:170px;
       border-radius:28px;
       display:flex;
       align-items:center;
@@ -228,19 +225,18 @@
       filter:brightness(1.08);
     }
 
-    /* brilho maior atrás do botão */
     .categoria-card::before{
       content:"";
       position:absolute;
-      width:86%;
-      height:86%;
+      width:88%;
+      height:88%;
       border-radius:999px;
       background:
         radial-gradient(circle,
-          rgba(255,255,255,.34) 0%,
-          rgba(255,255,255,.18) 18%,
-          rgba(255,216,77,.22) 34%,
-          rgba(255,216,77,.10) 52%,
+          rgba(255,255,255,.30) 0%,
+          rgba(255,255,255,.16) 18%,
+          rgba(255,216,77,.20) 34%,
+          rgba(255,216,77,.09) 52%,
           rgba(255,216,77,.03) 70%,
           transparent 84%);
       filter:blur(18px);
@@ -256,21 +252,22 @@
       justify-content:center;
       width:100%;
       height:100%;
-      padding:14px;
+      padding:8px;
     }
 
     .categoria-card img{
-      max-width:210px;
-      max-height:112px;
-      width:auto;
-      height:auto;
+      width:230px;
+      height:120px;
+      max-width:100%;
+      max-height:100%;
       object-fit:contain;
+      object-position:center;
       filter:drop-shadow(0 8px 20px rgba(0,0,0,.48));
       transition:transform .18s ease;
     }
 
     .categoria-card:hover img{
-      transform:scale(1.05);
+      transform:scale(1.04);
     }
 
     .acoes-finais{
@@ -314,7 +311,6 @@
       margin-top:10px;
     }
 
-    /* ZAP FIXO MAIOR */
     .whatsapp-fixo{
       position:fixed;
       right:14px;
@@ -333,14 +329,12 @@
       filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
     }
 
-    /* TABLET */
     @media (max-width: 1100px){
       .categorias-grid{
         grid-template-columns:repeat(3, minmax(180px, 1fr));
       }
     }
 
-    /* MOBILE */
     @media (max-width: 780px){
       html, body{
         overflow-x:hidden;
@@ -435,7 +429,7 @@
       }
 
       .categoria-card{
-        min-height:118px;
+        min-height:132px;
         border-radius:20px;
       }
 
@@ -446,8 +440,8 @@
       }
 
       .categoria-card img{
-        max-width:150px;
-        max-height:78px;
+        width:170px;
+        height:88px;
       }
 
       .voltar-home{
@@ -508,12 +502,12 @@
       }
 
       .categoria-card{
-        min-height:104px;
+        min-height:118px;
       }
 
       .categoria-card img{
-        max-width:132px;
-        max-height:68px;
+        width:150px;
+        height:78px;
       }
 
       .voltar-home{
