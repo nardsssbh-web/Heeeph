@@ -78,7 +78,7 @@ const PRODUTOS = {
     { id: "bebidas-tequila", nome: "Tequila", imagem: "placas/bebida/tequila.png", preco: "preço aqui" },
     { id: "bebidas-vodka", nome: "Vodka", imagem: "placas/bebida/vodka.png", preco: "preço aqui" },
     { id: "bebidas-whiskey", nome: "Whiskey", imagem: "placas/bebida/whiskey.png", preco: "preço aqui" },
-    { id: "bebida-reuniao.png", nome: "bebida-reuniao.png", imagem: "placas/bebida/bebida-reuniao.png.png", preco: "preço aqui" }
+    { id: "bebida-reuniao", nome: "bebida reuniao", imagem: "placas/bebida/bebida-reuniao.png.png", preco: "preço aqui" }
   ],
 
   games: [
