@@ -1068,116 +1068,95 @@
     <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
   </a>
 
-  <script>
-    function getCart() {
-      return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
+  <script src="produtos.js"></script>
+<script>
+  function updateCartCount() {
+    const countEl = document.getElementById("cartCount");
+    if (countEl && typeof contarItensCarrinho === "function") {
+      countEl.textContent = contarItensCarrinho();
     }
+  }
 
-    function saveCart(cart) {
-      localStorage.setItem('heeeph_cart', JSON.stringify(cart));
+  const produtosDestaque = [
+    {
+      id: "street-naipess",
+      nome: "Placa Naipes",
+      preco: "R$ 29,90",
+      medida: "20x28cm",
+      imagem: "placas/street/naipess.png"
+    },
+    {
+      id: "games-gta-sa",
+      nome: "GTA San Andreas",
+      preco: "preço aqui",
+      medida: "20x28cm",
+      imagem: "placas/games/gta-sa.png"
+    },
+    {
+      id: "motos-velho",
+      nome: "Velho",
+      preco: "preço aqui",
+      medida: "20x28cm",
+      imagem: "placas/motos/velho.png"
+    },
+    {
+      id: "street-skatista",
+      nome: "Skatista",
+      preco: "preço aqui",
+      medida: "20x28cm",
+      imagem: "placas/street/skatista.png"
+    },
+    {
+      id: "home-frases-beleza",
+      nome: "Beleza",
+      preco: "preço aqui",
+      medida: "20x28cm",
+      imagem: "placas/home-frases/beleza.png"
+    }
+  ];
+
+  let currentIndex = 0;
+
+  function renderCarouselPrincipal() {
+    const produto = produtosDestaque[currentIndex];
+
+    document.getElementById("placaPrincipal").src = produto.imagem;
+    document.getElementById("placaPrincipal").alt = produto.nome;
+    document.getElementById("medidaAtual").textContent = produto.medida;
+    document.getElementById("nomeAtual").textContent = produto.nome;
+    document.getElementById("precoAtual").textContent = produto.preco;
+  }
+
+  function comprarProdutoDestaque() {
+    const produto = produtosDestaque[currentIndex];
+
+    if (typeof adicionarAoCarrinho === "function") {
+      adicionarAoCarrinho(produto.id);
       updateCartCount();
+      window.location.href = "carrinho.html";
     }
+  }
 
-    function updateCartCount() {
-      const cart = getCart();
-      const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
-      const countEl = document.getElementById('cartCount');
-      if (countEl) countEl.textContent = total;
-    }
-
-    function addToCart(item) {
-      const cart = getCart();
-      const existingIndex = cart.findIndex(cartItem => cartItem.id === item.id);
-
-      if (existingIndex > -1) {
-        cart[existingIndex].quantity += 1;
-      } else {
-        cart.push({
-          ...item,
-          quantity: 1
-        });
-      }
-
-      saveCart(cart);
-      window.location.href = 'carrinho.html';
-    }
-
-    updateCartCount();
-
-    const produtosDestaque = [
-      {
-        id: 'destaque-naipes',
-        nome: 'Placa Naipes',
-        preco: 'R$ 29,90',
-        medida: '20x28cm',
-        imagem: 'placas/street/naipess.png'
-      },
-      {
-        id: 'destaque-gta-sa',
-        nome: 'Placa GTA SA',
-        preco: 'preço aqui',
-        medida: '20x28cm',
-        imagem: 'placas/games/gta-sa.png'
-      },
-      {
-        id: 'destaque-velho',
-        nome: 'Placa Velho',
-        preco: 'preço aqui',
-        medida: '20x28cm',
-        imagem: 'placas/motos/velho.png'
-      },
-      {
-        id: 'destaque-skatista',
-        nome: 'Placa Skatista',
-        preco: 'preço aqui',
-        medida: '20x28cm',
-        imagem: 'placas/street/skatista.png'
-      },
-      {
-        id: 'destaque-beleza',
-        nome: 'Placa Beleza',
-        preco: 'preço aqui',
-        medida: '20x28cm',
-        imagem: 'placas/home-frases/beleza.png'
-      }
-    ];
-
-    let currentIndex = 0;
-
-    function renderCarouselPrincipal() {
-      const produto = produtosDestaque[currentIndex];
-
-      document.getElementById('placaPrincipal').src = produto.imagem;
-      document.getElementById('placaPrincipal').alt = produto.nome;
-      document.getElementById('medidaAtual').textContent = produto.medida;
-      document.getElementById('nomeAtual').textContent = produto.nome;
-      document.getElementById('precoAtual').textContent = produto.preco;
-    }
-
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
-      renderCarouselPrincipal();
-    });
-
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % produtosDestaque.length;
-      renderCarouselPrincipal();
-    });
-
-    document.getElementById('btnComprar').addEventListener('click', () => {
-      addToCart(produtosDestaque[currentIndex]);
-    });
-
-    document.getElementById('placaClick').addEventListener('click', () => {
-      addToCart(produtosDestaque[currentIndex]);
-    });
-
-    setInterval(() => {
-      currentIndex = (currentIndex + 1) % produtosDestaque.length;
-      renderCarouselPrincipal();
-    }, 4000);
-
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
     renderCarouselPrincipal();
-  </script>
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % produtosDestaque.length;
+    renderCarouselPrincipal();
+  });
+
+  document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
+  document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
+
+  updateCartCount();
+  renderCarouselPrincipal();
+
+  setInterval(() => {
+    currentIndex = (currentIndex + 1) % produtosDestaque.length;
+    renderCarouselPrincipal();
+  }, 4000);
+</script>
 </body>
 </html>
