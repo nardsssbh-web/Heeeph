@@ -37,7 +37,7 @@ const PRODUTOS = {
     { id: "bandas-metallica-justice", nome: "Metallica Justice", imagem: "placas/bandas/metallica-justice.png", preco: "preço aqui" },
     { id: "bandas-metallica-master", nome: "Metallica Master", imagem: "placas/bandas/metallica-master.png", preco: "preço aqui" },
     { id: "bandas-metallica-reload", nome: "Metallica Reload", imagem: "placas/bandas/metallica-reload.png", preco: "preço aqui" },
-    { id: "bandas-motobead-1916", nome: "Motorhead 1916", imagem: "placas/bandas/motobead-1916.png", preco: "preço aqui" },
+    { id: "bandas-motobead-1916", nome: "Motorhead 1916", imagem: "placas/bandas/motohead-1916.png", preco: "preço aqui" },
     { id: "bandas-motorhead-no-remorse", nome: "Motorhead No Remorse", imagem: "placas/bandas/motorhead-no remorse.png", preco: "preço aqui" },
     { id: "bandas-pantera-far", nome: "Pantera Far", imagem: "placas/bandas/pantera-far.png", preco: "preço aqui" },
     { id: "bandas-pantera-hell", nome: "Pantera Hell", imagem: "placas/bandas/pantera-hell.png", preco: "preço aqui" },
