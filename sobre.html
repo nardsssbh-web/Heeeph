@@ -20,7 +20,7 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bege);
+      background: #000;
       color: var(--branco);
       overflow-x: hidden;
     }
@@ -126,27 +126,12 @@
     }
 
     .site-bg {
-      background: linear-gradient(to bottom, #0f0f0f 0%, #1c1c1c 100%);
-      min-height: 100vh;
-      padding: 30px 0 80px;
-    }
-
-    .container {
-      width: min(94%, 1500px);
-      margin: 0 auto;
-    }
-
-    .sobre-banner {
-      width: 100%;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-    }
-
-    .sobre-banner img {
-      width: 100%;
-      height: auto;
-      display: block;
+      min-height: calc(100vh - 92px);
+      background:
+        linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
+        url("banner/quem-somos.png") center top / contain no-repeat,
+        #000;
+      padding: 20px 0 40px;
     }
 
     footer {
@@ -155,6 +140,7 @@
       text-align: center;
       padding: 26px 15px;
       font-size: 17px;
+      border-top: 1px solid rgba(255,255,255,0.08);
     }
 
     .whatsapp-fixo {
@@ -199,16 +185,68 @@
     }
 
     @media (max-width: 700px) {
+      .topo .wrap {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 10px 8px;
+        flex-wrap: nowrap;
+      }
+
       .logo a {
-        font-size: 28px;
+        font-size: 18px;
+        letter-spacing: 1px;
+      }
+
+      .menu-area {
+        width: auto;
+        justify-content: flex-end;
+        margin-left: auto;
+        gap: 6px;
+        flex-wrap: nowrap;
+        min-width: 0;
+        flex: 1 1 auto;
       }
 
       .menu {
-        gap: 14px;
+        gap: 6px;
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+        overflow: hidden;
       }
 
       .menu a {
-        font-size: 14px;
+        font-size: 8px;
+        letter-spacing: 0;
+      }
+
+      .cart-link {
+        width: 30px;
+        height: 30px;
+      }
+
+      .cart-link img {
+        width: 21px;
+        height: 21px;
+      }
+
+      .cart-count {
+        top: -2px;
+        right: -2px;
+        min-width: 14px;
+        height: 14px;
+        font-size: 8px;
+        padding: 0 4px;
+      }
+
+      .site-bg {
+        min-height: auto;
+        background:
+          linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
+          url("banner/quem-somos.png") center top / contain no-repeat,
+          #000;
+        padding: 14px 0 24px;
       }
 
       .whatsapp-fixo {
@@ -219,6 +257,11 @@
       .whatsapp-fixo img {
         width: 190px;
         max-width: 190px;
+      }
+
+      footer {
+        font-size: 14px;
+        padding: 18px 12px;
       }
     }
   </style>
@@ -248,13 +291,7 @@
     </div>
   </header>
 
-  <main class="site-bg">
-    <div class="container">
-      <div class="sobre-banner">
-        <img src="banner/sobre.png" alt="Sobre a HEEEPH">
-      </div>
-    </div>
-  </main>
+  <main class="site-bg"></main>
 
   <footer>
     © 2026 HEEEPH - Placas Decorativas
