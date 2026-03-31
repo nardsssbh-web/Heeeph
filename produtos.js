@@ -118,7 +118,7 @@ const PRODUTOS = {
   { id: "garage-garage12", nome: "Garage 12", imagem: "placas/garage/garage12.png", preco: "preço aqui" }
 ],
 
-  "home-frases": [
+  home-frases: [
     { id: "home-frases-amigo-familia", nome: "Amigo Família", imagem: "placas/home-frases/amigo-familia.png", preco: "preço aqui" },
     { id: "home-frases-amizade", nome: "Amizade", imagem: "placas/home-frases/amizade.png", preco: "preço aqui" },
     { id: "home-frases-beleza", nome: "Beleza", imagem: "placas/home-frases/beleza.png", preco: "preço aqui" },
