@@ -222,9 +222,7 @@ const PRODUTOS = {
     { id: "trip-meditando", nome: "Meditando", imagem: "placas/trip/meditando.png", preco: "preço aqui" }
   ],
 
-  musica: [],
-  "fotos-reais": []
-};
+ 
 
 function getProdutosPorCategoria(categoria) {
   return PRODUTOS[categoria] || [];
