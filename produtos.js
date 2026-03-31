@@ -81,9 +81,18 @@ const PRODUTOS = {
     { id: "bebida-reuniao", nome: "bebida reuniao", imagem: "placas/bebida/bebida-reuniao.png", preco: "preço aqui" }
   ],
 
+  fotos-reais: [
+  { id: "fotos-reais-foto1", nome: "Foto Real 1", imagem: "placas/fotos-reais/foto1.png", preco: "preço aqui" },
+  { id: "fotos-reais-foto2", nome: "Foto Real 2", imagem: "placas/fotos-reais/foto2.png", preco: "preço aqui" },
+  { id: "fotos-reais-foto3", nome: "Foto Real 3", imagem: "placas/fotos-reais/foto3.png", preco: "preço aqui" },
+  { id: "fotos-reais-foto4", nome: "Foto Real 4", imagem: "placas/fotos-reais/foto4.png", preco: "preço aqui" },
+  { id: "fotos-reais-foto5", nome: "Foto Real 5", imagem: "placas/fotos-reais/foto5.png", preco: "preço aqui" },
+  { id: "fotos-reais-foto6", nome: "Foto Real 6", imagem: "placas/fotos-reais/foto6.png", preco: "preço aqui" }
+  ],
+
   games: [
     { id: "games-f-zero", nome: "F-Zero", imagem: "placas/games/f-zero.png", preco: "preço aqui" },
-    { id: "games-final-fantasy", nome: "Final Fantasy", imagem: "placas/games/final-fantasy.png", preco: "preço aqui" },
+    { id: "games-final-fantasy", nome: "Final Fantasy", 2imagem: "placas/games/final-fantasy.png", preco: "preço aqui" },
     { id: "games-free-fire", nome: "Free Fire", imagem: "placas/games/free-fire.png", preco: "preço aqui" },
     { id: "games-gta-5", nome: "GTA 5", imagem: "placas/games/gta-5.png", preco: "preço aqui" },
     { id: "games-gta-sa", nome: "GTA San Andreas", imagem: "placas/games/gta-sa.png", preco: "preço aqui" },
@@ -94,7 +103,20 @@ const PRODUTOS = {
     { id: "games-star-fox", nome: "Star Fox", imagem: "placas/games/star-fox.png", preco: "preço aqui" }
   ],
 
-  garage: [],
+  garage: [
+   { id: "garage-garage1", nome: "Garage 1", imagem: "placas/garage/garage1.png", preco: "preço aqui" },
+  { id: "garage-garage2", nome: "Garage 2", imagem: "placas/garage/garage2.png", preco: "preço aqui" },
+  { id: "garage-garage3", nome: "Garage 3", imagem: "placas/garage/garage3.png", preco: "preço aqui" },
+  { id: "garage-garage4", nome: "Garage 4", imagem: "placas/garage/garage4.png", preco: "preço aqui" },
+  { id: "garage-garage5", nome: "Garage 5", imagem: "placas/garage/garage5.png", preco: "preço aqui" },
+  { id: "garage-garage6", nome: "Garage 6", imagem: "placas/garage/garage6.png", preco: "preço aqui" },
+  { id: "garage-garage7", nome: "Garage 7", imagem: "placas/garage/garage7.png", preco: "preço aqui" },
+  { id: "garage-garage8", nome: "Garage 8", imagem: "placas/garage/garage8.png", preco: "preço aqui" },
+  { id: "garage-garage9", nome: "Garage 9", imagem: "placas/garage/garage9.png", preco: "preço aqui" },
+  { id: "garage-garage10", nome: "Garage 10", imagem: "placas/garage/garage10.png", preco: "preço aqui" },
+  { id: "garage-garage11", nome: "Garage 11", imagem: "placas/garage/garage11.png", preco: "preço aqui" },
+  { id: "garage-garage12", nome: "Garage 12", imagem: "placas/garage/garage12.png", preco: "preço aqui" }
+],
 
   "home-frases": [
     { id: "home-frases-amigo-familia", nome: "Amigo Família", imagem: "placas/home-frases/amigo-familia.png", preco: "preço aqui" },
@@ -142,6 +164,21 @@ const PRODUTOS = {
     { id: "motos-rock-ride2", nome: "Rock Ride 2", imagem: "placas/motos/rock-ride2.png", preco: "preço aqui" },
     { id: "motos-velho", nome: "Velho", imagem: "placas/motos/velho.png", preco: "preço aqui" }
   ],
+
+  musica: [
+  { id: "musica-musica1", nome: "Música 1", imagem: "placas/musica/musica1.png", preco: "preço aqui" },
+  { id: "musica-musica2", nome: "Música 2", imagem: "placas/musica/musica2.png", preco: "preço aqui" },
+  { id: "musica-musica3", nome: "Música 3", imagem: "placas/musica/musica3.png", preco: "preço aqui" },
+  { id: "musica-musica4", nome: "Música 4", imagem: "placas/musica/musica4.png", preco: "preço aqui" },
+  { id: "musica-musica5", nome: "Música 5", imagem: "placas/musica/musica5.png", preco: "preço aqui" },
+  { id: "musica-musica6", nome: "Música 6", imagem: "placas/musica/musica6.png", preco: "preço aqui" },
+  { id: "musica-musica7", nome: "Música 7", imagem: "placas/musica/musica7.png", preco: "preço aqui" },
+  { id: "musica-musica8", nome: "Música 8", imagem: "placas/musica/musica8.png", preco: "preço aqui" },
+  { id: "musica-musica9", nome: "Música 9", imagem: "placas/musica/musica9.png", preco: "preço aqui" },
+  { id: "musica-musica10", nome: "Música 10", imagem: "placas/musica/musica10.png", preco: "preço aqui" },
+  { id: "musica-musica11", nome: "Música 11", imagem: "placas/musica/musica11.png", preco: "preço aqui" },
+  { id: "musica-musica12", nome: "Música 12", imagem: "placas/musica/musica12.png", preco: "preço aqui" }
+],
 
   rpg: [
     { id: "rpg-3magos", nome: "3 Magos", imagem: "placas/rpg/3magos.png", preco: "preço aqui" },
