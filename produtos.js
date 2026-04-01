@@ -236,11 +236,11 @@ function getProdutoPorId(id) {
 }
 
 function salvarCarrinho(carrinho) {
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  localStorage.setItem("heeeph_cart", JSON.stringify(carrinho));
 }
 
 function obterCarrinho() {
-  return JSON.parse(localStorage.getItem("carrinho")) || [];
+  return JSON.parse(localStorage.getItem("heeeph_cart")) || [];
 }
 
 function adicionarAoCarrinho(id) {
