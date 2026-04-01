@@ -64,21 +64,23 @@ const PRODUTOS = {
   ],
 
   bebidas: [
+    { id: "bebida-reuniao", nome: "Bebida Reunião", imagem: "placas/bebida/bebida-reuniao.png", preco: "preço aqui" },
+    { id: "bebidas-good-beer", nome: "Good Beer", imagem: "placas/bebida/good-beer.png", preco: "preço aqui" },
     { id: "bebidas-cachaçah", nome: "Cachaça H", imagem: "placas/bebida/cachaçah.png", preco: "preço aqui" },
     { id: "bebidas-cachaçam", nome: "Cachaça M", imagem: "placas/bebida/cachaçam.png", preco: "preço aqui" },
-    { id: "bebidas-caipirinha-lovers", nome: "Caipirinha Lovers", imagem: "placas/bebida/caipirinha-lovers.png", preco: "preço aqui" },
+    { id: "bebidas-rum", nome: "Rum", imagem: "placas/bebida/rum.png", preco: "preço aqui" },
+    { id: "bebidas-tequila", nome: "Tequila", imagem: "placas/bebida/tequila.png", preco: "preço aqui" },
+    { id: "bebidas-vodka", nome: "Vodka", imagem: "placas/bebida/vodka.png", preco: "preço aqui" },
+    { id: "bebidas-whiskey", nome: "Whiskey", imagem: "placas/bebida/whiskey.png", preco: "preço aqui" },    
     { id: "bebidas-cocktails", nome: "Cocktails", imagem: "placas/bebida/cocktails.png", preco: "preço aqui" },
     { id: "bebidas-drink-beer", nome: "Drink Beer", imagem: "placas/bebida/drink-beer.png", preco: "preço aqui" },
     { id: "bebidas-drink-cocktails", nome: "Drink Cocktails", imagem: "placas/bebida/drink-cocktails.png", preco: "preço aqui" },
     { id: "bebidas-drink-tequila", nome: "Drink Tequila", imagem: "placas/bebida/drink-tequila.png", preco: "preço aqui" },
     { id: "bebidas-drink-whiskey", nome: "Drink Whiskey", imagem: "placas/bebida/drink-whiskey.png", preco: "preço aqui" },
-    { id: "bebidas-good-beer", nome: "Good Beer", imagem: "placas/bebida/good-beer.png", preco: "preço aqui" },
-    { id: "bebidas-in-vino", nome: "In Vino", imagem: "placas/bebida/in-vino.png", preco: "preço aqui" },
-    { id: "bebidas-rum", nome: "Rum", imagem: "placas/bebida/rum.png", preco: "preço aqui" },
-    { id: "bebidas-tequila", nome: "Tequila", imagem: "placas/bebida/tequila.png", preco: "preço aqui" },
-    { id: "bebidas-vodka", nome: "Vodka", imagem: "placas/bebida/vodka.png", preco: "preço aqui" },
-    { id: "bebidas-whiskey", nome: "Whiskey", imagem: "placas/bebida/whiskey.png", preco: "preço aqui" },
-    { id: "bebida-reuniao", nome: "Bebida Reunião", imagem: "placas/bebida/bebida-reuniao.png", preco: "preço aqui" }
+    { id: "bebidas-caipirinha-lovers", nome: "Caipirinha Lovers", imagem: "placas/bebida/caipirinha-lovers.png", preco: "preço aqui" },
+        { id: "bebidas-in-vino", nome: "In Vino", imagem: "placas/bebida/in-vino.png", preco: "preço aqui" },
+    
+    
   ],
 
   "fotos-reais": [
