@@ -760,19 +760,24 @@
     <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
   </a>
 
-  <script>
-    function getCart() {
-      return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
-    }
+<script>
+  function getCart() {
+    const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+    return Array.isArray(cart) ? cart : [];
+  }
 
-    function updateCartCount() {
-      const cart = getCart();
-      const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
-      const countEl = document.getElementById('cartCount');
-      if (countEl) countEl.textContent = total;
-    }
+  function updateCartCount() {
+    const cart = getCart();
+    const total = cart.reduce((acc, item) => {
+      const qtd = Number(item.quantity || item.quantidade || 1);
+      return acc + (isNaN(qtd) ? 1 : qtd);
+    }, 0);
 
-    updateCartCount();
-  </script>
+    const countEl = document.getElementById("cartCount");
+    if (countEl) countEl.textContent = total;
+  }
+
+  updateCartCount();
+</script>
 </body>
 </html>
