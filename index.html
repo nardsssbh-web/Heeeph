@@ -1070,11 +1070,20 @@
 
   <script src="produtos.js"></script>
 <script>
+  function getCart() {
+    const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+    return Array.isArray(cart) ? cart : [];
+  }
+
   function updateCartCount() {
+    const cart = getCart();
+    const total = cart.reduce((acc, item) => {
+      const qtd = Number(item.quantity || item.quantidade || 1);
+      return acc + (isNaN(qtd) ? 1 : qtd);
+    }, 0);
+
     const countEl = document.getElementById("cartCount");
-    if (countEl && typeof contarItensCarrinho === "function") {
-      countEl.textContent = contarItensCarrinho();
-    }
+    if (countEl) countEl.textContent = total;
   }
 
   const produtosDestaque = [
