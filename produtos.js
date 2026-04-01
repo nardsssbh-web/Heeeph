@@ -222,7 +222,7 @@ const PRODUTOS = {
     { id: "trip-reggae", nome: "regaae", imagem: "placas/trip/reggae-a-vida.png", preco: "preço aqui" },
     { id: "trip-leoao-erva", nome: "Leao", imagem: "placas/trip/leao-erva.png", preco: "preço aqui" },
     { id: "trip-crazy", nome: "Crazy", imagem: "placas/trip/crazy.png", preco: "preço aqui" },
-    { id: "trip-derretendo", nome: "Derretendo", imagem: "placas/trip/derretendo.png", preco: "preço aqui" },
+    { id: "trip-derretendo", nome: "Derretendo", imagem: "placas/trip/raiz-ritmo.png", preco: "preço aqui" },
     { id: "trip-economico", nome: "Econômico", imagem: "placas/trip/economico.png", preco: "preço aqui" },
     { id: "trip-meditando", nome: "Meditando", imagem: "placas/trip/meditando.png", preco: "preço aqui" },
     
