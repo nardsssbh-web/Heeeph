@@ -166,7 +166,7 @@ const PRODUTOS = {
   ],
 
   musica: [
-    { id: "musica-musica1", nome: "Música 1", imagem: "placas/musica/musica1.png", preco: "preço aqui" },
+    { id: "musica-musica1", nome: "Música 1", imagem: "placas/musica/escala-pentatonica.png", preco: "preço aqui" },
     { id: "musica-musica2", nome: "Música 2", imagem: "placas/musica/musica2.png", preco: "preço aqui" },
     { id: "musica-musica3", nome: "Música 3", imagem: "placas/musica/musica3.png", preco: "preço aqui" },
     { id: "musica-musica4", nome: "Música 4", imagem: "placas/musica/musica4.png", preco: "preço aqui" },
