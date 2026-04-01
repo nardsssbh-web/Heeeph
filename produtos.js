@@ -104,9 +104,9 @@ const PRODUTOS = {
   ],
 
   garage: [
-    { id: "garage-garage1", nome: "Garage 1", imagem: "placas/garage/garage1.png", preco: "preço aqui" },
-    { id: "garage-garage2", nome: "Garage 2", imagem: "placas/garage/garage2.png", preco: "preço aqui" },
-    { id: "garage-garage3", nome: "Garage 3", imagem: "placas/garage/garage3.png", preco: "preço aqui" },
+    { id: "garage-garage1", nome: "Garage 1", imagem: "placas/garage/fusca.png", preco: "preço aqui" },
+    { id: "garage-garage2", nome: "Garage 2", imagem: "placas/garage/pala-placa.png", preco: "preço aqui" },
+    { id: "garage-garage3", nome: "Garage 3", imagem: "placas/garage/vira-projeto.png", preco: "preço aqui" },
     { id: "garage-garage4", nome: "Garage 4", imagem: "placas/garage/garage4.png", preco: "preço aqui" },
     { id: "garage-garage5", nome: "Garage 5", imagem: "placas/garage/garage5.png", preco: "preço aqui" },
     { id: "garage-garage6", nome: "Garage 6", imagem: "placas/garage/garage6.png", preco: "preço aqui" },
