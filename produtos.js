@@ -84,8 +84,8 @@ const PRODUTOS = {
   ],
 
   "fotos-reais": [
-    { id: "fotos-reais-foto1", nome: "Foto Real 1", imagem: "placas/reais/banda-1.png", preco: "preço aqui" },
-    { id: "fotos-reais-foto2", nome: "Foto Real 2", imagem: "placas/reais/banda-2.png", preco: "preço aqui" },
+    { id: "fotos-reais-foto1", nome: "Foto Real 1", imagem: "placas/reais/bandas-1.png", preco: "preço aqui" },
+    { id: "fotos-reais-foto2", nome: "Foto Real 2", imagem: "placas/reais/bandas-2.png", preco: "preço aqui" },
     { id: "fotos-reais-foto3", nome: "Foto Real 3", imagem: "placas/reais/foto3.png", preco: "preço aqui" },
     { id: "fotos-reais-foto4", nome: "Foto Real 4", imagem: "placas/reais/foto4.png", preco: "preço aqui" },
     { id: "fotos-reais-foto5", nome: "Foto Real 5", imagem: "placas/reais/foto5.png", preco: "preço aqui" },
