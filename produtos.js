@@ -168,9 +168,9 @@ const PRODUTOS = {
   ],
 
   musica: [
-    { id: "musica-musica1", nome: "Música 1", imagem: "placas/musica/escala-pentatonica.png", preco: "preço aqui" },
-    { id: "musica-musica2", nome: "Música 2", imagem: "placas/musica/modos.png", preco: "preço aqui" },
-    { id: "musica-musica3", nome: "Música 3", imagem: "placas/musica/musica3.png", preco: "preço aqui" },
+    { id: "musica-musica1", nome: "Música 1", imagem: "placas/musica/escala-pentatonica.png", preco: "R$29,90" },
+    { id: "musica-musica2", nome: "Música 2", imagem: "placas/musica/modos.png", preco: "R$29,90" },
+    { id: "musica-musica3", nome: "Música 3", imagem: "placas/musica/sem-musica.png", preco: "R$29,90" },
     { id: "musica-musica4", nome: "Música 4", imagem: "placas/musica/musica4.png", preco: "preço aqui" },
     { id: "musica-musica5", nome: "Música 5", imagem: "placas/musica/musica5.png", preco: "preço aqui" },
     { id: "musica-musica6", nome: "Música 6", imagem: "placas/musica/musica6.png", preco: "preço aqui" },
