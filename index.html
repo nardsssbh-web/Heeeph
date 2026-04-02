@@ -943,7 +943,7 @@
 </head>
 <body>
 
-  <div class="site-escala">
+  <div class="site-escala" id="siteEscala">
     <header class="topo">
       <div class="wrap">
         <div class="logo">
@@ -1164,6 +1164,19 @@
     currentIndex = (currentIndex + 1) % produtosDestaque.length;
     renderCarouselPrincipal();
   }, 4000);
+</script>
+  <script>
+  function ajustarAlturaFinalDoSite() {
+    const site = document.getElementById("siteEscala");
+    if (!site) return;
+
+    site.style.height = "auto";
+    const alturaVisual = site.getBoundingClientRect().height;
+    site.style.height = alturaVisual + "px";
+  }
+
+  window.addEventListener("load", ajustarAlturaFinalDoSite);
+  window.addEventListener("resize", ajustarAlturaFinalDoSite);
 </script>
 </body>
 </html>
