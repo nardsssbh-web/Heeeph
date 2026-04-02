@@ -200,7 +200,7 @@ const PRODUTOS = {
     { id: "street-hh-h", nome: "HH H", imagem: "placas/street/hh-h.png", preco: "preço aqui" },
     { id: "street-hh-m", nome: "HH M", imagem: "placas/street/hh-m.png", preco: "preço aqui" },
     { id: "street-jacketa", nome: "Jacketa", imagem: "placas/street/jacketa.png", preco: "preço aqui" },
-    { id: "street-naipess", nome: "Naipess", imagem: "placas/street/naipess.png", preco: "preço aqui" },
+    { id: "street-naipess", nome: "Naipess", imagem: "placas/street/naipess.png", preco: "20x28cm R$29,90" },
     { id: "street-naopedelicença", nome: "Não Pede Licença", imagem: "placas/street/naopedelicença.png", preco: "preço aqui" },
     { id: "street-paz-spray", nome: "Paz Spray", imagem: "placas/street/paz-spray.png", preco: "preço aqui" },
     { id: "street-role-sem-fim", nome: "Rolê Sem Fim", imagem: "placas/street/role-sem-fim.png", preco: "preço aqui" },
