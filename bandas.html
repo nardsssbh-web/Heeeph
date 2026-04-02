@@ -151,13 +151,6 @@
       align-items: center;
     }
 
-    .link-placa {
-      width: 100%;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
     .placa {
       width: 100%;
       background: #e9e5dd;
@@ -199,6 +192,77 @@
       font-weight: bold;
       color: #fff;
       text-align: center;
+    }
+
+    .btn-comprar-placa {
+      margin-top: 10px;
+      background: #f0c400;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-comprar-placa:hover {
+      background: #ffd84d;
+      transform: translateY(-2px);
+    }
+
+    .zoomable {
+      cursor: zoom-in;
+    }
+
+    .modal-zoom {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .modal-zoom.ativo {
+      display: flex;
+    }
+
+    .modal-zoom-conteudo {
+      position: relative;
+      max-width: 95vw;
+      max-height: 95vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-zoom img {
+      max-width: 100%;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    }
+
+    .fechar-zoom {
+      position: absolute;
+      top: -18px;
+      right: -18px;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      background: #f0c400;
+      color: #000;
+      font-size: 28px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
     .voltar {
@@ -380,6 +444,11 @@
       .preco-placa {
         font-size: 15px;
       }
+
+      .btn-comprar-placa {
+        font-size: 14px;
+        padding: 9px 14px;
+      }
     }
 
     @media (max-width: 420px) {
@@ -441,6 +510,11 @@
         font-size: 14px;
       }
 
+      .btn-comprar-placa {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+
       .zap img {
         width: 170px;
         max-width: 170px;
@@ -489,6 +563,13 @@
   <img src="botoes/whatsapp.png" alt="WhatsApp">
 </a>
 
+<div class="modal-zoom" id="modalZoom">
+  <div class="modal-zoom-conteudo">
+    <button class="fechar-zoom" id="fecharZoom">&times;</button>
+    <img id="imagemZoom" src="" alt="Imagem ampliada">
+  </div>
+</div>
+
 <script src="produtos.js"></script>
 <script>
   const categoriaAtual = "bandas";
@@ -517,14 +598,17 @@
 
     grade.innerHTML = itens.map(item => `
       <div class="item-placa">
-        <a href="#" class="link-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
-          <div class="placa">
-            <div class="img-box">
-              <img src="${item.imagem}" alt="${item.nome}">
-            </div>
+        <div class="placa">
+          <div class="img-box">
+            <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
           </div>
-        </a>
+        </div>
+
         <div class="preco-placa">${item.preco}</div>
+
+        <button class="btn-comprar-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
+          Comprar
+        </button>
       </div>
     `).join("");
   }
@@ -541,6 +625,41 @@
 
   updateCartCount();
   renderProdutos();
+
+  const modalZoom = document.getElementById("modalZoom");
+  const imagemZoom = document.getElementById("imagemZoom");
+  const fecharZoom = document.getElementById("fecharZoom");
+
+  document.addEventListener("click", function(e) {
+    if (e.target.classList.contains("zoomable")) {
+      imagemZoom.src = e.target.src;
+      imagemZoom.alt = e.target.alt;
+      modalZoom.classList.add("ativo");
+      document.body.style.overflow = "hidden";
+    }
+  });
+
+  fecharZoom.addEventListener("click", function() {
+    modalZoom.classList.remove("ativo");
+    imagemZoom.src = "";
+    document.body.style.overflow = "";
+  });
+
+  modalZoom.addEventListener("click", function(e) {
+    if (e.target === modalZoom) {
+      modalZoom.classList.remove("ativo");
+      imagemZoom.src = "";
+      document.body.style.overflow = "";
+    }
+  });
+
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+      modalZoom.classList.remove("ativo");
+      imagemZoom.src = "";
+      document.body.style.overflow = "";
+    }
+  });
 </script>
 
 </body>
