@@ -182,6 +182,20 @@ const PRODUTOS = {
     { id: "musica-musica12", nome: "Música 12", imagem: "placas/musica/musica12.png", preco: "preço aqui" }
   ],
 
+
+  reais: [
+    { id: "reais-3magos", nome: "3 Magos", imagem: "placas/reais/bandas-1.png", preco: "preço aqui" },
+    { id: "reais-abobora", nome: "Abóbora", imagem: "placas/reais/bandas-2.png", preco: "preço aqui" },
+    { id: "reais-adaga", nome: "Adaga", imagem: "placas/reais/adaga.png", preco: "preço aqui" },
+    { id: "reais-arco", nome: "Arco", imagem: "placas/reais/arco.png", preco: "preço aqui" },
+    { id: "reais-espada-gelo", nome: "Espada de Gelo", imagem: "placas/reais/espada-gelo.png", preco: "preço aqui" },
+    { id: "reais-gelo", nome: "Gelo", imagem: "placas/reais/gelo.png", preco: "preço aqui" },
+    { id: "reais-machado", nome: "Machado", imagem: "placas/reais/machado.png", preco: "preço aqui" },
+    { id: "reais-mapa", nome: "Mapa", imagem: "placas/reais/mapa.png", preco: "preço aqui" },
+    { id: "reais-nature", nome: "Nature", imagem: "placas/reais/nature.png", preco: "preço aqui" },
+    { id: "reais-pureza", nome: "Pureza", imagem: "placas/reais/pureza.png", preco: "preço aqui" }
+  ],
+
   rpg: [
     { id: "rpg-3magos", nome: "3 Magos", imagem: "placas/rpg/3magos.png", preco: "preço aqui" },
     { id: "rpg-abobora", nome: "Abóbora", imagem: "placas/rpg/abobora.png", preco: "preço aqui" },
