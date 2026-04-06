@@ -447,6 +447,16 @@
         max-height: 88%;
       }
 
+      .nome-placa {
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 800;
+  color: #4a2a00;
+  font-family: "Trebuchet MS", "Arial Black", Arial, sans-serif;
+  line-height: 1.2;
+}
+
       .preco-placa {
         font-size: 15px;
       }
@@ -600,6 +610,8 @@
     grade.innerHTML = itens.map(item => `
   <div class="item-placa">
     <div class="placa">
+      <div class="nome-placa">${item.nome}</div>
+
       <div class="img-box">
         <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
       </div>
