@@ -606,9 +606,11 @@
       return;
     }
 
-    grade.innerHTML = itens.map(item => `
+    ggrade.innerHTML = itens.map(item => `
   <div class="item-placa">
     <div class="placa">
+      <div class="nome-placa">${item.nome}</div>
+
       <div class="img-box">
         <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
       </div>
