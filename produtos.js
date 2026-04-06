@@ -87,9 +87,9 @@ const PRODUTOS = {
     { id: "fotos-reais-foto1", nome: "Placas 10x15 Bandas", imagem: "placas/reais/bandas-1.png", preco: "" },
     { id: "fotos-reais-foto2", nome: "Placas 10x15cm", imagem: "placas/reais/bandas-2.png", preco: "preço aqui" },
     { id: "fotos-reais-foto3", nome: "Mural com 35 placas 10x15cm", imagem: "placas/reais/bandas-3.png", preco: "preço aqui" },
-    { id: "fotos-reais-foto4", nome: "Foto Real 4", imagem: "placas/reais/foto4.png", preco: "preço aqui" },
-    { id: "fotos-reais-foto5", nome: "Foto Real 5", imagem: "placas/reais/foto5.png", preco: "preço aqui" },
-    { id: "fotos-reais-foto6", nome: "Foto Real 6", imagem: "placas/reais/foto6.png", preco: "preço aqui" }
+    { id: "fotos-reais-foto4", nome: "Em Breve", imagem: "placas/reais/foto4.png", preco: "preço aqui" },
+    { id: "fotos-reais-foto5", nome: "Em Breve", imagem: "placas/reais/foto5.png", preco: "preço aqui" },
+    { id: "fotos-reais-foto6", nome: "Em Breve", imagem: "placas/reais/foto6.png", preco: "preço aqui" }
   ],
 
   games: [
@@ -106,18 +106,18 @@ const PRODUTOS = {
   ],
 
   garage: [
-    { id: "garage-garage1", nome: "Garage 1", imagem: "placas/garage/fusca.png", preco: "preço aqui" },
-    { id: "garage-garage2", nome: "Garage 2", imagem: "placas/garage/pala-placa.png", preco: "preço aqui" },
-    { id: "garage-garage3", nome: "Garage 3", imagem: "placas/garage/vira-projeto.png", preco: "preço aqui" },
-    { id: "garage-garage4", nome: "Garage 4", imagem: "placas/garage/mach1-v8.png", preco: "preço aqui" },
-    { id: "garage-garage5", nome: "Garage 5", imagem: "placas/garage/nascido-para-voar.png", preco: "preço aqui" },
-    { id: "garage-garage6", nome: "Garage 6", imagem: "placas/garage/opala-ss.png", preco: "preço aqui" },
-    { id: "garage-garage7", nome: "Garage 7", imagem: "placas/garage/garage7.png", preco: "preço aqui" },
-    { id: "garage-garage8", nome: "Garage 8", imagem: "placas/garage/garage8.png", preco: "preço aqui" },
-    { id: "garage-garage9", nome: "Garage 9", imagem: "placas/garage/garage9.png", preco: "preço aqui" },
-    { id: "garage-garage10", nome: "Garage 10", imagem: "placas/garage/garage10.png", preco: "preço aqui" },
-    { id: "garage-garage11", nome: "Garage 11", imagem: "placas/garage/garage11.png", preco: "preço aqui" },
-    { id: "garage-garage12", nome: "Garage 12", imagem: "placas/garage/garage12.png", preco: "preço aqui" }
+    { id: "garage-garage1", nome: "Fuscão !!!", imagem: "placas/garage/fusca.png", preco: "preço aqui" },
+    { id: "garage-garage2", nome: "Opala", imagem: "placas/garage/pala-placa.png", preco: "preço aqui" },
+    { id: "garage-garage3", nome: "Mãos à Obra", imagem: "placas/garage/vira-projeto.png", preco: "preço aqui" },
+    { id: "garage-garage4", nome: "Respeito e Atitude, só pra quem conheçe !", imagem: "placas/garage/mach1-v8.png", preco: "preço aqui" },
+    { id: "garage-garage5", nome: "Mustang Mach 1", imagem: "placas/garage/nascido-para-voar.png", preco: "preço aqui" },
+    { id: "garage-garage6", nome: "SS Zangado !!!", imagem: "placas/garage/opala-ss.png", preco: "preço aqui" },
+    { id: "garage-garage7", nome: "Em Breve", imagem: "placas/garage/garage7.png", preco: "preço aqui" },
+    { id: "garage-garage8", nome: "Em Breve", imagem: "placas/garage/garage8.png", preco: "preço aqui" },
+    { id: "garage-garage9", nome: "Em Breve", imagem: "placas/garage/garage9.png", preco: "preço aqui" },
+    { id: "garage-garage10", nome: "Em Breve", imagem: "placas/garage/garage10.png", preco: "preço aqui" },
+    { id: "garage-garage11", nome: "Em Breve", imagem: "placas/garage/garage11.png", preco: "preço aqui" },
+    { id: "garage-garage12", nome: "Em Breve", imagem: "placas/garage/garage12.png", preco: "preço aqui" }
   ],
 
   "home-frases": [
