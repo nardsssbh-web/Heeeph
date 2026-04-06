@@ -632,14 +632,15 @@
   }
 
   function adicionarProdutoAoCarrinho(event, id) {
-    event.preventDefault();
+  event.preventDefault();
 
-    if (typeof adicionarAoCarrinho === "function") {
-      adicionarAoCarrinho(id);
-      updateCartCount();
-      window.location.href = "carrinho.html";
-    }
+  if (typeof adicionarAoCarrinho === "function") {
+    localStorage.setItem("ultimaPagina", window.location.pathname.split("/").pop());
+    adicionarAoCarrinho(id);
+    updateCartCount();
+    window.location.href = "carrinho.html";
   }
+}
 
   updateCartCount();
   renderProdutos();
