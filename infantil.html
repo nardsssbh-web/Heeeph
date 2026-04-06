@@ -196,6 +196,8 @@
   line-height: 1.2;
 }
 
+    
+
     .preco-placa {
       margin-top: 12px;
       font-size: 18px;
@@ -609,6 +611,8 @@
     grade.innerHTML = itens.map(item => `
   <div class="item-placa">
     <div class="placa">
+      <div class="nome-placa">${item.nome}</div>
+
       <div class="img-box">
         <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
       </div>
@@ -621,7 +625,6 @@
     </button>
   </div>
 `).join("");
-  }
 
   function adicionarProdutoAoCarrinho(event, id) {
     event.preventDefault();
