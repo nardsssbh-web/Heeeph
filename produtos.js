@@ -268,7 +268,7 @@ function adicionarAoCarrinho(id) {
   }
 
   salvarCarrinho(carrinho);
-  alert(`${produto.nome} foi adicionado ao carrinho!`);
+  alert(`${produto.nome} foi adicionado ao carrinho! Obrigado por escolher a marca Heeeph`);
 }
 
 function removerDoCarrinho(id) {
