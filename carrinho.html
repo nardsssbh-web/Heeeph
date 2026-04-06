@@ -354,42 +354,43 @@
     }
 
     .botao-escuro:hover {
-      .botao-zap {
-  background: #25d366;
-  color: #fff;
-}
-
-.botao-zap:hover {
-  background: #1ebe5d;
-}
-
-.botao-mercado {
-  background: #009ee3;
-  color: #fff;
-}
-
-.botao-mercado:hover {
-  background: #0089c7;
-}
-
-.botao-continuar {
-  background: #f0c400;
-  color: #000;
-}
-
-.botao-continuar:hover {
-  background: #ffd84d;
-}
-
-.botao-esvaziar {
-  background: #d63b3b;
-  color: #fff;
-}
-
-.botao-esvaziar:hover {
-  background: #b92f2f;
-}
       background: #2a2a2a;
+    }
+
+    .botao-zap {
+      background: #25d366;
+      color: #fff;
+    }
+
+    .botao-zap:hover {
+      background: #1ebe5d;
+    }
+
+    .botao-mercado {
+      background: #009ee3;
+      color: #fff;
+    }
+
+    .botao-mercado:hover {
+      background: #0089c7;
+    }
+
+    .botao-continuar {
+      background: #f0c400;
+      color: #000;
+    }
+
+    .botao-continuar:hover {
+      background: #ffd84d;
+    }
+
+    .botao-esvaziar {
+      background: #d63b3b;
+      color: #fff;
+    }
+
+    .botao-esvaziar:hover {
+      background: #b92f2f;
     }
 
     .vazio {
@@ -830,7 +831,7 @@
           </div>
 
           <div class="acoes">
-            <a class="botao botao-zap" href="...">" href="https://wa.me/5511998302901?text=${mensagemWhats}" target="_blank" rel="noopener noreferrer">
+            <a class="botao botao-zap" href="https://wa.me/5511998302901?text=${mensagemWhats}" target="_blank" rel="noopener noreferrer">
               FINALIZAR PELO WHATSAPP
             </a>
 
@@ -839,8 +840,8 @@
             </a>
 
             <a class="botao botao-continuar" href="#" id="btnContinuarComprando">
-  CONTINUAR COMPRANDO
-</a>
+              CONTINUAR COMPRANDO
+            </a>
 
             <button class="botao botao-esvaziar" onclick="limparCarrinho()">
               ESVAZIAR CARRINHO
@@ -852,6 +853,7 @@
 
     atualizarTotalComFrete();
     updateCartCount();
+    configurarBotaoContinuarComprando();
   }
 
   function aumentarQuantidade(id) {
@@ -871,21 +873,20 @@
 
   function limparCarrinho() {
     freteAtual = 0;
-    localStorage.removeItem("carrinho");
+    localStorage.removeItem("heeeph_cart");
     renderCarrinho();
   }
 
   function configurarBotaoContinuarComprando() {
-  const botao = document.getElementById("btnContinuarComprando");
-  if (!botao) return;
+    const botao = document.getElementById("btnContinuarComprando");
+    if (!botao) return;
 
-  const ultimaPagina = localStorage.getItem("ultimaPagina") || "categorias.html";
-  botao.href = ultimaPagina;
-}
+    const ultimaPagina = localStorage.getItem("ultimaPagina") || "categorias.html";
+    botao.href = ultimaPagina;
+  }
 
   updateCartCount();
   renderCarrinho();
-  configurarBotaoContinuarComprando();
 </script>
 
 </body>
