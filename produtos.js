@@ -1,10 +1,10 @@
 const PRODUTOS = {
   bandas: [
-    { id: "bandas-accept", nome: "Accept", imagem: "placas/bandas/accept.png", preco: "preço aqui" },
-    { id: "bandas-acdc-bb", nome: "AC/DC BB", imagem: "placas/bandas/acdc-bb.png", preco: "preço aqui" },
+    { id: "bandas-accept", nome: "Accept  -  10x15cm", imagem: "placas/bandas/accept.png", preco: "preço aqui" },
+    { id: "bandas-acdc-bb", nome: "AC/DC  -  10x15cm", imagem: "placas/bandas/acdc-bb.png", preco: "preço aqui" },
     { id: "bandas-angra", nome: "Angra", imagem: "placas/bandas/angra.png", preco: "preço aqui" },
-    { id: "bandas-arp", nome: "ARP", imagem: "placas/bandas/arp.png", preco: "preço aqui" },
-    { id: "bandas-bls", nome: "BLS", imagem: "placas/bandas/bls.png", preco: "preço aqui" },
+    { id: "bandas-arp", nome: "Axel Rudi Pell", imagem: "placas/bandas/arp.png", preco: "preço aqui" },
+    { id: "bandas-bls", nome: "Black Label Society", imagem: "placas/bandas/bls.png", preco: "preço aqui" },
     { id: "bandas-bs-caravan", nome: "Black Sabbath Caravan", imagem: "placas/bandas/bs-caravan.png", preco: "preço aqui" },
     { id: "bandas-bs-hell", nome: "Black Sabbath Hell", imagem: "placas/bandas/bs-hell.png", preco: "preço aqui" },
     { id: "bandas-bs-master", nome: "Black Sabbath Master", imagem: "placas/bandas/bs-master.png", preco: "preço aqui" },
