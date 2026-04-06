@@ -840,8 +840,17 @@
     renderCarrinho();
   }
 
+  function configurarBotaoContinuarComprando() {
+  const botao = document.getElementById("btnContinuarComprando");
+  if (!botao) return;
+
+  const ultimaPagina = localStorage.getItem("ultimaPagina") || "categorias.html";
+  botao.href = ultimaPagina;
+}
+
   updateCartCount();
   renderCarrinho();
+  configurarBotaoContinuarComprando();
 </script>
 
 </body>
