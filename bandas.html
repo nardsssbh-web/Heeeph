@@ -597,20 +597,22 @@
     }
 
     grade.innerHTML = itens.map(item => `
-      <div class="item-placa">
-        <div class="placa">
-          <div class="img-box">
-            <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-          </div>
-        </div>
+  <div class="item-placa">
+    <div class="placa">
+      <div class="nome-placa">${item.nome}</div>
 
-        <div class="preco-placa">${item.preco}</div>
-
-        <button class="btn-comprar-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
-          Comprar
-        </button>
+      <div class="img-box">
+        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
       </div>
-    `).join("");
+    </div>
+
+    <div class="preco-placa">${item.preco}</div>
+
+    <button class="btn-comprar-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
+      Comprar
+    </button>
+  </div>
+`).join("");
   }
 
   function adicionarProdutoAoCarrinho(event, id) {
