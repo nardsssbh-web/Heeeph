@@ -645,15 +645,24 @@
       .slice(0, 9);
   }
 
-  function calcularValorFretePorCEP(cepLimpo) {
-    const inicio = Number(cepLimpo.charAt(0));
+  function calcularValorFretePorCEP(cepLimpo, quantidadeTotal) {
+  const inicio = Number(cepLimpo.charAt(0));
 
-    if (inicio >= 0 && inicio <= 1) return 19.90;
-    if (inicio >= 2 && inicio <= 3) return 24.90;
-    if (inicio >= 4 && inicio <= 5) return 29.90;
-    if (inicio >= 6 && inicio <= 7) return 34.90;
-    return 39.90;
-  }
+  let freteBase = 0;
+
+  if (inicio >= 0 && inicio <= 1) freteBase = 19.90;
+  else if (inicio >= 2 && inicio <= 3) freteBase = 24.90;
+  else if (inicio >= 4 && inicio <= 5) freteBase = 29.90;
+  else if (inicio >= 6 && inicio <= 7) freteBase = 34.90;
+  else freteBase = 39.90;
+
+  if (quantidadeTotal <= 1) return freteBase;
+  if (quantidadeTotal <= 3) return freteBase + 8.00;
+  if (quantidadeTotal <= 5) return freteBase + 15.00;
+  if (quantidadeTotal <= 8) return freteBase + 25.00;
+
+  return freteBase + 35.00;
+}
 
   function updateCartCount() {
     const countEl = document.getElementById("cartCount");
@@ -680,19 +689,27 @@
   }
 
   function calcularFrete() {
-    const input = document.getElementById("cepFrete");
-    const mensagem = document.getElementById("mensagemFrete");
+  const input = document.getElementById("cepFrete");
+  const mensagem = document.getElementById("mensagemFrete");
 
-    if (!input || !mensagem) return;
+  if (!input || !mensagem) return;
 
-    const cepLimpo = input.value.replace(/\D/g, "");
+  const cepLimpo = input.value.replace(/\D/g, "");
 
-    if (cepLimpo.length !== 8) {
-      freteAtual = 0;
-      mensagem.textContent = "Digite um CEP válido com 8 números.";
-      atualizarTotalComFrete();
-      return;
-    }
+  if (cepLimpo.length !== 8) {
+    freteAtual = 0;
+    mensagem.textContent = "Digite um CEP válido com 8 números.";
+    atualizarTotalComFrete();
+    return;
+  }
+
+  const carrinho = obterCarrinho();
+  const quantidadeTotal = carrinho.reduce((total, item) => total + (item.quantidade || 1), 0);
+
+  freteAtual = calcularValorFretePorCEP(cepLimpo, quantidadeTotal);
+  mensagem.textContent = `Frete estimado para ${quantidadeTotal} placa(s), CEP ${input.value}: ${formatarPreco(freteAtual)}.`;
+  atualizarTotalComFrete();
+}
 
     freteAtual = calcularValorFretePorCEP(cepLimpo);
     mensagem.textContent = `Frete estimado para o CEP ${input.value}: ${formatarPreco(freteAtual)}.`;
