@@ -711,11 +711,7 @@
   atualizarTotalComFrete();
 }
 
-    freteAtual = calcularValorFretePorCEP(cepLimpo);
-    mensagem.textContent = `Frete estimado para o CEP ${input.value}: ${formatarPreco(freteAtual)}.`;
-    atualizarTotalComFrete();
-  }
-
+    
   document.addEventListener("input", function (event) {
     if (event.target && event.target.id === "cepFrete") {
       event.target.value = formatarCEP(event.target.value);
