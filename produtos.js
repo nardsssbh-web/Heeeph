@@ -1,46 +1,10 @@
-const PRODUTOS = {
-
-  const DESTAQUES_HOME = [
-  "placas/street/naipss.png",
+const DESTAQUES_HOME = [
+  "placas/street/naipess.png",
   "placas/street/skatista.png",
   "placas/games/gta-sa.png"
 ];
 
-function normalizarCaminhoProduto(caminho) {
-  return String(caminho || "")
-    .trim()
-    .replace(/^\.?\//, "")
-    .replace(/\\/g, "/")
-    .toLowerCase();
-}
-
-function getTodosOsProdutos() {
-  const todasAsCategorias = Object.values(PRODUTOS);
-  return todasAsCategorias.flatMap(categoria =>
-    Array.isArray(categoria) ? categoria : []
-  );
-}
-
-function getProdutosDestaqueHome() {
-  const todos = getTodosOsProdutos();
-
-  return DESTAQUES_HOME
-    .map(caminho => {
-      const caminhoNormalizado = normalizarCaminhoProduto(caminho);
-
-      const produto = todos.find(item =>
-        normalizarCaminhoProduto(item.imagem) === caminhoNormalizado
-      );
-
-      if (!produto) return null;
-
-      return {
-        ...produto,
-        medida: produto.medida || "20x28cm"
-      };
-    })
-    .filter(Boolean);
-}
+const PRODUTOS = {
   bandas: [
     { id: "bandas-accept", nome: "Accept", imagem: "placas/bandas/accept.png", preco: "preço aqui" },
     { id: "bandas-acdc-bb", nome: "AC/DC", imagem: "placas/bandas/acdc-bb.png", preco: "preço aqui" },
@@ -114,15 +78,13 @@ function getProdutosDestaqueHome() {
     { id: "bebidas-rum", nome: "Coleção - Rum", imagem: "placas/bebida/rum.png", preco: "preço aqui" },
     { id: "bebidas-tequila", nome: "Coleção - Tequila", imagem: "placas/bebida/tequila.png", preco: "preço aqui" },
     { id: "bebidas-vodka", nome: "Coleção - Vodka", imagem: "placas/bebida/vodka.png", preco: "preço aqui" },
-    { id: "bebidas-whiskey", nome: "Coleção - Whiskey", imagem: "placas/bebida/whiskey.png", preco: "preço aqui" },    
+    { id: "bebidas-whiskey", nome: "Coleção - Whiskey", imagem: "placas/bebida/whiskey.png", preco: "preço aqui" },
     { id: "bebidas-drink-beer", nome: "Coleção - Drink Beer", imagem: "placas/bebida/drink-beer.png", preco: "preço aqui" },
     { id: "bebidas-drink-cocktails", nome: "Coleção -Drink Cocktails", imagem: "placas/bebida/drink-cocktails.png", preco: "preço aqui" },
     { id: "bebidas-drink-tequila", nome: "Coleção - Drink Tequila", imagem: "placas/bebida/drink-tequila.png", preco: "preço aqui" },
     { id: "bebidas-drink-whiskey", nome: "Coleção - Drink Whiskey", imagem: "placas/bebida/drink-whiskey.png", preco: "preço aqui" },
     { id: "bebidas-caipirinha-lovers", nome: "Coleção - Caipirinha Lovers", imagem: "placas/bebida/caipirinha-lovers.png", preco: "preço aqui" },
     { id: "bebidas-in-vino", nome: "Coleção - In Vino", imagem: "placas/bebida/in-vino.png", preco: "preço aqui" },
-    
-    
   ],
 
   "fotos-reais": [
@@ -194,7 +156,6 @@ function getProdutosDestaqueHome() {
     { id: "infantil-quartinho-abencoado", nome: "Para o quartinho dela", imagem: "placas/infantil/quartinho-abençoado.png", preco: "preço aqui" },
     { id: "infantil-sonhe-alto", nome: "Sonhe Alto Pequeno", imagem: "placas/infantil/sonhe-alto.png", preco: "preço aqui" },
     { id: "infantil-sonhe", nome: "Sonhe Alto", imagem: "placas/infantil/sonhe.png", preco: "preço aqui" },
-    
   ],
 
   motos: [
@@ -225,7 +186,6 @@ function getProdutosDestaqueHome() {
     { id: "musica-musica12", nome: "Música 12", imagem: "placas/musica/musica12.png", preco: "preço aqui" }
   ],
 
-  
   rpg: [
     { id: "rpg-3magos", nome: "3 Magos", imagem: "placas/rpg/3magos.png", preco: "preço aqui" },
     { id: "rpg-abobora", nome: "Incensário Abóbora", imagem: "placas/rpg/abobora.png", preco: "preço aqui" },
@@ -269,9 +229,44 @@ function getProdutosDestaqueHome() {
     { id: "trip-derretendo", nome: "Sempre Assim !!!", imagem: "placas/trip/raiz-ritmo.png", preco: "preço aqui" },
     { id: "trip-economico", nome: "Econômico", imagem: "placas/trip/economico.png", preco: "preço aqui" },
     { id: "trip-meditando", nome: "Meditando", imagem: "placas/trip/meditando.png", preco: "preço aqui" },
-    
   ]
 };
+
+function normalizarCaminhoProduto(caminho) {
+  return String(caminho || "")
+    .trim()
+    .replace(/^\.?\//, "")
+    .replace(/\\/g, "/")
+    .toLowerCase();
+}
+
+function getTodosOsProdutos() {
+  const todasAsCategorias = Object.values(PRODUTOS);
+  return todasAsCategorias.flatMap(categoria =>
+    Array.isArray(categoria) ? categoria : []
+  );
+}
+
+function getProdutosDestaqueHome() {
+  const todos = getTodosOsProdutos();
+
+  return DESTAQUES_HOME
+    .map(caminho => {
+      const caminhoNormalizado = normalizarCaminhoProduto(caminho);
+
+      const produto = todos.find(item =>
+        normalizarCaminhoProduto(item.imagem) === caminhoNormalizado
+      );
+
+      if (!produto) return null;
+
+      return {
+        ...produto,
+        medida: produto.medida || "20x28cm"
+      };
+    })
+    .filter(Boolean);
+}
 
 function getProdutosPorCategoria(categoria) {
   return PRODUTOS[categoria] || [];
