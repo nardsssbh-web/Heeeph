@@ -222,7 +222,7 @@
       display:grid;
       grid-template-columns:1fr auto 1fr;
       gap:26px;
-      align-items:stretch;
+      align-items:end;
       position:relative;
     }
 
@@ -743,74 +743,63 @@
       }
 
       .topo-vitrine{
-  grid-template-columns:90px 170px 90px;
-  gap:10px;
-  justify-content:center;
-  width:100%;
-}
+        grid-template-columns:82px 150px 82px;
+        gap:10px;
+        justify-content:center;
+        align-items:end;
+      }
 
-.banner-medidas-html{
-  min-height:138px;
-  border-radius:12px;
-  padding:7px 5px 7px;
-}
-.banner-medidas-html::before{
-  inset:7px;
-  border-radius:10px;
-}
+      .banner-medidas-html{
+        min-height:118px;
+        border-radius:12px;
+        padding:6px 4px 6px;
+      }
 
-.banner-medidas-html::before{
-  inset:6px;
-  border-radius:10px;
-}
+      .banner-medidas-html::before{
+        inset:5px;
+        border-radius:9px;
+      }
 
-.banner-medidas-html::after{
-  left:6px;
-  right:6px;
-  top:42px;
-}
+      .banner-medidas-html::after{
+        left:6px;
+        right:6px;
+        top:34px;
+      }
 
-.medidas-topo{
-  font-size:10px;
-  line-height:0.92;
-}
+      .medidas-topo{
+        font-size:9px;
+        line-height:0.9;
+      }
 
-.frase-banner{
-  margin-top:7px;
-  gap:1px;
-}
+      .frase-banner{
+        margin-top:5px;
+        gap:1px;
+      }
 
-.linha-branca{
-  font-size:8px;
-  line-height:0.92;
-}
+      .linha-branca{
+        font-size:7px;
+        line-height:0.9;
+      }
 
-.linha-amarela{
-  font-size:9px;
-  line-height:0.92;
-}
+      .linha-amarela{
+        font-size:8px;
+        line-height:0.9;
+      }
 
-.lista-banner{
-  gap:2px;
-  margin-top:7px;
-}
+      .lista-banner{
+        gap:2px;
+        margin-top:5px;
+      }
 
-.lista-banner li{
-  font-size:6px;
-  gap:3px;
-  line-height:1;
-}
+      .lista-banner li{
+        font-size:5px;
+        gap:2px;
+        line-height:1;
+      }
 
-.lista-banner li::before{
-  font-size:7px;
-}
-.lista-banner li::before{
-  font-size:9px;
-}
-
-.lista-banner li::before{
-  font-size:8px;
-}
+      .lista-banner li::before{
+        font-size:6px;
+      }
 
       .centro-vitrine{
         min-width:auto;
@@ -826,8 +815,8 @@
       }
 
       .placa-central-wrap{
-        width:160px;
-        height:220px;
+        width:150px;
+        height:205px;
       }
 
       .faixa-destaque{
@@ -939,61 +928,66 @@
       }
 
       .topo-vitrine{
-  grid-template-columns:72px 140px 72px;
-  gap:8px;
-  justify-content:center;
-  width:100%;
-}
+        grid-template-columns:74px 138px 74px;
+        gap:8px;
+        justify-content:center;
+        align-items:end;
+      }
 
-.banner-medidas-html{
-  min-height:118px;
-  padding:6px 4px 6px;
-}
+      .banner-medidas-html{
+        min-height:104px;
+        padding:5px 4px 5px;
+      }
 
-.banner-medidas-html::after{
-  top:36px;
-}
+      .banner-medidas-html::before{
+        inset:4px;
+        border-radius:8px;
+      }
 
-.medidas-topo{
-  font-size:8px;
-  line-height:0.9;
-}
+      .banner-medidas-html::after{
+        left:5px;
+        right:5px;
+        top:30px;
+      }
 
-.linha-branca{
-  font-size:7px;
-  line-height:0.9;
-}
+      .medidas-topo{
+        font-size:8px;
+        line-height:0.9;
+      }
 
-.linha-amarela{
-  font-size:8px;
-  line-height:0.9;
-}
+      .frase-banner{
+        margin-top:4px;
+        gap:1px;
+      }
 
-.lista-banner{
-  margin-top:6px;
-  gap:2px;
-}
+      .linha-branca{
+        font-size:6px;
+        line-height:0.9;
+      }
 
-.lista-banner li{
-  font-size:5px;
-  gap:2px;
-  line-height:1;
-}
+      .linha-amarela{
+        font-size:7px;
+        line-height:0.9;
+      }
 
-.lista-banner li::before{
-  font-size:6px;
-}
+      .lista-banner{
+        margin-top:4px;
+        gap:1px;
+      }
 
-.lista-banner li::before{
-  font-size:8px;
-}
-.lista-banner li::before{
-  font-size:7px;
-}
+      .lista-banner li{
+        font-size:4.5px;
+        gap:2px;
+        line-height:1;
+      }
+
+      .lista-banner li::before{
+        font-size:5px;
+      }
 
       .placa-central-wrap{
-        width:130px;
-        height:185px;
+        width:138px;
+        height:188px;
       }
 
       .titulo-centro .l1{
@@ -1166,87 +1160,69 @@
       if (countEl) countEl.textContent = total;
     }
 
-    <script src="produtos.js"></script>
-<script>
-  function getCart() {
-    const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
-    return Array.isArray(cart) ? cart : [];
-  }
+    const produtosDestaque =
+      typeof getProdutosDestaqueHome === "function"
+        ? getProdutosDestaqueHome()
+        : [];
 
-  function updateCartCount() {
-    const cart = getCart();
-    const total = cart.reduce((acc, item) => {
-      const qtd = Number(item.quantity || item.quantidade || 1);
-      return acc + (isNaN(qtd) ? 1 : qtd);
-    }, 0);
+    let currentIndex = 0;
 
-    const countEl = document.getElementById("cartCount");
-    if (countEl) countEl.textContent = total;
-  }
+    function renderCarouselPrincipal() {
+      const placaPrincipal = document.getElementById("placaPrincipal");
+      const medidaAtual = document.getElementById("medidaAtual");
+      const nomeAtual = document.getElementById("nomeAtual");
+      const precoAtual = document.getElementById("precoAtual");
 
-  const produtosDestaque =
-    typeof getProdutosDestaqueHome === "function"
-      ? getProdutosDestaqueHome()
-      : [];
+      if (!produtosDestaque.length) {
+        placaPrincipal.src = "";
+        placaPrincipal.alt = "Sem destaque";
+        medidaAtual.textContent = "";
+        nomeAtual.textContent = "Nenhuma placa encontrada";
+        precoAtual.textContent = "";
+        return;
+      }
 
-  let currentIndex = 0;
+      const produto = produtosDestaque[currentIndex];
 
-  function renderCarouselPrincipal() {
-    const placaPrincipal = document.getElementById("placaPrincipal");
-    const medidaAtual = document.getElementById("medidaAtual");
-    const nomeAtual = document.getElementById("nomeAtual");
-    const precoAtual = document.getElementById("precoAtual");
-
-    if (!produtosDestaque.length) {
-      placaPrincipal.src = "";
-      placaPrincipal.alt = "Sem destaque";
-      medidaAtual.textContent = "";
-      nomeAtual.textContent = "Nenhuma placa encontrada";
-      precoAtual.textContent = "";
-      return;
+      placaPrincipal.src = produto.imagem || "";
+      placaPrincipal.alt = produto.nome || "Placa em destaque";
+      medidaAtual.textContent = produto.medida || "20x28cm";
+      nomeAtual.textContent = produto.nome || "";
+      precoAtual.textContent = produto.preco || "preço aqui";
     }
 
-    const produto = produtosDestaque[currentIndex];
+    function comprarProdutoDestaque() {
+      if (!produtosDestaque.length) return;
 
-    placaPrincipal.src = produto.imagem || "";
-    placaPrincipal.alt = produto.nome || "Placa em destaque";
-    medidaAtual.textContent = produto.medida || "20x28cm";
-    nomeAtual.textContent = produto.nome || "";
-    precoAtual.textContent = produto.preco || "preço aqui";
-  }
+      const produto = produtosDestaque[currentIndex];
 
-  function comprarProdutoDestaque() {
-    if (!produtosDestaque.length) return;
+      if (typeof adicionarAoCarrinho !== "function") {
+        alert("A função do carrinho não foi carregada. Confira o produtos.js.");
+        return;
+      }
 
-    const produto = produtosDestaque[currentIndex];
-
-    if (typeof adicionarAoCarrinho !== "function") {
-      alert("A função do carrinho não foi carregada. Confira o produtos.js.");
-      return;
+      localStorage.setItem("ultimaPagina", "index.html");
+      adicionarAoCarrinho(produto.id);
+      updateCartCount();
     }
 
-    localStorage.setItem("ultimaPagina", "index.html");
-    adicionarAoCarrinho(produto.id);
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (!produtosDestaque.length) return;
+      currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
+      renderCarouselPrincipal();
+    });
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (!produtosDestaque.length) return;
+      currentIndex = (currentIndex + 1) % produtosDestaque.length;
+      renderCarouselPrincipal();
+    });
+
+    document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
+    document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
+
     updateCartCount();
-  }
-
-  document.getElementById("prevBtn").addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-    currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
     renderCarouselPrincipal();
-  });
-
-  document.getElementById("nextBtn").addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-    currentIndex = (currentIndex + 1) % produtosDestaque.length;
-    renderCarouselPrincipal();
-  });
-
-  document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
-  document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
-
-  updateCartCount();
-  renderCarouselPrincipal();
-</script>
+  </script>
 </body>
 </html>
