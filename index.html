@@ -1,122 +1,1223 @@
-<script src="produtos.js"></script>
-<script>
-  function getCart() {
-    const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
-    return Array.isArray(cart) ? cart : [];
-  }
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HEEEPH - Placas Decorativas</title>
 
-  function updateCartCount() {
-    const cart = getCart();
-    const total = cart.reduce((acc, item) => {
-      const qtd = Number(item.quantity || item.quantidade || 1);
-      return acc + (isNaN(qtd) ? 1 : qtd);
-    }, 0);
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
 
-    const countEl = document.getElementById("cartCount");
-    if (countEl) countEl.textContent = total;
-  }
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
 
-  /* =====================================================
-     ALTERE SÓ ESTE BLOCO ABAIXO
-     Coloque aqui os caminhos das 3 placas em destaque
-  ====================================================== */
-  const caminhosDestaque = [
-    "placas/street/naipess.png",
-    "placas/street/skatista.png",
-    "placas/games/gta-sa.png"
-  ];
+    :root{
+      --gold:#f0c400;
+      --gold2:#ffd84d;
+      --text:#fff;
+      --site-scale:1;
+      --topo-altura:72px;
+    }
 
-  /* =====================================================
-     NÃO MEXER DAQUI PRA BAIXO
-  ====================================================== */
+    html{
+      scroll-behavior:smooth;
+      overflow-x:hidden;
+    }
 
-  function normalizarTexto(valor) {
-    return String(valor || "")
-      .trim()
-      .replace(/^\.?\//, "")
-      .replace(/\\/g, "/")
-      .toLowerCase();
-  }
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.22)),
+        url("banner/fundo.png") center top / cover no-repeat fixed;
+      background-color:#000;
+      overflow-x:hidden;
+      width:100%;
+      max-width:100%;
+      padding-top:var(--topo-altura);
+    }
 
-  function obterTodosOsProdutos() {
-    if (typeof PRODUTOS === "undefined") return [];
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
 
-    return Object.values(PRODUTOS).flatMap(categoria => {
-      if (!Array.isArray(categoria)) return [];
-      return categoria;
+    img{
+      display:block;
+      max-width:100%;
+    }
+
+    button{
+      font-family:inherit;
+    }
+
+    .site-escala{
+      width:100%;
+    }
+
+    .container{
+      width:min(94%, 1500px);
+      margin:0 auto;
+    }
+
+    /* TOPO */
+    .topo{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:1000;
+      background:rgba(0,0,0,.96);
+      border-bottom:1px solid rgba(255,255,255,.05);
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+
+    .topo::after{
+      content:"";
+      display:block;
+      height:2px;
+      background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(240,196,0,.95) 10%,
+        rgba(240,196,0,.12) 50%,
+        rgba(240,196,0,.95) 90%,
+        transparent 100%
+      );
+    }
+
+    .topo .wrap{
+      max-width:1500px;
+      margin:0 auto;
+      padding:10px 18px 9px;
+      min-height:70px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .logo{
+      flex:0 0 auto;
+    }
+
+    .logo a{
+      font-size:26px;
+      font-weight:900;
+      letter-spacing:1px;
+      color:#fff;
+      white-space:nowrap;
+    }
+
+    .menu-area{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-left:auto;
+      min-width:0;
+    }
+
+    .menu{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .menu a{
+      color:#fff;
+      font-size:14px;
+      font-weight:800;
+      text-transform:uppercase;
+      white-space:nowrap;
+      transition:.2s ease;
+    }
+
+    .menu a:hover,
+    .menu a.ativo{
+      color:var(--gold);
+    }
+
+    .cart-link{
+      position:relative;
+      width:40px;
+      height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .cart-link img{
+      width:32px;
+      height:32px;
+      object-fit:contain;
+    }
+
+    .cart-count{
+      position:absolute;
+      top:-4px;
+      right:-4px;
+      min-width:20px;
+      height:20px;
+      padding:0 5px;
+      border-radius:999px;
+      background:var(--gold);
+      color:#000;
+      font-size:11px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* HERO */
+    .hero{
+      padding-top:10px;
+      padding-bottom:26px;
+    }
+
+    .banner-principal-wrap{
+      position:relative;
+      width:min(92%, 1250px);
+      margin:0 auto 8px;
+      border-radius:22px;
+      padding:6px;
+      background:linear-gradient(145deg, rgba(110,69,22,.95), rgba(10,8,7,.96));
+      box-shadow:0 14px 30px rgba(0,0,0,.34);
+    }
+
+    .banner-principal-wrap::before{
+      content:"";
+      position:absolute;
+      inset:3px;
+      border-radius:18px;
+      border:2px solid rgba(130, 82, 30, .85);
+      box-shadow:inset 0 0 0 1px rgba(255,213,89,.10);
+      pointer-events:none;
+    }
+
+    .banner-principal{
+      overflow:hidden;
+      border-radius:16px;
+      background:#111;
+    }
+
+    .banner-principal img{
+      width:100%;
+      height:auto;
+    }
+
+    /* ÁREA ÚNICA */
+    .area-unica{
+      width:min(92%, 1180px);
+      margin:0 auto;
+      padding:10px 18px 20px;
+      position:relative;
+      background:transparent;
+    }
+
+    .topo-vitrine{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:26px;
+      align-items:stretch;
+      position:relative;
+    }
+
+    .topo-vitrine::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:2px;
+      background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(205,143,41,.85) 8%,
+        rgba(205,143,41,.22) 24%,
+        rgba(205,143,41,.10) 50%,
+        rgba(205,143,41,.22) 76%,
+        rgba(205,143,41,.85) 92%,
+        transparent 100%
+      );
+    }
+
+    .painel-lateral{
+      position:relative;
+      padding:18px 18px 18px;
+      border-radius:18px;
+      min-height:320px;
+      background:
+        linear-gradient(180deg, rgba(28,16,10,.72), rgba(8,7,6,.52));
+      box-shadow:
+        inset 0 0 0 2px rgba(146,88,24,.55),
+        0 10px 20px rgba(0,0,0,.20);
+      text-align:center;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+    }
+
+    .painel-lateral::before{
+      content:"";
+      position:absolute;
+      inset:10px;
+      border:1px solid rgba(240,196,0,.18);
+      border-radius:14px;
+      pointer-events:none;
+    }
+
+    .painel-lateral::after{
+      content:"";
+      position:absolute;
+      left:16px;
+      right:16px;
+      top:96px;
+      height:2px;
+      background:linear-gradient(90deg, transparent, rgba(240,196,0,.85), transparent);
+      opacity:.95;
+    }
+
+    .medidas{
+      font-family:'Oswald', sans-serif;
+      font-size:34px;
+      font-weight:700;
+      line-height:1;
+      color:var(--gold2);
+      text-shadow:0 2px 8px rgba(0,0,0,.35);
+      position:relative;
+      z-index:2;
+      letter-spacing:.5px;
+    }
+
+    .frase-lado{
+      margin-top:28px;
+      font-family:'Oswald', sans-serif;
+      font-size:28px;
+      font-weight:800;
+      line-height:.95;
+      text-transform:uppercase;
+      color:#fff;
+      position:relative;
+      z-index:2;
+      text-shadow:
+        0 1px 0 rgba(0,0,0,.45),
+        0 2px 6px rgba(0,0,0,.35);
+    }
+
+    .frase-lado .amarelo{
+      display:block;
+      color:var(--gold);
+      font-weight:900;
+      font-size:30px;
+      margin-top:4px;
+    }
+
+    .beneficios{
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:18px;
+      position:relative;
+      z-index:2;
+      align-items:flex-start;
+      width:fit-content;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .beneficios li{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px;
+      font-family:'Montserrat', sans-serif;
+      font-size:18px;
+      font-weight:800;
+      line-height:1.1;
+      color:#fff;
+      text-align:left;
+    }
+
+    .beneficios li::before{
+      content:"■";
+      color:var(--gold);
+      flex-shrink:0;
+      font-size:11px;
+      margin-top:0;
+    }
+
+    .centro-vitrine{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      min-width:260px;
+      position:relative;
+      z-index:2;
+    }
+
+    .titulo-centro{
+      text-align:center;
+      color:#f2dfb4;
+      font-family:Georgia, "Times New Roman", serif;
+      text-shadow:0 2px 8px rgba(0,0,0,.35);
+      line-height:1.02;
+    }
+
+    .titulo-centro .l1{
+      display:block;
+      font-size:21px;
+      font-weight:500;
+    }
+
+    .titulo-centro .l2{
+      display:block;
+      font-size:23px;
+      font-weight:700;
+    }
+
+    .placa-central-wrap{
+      width:235px;
+      height:325px;
+      border-radius:10px;
+      overflow:hidden;
+      background:#111;
+      border:2px solid rgba(255,208,0,.08);
+      box-shadow:0 8px 20px rgba(0,0,0,.28);
+      cursor:pointer;
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+
+    .placa-central-wrap:hover{
+      transform:translateY(-3px);
+      box-shadow:0 14px 28px rgba(0,0,0,.35);
+    }
+
+    .placa-central-wrap img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .faixa-destaque{
+      margin-top:26px;
+      position:relative;
+      text-align:center;
+    }
+
+    .faixa-destaque::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:50%;
+      transform:translateY(-50%);
+      height:2px;
+      background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(205,143,41,.90) 8%,
+        rgba(205,143,41,.22) 24%,
+        rgba(205,143,41,.10) 50%,
+        rgba(205,143,41,.22) 76%,
+        rgba(205,143,41,.90) 92%,
+        transparent 100%
+      );
+    }
+
+    .faixa-destaque h2{
+      display:inline-block;
+      position:relative;
+      z-index:2;
+      padding:0 20px;
+      background:transparent;
+      font-size:28px;
+      font-weight:900;
+      color:var(--gold2);
+      text-shadow:0 2px 10px rgba(0,0,0,.35);
+    }
+
+    .vitrine-rodape{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns:100px 1fr 100px;
+      align-items:center;
+      gap:18px;
+      max-width:980px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+
+    .carousel-btn{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      border:none;
+      background:linear-gradient(180deg, #f2c93d, #d89d07);
+      color:#000;
+      font-size:32px;
+      font-weight:900;
+      cursor:pointer;
+      margin:0 auto;
+      transition:transform .2s ease, filter .2s ease;
+      box-shadow:0 8px 18px rgba(0,0,0,.25);
+    }
+
+    .carousel-btn:hover{
+      transform:scale(1.06);
+      filter:brightness(1.05);
+    }
+
+    .info-placa{
+      text-align:center;
+      background:rgba(0,0,0,.38);
+      border-radius:18px;
+      padding:12px 20px 16px;
+      border:1px solid rgba(180,110,35,.6);
+      box-shadow:0 10px 18px rgba(0,0,0,.18);
+      max-width:360px;
+      margin:0 auto;
+      position:relative;
+    }
+
+    .info-placa::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:18px;
+      box-shadow:inset 0 0 0 2px rgba(128,77,24,.35);
+      pointer-events:none;
+    }
+
+    .medida-atual{
+      display:inline-block;
+      background:linear-gradient(180deg, #f2c93d, #d8a510);
+      color:#000;
+      font-weight:900;
+      font-size:15px;
+      padding:7px 18px;
+      border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,.25);
+      margin-bottom:10px;
+    }
+
+    .nome-placa{
+      font-size:18px;
+      font-weight:800;
+      color:#fff;
+      margin-bottom:4px;
+    }
+
+    .preco-wrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .preco-wrap::before,
+    .preco-wrap::after{
+      content:"";
+      width:56px;
+      height:2px;
+      background:linear-gradient(90deg, transparent, rgba(205,143,41,.9), transparent);
+    }
+
+    .preco-placa{
+      font-size:17px;
+      color:var(--gold);
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .btn-comprar{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:240px;
+      padding:12px 18px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(180deg, #f7cf4f, #d89d07);
+      color:#000;
+      font-size:16px;
+      font-weight:900;
+      text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,.28);
+      transition:transform .2s ease, filter .2s ease;
+    }
+
+    .btn-comprar:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.04);
+    }
+
+    .faixa-acoes{
+      margin-top:18px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:flex-start;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .botao-categorias{
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+    }
+
+    .botao-categorias a{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      transition:transform .2s ease;
+    }
+
+    .botao-categorias a:hover{
+      transform:scale(1.02);
+    }
+
+    .botao-categorias img{
+      width:min(100%, 430px);
+      height:auto;
+    }
+
+    .whatsapp-fixo{
+      position:fixed;
+      right:14px;
+      bottom:18px;
+      z-index:999;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .whatsapp-fixo img{
+      width:190px;
+      max-width:190px;
+      height:auto;
+      display:block;
+      filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
+    }
+
+    footer{
+      background:#000;
+      color:#fff;
+      text-align:center;
+      padding:18px 15px;
+      font-size:14px;
+      margin-top:26px;
+    }
+
+    @media (max-width: 1100px){
+      :root{ --site-scale: 0.86; }
+
+      .topo-vitrine{
+        gap:18px;
+      }
+
+      .placa-central-wrap{
+        width:210px;
+        height:290px;
+      }
+
+      .medidas{
+        font-size:28px;
+      }
+
+      .frase-lado{
+        font-size:23px;
+      }
+
+      .frase-lado .amarelo{
+        font-size:25px;
+      }
+
+      .beneficios li{
+        font-size:15px;
+      }
+    }
+
+    @media (max-width: 780px){
+      :root{
+        --site-scale:1;
+        --topo-altura:56px;
+      }
+
+      html, body{
+        overflow-x:hidden;
+        width:100%;
+        max-width:100%;
+      }
+
+      .site-escala{
+        width:100%;
+        transform:none;
+      }
+
+      .topo{
+        overflow:hidden;
+      }
+
+      .topo .wrap{
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        padding:8px 10px 8px;
+        min-height:54px;
+        flex-wrap:nowrap;
+      }
+
+      .logo{
+        flex:0 0 auto;
+        min-width:0;
+      }
+
+      .logo a{
+        font-size:18px;
+        letter-spacing:1px;
+      }
+
+      .menu-area{
+        width:auto;
+        margin-left:auto;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        flex:1 1 auto;
+        justify-content:flex-end;
+      }
+
+      .menu{
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        overflow:hidden;
+      }
+
+      .menu a{
+        font-size:9px;
+        white-space:nowrap;
+        letter-spacing:0;
+      }
+
+      .cart-link{
+        width:34px;
+        height:34px;
+        flex:0 0 auto;
+      }
+
+      .cart-link img{
+        width:26px;
+        height:26px;
+      }
+
+      .cart-count{
+        top:-2px;
+        right:-2px;
+        min-width:16px;
+        height:16px;
+        font-size:9px;
+        padding:0 4px;
+      }
+
+      .banner-principal-wrap{
+        border-radius:18px;
+        padding:5px;
+      }
+
+      .banner-principal-wrap::before{
+        inset:3px;
+        border-radius:14px;
+      }
+
+      .banner-principal{
+        border-radius:12px;
+      }
+
+      .area-unica{
+        width:96%;
+        padding:8px 8px 18px;
+      }
+
+      .topo-vitrine{
+        grid-template-columns:1fr 170px 1fr;
+        gap:10px;
+        align-items:stretch;
+      }
+
+      .painel-lateral{
+        min-height:250px;
+        padding:12px 8px 12px;
+        border-radius:12px;
+      }
+
+      .painel-lateral::after{
+        left:8px;
+        right:8px;
+        top:72px;
+      }
+
+      .medidas{
+        font-size:17px;
+        line-height:1;
+      }
+
+      .frase-lado{
+        margin-top:20px;
+        font-size:15px;
+        line-height:.95;
+      }
+
+      .frase-lado .amarelo{
+        font-size:17px;
+      }
+
+      .beneficios{
+        margin-top:12px;
+        gap:6px;
+      }
+
+      .beneficios li{
+        font-size:10px;
+        gap:6px;
+      }
+
+      .beneficios li::before{
+        font-size:8px;
+        margin-top:1px;
+      }
+
+      .centro-vitrine{
+        min-width:auto;
+        gap:6px;
+      }
+
+      .titulo-centro .l1{
+        font-size:15px;
+      }
+
+      .titulo-centro .l2{
+        font-size:16px;
+      }
+
+      .placa-central-wrap{
+        width:160px;
+        height:220px;
+      }
+
+      .faixa-destaque{
+        margin-top:16px;
+      }
+
+      .faixa-destaque h2{
+        font-size:22px;
+      }
+
+      .vitrine-rodape{
+        grid-template-columns:52px 1fr 52px;
+        gap:8px;
+        max-width:100%;
+      }
+
+      .carousel-btn{
+        width:42px;
+        height:42px;
+        font-size:22px;
+      }
+
+      .info-placa{
+        max-width:260px;
+        padding:10px 10px 12px;
+        border-radius:14px;
+      }
+
+      .medida-atual{
+        font-size:13px;
+        padding:6px 14px;
+      }
+
+      .nome-placa{
+        font-size:15px;
+      }
+
+      .preco-wrap::before,
+      .preco-wrap::after{
+        width:28px;
+      }
+
+      .preco-placa{
+        font-size:14px;
+      }
+
+      .btn-comprar{
+        min-width:180px;
+        font-size:13px;
+        padding:10px 12px;
+      }
+
+      .faixa-acoes{
+        justify-content:center;
+      }
+
+      .botao-categorias{
+        justify-content:center;
+        width:100%;
+      }
+
+      .botao-categorias img{
+        width:min(100%, 300px);
+      }
+
+      .whatsapp-fixo{
+        right:8px;
+        bottom:8px;
+      }
+
+      .whatsapp-fixo img{
+        width:145px;
+        max-width:145px;
+      }
+    }
+
+    @media (max-width: 480px){
+      html, body{
+        overflow-x:hidden;
+        width:100%;
+        max-width:100%;
+      }
+
+      .topo .wrap{
+        padding:8px 8px 8px;
+        gap:6px;
+      }
+
+      .logo a{
+        font-size:16px;
+      }
+
+      .menu{
+        gap:6px;
+      }
+
+      .menu a{
+        font-size:8px;
+      }
+
+      .cart-link{
+        width:30px;
+        height:30px;
+      }
+
+      .cart-link img{
+        width:22px;
+        height:22px;
+      }
+
+      .cart-count{
+        min-width:14px;
+        height:14px;
+        font-size:8px;
+      }
+
+      .topo-vitrine{
+        grid-template-columns:1fr 140px 1fr;
+        gap:8px;
+      }
+
+      .painel-lateral{
+        min-height:220px;
+      }
+
+      .medidas{
+        font-size:15px;
+      }
+
+      .frase-lado{
+        font-size:13px;
+      }
+
+      .frase-lado .amarelo{
+        font-size:14px;
+      }
+
+      .beneficios li{
+        font-size:9px;
+      }
+
+      .placa-central-wrap{
+        width:130px;
+        height:185px;
+      }
+
+      .titulo-centro .l1{
+        font-size:13px;
+      }
+
+      .titulo-centro .l2{
+        font-size:14px;
+      }
+
+      .info-placa{
+        max-width:220px;
+      }
+
+      .btn-comprar{
+        min-width:160px;
+      }
+
+      .whatsapp-fixo img{
+        width:130px;
+        max-width:130px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-escala" id="siteEscala">
+    <header class="topo">
+      <div class="wrap">
+        <div class="logo">
+          <a href="index.html">HEEEPH</a>
+        </div>
+
+        <div class="menu-area">
+          <nav class="menu">
+            <a href="index.html" class="ativo">HOME</a>
+            <a href="categorias.html">COLEÇÃO</a>
+            <a href="sobre.html">O QUE É HEEEPH?</a>
+            <a href="fotos-reais.html">FOTOS REAIS</a>
+            <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">CONTATOS</a>
+          </nav>
+
+          <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+            <img src="botoes/botao-carrinho.png" alt="Carrinho">
+            <span class="cart-count" id="cartCount">0</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+
+          <div class="banner-principal-wrap">
+            <div class="banner-principal">
+              <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
+            </div>
+          </div>
+
+          <div class="area-unica">
+            <div class="topo-vitrine">
+              <div class="painel-lateral esq">
+                <div class="medidas">
+                  <div>20x28cm</div>
+                  <div>28x20cm</div>
+                </div>
+
+                <div class="frase-lado">
+                  O tamanho que
+                  <span class="amarelo">chama atenção!</span>
+                </div>
+
+                <ul class="beneficios">
+                  <li>MDF Resistente</li>
+                  <li>Impressão HD</li>
+                  <li>Laminação de proteção</li>
+                </ul>
+              </div>
+
+              <div class="centro-vitrine">
+                <div class="titulo-centro">
+                  <span class="l1">Placas Decorativas</span>
+                  <span class="l2">Placas Personalizadas</span>
+                </div>
+
+                <div class="placa-central-wrap" id="placaClick">
+                  <img id="placaPrincipal" src="" alt="Placa em destaque">
+                </div>
+              </div>
+
+              <div class="painel-lateral dir">
+                <div class="medidas">
+                  <div>10x15cm</div>
+                  <div>15x10cm</div>
+                </div>
+
+                <div class="frase-lado">
+                  Monte a sua
+                  <span class="amarelo">coleção!</span>
+                </div>
+
+                <ul class="beneficios">
+                  <li>MDF Resistente</li>
+                  <li>Impressão HD</li>
+                  <li>Fácil Aplicação e Limpeza</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="faixa-destaque">
+              <h2>Destaque</h2>
+            </div>
+
+            <div class="vitrine-rodape">
+              <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
+
+              <div class="info-placa">
+                <div class="medida-atual" id="medidaAtual"></div>
+                <div class="nome-placa" id="nomeAtual"></div>
+                <div class="preco-wrap">
+                  <div class="preco-placa" id="precoAtual"></div>
+                </div>
+                <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
+              </div>
+
+              <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
+            </div>
+
+            <div class="faixa-acoes">
+              <div class="botao-categorias">
+                <a href="categorias.html">
+                  <img src="botoes/categorias.png" alt="Categorias">
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © 2026 HEEEPH - Placas Decorativas
+    </footer>
+  </div>
+
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
+  </a>
+
+  <script src="produtos.js"></script>
+  <script>
+    function getCart() {
+      const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+      return Array.isArray(cart) ? cart : [];
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => {
+        const qtd = Number(item.quantity || item.quantidade || 1);
+        return acc + (isNaN(qtd) ? 1 : qtd);
+      }, 0);
+
+      const countEl = document.getElementById("cartCount");
+      if (countEl) countEl.textContent = total;
+    }
+
+    const produtosDestaque =
+      typeof getProdutosDestaqueHome === "function"
+        ? getProdutosDestaqueHome()
+        : [];
+
+    let currentIndex = 0;
+
+    function renderCarouselPrincipal() {
+      const placaPrincipal = document.getElementById("placaPrincipal");
+      const medidaAtual = document.getElementById("medidaAtual");
+      const nomeAtual = document.getElementById("nomeAtual");
+      const precoAtual = document.getElementById("precoAtual");
+
+      if (!produtosDestaque.length) {
+        placaPrincipal.src = "";
+        placaPrincipal.alt = "Sem destaque";
+        medidaAtual.textContent = "";
+        nomeAtual.textContent = "Nenhuma placa encontrada";
+        precoAtual.textContent = "";
+        return;
+      }
+
+      const produto = produtosDestaque[currentIndex];
+
+      placaPrincipal.src = produto.imagem || "";
+      placaPrincipal.alt = produto.nome || "Placa em destaque";
+      medidaAtual.textContent = produto.medida || "20x28cm";
+      nomeAtual.textContent = produto.nome || "";
+      precoAtual.textContent = produto.preco || "preço aqui";
+    }
+
+    function comprarProdutoDestaque() {
+      if (!produtosDestaque.length) return;
+
+      const produto = produtosDestaque[currentIndex];
+
+      if (typeof adicionarAoCarrinho === "function") {
+        localStorage.setItem("ultimaPagina", "index.html");
+        adicionarAoCarrinho(produto.id);
+        updateCartCount();
+      }
+    }
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (!produtosDestaque.length) return;
+      currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
+      renderCarouselPrincipal();
     });
-  }
 
-  function montarProdutosDestaque() {
-    const todos = obterTodosOsProdutos();
-
-    return caminhosDestaque
-      .map(caminho => {
-        const caminhoNormalizado = normalizarTexto(caminho);
-
-        return todos.find(produto =>
-          normalizarTexto(produto.imagem) === caminhoNormalizado
-        );
-      })
-      .filter(Boolean);
-  }
-
-  const produtosDestaque = montarProdutosDestaque();
-  let currentIndex = 0;
-
-  function renderCarouselPrincipal() {
-    if (!produtosDestaque.length) {
-      document.getElementById("nomeAtual").textContent = "Nenhuma placa encontrada";
-      document.getElementById("precoAtual").textContent = "";
-      document.getElementById("medidaAtual").textContent = "";
-      document.getElementById("placaPrincipal").src = "";
-      document.getElementById("placaPrincipal").alt = "Sem destaque";
-      return;
-    }
-
-    const produto = produtosDestaque[currentIndex];
-
-    document.getElementById("placaPrincipal").src = produto.imagem;
-    document.getElementById("placaPrincipal").alt = produto.nome || "Placa em destaque";
-    document.getElementById("medidaAtual").textContent = produto.medida || "";
-    document.getElementById("nomeAtual").textContent = produto.nome || "";
-    document.getElementById("precoAtual").textContent = produto.preco || "preço aqui";
-  }
-
-  function comprarProdutoDestaque() {
-    if (!produtosDestaque.length) return;
-
-    const produto = produtosDestaque[currentIndex];
-
-    if (typeof adicionarAoCarrinho === "function") {
-      localStorage.setItem("ultimaPagina", "index.html");
-      adicionarAoCarrinho(produto.id);
-      updateCartCount();
-    }
-  }
-
-  document.getElementById("prevBtn").addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-    currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
-    renderCarouselPrincipal();
-  });
-
-  document.getElementById("nextBtn").addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-    currentIndex = (currentIndex + 1) % produtosDestaque.length;
-    renderCarouselPrincipal();
-  });
-
-  document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
-  document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
-
-  updateCartCount();
-  renderCarouselPrincipal();
-
-  if (produtosDestaque.length > 1) {
-    setInterval(() => {
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (!produtosDestaque.length) return;
       currentIndex = (currentIndex + 1) % produtosDestaque.length;
       renderCarouselPrincipal();
-    }, 4000);
-  }
-</script>
+    });
+
+    document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
+    document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
+
+    updateCartCount();
+    renderCarouselPrincipal();
+
+    if (produtosDestaque.length > 1) {
+      setInterval(() => {
+        currentIndex = (currentIndex + 1) % produtosDestaque.length;
+        renderCarouselPrincipal();
+      }, 4000);
+    }
+  </script>
+
+  <script>
+    function ajustarAlturaFinalDoSite() {
+      const site = document.getElementById("siteEscala");
+      if (!site) return;
+
+      site.style.height = "auto";
+      const alturaVisual = site.getBoundingClientRect().height;
+      site.style.height = alturaVisual + "px";
+    }
+
+    window.addEventListener("load", ajustarAlturaFinalDoSite);
+    window.addEventListener("resize", ajustarAlturaFinalDoSite);
+  </script>
+</body>
+</html>
