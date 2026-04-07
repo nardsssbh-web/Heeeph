@@ -1,4 +1,46 @@
 const PRODUTOS = {
+
+  const DESTAQUES_HOME = [
+  "placas/street/naipss.png",
+  "placas/street/skatista.png",
+  "placas/games/gta-sa.png"
+];
+
+function normalizarCaminhoProduto(caminho) {
+  return String(caminho || "")
+    .trim()
+    .replace(/^\.?\//, "")
+    .replace(/\\/g, "/")
+    .toLowerCase();
+}
+
+function getTodosOsProdutos() {
+  const todasAsCategorias = Object.values(PRODUTOS);
+  return todasAsCategorias.flatMap(categoria =>
+    Array.isArray(categoria) ? categoria : []
+  );
+}
+
+function getProdutosDestaqueHome() {
+  const todos = getTodosOsProdutos();
+
+  return DESTAQUES_HOME
+    .map(caminho => {
+      const caminhoNormalizado = normalizarCaminhoProduto(caminho);
+
+      const produto = todos.find(item =>
+        normalizarCaminhoProduto(item.imagem) === caminhoNormalizado
+      );
+
+      if (!produto) return null;
+
+      return {
+        ...produto,
+        medida: produto.medida || "20x28cm"
+      };
+    })
+    .filter(Boolean);
+}
   bandas: [
     { id: "bandas-accept", nome: "Accept", imagem: "placas/bandas/accept.png", preco: "preço aqui" },
     { id: "bandas-acdc-bb", nome: "AC/DC", imagem: "placas/bandas/acdc-bb.png", preco: "preço aqui" },
