@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HEEEPH - Placas Decorativas</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
-
   <style>
     *{
       margin:0;
@@ -20,7 +16,6 @@
       --gold:#f0c400;
       --gold2:#ffd84d;
       --text:#fff;
-      --site-scale:1;
       --topo-altura:72px;
     }
 
@@ -54,10 +49,6 @@
 
     button{
       font-family:inherit;
-    }
-
-    .site-escala{
-      width:100%;
     }
 
     .container{
@@ -261,11 +252,6 @@
       display:flex;
       align-items:center;
       justify-content:center;
-    }
-
-    .painel-lateral::before,
-    .painel-lateral::after{
-      display:none;
     }
 
     .painel-lateral img{
@@ -543,8 +529,6 @@
     }
 
     @media (max-width: 1100px){
-      :root{ --site-scale: 0.86; }
-
       .topo-vitrine{
         gap:18px;
       }
@@ -557,23 +541,7 @@
 
     @media (max-width: 780px){
       :root{
-        --site-scale:1;
         --topo-altura:56px;
-      }
-
-      html, body{
-        overflow-x:hidden;
-        width:100%;
-        max-width:100%;
-      }
-
-      .site-escala{
-        width:100%;
-        transform:none;
-      }
-
-      .topo{
-        overflow:hidden;
       }
 
       .topo .wrap{
@@ -584,11 +552,6 @@
         padding:8px 10px 8px;
         min-height:54px;
         flex-wrap:nowrap;
-      }
-
-      .logo{
-        flex:0 0 auto;
-        min-width:0;
       }
 
       .logo a{
@@ -618,14 +581,11 @@
 
       .menu a{
         font-size:9px;
-        white-space:nowrap;
-        letter-spacing:0;
       }
 
       .cart-link{
         width:34px;
         height:34px;
-        flex:0 0 auto;
       }
 
       .cart-link img{
@@ -664,7 +624,6 @@
       .topo-vitrine{
         grid-template-columns:1fr 170px 1fr;
         gap:10px;
-        align-items:stretch;
       }
 
       .painel-lateral{
@@ -769,12 +728,6 @@
     }
 
     @media (max-width: 480px){
-      html, body{
-        overflow-x:hidden;
-        width:100%;
-        max-width:100%;
-      }
-
       .topo .wrap{
         padding:8px 8px 8px;
         gap:6px;
@@ -847,98 +800,96 @@
 </head>
 <body>
 
-  <div class="site-escala" id="siteEscala">
-    <header class="topo">
-      <div class="wrap">
-        <div class="logo">
-          <a href="index.html">HEEEPH</a>
-        </div>
-
-        <div class="menu-area">
-          <nav class="menu">
-            <a href="index.html" class="ativo">HOME</a>
-            <a href="categorias.html">COLEÇÃO</a>
-            <a href="sobre.html">O QUE É HEEEPH?</a>
-            <a href="fotos-reais.html">FOTOS REAIS</a>
-            <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">CONTATOS</a>
-          </nav>
-
-          <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
-            <img src="botoes/botao-carrinho.png" alt="Carrinho">
-            <span class="cart-count" id="cartCount">0</span>
-          </a>
-        </div>
+  <header class="topo">
+    <div class="wrap">
+      <div class="logo">
+        <a href="index.html">HEEEPH</a>
       </div>
-    </header>
 
-    <main>
-      <section class="hero">
-        <div class="container">
+      <div class="menu-area">
+        <nav class="menu">
+          <a href="index.html" class="ativo">HOME</a>
+          <a href="categorias.html">COLEÇÃO</a>
+          <a href="sobre.html">O QUE É HEEEPH?</a>
+          <a href="fotos-reais.html">FOTOS REAIS</a>
+          <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">CONTATOS</a>
+        </nav>
 
-          <div class="banner-principal-wrap">
-            <div class="banner-principal">
-              <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
-            </div>
+        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+          <img src="botoes/botao-carrinho.png" alt="Carrinho">
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+
+        <div class="banner-principal-wrap">
+          <div class="banner-principal">
+            <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
           </div>
-
-          <div class="area-unica">
-            <div class="topo-vitrine">
-              <div class="painel-lateral esq">
-                <img src="banner/banner-medidas-maior.png" alt="Banner medidas 20x28 e 28x20">
-              </div>
-
-              <div class="centro-vitrine">
-                <div class="titulo-centro">
-                  <span class="l1">Placas Decorativas</span>
-                  <span class="l2">Placas Personalizadas</span>
-                </div>
-
-                <div class="placa-central-wrap" id="placaClick">
-                  <img id="placaPrincipal" src="" alt="Placa em destaque">
-                </div>
-              </div>
-
-              <div class="painel-lateral dir">
-                <img src="banner/banner-medidas-menor.png" alt="Banner medidas 10x15 e 15x10">
-              </div>
-            </div>
-
-            <div class="faixa-destaque">
-              <h2>Destaque</h2>
-            </div>
-
-            <div class="vitrine-rodape">
-              <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
-
-              <div class="info-placa">
-                <div class="medida-atual" id="medidaAtual"></div>
-                <div class="nome-placa" id="nomeAtual"></div>
-                <div class="preco-wrap">
-                  <div class="preco-placa" id="precoAtual"></div>
-                </div>
-                <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
-              </div>
-
-              <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
-            </div>
-
-            <div class="faixa-acoes">
-              <div class="botao-categorias">
-                <a href="categorias.html">
-                  <img src="botoes/categorias.png" alt="Categorias">
-                </a>
-              </div>
-            </div>
-          </div>
-
         </div>
-      </section>
-    </main>
 
-    <footer>
-      © 2026 HEEEPH - Placas Decorativas
-    </footer>
-  </div>
+        <div class="area-unica">
+          <div class="topo-vitrine">
+            <div class="painel-lateral esq">
+              <img src="banner/banner-medidas-maior.png" alt="Banner medidas 20x28 e 28x20">
+            </div>
+
+            <div class="centro-vitrine">
+              <div class="titulo-centro">
+                <span class="l1">Placas Decorativas</span>
+                <span class="l2">Placas Personalizadas</span>
+              </div>
+
+              <div class="placa-central-wrap" id="placaClick">
+                <img id="placaPrincipal" src="placas/street/naipess.png" alt="Placa em destaque">
+              </div>
+            </div>
+
+            <div class="painel-lateral dir">
+              <img src="banner/banner-medidas-menor.png" alt="Banner medidas 10x15 e 15x10">
+            </div>
+          </div>
+
+          <div class="faixa-destaque">
+            <h2>Destaque</h2>
+          </div>
+
+          <div class="vitrine-rodape">
+            <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
+
+            <div class="info-placa">
+              <div class="medida-atual" id="medidaAtual">20x28cm</div>
+              <div class="nome-placa" id="nomeAtual">Naipes Baralho</div>
+              <div class="preco-wrap">
+                <div class="preco-placa" id="precoAtual">R$ 29,90</div>
+              </div>
+              <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
+            </div>
+
+            <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
+          </div>
+
+          <div class="faixa-acoes">
+            <div class="botao-categorias">
+              <a href="categorias.html">
+                <img src="botoes/categorias.png" alt="Categorias">
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 HEEEPH - Placas Decorativas
+  </footer>
 
   <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
     <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
@@ -962,40 +913,29 @@
       if (countEl) countEl.textContent = total;
     }
 
-    const produtosDestaque =
-      typeof getProdutosDestaqueHome === "function"
-        ? getProdutosDestaqueHome()
-        : [];
+    const produtosDestaque = [
+      {
+        id: "street-naipess",
+        nome: "Naipes Baralho",
+        preco: "R$ 29,90",
+        medida: "20x28cm",
+        imagem: "placas/street/naipess.png"
+      }
+    ];
 
     let currentIndex = 0;
 
     function renderCarouselPrincipal() {
-      const placaPrincipal = document.getElementById("placaPrincipal");
-      const medidaAtual = document.getElementById("medidaAtual");
-      const nomeAtual = document.getElementById("nomeAtual");
-      const precoAtual = document.getElementById("precoAtual");
-
-      if (!produtosDestaque.length) {
-        placaPrincipal.src = "";
-        placaPrincipal.alt = "Sem destaque";
-        medidaAtual.textContent = "";
-        nomeAtual.textContent = "Nenhuma placa encontrada";
-        precoAtual.textContent = "";
-        return;
-      }
-
       const produto = produtosDestaque[currentIndex];
 
-      placaPrincipal.src = produto.imagem || "";
-      placaPrincipal.alt = produto.nome || "Placa em destaque";
-      medidaAtual.textContent = produto.medida || "20x28cm";
-      nomeAtual.textContent = produto.nome || "";
-      precoAtual.textContent = produto.preco || "preço aqui";
+      document.getElementById("placaPrincipal").src = produto.imagem;
+      document.getElementById("placaPrincipal").alt = produto.nome;
+      document.getElementById("medidaAtual").textContent = produto.medida;
+      document.getElementById("nomeAtual").textContent = produto.nome;
+      document.getElementById("precoAtual").textContent = produto.preco;
     }
 
     function comprarProdutoDestaque() {
-      if (!produtosDestaque.length) return;
-
       const produto = produtosDestaque[currentIndex];
 
       if (typeof adicionarAoCarrinho === "function") {
@@ -1006,13 +946,11 @@
     }
 
     document.getElementById("prevBtn").addEventListener("click", () => {
-      if (!produtosDestaque.length) return;
       currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
       renderCarouselPrincipal();
     });
 
     document.getElementById("nextBtn").addEventListener("click", () => {
-      if (!produtosDestaque.length) return;
       currentIndex = (currentIndex + 1) % produtosDestaque.length;
       renderCarouselPrincipal();
     });
@@ -1022,27 +960,6 @@
 
     updateCartCount();
     renderCarouselPrincipal();
-
-    if (produtosDestaque.length > 1) {
-      setInterval(() => {
-        currentIndex = (currentIndex + 1) % produtosDestaque.length;
-        renderCarouselPrincipal();
-      }, 4000);
-    }
-  </script>
-
-  <script>
-    function ajustarAlturaFinalDoSite() {
-      const site = document.getElementById("siteEscala");
-      if (!site) return;
-
-      site.style.height = "auto";
-      const alturaVisual = site.getBoundingClientRect().height;
-      site.style.height = alturaVisual + "px";
-    }
-
-    window.addEventListener("load", ajustarAlturaFinalDoSite);
-    window.addEventListener("resize", ajustarAlturaFinalDoSite);
   </script>
 </body>
 </html>
