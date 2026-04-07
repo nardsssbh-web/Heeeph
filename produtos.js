@@ -1,7 +1,7 @@
 const DESTAQUES_HOME = [
   "placas/street/naipess.png",
   "placas/street/skatista.png",
-  "placas/bebida/drink-tequila.png"
+  "placas/bebida/tequila.png"
 ];
 
 const PRODUTOS = {
@@ -81,7 +81,7 @@ const PRODUTOS = {
     { id: "bebidas-whiskey", nome: "Coleção - Whiskey", imagem: "placas/bebida/whiskey.png", preco: "preço aqui" },
     { id: "bebidas-drink-beer", nome: "Coleção - Drink Beer", imagem: "placas/bebida/drink-beer.png", preco: "preço aqui" },
     { id: "bebidas-drink-cocktails", nome: "Coleção -Drink Cocktails", imagem: "placas/bebida/drink-cocktails.png", preco: "preço aqui" },
-    { id: "bebidas-drink-tequila", nome: "Coleção - Drink Tequila", imagem: "placas/bebida/drink-tequila.png", preco: "preço aqui" },
+    { id: "bebidas-drink-tequila", nome: "Coleção - Drink Tequila", imagem: "placas/bebida/drink-tequila.png", preco: "R$29,90" },
     { id: "bebidas-drink-whiskey", nome: "Coleção - Drink Whiskey", imagem: "placas/bebida/drink-whiskey.png", preco: "preço aqui" },
     { id: "bebidas-caipirinha-lovers", nome: "Coleção - Caipirinha Lovers", imagem: "placas/bebida/caipirinha-lovers.png", preco: "preço aqui" },
     { id: "bebidas-in-vino", nome: "Coleção - In Vino", imagem: "placas/bebida/in-vino.png", preco: "preço aqui" },
