@@ -76,7 +76,7 @@ const PRODUTOS = {
     { id: "bebidas-cachaçah", nome: "Coleção - Cachaça Macho", imagem: "placas/bebida/cachaçah.png", preco: "preço aqui" },
     { id: "bebidas-cachaçam", nome: "Coleção - Cachaça Fêmea", imagem: "placas/bebida/cachaçam.png", preco: "preço aqui" },
     { id: "bebidas-rum", nome: "Coleção - Rum", imagem: "placas/bebida/rum.png", preco: "preço aqui" },
-    { id: "bebidas-tequila", nome: "Coleção - Tequila", imagem: "placas/bebida/tequila.png", preco: "preço aqui" },
+    { id: "bebidas-tequila", nome: "Coleção - Tequila", imagem: "placas/bebida/tequila.png", preco: "R$29,90" },
     { id: "bebidas-vodka", nome: "Coleção - Vodka", imagem: "placas/bebida/vodka.png", preco: "preço aqui" },
     { id: "bebidas-whiskey", nome: "Coleção - Whiskey", imagem: "placas/bebida/whiskey.png", preco: "preço aqui" },
     { id: "bebidas-drink-beer", nome: "Coleção - Drink Beer", imagem: "placas/bebida/drink-beer.png", preco: "preço aqui" },
