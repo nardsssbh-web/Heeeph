@@ -695,6 +695,7 @@
   if (!input || !mensagem) return;
 
   const cepLimpo = input.value.replace(/\D/g, "");
+    localStorage.setItem("cepFreteSalvo", input.value);
 
   if (cepLimpo.length !== 8) {
     freteAtual = 0;
@@ -870,19 +871,22 @@
   }
 
   function aumentarQuantidade(id) {
-    alterarQuantidade(id, 1);
-    renderCarrinho();
-  }
+  alterarQuantidade(id, 1);
+  renderCarrinho();
+  reaplicarFreteSeJaHouverCEP();
+}
 
   function diminuirQuantidade(id) {
-    alterarQuantidade(id, -1);
-    renderCarrinho();
-  }
+  alterarQuantidade(id, -1);
+  renderCarrinho();
+  reaplicarFreteSeJaHouverCEP();
+}
 
   function excluirItem(id) {
-    removerDoCarrinho(id);
-    renderCarrinho();
-  }
+  removerDoCarrinho(id);
+  renderCarrinho();
+  reaplicarFreteSeJaHouverCEP();
+}
 
   function limparCarrinho() {
     freteAtual = 0;
@@ -898,8 +902,18 @@
     botao.href = ultimaPagina;
   }
 
+  function reaplicarFreteSeJaHouverCEP() {
+  const cepSalvo = localStorage.getItem("cepFreteSalvo") || "";
+  const input = document.getElementById("cepFrete");
+
+  if (input && cepSalvo) {
+    input.value = cepSalvo;
+    calcularFrete();
+  }
+}
   updateCartCount();
   renderCarrinho();
+  reaplicarFreteSeJaHouverCEP();
 </script>
 
 </body>
