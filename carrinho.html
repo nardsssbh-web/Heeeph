@@ -765,8 +765,9 @@
           </div>
 
           <div class="item-info">
-            <h2>${item.nome}</h2>
-            <div class="item-preco">${item.preco}</div>
+           <h2>${item.nome}</h2>
+           <div class="item-medida">${item.medida || ""}</div>
+           <div class="item-preco">R$ ${Number(item.preco || 0).toFixed(2).replace(".", ",")}</div>
 
             <div class="quantidade-area">
               <button class="quantidade-btn" onclick="diminuirQuantidade('${item.id}')">-</button>
