@@ -620,16 +620,16 @@
   let subtotalAtual = 0;
 
   function precoParaNumero(preco) {
-    if (!preco) return 0;
-    if (preco === "preço aqui") return 0;
+  if (!preco) return 0;
+  if (typeof preco === "number") return preco;
+  if (preco === "preço aqui") return 0;
 
-    return Number(
-      preco
-        .replace(/[^\d,.-]/g, "")
-        .replace(/\./g, "")
-        .replace(",", ".")
-    ) || 0;
-  }
+  return Number(
+    String(preco)
+      .replace(/[^\d,.-]/g, "")
+      .replace(",", ".")
+  ) || 0;
+}
 
   function formatarPreco(valor) {
     return valor.toLocaleString("pt-BR", {
