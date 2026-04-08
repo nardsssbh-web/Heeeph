@@ -787,6 +787,7 @@
     salvarCarrinho(carrinho);
     updateCartCount();
     document.getElementById("modalTamanho").classList.remove("ativo");
+    localStorage.setItem("ultimaPagina", window.location.pathname.split("/").pop());
     window.location.href = "carrinho.html";
   }
 
