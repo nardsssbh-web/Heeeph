@@ -678,12 +678,12 @@
 
   const OPCOES_TAMANHO = {
     vertical: [
-      { medida: "10x15cm", preco: "" },
-      { medida: "20x28cm", preco: "" }
+      { medida: "10x15cm", preco: 12.90 },
+      { medida: "20x28cm", preco: 29.90 }
     ],
     horizontal: [
-      { medida: "15x10cm", preco: "" },
-      { medida: "28x20cm", preco: "" }
+      { medida: "15x10cm", preco: 12.90 },
+      { medida: "28x20cm", preco: 29.90 }
     ]
   };
 
@@ -694,23 +694,7 @@
     }
   }
 
-  function grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
-
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-      </div>
-    </div>
-
-    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
-
-    <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join(""); {
+  function renderProdutos() {
     const grade = document.getElementById("gradeProdutos");
 
     if (typeof PRODUTOS === "undefined") {
@@ -735,7 +719,7 @@
           </div>
         </div>
 
-        ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}>${item.preco || ""}</div>
+        ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
 
         <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
           Comprar
@@ -795,7 +779,7 @@
       carrinho.push({
         ...produto,
         medida: medidaEscolhida,
-        preco: precoEscolhido || "",
+        preco: precoEscolhido,
         quantidade: 1
       });
     }
@@ -803,29 +787,12 @@
     salvarCarrinho(carrinho);
     updateCartCount();
     document.getElementById("modalTamanho").classList.remove("ativo");
-    window.location.href = "carrinho.html";
     localStorage.setItem("ultimaPagina", window.location.pathname.split("/").pop());
-    
+    window.location.href = "carrinho.html";
   }
 
   updateCartCount();
-  grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
-
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-      </div>
-    </div>
-
-    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
-
-    <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join("");;
+  renderProdutos();
 
   const modalZoom = document.getElementById("modalZoom");
   const imagemZoom = document.getElementById("imagemZoom");
@@ -859,7 +826,6 @@
       modalZoom.classList.remove("ativo");
       imagemZoom.src = "";
       document.body.style.overflow = "";
-
       document.getElementById("modalTamanho").classList.remove("ativo");
     }
   });
