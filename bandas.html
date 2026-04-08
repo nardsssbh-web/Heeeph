@@ -633,7 +633,7 @@
       </div>
     </div>
 
-    <div class="preco-placa">${item.preco}</div>
+    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
 
     <button class="btn-comprar-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
       Comprar
