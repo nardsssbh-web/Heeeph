@@ -741,7 +741,7 @@
       }
 
       .topo-vitrine{
-        grid-template-columns:110px 150px 110px;
+        grid-template-columns:125px 150px 125px;
         gap:10px;
         justify-content:center;
         align-items:end;
@@ -752,8 +752,8 @@
       }
 
       .banner-medidas-html{
-        min-height:150px;
-        height:150px;
+        min-height:170px;
+        height:170px;
         border-radius:14px;
         padding:8px 6px 8px;
       }
@@ -766,11 +766,11 @@
       .banner-medidas-html::after{
         left:6px;
         right:6px;
-        top:40px;
+        top:45px;
       }
 
       .medidas-topo{
-        font-size:13px;
+        font-size:14px;
         line-height:0.95;
       }
 
@@ -780,28 +780,28 @@
       }
 
       .linha-branca{
-        font-size:9px;
-        line-height:0.95;
-      }
-
-      .linha-amarela{
         font-size:10px;
         line-height:0.95;
       }
 
+      .linha-amarela{
+        font-size:11px;
+        line-height:0.95;
+      }
+
       .lista-banner{
-        gap:3px;
-        margin-top:6px;
+        gap:4px;
+        margin-top:7px;
       }
 
       .lista-banner li{
-        font-size:7px;
-        gap:3px;
+        font-size:8px;
+        gap:4px;
         line-height:1;
       }
 
       .lista-banner li::before{
-        font-size:7px;
+        font-size:8px;
       }
 
       .centro-vitrine{
@@ -930,63 +930,6 @@
         font-size:8px;
       }
 
-      @media (max-width: 780px){
-  .topo-vitrine{
-    grid-template-columns:125px 150px 125px;
-    gap:10px;
-    justify-content:center;
-    align-items:end;
-  }
-
-  .banner-medidas-html{
-    min-height:170px;
-    height:170px;
-    border-radius:14px;
-    padding:8px 6px 8px;
-  }
-
-  .banner-medidas-html::after{
-    left:6px;
-    right:6px;
-    top:45px;
-  }
-
-  .medidas-topo{
-    font-size:14px;
-    line-height:0.95;
-  }
-
-  .linha-branca{
-    font-size:10px;
-    line-height:0.95;
-  }
-
-  .linha-amarela{
-    font-size:11px;
-    line-height:0.95;
-  }
-
-  .lista-banner{
-    gap:4px;
-    margin-top:7px;
-  }
-
-  .lista-banner li{
-    font-size:8px;
-    gap:4px;
-    line-height:1;
-  }
-
-  .lista-banner li::before{
-    font-size:8px;
-  }
-
-  .placa-central-wrap{
-    width:150px;
-    height:205px;
-  }
-}
-
       .titulo-centro .l1{
         font-size:13px;
       }
@@ -1111,7 +1054,7 @@
               <div class="medida-atual" id="medidaAtual">20x28cm</div>
               <div class="nome-placa" id="nomeAtual">Naipes Baralho</div>
               <div class="preco-wrap">
-                ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""} id="precoAtual">R$ 29,90</div>
+                <div class="preco-placa" id="precoAtual">R$ 29,90</div>
               </div>
               <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
             </div>
@@ -1159,6 +1102,11 @@
       if (countEl) countEl.textContent = total;
     }
 
+    function formatarPreco(valor) {
+      const numero = Number(valor || 0);
+      return "R$ " + numero.toFixed(2).replace(".", ",");
+    }
+
     const produtosDestaque =
       typeof getProdutosDestaqueHome === "function"
         ? getProdutosDestaqueHome()
@@ -1187,7 +1135,7 @@
       placaPrincipal.alt = produto.nome || "Placa em destaque";
       medidaAtual.textContent = produto.medida || "20x28cm";
       nomeAtual.textContent = produto.nome || "";
-      precoAtual.textContent = produto.preco || "preço aqui";
+      precoAtual.textContent = produto.preco ? produto.preco : formatarPreco(29.90);
     }
 
     function comprarProdutoDestaque() {
