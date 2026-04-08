@@ -6,7 +6,7 @@ const DESTAQUES_HOME = [
 
 const PRODUTOS = {
   bandas: [
-    { id: "bandas-accept", nome: "Accept", imagem: "placas/bandas/accept.png", orientacao: "vertical", preco: "" },
+    { id: "bandas-accept", nome: "Accept Teste", imagem: "placas/bandas/accept.png", orientacao: "vertical", preco: "" },
     { id: "bandas-acdc-bb", nome: "AC/DC", imagem: "placas/bandas/acdc-bb.png", orientacao: "horizontal", preco: "" },
     { id: "bandas-angra", nome: "Angra-Angels Cry", imagem: "placas/bandas/angra.png", orientacao: "vertical", preco: "" },
     { id: "bandas-arp", nome: "Axel Rudi Pell", imagem: "placas/bandas/arp.png", orientacao: "vertical", preco: "" },
