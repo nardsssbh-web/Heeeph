@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contato - HEEEPH</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --gold:#f0c400;
+      --gold2:#ffd84d;
+      --text:#fff;
+      --topo-altura:72px;
+    }
+
+    html{
+      scroll-behavior:smooth;
+      overflow-x:hidden;
+    }
+
+    body{
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.28)),
+        url("banner/fundo.png") center top / cover no-repeat fixed;
+      background-color:#000;
+      overflow-x:hidden;
+      width:100%;
+      max-width:100%;
+      padding-top:var(--topo-altura);
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .container{
+      width:min(94%, 1200px);
+      margin:0 auto;
+    }
+
+    .topo{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:1000;
+      background:rgba(0,0,0,.96);
+      border-bottom:1px solid rgba(255,255,255,.05);
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+
+    .topo::after{
+      content:"";
+      display:block;
+      height:2px;
+      background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(240,196,0,.95) 10%,
+        rgba(240,196,0,.12) 50%,
+        rgba(240,196,0,.95) 90%,
+        transparent 100%
+      );
+    }
+
+    .topo .wrap{
+      max-width:1500px;
+      margin:0 auto;
+      padding:10px 18px 9px;
+      min-height:70px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .logo a{
+      font-size:26px;
+      font-weight:900;
+      letter-spacing:1px;
+      color:#fff;
+      white-space:nowrap;
+    }
+
+    .menu-area{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-left:auto;
+      min-width:0;
+    }
+
+    .menu{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .menu a{
+      color:#fff;
+      font-size:14px;
+      font-weight:800;
+      text-transform:uppercase;
+      white-space:nowrap;
+      transition:.2s ease;
+    }
+
+    .menu a:hover,
+    .menu a.ativo{
+      color:var(--gold);
+    }
+
+    .cart-link{
+      position:relative;
+      width:40px;
+      height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .cart-link img{
+      width:32px;
+      height:32px;
+      object-fit:contain;
+    }
+
+    .cart-count{
+      position:absolute;
+      top:-4px;
+      right:-4px;
+      min-width:20px;
+      height:20px;
+      padding:0 5px;
+      border-radius:999px;
+      background:var(--gold);
+      color:#000;
+      font-size:11px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .contato{
+      padding:40px 0 50px;
+    }
+
+    .titulo-pagina{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    .titulo-pagina h1{
+      font-size:40px;
+      color:var(--gold2);
+      margin-bottom:10px;
+      text-shadow:0 2px 10px rgba(0,0,0,.35);
+    }
+
+    .titulo-pagina p{
+      font-size:17px;
+      color:#fff;
+      opacity:.95;
+    }
+
+    .box-contato{
+      display:grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap:24px;
+      align-items:stretch;
+    }
+
+    .card{
+      background:rgba(0,0,0,.45);
+      border:1px solid rgba(180,110,35,.6);
+      border-radius:22px;
+      padding:24px;
+      box-shadow:0 12px 28px rgba(0,0,0,.25);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:22px;
+      box-shadow:inset 0 0 0 2px rgba(128,77,24,.28);
+      pointer-events:none;
+    }
+
+    .card h2{
+      font-size:24px;
+      color:var(--gold2);
+      margin-bottom:16px;
+    }
+
+    .info-item{
+      margin-bottom:18px;
+      padding:14px 14px;
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.05);
+    }
+
+    .info-item strong{
+      display:block;
+      color:var(--gold);
+      font-size:15px;
+      margin-bottom:6px;
+      text-transform:uppercase;
+    }
+
+    .info-item span,
+    .info-item a{
+      font-size:16px;
+      color:#fff;
+      word-break:break-word;
+    }
+
+    .info-item a:hover{
+      color:var(--gold2);
+    }
+
+    .frase-contato{
+      margin-top:18px;
+      font-size:15px;
+      line-height:1.6;
+      color:#f3f3f3;
+      opacity:.95;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .campo{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .campo.full{
+      grid-column:1 / -1;
+    }
+
+    .campo label{
+      font-size:14px;
+      font-weight:700;
+      color:#fff;
+    }
+
+    .campo input,
+    .campo textarea{
+      width:100%;
+      border:none;
+      outline:none;
+      border-radius:14px;
+      padding:14px 14px;
+      background:rgba(255,255,255,.07);
+      color:#fff;
+      font-size:15px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .campo input::placeholder,
+    .campo textarea::placeholder{
+      color:rgba(255,255,255,.62);
+    }
+
+    .campo textarea{
+      min-height:170px;
+      resize:vertical;
+    }
+
+    .acoes-form{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:190px;
+      padding:13px 18px;
+      border:none;
+      border-radius:14px;
+      font-size:15px;
+      font-weight:900;
+      cursor:pointer;
+      text-transform:uppercase;
+      transition:.2s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-whats{
+      background:linear-gradient(180deg, #f7cf4f, #d89d07);
+      color:#000;
+      box-shadow:0 4px 12px rgba(0,0,0,.28);
+    }
+
+    .btn-email{
+      background:#111;
+      color:#fff;
+      border:1px solid rgba(240,196,0,.45);
+    }
+
+    footer{
+      background:#000;
+      color:#fff;
+      text-align:center;
+      padding:18px 15px;
+      font-size:14px;
+      margin-top:26px;
+    }
+
+    .whatsapp-fixo{
+      position:fixed;
+      right:14px;
+      bottom:18px;
+      z-index:999;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .whatsapp-fixo img{
+      width:190px;
+      max-width:190px;
+      height:auto;
+      display:block;
+      filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
+    }
+
+    @media (max-width: 900px){
+      .box-contato{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 780px){
+      :root{
+        --topo-altura:56px;
+      }
+
+      .topo .wrap{
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        padding:8px 10px 8px;
+        min-height:54px;
+        flex-wrap:nowrap;
+      }
+
+      .logo a{
+        font-size:18px;
+      }
+
+      .menu-area{
+        width:auto;
+        margin-left:auto;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        flex:1 1 auto;
+        justify-content:flex-end;
+      }
+
+      .menu{
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        overflow:hidden;
+      }
+
+      .menu a{
+        font-size:9px;
+      }
+
+      .cart-link{
+        width:34px;
+        height:34px;
+      }
+
+      .cart-link img{
+        width:26px;
+        height:26px;
+      }
+
+      .cart-count{
+        top:-2px;
+        right:-2px;
+        min-width:16px;
+        height:16px;
+        font-size:9px;
+        padding:0 4px;
+      }
+
+      .titulo-pagina h1{
+        font-size:30px;
+      }
+
+      .titulo-pagina p{
+        font-size:15px;
+      }
+
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .acoes-form{
+        flex-direction:column;
+      }
+
+      .btn{
+        width:100%;
+      }
+
+      .whatsapp-fixo{
+        right:8px;
+        bottom:8px;
+      }
+
+      .whatsapp-fixo img{
+        width:145px;
+        max-width:145px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topo">
+    <div class="wrap">
+      <div class="logo">
+        <a href="index.html">HEEEPH</a>
+      </div>
+
+      <div class="menu-area">
+        <nav class="menu">
+          <a href="index.html">HOME</a>
+          <a href="categorias.html">COLEÇÃO</a>
+          <a href="sobre.html">O QUE É HEEEPH?</a>
+          <a href="fotos-reais.html">FOTOS REAIS</a>
+          <a href="contato.html" class="ativo">CONTATOS</a>
+        </nav>
+
+        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+          <img src="botoes/botao-carrinho.png" alt="Carrinho">
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="contato">
+    <div class="container">
+      <div class="titulo-pagina">
+        <h1>Fale com a HEEEPH</h1>
+        <p>Se quiser tirar dúvidas, pedir placas personalizadas ou chamar no WhatsApp, é só mandar.</p>
+      </div>
+
+      <div class="box-contato">
+        <section class="card">
+          <h2>Informações de contato</h2>
+
+          <div class="info-item">
+            <strong>WhatsApp</strong>
+            <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">(11) 99830-2901</a>
+          </div>
+
+          <div class="info-item">
+            <strong>E-mail</strong>
+            <a href="mailto:contato@heeeph.com.br">contato@heeeph.com.br</a>
+          </div>
+
+          <div class="info-item">
+            <strong>Mensagens</strong>
+            <span>Atendimento para dúvidas, pedidos, placas personalizadas e informações gerais.</span>
+          </div>
+
+          <p class="frase-contato">
+            Aqui a conversa é direta: chegou, falou, resolveu.  
+            Seja para montar sua coleção, pedir uma arte personalizada ou fechar um pedido, o caminho está aberto.
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>Envie sua mensagem</h2>
+
+          <form id="formContato">
+            <div class="form-grid">
+              <div class="campo">
+                <label for="nome">Seu nome</label>
+                <input type="text" id="nome" placeholder="Digite seu nome">
+              </div>
+
+              <div class="campo">
+                <label for="email">Seu e-mail</label>
+                <input type="email" id="email" placeholder="Digite seu e-mail">
+              </div>
+
+              <div class="campo full">
+                <label for="assunto">Assunto</label>
+                <input type="text" id="assunto" placeholder="Ex: Quero orçamento para placas 10x15">
+              </div>
+
+              <div class="campo full">
+                <label for="mensagem">Mensagem</label>
+                <textarea id="mensagem" placeholder="Escreva sua mensagem aqui..."></textarea>
+              </div>
+            </div>
+
+            <div class="acoes-form">
+              <button type="button" class="btn btn-whats" onclick="enviarWhatsapp()">Enviar no WhatsApp</button>
+              <button type="button" class="btn btn-email" onclick="enviarEmail()">Enviar por E-mail</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 HEEEPH - Placas Decorativas
+  </footer>
+
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
+  </a>
+
+  <script src="produtos.js"></script>
+  <script>
+    function getCart() {
+      const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+      return Array.isArray(cart) ? cart : [];
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => {
+        const qtd = Number(item.quantity || item.quantidade || 1);
+        return acc + (isNaN(qtd) ? 1 : qtd);
+      }, 0);
+
+      const countEl = document.getElementById("cartCount");
+      if (countEl) countEl.textContent = total;
+    }
+
+    function enviarWhatsapp() {
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const assunto = document.getElementById("assunto").value.trim();
+      const mensagem = document.getElementById("mensagem").value.trim();
+
+      const texto = 
+`Olá, tudo bem? Me chamo ${nome || "cliente"}.
+
+E-mail: ${email || "não informado"}
+Assunto: ${assunto || "não informado"}
+
+Mensagem:
+${mensagem || "Olá, gostaria de mais informações."}`;
+
+      const url = `https://wa.me/5511998302901?text=${encodeURIComponent(texto)}`;
+      window.open(url, "_blank");
+    }
+
+    function enviarEmail() {
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const assunto = document.getElementById("assunto").value.trim() || "Contato pelo site HEEEPH";
+      const mensagem = document.getElementById("mensagem").value.trim();
+
+      const corpo = 
+`Nome: ${nome || "não informado"}
+E-mail: ${email || "não informado"}
+
+Mensagem:
+${mensagem || ""}`;
+
+      window.location.href = `mailto:contato@heeeph.com.br?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
+    }
+
+    updateCartCount();
+  </script>
+</body>
+</html>

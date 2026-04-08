@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HOME / FRASES | HEEEPH</title>
+  <title>HOME FRASES | HEEEPH</title>
   <style>
     * {
       margin: 0;
@@ -187,14 +187,14 @@
     }
 
     .nome-placa {
-  margin-bottom: 12px;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 800;
-  color: #4a2a00;
-  font-family: "Trebuchet MS", "Arial Black", Arial, sans-serif;
-  line-height: 1.2;
-}
+      margin-bottom: 12px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 800;
+      color: #4a2a00;
+      font-family: "Trebuchet MS", "Arial Black", Arial, sans-serif;
+      line-height: 1.2;
+    }
 
     .preco-placa {
       margin-top: 12px;
@@ -273,6 +273,85 @@
       font-weight: 900;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .modal-tamanho-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    .modal-tamanho-overlay.ativo {
+      display: flex;
+    }
+
+    .modal-tamanho-box {
+      width: min(92vw, 460px);
+      background: #0d0d0d;
+      border: 1px solid rgba(240,196,0,.35);
+      border-radius: 18px;
+      padding: 22px 18px 18px;
+      position: relative;
+      box-shadow: 0 16px 40px rgba(0,0,0,.45);
+    }
+
+    .fechar-tamanho {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      font-weight: 900;
+      background: linear-gradient(180deg, #f7cf4f, #d89d07);
+      color: #000;
+    }
+
+    .modal-tamanho-titulo {
+      color: #f0c400;
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .modal-tamanho-nome {
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .opcoes-tamanho {
+      display: grid;
+      gap: 12px;
+    }
+
+    .btn-opcao-tamanho {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      background: linear-gradient(180deg, #f7cf4f, #d89d07);
+      color: #000;
+      font-size: 17px;
+      font-weight: 900;
+      text-align: center;
+      transition: .2s ease;
+    }
+
+    .btn-opcao-tamanho:hover {
+      transform: translateY(-2px);
     }
 
     .voltar {
@@ -451,6 +530,10 @@
         max-height: 88%;
       }
 
+      .nome-placa {
+        font-size: 15px;
+      }
+
       .preco-placa {
         font-size: 15px;
       }
@@ -546,7 +629,7 @@
         <a href="categorias.html" class="ativo">COLEÇÃO</a>
         <a href="sobre.html">O QUE É HEEEPH?</a>
         <a href="fotos-reais.html">FOTOS REAIS</a>
-        <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">CONTATOS</a>
+        <a href="contato.html">CONTATOS</a>
       </nav>
 
       <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
@@ -580,9 +663,29 @@
   </div>
 </div>
 
+<div id="modalTamanho" class="modal-tamanho-overlay" onclick="fecharModalTamanho(event)">
+  <div class="modal-tamanho-box">
+    <button class="fechar-tamanho" onclick="fecharModalTamanhoDireto()">×</button>
+    <div class="modal-tamanho-titulo">Escolha o tamanho</div>
+    <div id="modalTamanhoNome" class="modal-tamanho-nome"></div>
+    <div id="opcoesTamanho" class="opcoes-tamanho"></div>
+  </div>
+</div>
+
 <script src="produtos.js"></script>
 <script>
   const categoriaAtual = "home-frases";
+
+  const OPCOES_TAMANHO = {
+    vertical: [
+      { medida: "10x15cm", preco: "" },
+      { medida: "20x28cm", preco: "" }
+    ],
+    horizontal: [
+      { medida: "15x10cm", preco: "" },
+      { medida: "28x20cm", preco: "" }
+    ]
+  };
 
   function updateCartCount() {
     const countEl = document.getElementById("cartCount");
@@ -607,33 +710,86 @@
     }
 
     grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
+      <div class="item-placa">
+        <div class="placa">
+          <div class="nome-placa">${item.nome}</div>
 
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
+          <div class="img-box">
+            <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
+          </div>
+        </div>
+
+        <div class="preco-placa">${item.preco || "preço aqui"}</div>
+
+        <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
+          Comprar
+        </button>
       </div>
-    </div>
-
-    <div class="preco-placa">${item.preco}</div>
-
-    <button class="btn-comprar-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join("");
+    `).join("");
   }
 
-  function adicionarProdutoAoCarrinho(event, id) {
-  event.preventDefault();
+  function abrirEscolhaTamanho(idProduto) {
+    const produto = getProdutoPorId(idProduto);
+    if (!produto) return;
 
-  if (typeof adicionarAoCarrinho === "function") {
-    localStorage.setItem("ultimaPagina", window.location.pathname.split("/").pop());
-    adicionarAoCarrinho(id);
+    const orientacao = produto.orientacao === "horizontal" ? "horizontal" : "vertical";
+    const opcoes = OPCOES_TAMANHO[orientacao] || [];
+
+    document.getElementById("modalTamanhoNome").textContent = produto.nome;
+
+    const boxOpcoes = document.getElementById("opcoesTamanho");
+    boxOpcoes.innerHTML = "";
+
+    opcoes.forEach(opcao => {
+      const botao = document.createElement("button");
+      botao.className = "btn-opcao-tamanho";
+      botao.textContent = opcao.medida;
+      botao.onclick = function() {
+        adicionarAoCarrinhoComTamanho(idProduto, opcao.medida, opcao.preco);
+      };
+      boxOpcoes.appendChild(botao);
+    });
+
+    document.getElementById("modalTamanho").classList.add("ativo");
+  }
+
+  function fecharModalTamanho(event) {
+    if (event.target.id === "modalTamanho") {
+      document.getElementById("modalTamanho").classList.remove("ativo");
+    }
+  }
+
+  function fecharModalTamanhoDireto() {
+    document.getElementById("modalTamanho").classList.remove("ativo");
+  }
+
+  function adicionarAoCarrinhoComTamanho(idProduto, medidaEscolhida, precoEscolhido) {
+    const produto = getProdutoPorId(idProduto);
+    if (!produto) return;
+
+    const carrinho = obterCarrinho();
+
+    const itemExistente = carrinho.find(item =>
+      item.id === idProduto && item.medida === medidaEscolhida
+    );
+
+    if (itemExistente) {
+      itemExistente.quantidade += 1;
+    } else {
+      carrinho.push({
+        ...produto,
+        medida: medidaEscolhida,
+        preco: precoEscolhido || "",
+        quantidade: 1
+      });
+    }
+
+    salvarCarrinho(carrinho);
     updateCartCount();
-      }
-}
+    document.getElementById("modalTamanho").classList.remove("ativo");
+    window.location.href = "carrinho.html";
+    localStorage.setItem("ultimaPagina", window.location.pathname.split("/").pop());
+  }
 
   updateCartCount();
   renderProdutos();
@@ -670,6 +826,7 @@
       modalZoom.classList.remove("ativo");
       imagemZoom.src = "";
       document.body.style.overflow = "";
+      document.getElementById("modalTamanho").classList.remove("ativo");
     }
   });
 </script>
