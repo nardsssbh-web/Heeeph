@@ -710,22 +710,22 @@
     }
 
     grade.innerHTML = itens.map(item => `
-      <div class="item-placa">
-        <div class="placa">
-          <div class="nome-placa">${item.nome}</div>
+  <div class="item-placa">
+    <div class="placa">
+      <div class="nome-placa">${item.nome}</div>
 
-          <div class="img-box">
-            <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-          </div>
-        </div>
-
-        ${item.preco ? `${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}>${item.preco}</div>` : ""}>${item.preco || ""}</div>
-
-        <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
-          Comprar
-        </button>
+      <div class="img-box">
+        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
       </div>
-    `).join("");
+    </div>
+
+    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
+
+    <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
+      Comprar
+    </button>
+  </div>
+`).join("");
   }
 
   function abrirEscolhaTamanho(idProduto) {
