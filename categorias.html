@@ -629,6 +629,85 @@
         max-width:155px;
       }
     }
+
+    .modal-tamanho-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.78);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modal-tamanho-overlay.ativo{
+  display: flex;
+}
+
+.modal-tamanho-box{
+  width: min(92vw, 460px);
+  background: #0d0d0d;
+  border: 1px solid rgba(240,196,0,.35);
+  border-radius: 18px;
+  padding: 22px 18px 18px;
+  position: relative;
+  box-shadow: 0 16px 40px rgba(0,0,0,.45);
+}
+
+.fechar-tamanho{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 24px;
+  font-weight: 900;
+  background: linear-gradient(180deg, #f7cf4f, #d89d07);
+  color: #000;
+}
+
+.modal-tamanho-titulo{
+  color: #f0c400;
+  font-size: 24px;
+  font-weight: 900;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.modal-tamanho-nome{
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.opcoes-tamanho{
+  display: grid;
+  gap: 12px;
+}
+
+.btn-opcao-tamanho{
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  background: linear-gradient(180deg, #f7cf4f, #d89d07);
+  color: #000;
+  font-size: 17px;
+  font-weight: 900;
+  text-align: center;
+  transition: .2s ease;
+}
+
+.btn-opcao-tamanho:hover{
+  transform: translateY(-2px);
+}
   </style>
 </head>
 <body>
