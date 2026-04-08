@@ -694,23 +694,7 @@
     }
   }
 
-  function grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
-
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-      </div>
-    </div>
-
-    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
-
-    <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join(""); {
+  function renderProdutos() {
     const grade = document.getElementById("gradeProdutos");
 
     if (typeof PRODUTOS === "undefined") {
@@ -808,23 +792,7 @@
   }
 
   updateCartCount();
-  grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
-
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-      </div>
-    </div>
-
-    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
-
-    <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join("");;
+  renderProdutos();
 
   const modalZoom = document.getElementById("modalZoom");
   const imagemZoom = document.getElementById("imagemZoom");
