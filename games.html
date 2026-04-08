@@ -788,6 +788,7 @@
     updateCartCount();
     document.getElementById("modalTamanho").classList.remove("ativo");
     window.location.href = "carrinho.html";
+    localStorage.setItem("ultimaPagina", window.location.pathname.split("/").pop());
   }
 
   updateCartCount();
