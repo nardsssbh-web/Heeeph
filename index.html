@@ -459,10 +459,10 @@
     .vitrine-rodape{
       margin-top:12px;
       display:grid;
-      grid-template-columns:100px 1fr 100px;
+      grid-template-columns:70px 1fr 70px;
       align-items:center;
       gap:18px;
-      max-width:980px;
+      max-width:720px;
       margin-left:auto;
       margin-right:auto;
     }
@@ -494,7 +494,8 @@
       padding:12px 20px 16px;
       border:1px solid rgba(180,110,35,.6);
       box-shadow:0 10px 18px rgba(0,0,0,.18);
-      max-width:360px;
+      max-width:390px;
+      width:100%;
       margin:0 auto;
       position:relative;
     }
@@ -520,34 +521,12 @@
       margin-bottom:10px;
     }
 
-    .nome-placa{
+    .info-placa .nome-placa{
       font-size:18px;
       font-weight:800;
       color:#fff;
-      margin-bottom:4px;
-    }
-
-    .preco-wrap{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      margin-bottom:12px;
-    }
-
-    .preco-wrap::before,
-    .preco-wrap::after{
-      content:"";
-      width:56px;
-      height:2px;
-      background:linear-gradient(90deg, transparent, rgba(205,143,41,.9), transparent);
-    }
-
-    .preco-placa{
-      font-size:17px;
-      color:var(--gold);
-      font-weight:900;
-      white-space:nowrap;
+      margin-bottom:14px;
+      text-align:center;
     }
 
     .btn-comprar{
@@ -853,17 +832,8 @@
         padding:6px 14px;
       }
 
-      .nome-placa{
+      .info-placa .nome-placa{
         font-size:15px;
-      }
-
-      .preco-wrap::before,
-      .preco-wrap::after{
-        width:28px;
-      }
-
-      .preco-placa{
-        font-size:14px;
       }
 
       .btn-comprar{
@@ -1083,104 +1053,107 @@
   <script src="produtos.js"></script>
 
   <script>
-    <script>
-  <script>
-  function getCart() {
-    const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
-    return Array.isArray(cart) ? cart : [];
-  }
-
-  function updateCartCount() {
-    const cart = getCart();
-    const total = cart.reduce((acc, item) => {
-      const qtd = Number(item.quantity || item.quantidade || 1);
-      return acc + (isNaN(qtd) ? 1 : qtd);
-    }, 0);
-
-    const countEl = document.getElementById("cartCount");
-    if (countEl) countEl.textContent = total;
-  }
-
-  const produtosDestaque =
-    typeof getProdutosDestaqueHome === "function"
-      ? getProdutosDestaqueHome()
-      : [];
-
-  let currentIndex = 0;
-
-  function renderCarouselPrincipal() {
-    const placaPrincipal = document.getElementById("placaPrincipal");
-    const medidaAtual = document.getElementById("medidaAtual");
-    const nomeAtual = document.getElementById("nomeAtual");
-
-    if (!placaPrincipal || !medidaAtual || !nomeAtual) return;
-
-    if (!produtosDestaque.length) {
-      placaPrincipal.src = "";
-      placaPrincipal.alt = "Sem destaque";
-      medidaAtual.textContent = "";
-      nomeAtual.textContent = "Nenhuma placa encontrada";
-      return;
+    function getCart() {
+      const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+      return Array.isArray(cart) ? cart : [];
     }
 
-    const produto = produtosDestaque[currentIndex];
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => {
+        const qtd = Number(item.quantity || item.quantidade || 1);
+        return acc + (isNaN(qtd) ? 1 : qtd);
+      }, 0);
 
-    placaPrincipal.src = produto.imagem || "";
-    placaPrincipal.alt = produto.nome || "Placa em destaque";
-    medidaAtual.textContent = produto.medida || "";
-    nomeAtual.textContent = produto.nome || "";
-  }
-
-  function comprarProdutoDestaque() {
-    if (!produtosDestaque.length) return;
-
-    const produto = produtosDestaque[currentIndex];
-    if (!produto) return;
-
-    const categoria =
-      produto.categoria ||
-      (produto.id ? String(produto.id).split("-")[0] : "");
-
-    if (!categoria || !produto.id) {
-      alert("Produto de destaque sem categoria ou id configurado.");
-      return;
+      const countEl = document.getElementById("cartCount");
+      if (countEl) countEl.textContent = total;
     }
 
-    localStorage.setItem("ultimaPagina", "index.html");
-    window.location.href = `${categoria}.html?produto=${encodeURIComponent(produto.id)}`;
-  }
+    const produtosDestaque =
+      typeof getProdutosDestaqueHome === "function"
+        ? getProdutosDestaqueHome()
+        : [];
 
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const btnComprar = document.getElementById("btnComprar");
-  const placaClick = document.getElementById("placaClick");
+    let currentIndex = 0;
 
-  if (prevBtn) {
-    prevBtn.addEventListener("click", () => {
+    function pegarCategoriaDoProduto(produto) {
+      if (!produto) return "";
+      if (produto.categoria) return produto.categoria;
+      if (produto.id && String(produto.id).includes("-")) {
+        return String(produto.id).split("-")[0];
+      }
+      return "";
+    }
+
+    function renderCarouselPrincipal() {
+      const placaPrincipal = document.getElementById("placaPrincipal");
+      const medidaAtual = document.getElementById("medidaAtual");
+      const nomeAtual = document.getElementById("nomeAtual");
+
+      if (!placaPrincipal || !medidaAtual || !nomeAtual) return;
+
+      if (!produtosDestaque.length) {
+        placaPrincipal.src = "";
+        placaPrincipal.alt = "Sem destaque";
+        medidaAtual.textContent = "";
+        nomeAtual.textContent = "Nenhuma placa encontrada";
+        return;
+      }
+
+      const produto = produtosDestaque[currentIndex];
+
+      placaPrincipal.src = produto.imagem || "";
+      placaPrincipal.alt = produto.nome || "Placa em destaque";
+      medidaAtual.textContent = produto.medida || "";
+      nomeAtual.textContent = produto.nome || "";
+    }
+
+    function abrirGaleriaDoDestaque() {
       if (!produtosDestaque.length) return;
-      currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
-      renderCarouselPrincipal();
-    });
-  }
 
-  if (nextBtn) {
-    nextBtn.addEventListener("click", () => {
-      if (!produtosDestaque.length) return;
-      currentIndex = (currentIndex + 1) % produtosDestaque.length;
-      renderCarouselPrincipal();
-    });
-  }
+      const produto = produtosDestaque[currentIndex];
+      const categoria = pegarCategoriaDoProduto(produto);
 
-  if (btnComprar) {
-    btnComprar.addEventListener("click", comprarProdutoDestaque);
-  }
+      if (!categoria || !produto.id) {
+        alert("Produto de destaque sem categoria ou id configurado.");
+        return;
+      }
 
-  if (placaClick) {
-    placaClick.addEventListener("click", comprarProdutoDestaque);
-  }
+      localStorage.setItem("ultimaPagina", "index.html");
+      window.location.href = `${categoria}.html?produto=${encodeURIComponent(produto.id)}`;
+    }
 
-  updateCartCount();
-  renderCarouselPrincipal();
-</script>
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const btnComprar = document.getElementById("btnComprar");
+    const placaClick = document.getElementById("placaClick");
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        if (!produtosDestaque.length) return;
+        currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
+        renderCarouselPrincipal();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        if (!produtosDestaque.length) return;
+        currentIndex = (currentIndex + 1) % produtosDestaque.length;
+        renderCarouselPrincipal();
+      });
+    }
+
+    if (btnComprar) {
+      btnComprar.addEventListener("click", abrirGaleriaDoDestaque);
+    }
+
+    if (placaClick) {
+      placaClick.addEventListener("click", abrirGaleriaDoDestaque);
+    }
+
+    updateCartCount();
+    renderCarouselPrincipal();
+  </script>
 </body>
 </html>
