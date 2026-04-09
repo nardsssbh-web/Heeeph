@@ -187,39 +187,13 @@
     }
 
     .nome-placa {
-  margin-bottom: 12px;
-  text-align: center;
-  font-size: 17px;
-  font-weight: 800;
-  color: #4a2a00;
-  font-family: "Trebuchet MS", "Arial Black", Arial, sans-serif;
-  line-height: 1.2;
-}
-
-    .preco-placa {
-      margin-top: 12px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #fff;
+      margin-bottom: 12px;
       text-align: center;
-    }
-
-    .btn-comprar-placa {
-      margin-top: 10px;
-      background: #f0c400;
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .btn-comprar-placa:hover {
-      background: #ffd84d;
-      transform: translateY(-2px);
+      font-size: 17px;
+      font-weight: 800;
+      color: #4a2a00;
+      font-family: "Trebuchet MS", "Arial Black", Arial, sans-serif;
+      line-height: 1.2;
     }
 
     .zoomable {
@@ -415,10 +389,6 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 18px;
       }
-
-      .preco-placa {
-        font-size: 16px;
-      }
     }
 
     @media (max-width: 520px) {
@@ -449,15 +419,6 @@
       .placa img {
         max-width: 88%;
         max-height: 88%;
-      }
-
-      .preco-placa {
-        font-size: 15px;
-      }
-
-      .btn-comprar-placa {
-        font-size: 14px;
-        padding: 9px 14px;
       }
     }
 
@@ -516,15 +477,6 @@
         max-height: 84%;
       }
 
-      .preco-placa {
-        font-size: 14px;
-      }
-
-      .btn-comprar-placa {
-        font-size: 13px;
-        padding: 8px 12px;
-      }
-
       .zap img {
         width: 170px;
         max-width: 170px;
@@ -543,9 +495,9 @@
     <div class="menu-area">
       <nav class="menu">
         <a href="index.html">HOME</a>
-        <a href="categorias.html" class="ativo">COLEÇÃO</a>
+        <a href="categorias.html">COLEÇÃO</a>
         <a href="sobre.html">O QUE É HEEEPH?</a>
-        <a href="fotos-reais.html">FOTOS REAIS</a>
+        <a href="fotos-reais.html" class="ativo">FOTOS REAIS</a>
         <a href="contato.html">CONTATOS</a>
       </nav>
 
@@ -586,28 +538,17 @@
 
   function updateCartCount() {
     const countEl = document.getElementById("cartCount");
-    if (countEl && typeof contarItensCarrinho === "function") {
-      countEl.textContent = contarItensCarrinho();
-    }
+    if (!countEl) return;
+
+    const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+    const total = Array.isArray(cart)
+      ? cart.reduce((acc, item) => acc + Number(item.quantity || item.quantidade || 1), 0)
+      : 0;
+
+    countEl.textContent = total;
   }
 
-  function grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
-
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-      </div>
-    </div>
-
-    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
-
-    <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join(""); {
+  function renderFotosReais() {
     const grade = document.getElementById("gradeProdutos");
 
     if (typeof PRODUTOS === "undefined") {
@@ -618,56 +559,21 @@
     const itens = PRODUTOS[categoriaAtual] || [];
 
     if (!itens.length) {
-      grade.innerHTML = '<div class="vazio">Nenhuma placa encontrada nesta categoria.</div>';
+      grade.innerHTML = '<div class="vazio">Nenhuma foto encontrada nesta categoria.</div>';
       return;
     }
 
     grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
-
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
+      <div class="item-placa">
+        <div class="placa">
+          <div class="nome-placa">${item.nome}</div>
+          <div class="img-box">
+            <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
+          </div>
+        </div>
       </div>
-    </div>
-
-    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}>${item.preco}</div>
-
-    <button class="btn-comprar-placa" onclick="adicionarProdutoAoCarrinho(event, '${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join("");
+    `).join("");
   }
-
-  function adicionarProdutoAoCarrinho(event, id) {
-    event.preventDefault();
-
-    if (typeof adicionarAoCarrinho === "function") {
-      adicionarAoCarrinho(id);
-      updateCartCount();
-          }
-  }
-
-  updateCartCount();
-  grade.innerHTML = itens.map(item => `
-  <div class="item-placa">
-    <div class="placa">
-      <div class="nome-placa">${item.nome}</div>
-
-      <div class="img-box">
-        <img src="${item.imagem}" alt="${item.nome}" class="zoomable">
-      </div>
-    </div>
-
-    ${item.preco ? `<div class="preco-placa">${item.preco}</div>` : ""}
-
-    <button class="btn-comprar-placa" onclick="abrirEscolhaTamanho('${item.id}')">
-      Comprar
-    </button>
-  </div>
-`).join("");;
 
   const modalZoom = document.getElementById("modalZoom");
   const imagemZoom = document.getElementById("imagemZoom");
@@ -703,6 +609,9 @@
       document.body.style.overflow = "";
     }
   });
+
+  updateCartCount();
+  renderFotosReais();
 </script>
 
 </body>
