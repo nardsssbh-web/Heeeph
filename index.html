@@ -290,6 +290,26 @@
       background:linear-gradient(90deg, transparent, rgba(240,196,0,.85), transparent);
     }
 
+    .medidas-preco{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  text-align:center;
+  font-family:'Oswald', sans-serif;
+  font-size:34px;
+  font-weight:700;
+  line-height:1;
+  color:#ffd84d;
+  text-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+
+.medidas-preco span{
+  display:block;
+}
+
     .medidas-topo{
       position:relative;
       z-index:2;
@@ -642,6 +662,11 @@
         --topo-altura:56px;
       }
 
+      .medidas-preco{
+  font-size:14px;
+  line-height:0.95;
+}
+
       .topo .wrap{
         flex-direction:row;
         align-items:center;
@@ -962,9 +987,9 @@
           <div class="topo-vitrine">
             <div class="painel-lateral esq">
               <div class="banner-medidas-html banner-maior">
-                <div class="medidas-topo">
-                  <div>20x28cm</div>
-                  <div>28x20cm</div>
+                <div class="medidas-preco">
+                  <span>20x28cm — R$ 24,90</span>
+                  <span>28x20cm — R$ 12,90</span>
                 </div>
 
                 <div class="frase-banner">
@@ -994,10 +1019,10 @@
 
             <div class="painel-lateral dir">
               <div class="banner-medidas-html banner-menor">
-                <div class="medidas-topo">
-                  <div>10x15cm</div>
-                  <div>15x10cm</div>
-                </div>
+                <div class="medidas-preco">
+                  <span>10x15cm — R$ 14,99</span>
+                  <span>15x10cm — R$ 14,99</span>
+            </div>
 
                 <div class="frase-banner">
                   <span class="linha-branca">MONTE A SUA</span>
