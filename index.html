@@ -1084,6 +1084,7 @@
 
   <script>
     <script>
+  <script>
   function getCart() {
     const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
     return Array.isArray(cart) ? cart : [];
@@ -1111,6 +1112,8 @@
     const placaPrincipal = document.getElementById("placaPrincipal");
     const medidaAtual = document.getElementById("medidaAtual");
     const nomeAtual = document.getElementById("nomeAtual");
+
+    if (!placaPrincipal || !medidaAtual || !nomeAtual) return;
 
     if (!produtosDestaque.length) {
       placaPrincipal.src = "";
@@ -1147,20 +1150,34 @@
     window.location.href = `${categoria}.html?produto=${encodeURIComponent(produto.id)}`;
   }
 
-  document.getElementById("prevBtn").addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-    currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
-    renderCarouselPrincipal();
-  });
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const btnComprar = document.getElementById("btnComprar");
+  const placaClick = document.getElementById("placaClick");
 
-  document.getElementById("nextBtn").addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-    currentIndex = (currentIndex + 1) % produtosDestaque.length;
-    renderCarouselPrincipal();
-  });
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      if (!produtosDestaque.length) return;
+      currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
+      renderCarouselPrincipal();
+    });
+  }
 
-  document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
-  document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      if (!produtosDestaque.length) return;
+      currentIndex = (currentIndex + 1) % produtosDestaque.length;
+      renderCarouselPrincipal();
+    });
+  }
+
+  if (btnComprar) {
+    btnComprar.addEventListener("click", comprarProdutoDestaque);
+  }
+
+  if (placaClick) {
+    placaClick.addEventListener("click", comprarProdutoDestaque);
+  }
 
   updateCartCount();
   renderCarouselPrincipal();
