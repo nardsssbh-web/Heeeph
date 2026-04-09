@@ -194,6 +194,12 @@
       color: #fff;
     }
 
+    .item-medida {
+      font-size: 14px;
+      color: #ddd;
+      margin-bottom: 8px;
+    }
+
     .item-preco {
       font-size: 18px;
       font-weight: bold;
@@ -590,7 +596,7 @@
         <a href="categorias.html">COLEÇÃO</a>
         <a href="sobre.html">O QUE É HEEEPH?</a>
         <a href="fotos-reais.html">FOTOS REAIS</a>
-        <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">CONTATOS</a>
+        <a href="contato.html">CONTATOS</a>
       </nav>
 
       <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
@@ -620,16 +626,16 @@
   let subtotalAtual = 0;
 
   function precoParaNumero(preco) {
-  if (!preco) return 0;
-  if (typeof preco === "number") return preco;
-  if (preco === "preço aqui") return 0;
+    if (!preco) return 0;
+    if (typeof preco === "number") return preco;
+    if (preco === "preço aqui") return 0;
 
-  return Number(
-    String(preco)
-      .replace(/[^\d,.-]/g, "")
-      .replace(",", ".")
-  ) || 0;
-}
+    return Number(
+      String(preco)
+        .replace(/[^\d,.-]/g, "")
+        .replace(",", ".")
+    ) || 0;
+  }
 
   function formatarPreco(valor) {
     return valor.toLocaleString("pt-BR", {
@@ -646,23 +652,23 @@
   }
 
   function calcularValorFretePorCEP(cepLimpo, quantidadeTotal) {
-  const inicio = Number(cepLimpo.charAt(0));
+    const inicio = Number(cepLimpo.charAt(0));
 
-  let freteBase = 0;
+    let freteBase = 0;
 
-  if (inicio >= 0 && inicio <= 1) freteBase = 19.90;
-  else if (inicio >= 2 && inicio <= 3) freteBase = 24.90;
-  else if (inicio >= 4 && inicio <= 5) freteBase = 29.90;
-  else if (inicio >= 6 && inicio <= 7) freteBase = 34.90;
-  else freteBase = 39.90;
+    if (inicio >= 0 && inicio <= 1) freteBase = 19.90;
+    else if (inicio >= 2 && inicio <= 3) freteBase = 24.90;
+    else if (inicio >= 4 && inicio <= 5) freteBase = 29.90;
+    else if (inicio >= 6 && inicio <= 7) freteBase = 34.90;
+    else freteBase = 39.90;
 
-  if (quantidadeTotal <= 1) return freteBase;
-  if (quantidadeTotal <= 3) return freteBase + 8.00;
-  if (quantidadeTotal <= 5) return freteBase + 15.00;
-  if (quantidadeTotal <= 8) return freteBase + 25.00;
+    if (quantidadeTotal <= 1) return freteBase;
+    if (quantidadeTotal <= 3) return freteBase + 8.00;
+    if (quantidadeTotal <= 5) return freteBase + 15.00;
+    if (quantidadeTotal <= 8) return freteBase + 25.00;
 
-  return freteBase + 35.00;
-}
+    return freteBase + 35.00;
+  }
 
   function updateCartCount() {
     const countEl = document.getElementById("cartCount");
@@ -689,30 +695,29 @@
   }
 
   function calcularFrete() {
-  const input = document.getElementById("cepFrete");
-  const mensagem = document.getElementById("mensagemFrete");
+    const input = document.getElementById("cepFrete");
+    const mensagem = document.getElementById("mensagemFrete");
 
-  if (!input || !mensagem) return;
+    if (!input || !mensagem) return;
 
-  const cepLimpo = input.value.replace(/\D/g, "");
+    const cepLimpo = input.value.replace(/\D/g, "");
     localStorage.setItem("cepFreteSalvo", input.value);
 
-  if (cepLimpo.length !== 8) {
-    freteAtual = 0;
-    mensagem.textContent = "Digite um CEP válido com 8 números.";
+    if (cepLimpo.length !== 8) {
+      freteAtual = 0;
+      mensagem.textContent = "Digite um CEP válido com 8 números.";
+      atualizarTotalComFrete();
+      return;
+    }
+
+    const carrinho = obterCarrinho();
+    const quantidadeTotal = carrinho.reduce((total, item) => total + (item.quantidade || 1), 0);
+
+    freteAtual = calcularValorFretePorCEP(cepLimpo, quantidadeTotal);
+    mensagem.textContent = `Frete estimado para ${quantidadeTotal} placa(s), CEP ${input.value}: ${formatarPreco(freteAtual)}.`;
     atualizarTotalComFrete();
-    return;
   }
 
-  const carrinho = obterCarrinho();
-  const quantidadeTotal = carrinho.reduce((total, item) => total + (item.quantidade || 1), 0);
-
-  freteAtual = calcularValorFretePorCEP(cepLimpo, quantidadeTotal);
-  mensagem.textContent = `Frete estimado para ${quantidadeTotal} placa(s), CEP ${input.value}: ${formatarPreco(freteAtual)}.`;
-  atualizarTotalComFrete();
-}
-
-    
   document.addEventListener("input", function (event) {
     if (event.target && event.target.id === "cepFrete") {
       event.target.value = formatarCEP(event.target.value);
@@ -765,9 +770,9 @@
           </div>
 
           <div class="item-info">
-           <h2>${item.nome}</h2>
-           <div class="item-medida">${item.medida || ""}</div>
-           <div class="item-preco">R$ ${Number(item.preco || 0).toFixed(2).replace(".", ",")}</div>
+            <h2>${item.nome}</h2>
+            <div class="item-medida">${item.medida || ""}</div>
+            <div class="item-preco">${precoUnitario > 0 ? formatarPreco(precoUnitario) : (item.preco || "preço aqui")}</div>
 
             <div class="quantidade-area">
               <button class="quantidade-btn" onclick="diminuirQuantidade('${item.id}')">-</button>
@@ -779,7 +784,7 @@
           </div>
 
           <div class="subtotal-item">
-            ${precoUnitario > 0 ? formatarPreco(subtotal) : item.preco}
+            ${precoUnitario > 0 ? formatarPreco(subtotal) : (item.preco || "preço aqui")}
           </div>
         </div>
       `;
@@ -789,7 +794,7 @@
 
     const mensagemWhats = encodeURIComponent(
       "Olá! Tenho interesse nestas placas:\n\n" +
-      carrinho.map(item => `- ${item.nome} | Qtd: ${item.quantidade || 1} | Valor: ${item.preco}`).join("\n") +
+      carrinho.map(item => `- ${item.nome} | ${item.medida || ""} | Qtd: ${item.quantidade || 1} | Valor: ${item.preco}`).join("\n") +
       "\n\nTotal de itens: " + totalItens +
       (totalGeral > 0 ? "\nSubtotal: " + formatarPreco(totalGeral) : "") +
       (freteAtual > 0 ? "\nFrete estimado: " + formatarPreco(freteAtual) : "") +
@@ -872,26 +877,27 @@
   }
 
   function aumentarQuantidade(id) {
-  alterarQuantidade(id, 1);
-  renderCarrinho();
-  reaplicarFreteSeJaHouverCEP();
-}
+    alterarQuantidade(id, 1);
+    renderCarrinho();
+    reaplicarFreteSeJaHouverCEP();
+  }
 
   function diminuirQuantidade(id) {
-  alterarQuantidade(id, -1);
-  renderCarrinho();
-  reaplicarFreteSeJaHouverCEP();
-}
+    alterarQuantidade(id, -1);
+    renderCarrinho();
+    reaplicarFreteSeJaHouverCEP();
+  }
 
   function excluirItem(id) {
-  removerDoCarrinho(id);
-  renderCarrinho();
-  reaplicarFreteSeJaHouverCEP();
-}
+    removerDoCarrinho(id);
+    renderCarrinho();
+    reaplicarFreteSeJaHouverCEP();
+  }
 
   function limparCarrinho() {
     freteAtual = 0;
     localStorage.removeItem("heeeph_cart");
+    localStorage.removeItem("cepFreteSalvo");
     renderCarrinho();
   }
 
@@ -904,14 +910,15 @@
   }
 
   function reaplicarFreteSeJaHouverCEP() {
-  const cepSalvo = localStorage.getItem("cepFreteSalvo") || "";
-  const input = document.getElementById("cepFrete");
+    const cepSalvo = localStorage.getItem("cepFreteSalvo") || "";
+    const input = document.getElementById("cepFrete");
 
-  if (input && cepSalvo) {
-    input.value = cepSalvo;
-    calcularFrete();
+    if (input && cepSalvo) {
+      input.value = cepSalvo;
+      calcularFrete();
+    }
   }
-}
+
   updateCartCount();
   renderCarrinho();
   reaplicarFreteSeJaHouverCEP();
