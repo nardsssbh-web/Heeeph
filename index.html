@@ -1083,91 +1083,87 @@
   <script src="produtos.js"></script>
 
   <script>
-    function getCart() {
-      const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
-      return Array.isArray(cart) ? cart : [];
+    <script>
+  function getCart() {
+    const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+    return Array.isArray(cart) ? cart : [];
+  }
+
+  function updateCartCount() {
+    const cart = getCart();
+    const total = cart.reduce((acc, item) => {
+      const qtd = Number(item.quantity || item.quantidade || 1);
+      return acc + (isNaN(qtd) ? 1 : qtd);
+    }, 0);
+
+    const countEl = document.getElementById("cartCount");
+    if (countEl) countEl.textContent = total;
+  }
+
+  const produtosDestaque =
+    typeof getProdutosDestaqueHome === "function"
+      ? getProdutosDestaqueHome()
+      : [];
+
+  let currentIndex = 0;
+
+  function renderCarouselPrincipal() {
+    const placaPrincipal = document.getElementById("placaPrincipal");
+    const medidaAtual = document.getElementById("medidaAtual");
+    const nomeAtual = document.getElementById("nomeAtual");
+
+    if (!produtosDestaque.length) {
+      placaPrincipal.src = "";
+      placaPrincipal.alt = "Sem destaque";
+      medidaAtual.textContent = "";
+      nomeAtual.textContent = "Nenhuma placa encontrada";
+      return;
     }
 
-    function updateCartCount() {
-      const cart = getCart();
-      const total = cart.reduce((acc, item) => {
-        const qtd = Number(item.quantity || item.quantidade || 1);
-        return acc + (isNaN(qtd) ? 1 : qtd);
-      }, 0);
+    const produto = produtosDestaque[currentIndex];
 
-      const countEl = document.getElementById("cartCount");
-      if (countEl) countEl.textContent = total;
+    placaPrincipal.src = produto.imagem || "";
+    placaPrincipal.alt = produto.nome || "Placa em destaque";
+    medidaAtual.textContent = produto.medida || "";
+    nomeAtual.textContent = produto.nome || "";
+  }
+
+  function comprarProdutoDestaque() {
+    if (!produtosDestaque.length) return;
+
+    const produto = produtosDestaque[currentIndex];
+    if (!produto) return;
+
+    const categoria =
+      produto.categoria ||
+      (produto.id ? String(produto.id).split("-")[0] : "");
+
+    if (!categoria || !produto.id) {
+      alert("Produto de destaque sem categoria ou id configurado.");
+      return;
     }
 
-    function formatarPreco(valor) {
-      const numero = Number(valor || 0);
-      return "R$ " + numero.toFixed(2).replace(".", ",");
-    }
+    localStorage.setItem("ultimaPagina", "index.html");
+    window.location.href = `${categoria}.html?produto=${encodeURIComponent(produto.id)}`;
+  }
 
-    const produtosDestaque =
-      typeof getProdutosDestaqueHome === "function"
-        ? getProdutosDestaqueHome()
-        : [];
-
-    let currentIndex = 0;
-
-    function renderCarouselPrincipal() {
-      const placaPrincipal = document.getElementById("placaPrincipal");
-      const medidaAtual = document.getElementById("medidaAtual");
-      const nomeAtual = document.getElementById("nomeAtual");
-      const precoAtual = document.getElementById("precoAtual");
-
-      if (!produtosDestaque.length) {
-        placaPrincipal.src = "";
-        placaPrincipal.alt = "Sem destaque";
-        medidaAtual.textContent = "";
-        nomeAtual.textContent = "Nenhuma placa encontrada";
-        precoAtual.textContent = "";
-        return;
-      }
-
-      const produto = produtosDestaque[currentIndex];
-
-      placaPrincipal.src = produto.imagem || "";
-      placaPrincipal.alt = produto.nome || "Placa em destaque";
-      medidaAtual.textContent = produto.medida || "20x28cm";
-      nomeAtual.textContent = produto.nome || "";
-      precoAtual.textContent = produto.preco ? produto.preco : formatarPreco(29.90);
-    }
-
-    function comprarProdutoDestaque() {
-      if (!produtosDestaque.length) return;
-
-      const produto = produtosDestaque[currentIndex];
-
-      if (typeof adicionarAoCarrinho !== "function") {
-        alert("A função do carrinho não foi carregada. Confira o produtos.js.");
-        return;
-      }
-
-      localStorage.setItem("ultimaPagina", "index.html");
-      adicionarAoCarrinho(produto.id);
-      updateCartCount();
-      window.location.href = "carrinho.html";
-    }
-
-    document.getElementById("prevBtn").addEventListener("click", () => {
-      if (!produtosDestaque.length) return;
-      currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
-      renderCarouselPrincipal();
-    });
-
-    document.getElementById("nextBtn").addEventListener("click", () => {
-      if (!produtosDestaque.length) return;
-      currentIndex = (currentIndex + 1) % produtosDestaque.length;
-      renderCarouselPrincipal();
-    });
-
-    document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
-    document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
-
-    updateCartCount();
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    if (!produtosDestaque.length) return;
+    currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
     renderCarouselPrincipal();
-  </script>
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (!produtosDestaque.length) return;
+    currentIndex = (currentIndex + 1) % produtosDestaque.length;
+    renderCarouselPrincipal();
+  });
+
+  document.getElementById("btnComprar").addEventListener("click", comprarProdutoDestaque);
+  document.getElementById("placaClick").addEventListener("click", comprarProdutoDestaque);
+
+  updateCartCount();
+  renderCarouselPrincipal();
+</script>
 </body>
 </html>
