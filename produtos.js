@@ -84,7 +84,8 @@ const PRODUTOS = {
     { id: "bebidas-drink-tequila", nome: "Coleção - Drink Tequila", imagem: "placas/bebida/drink-tequila.png", orientacao: "vertical", preco: "" },
     { id: "bebidas-drink-whiskey", nome: "Coleção - Drink Whiskey", imagem: "placas/bebida/drink-whiskey.png", orientacao: "vertical", preco: "" },
     { id: "bebidas-caipirinha-lovers", nome: "Coleção - Caipirinha Lovers", imagem: "placas/bebida/caipirinha-lovers.png", orientacao: "vertical", preco: "" },
-    { id: "bebidas-in-vino", nome: "Coleção - In Vino", imagem: "placas/bebida/in-vino.png", orientacao: "vertical", preco: "" }
+    { id: "bebidas-in-vino", nome: "Coleção - In Vino", imagem: "placas/bebida/in-vino.png", orientacao: "vertical", preco: "" },
+    { id: "bebidas-rei-carta", nome: "King Beer", imagem: "placas/bebida/king-beer.png", orientacao: "vertical", preco: "" },
   ],
 
   "fotos-reais": [
