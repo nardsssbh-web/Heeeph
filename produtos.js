@@ -94,6 +94,9 @@ const PRODUTOS = {
     { id: "fotos-reais-foto4", nome: "Indicação do Bar", imagem: "placas/reais/bar.png", orientacao: "horizontal", preco: "" },
     { id: "fotos-reais-foto5", nome: "Área de Fumante", imagem: "placas/reais/fumante.png", orientacao: "horizontal", preco: "" },
     { id: "fotos-reais-foto6", nome: "Aceita PIX", imagem: "placas/reais/pix.png", orientacao: "horizontal", preco: "" },
+    { id: "fotos-reais-foto2", nome: "Bem Vindos", imagem: "placas/reais/bem-vindos.png", orientacao: "horizontal", preco: "" },
+    { id: "fotos-reais-foto2", nome: "W.C.Masculino", imagem: "placas/reais/masculino.png", orientacao: "vertical", preco: "" },
+    { id: "fotos-reais-foto2", nome: "W.C.Feminino", imagem: "placas/reais/feminino.png", orientacao: "vertical", preco: "" },
 
   ],
 
