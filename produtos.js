@@ -110,7 +110,8 @@ const PRODUTOS = {
     { id: "games-pac", nome: "Pac-Man", imagem: "placas/games/pac.png", orientacao: "vertical", preco: "" },
     { id: "games-retro", nome: "Retrô Gamer", imagem: "placas/games/retro.png", orientacao: "vertical", preco: "" },
     { id: "games-roblox", nome: "Roblox", imagem: "placas/games/roblox.png", orientacao: "vertical", preco: "" },
-    { id: "games-star-fox", nome: "Star Fox", imagem: "placas/games/star-fox.png", orientacao: "vertical", preco: "" }
+    { id: "games-star-fox", nome: "Star Fox", imagem: "placas/games/star-fox.png", orientacao: "vertical", preco: "" },
+    { id: "games-retro", nome: "Arcade", imagem: "placas/games/arcade-retro.png", orientacao: "vertical", preco: "" },
   ],
 
   garage: [
