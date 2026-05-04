@@ -91,9 +91,10 @@ const PRODUTOS = {
     { id: "fotos-reais-foto1", nome: "Placas 10x15 Bandas", imagem: "placas/reais/bandas-1.png", orientacao: "vertical", preco: "" },
     { id: "fotos-reais-foto2", nome: "Placas 10x15cm", imagem: "placas/reais/bandas-2.png", orientacao: "vertical", preco: "" },
     { id: "fotos-reais-foto3", nome: "Mural com 35 placas 10x15cm", imagem: "placas/reais/bandas-3.png", orientacao: "vertical", preco: "" },
-    { id: "fotos-reais-foto4", nome: "Em Breve", imagem: "placas/reais/foto4.png", orientacao: "vertical", preco: "" },
-    { id: "fotos-reais-foto5", nome: "Em Breve", imagem: "placas/reais/foto5.png", orientacao: "vertical", preco: "" },
-    { id: "fotos-reais-foto6", nome: "Em Breve", imagem: "placas/reais/foto6.png", orientacao: "vertical", preco: "" }
+    { id: "fotos-reais-foto4", nome: "bar", imagem: "placas/reais/bar.png", orientacao: "horizontal", preco: "" },
+    { id: "fotos-reais-foto5", nome: "fumante", imagem: "placas/reais/fumante.png", orientacao: "horizontal", preco: "" },
+    { id: "fotos-reais-foto6", nome: "Em Breve", imagem: "placas/reais/pix.png", orientacao: "horizontal", preco: "" },
+
   ],
 
   games: [
