@@ -159,7 +159,7 @@ const PRODUTOS = {
     { id: "infantil-quartinho-abencoado-m", nome: "Para o quartinho dela", imagem: "placas/infantil/quartinho-abençoado-m.png", orientacao: "vertical", preco: "" },
     { id: "infantil-quartinho-abencoado", nome: "Para o quartinho dela", imagem: "placas/infantil/quartinho-abençoado.png", orientacao: "vertical", preco: "" },
     { id: "infantil-sonhe-alto", nome: "Sonhe Alto Pequeno", imagem: "placas/infantil/sonhe-alto.png", orientacao: "vertical", preco: "" },
-    { id: "infantil-sonhe", nome: "Sonhe Alto", imagem: "placas/infantil/sonhe.png", orientacao: "vertical", preco: "" }
+    { id: "infantil-sonhe", nome: "Sonhe Alto", imagem: "placas/infantil/sonhe.png", orientacao: "horizontal", preco: "" }
   ],
 
   motos: [
