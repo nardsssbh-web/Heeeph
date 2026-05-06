@@ -180,7 +180,8 @@ const PRODUTOS = {
     { id: "motos-ride-die", nome: "Ride or Die", imagem: "placas/motos/ride-die.png", orientacao: "vertical", preco: "" },
     { id: "motos-rock-ride1", nome: "Rock Ride 1", imagem: "placas/motos/rock-ride1.png", orientacao: "vertical", preco: "" },
     { id: "motos-rock-ride2", nome: "Rock Ride 2", imagem: "placas/motos/rock-ride2.png", orientacao: "vertical", preco: "" },
-    { id: "motos-velho", nome: "Velho Demais", imagem: "placas/motos/velho.png", orientacao: "vertical", preco: "" }
+    { id: "motos-velho", nome: "Velho Demais", imagem: "placas/motos/velho.png", orientacao: "vertical", preco: "" },
+    { id: "motos-wheeling", nome: "No Grau", imagem: "placas/motos/wheeling.png", orientacao: "horizontal", preco: "" },
   ],
 
   musica: [
