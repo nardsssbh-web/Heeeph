@@ -108,6 +108,7 @@ const PRODUTOS = {
     { id: "games-gta-5", nome: "GTA 5", imagem: "placas/games/gta-5.png", orientacao: "vertical", preco: "" },
     { id: "games-gta-sa", nome: "GTA San Andreas", imagem: "placas/games/gta-sa.png", orientacao: "vertical", preco: "" },
     { id: "games-mortal", nome: "Mortal Kombat", imagem: "placas/games/mortal.png", orientacao: "vertical", preco: "" },
+    { id: "games-dokken", nome: "Donken Kong", imagem: "placas/games/dokken.png", orientacao: "vertical", preco: "" },
     { id: "games-pac", nome: "Pac-Man", imagem: "placas/games/pac.png", orientacao: "vertical", preco: "" },
     { id: "games-retro", nome: "Retrô Gamer", imagem: "placas/games/retro.png", orientacao: "vertical", preco: "" },
     { id: "games-roblox", nome: "Roblox", imagem: "placas/games/roblox.png", orientacao: "vertical", preco: "" },
