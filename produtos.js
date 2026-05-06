@@ -122,13 +122,13 @@ const PRODUTOS = {
   ],
 
   garage: [
+    { id: "garage-garage7", nome: "Black Opala", imagem: "placas/garage/opala.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage1", nome: "Fuscão !!!", imagem: "placas/garage/fusca.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage2", nome: "Opala", imagem: "placas/garage/pala-placa.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage3", nome: "Mãos à Obra", imagem: "placas/garage/vira-projeto.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage4", nome: "Respeito e Atitude, só pra quem conheçe !", imagem: "placas/garage/mach1-v8.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage5", nome: "Mustang Mach 1", imagem: "placas/garage/nascido-para-voar.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage6", nome: "SS Zangado !!!", imagem: "placas/garage/opala-ss.png", orientacao: "vertical", preco: "" },
-    { id: "garage-garage7", nome: "Black Opala", imagem: "placas/garage/opala.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage8", nome: "Em Breve", imagem: "placas/garage/garage8.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage9", nome: "Em Breve", imagem: "placas/garage/garage9.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage10", nome: "Em Breve", imagem: "placas/garage/garage10.png", orientacao: "vertical", preco: "" },
