@@ -114,6 +114,11 @@ const PRODUTOS = {
     { id: "games-roblox", nome: "Roblox", imagem: "placas/games/roblox.png", orientacao: "vertical", preco: "" },
     { id: "games-star-fox", nome: "Star Fox", imagem: "placas/games/star-fox.png", orientacao: "vertical", preco: "" },
     { id: "games-retro", nome: "Arcade", imagem: "placas/games/arcade-retro.png", orientacao: "vertical", preco: "" },
+    { id: "games-retro", nome: "Em Breve", imagem: "placas/games/games.png", orientacao: "vertical", preco: "" },
+    { id: "games-retro", nome: "Em Breve", imagem: "placas/games/games.png", orientacao: "vertical", preco: "" },
+    { id: "games-retro", nome: "Em Breve", imagem: "placas/games/games.png", orientacao: "vertical", preco: "" },
+    { id: "games-retro", nome: "Em Breve", imagem: "placas/games/games.png", orientacao: "vertical", preco: "" },
+    { id: "games-retro", nome: "Em Breve", imagem: "placas/games/games.png", orientacao: "vertical", preco: "" },
   ],
 
   garage: [
@@ -123,7 +128,7 @@ const PRODUTOS = {
     { id: "garage-garage4", nome: "Respeito e Atitude, só pra quem conheçe !", imagem: "placas/garage/mach1-v8.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage5", nome: "Mustang Mach 1", imagem: "placas/garage/nascido-para-voar.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage6", nome: "SS Zangado !!!", imagem: "placas/garage/opala-ss.png", orientacao: "vertical", preco: "" },
-    { id: "garage-garage7", nome: "Em Breve", imagem: "placas/garage/garage7.png", orientacao: "vertical", preco: "" },
+    { id: "garage-garage7", nome: "Black Opala", imagem: "placas/garage/opala.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage8", nome: "Em Breve", imagem: "placas/garage/garage8.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage9", nome: "Em Breve", imagem: "placas/garage/garage9.png", orientacao: "vertical", preco: "" },
     { id: "garage-garage10", nome: "Em Breve", imagem: "placas/garage/garage10.png", orientacao: "vertical", preco: "" },
