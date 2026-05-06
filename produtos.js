@@ -171,16 +171,16 @@ const PRODUTOS = {
   ],
 
   motos: [
-    { id: "motos-alma-livre", nome: "Alma Livre", imagem: "placas/motos/alma-livre.png", orientacao: "vertical", preco: "" },
-    { id: "motos-born", nome: "Born", imagem: "placas/motos/born.png", orientacao: "vertical", preco: "" },
-    { id: "motos-deserto", nome: "Deserto", imagem: "placas/motos/deserto.png", orientacao: "vertical", preco: "" },
-    { id: "motos-ferrugem", nome: "Ferrugem", imagem: "placas/motos/ferrugem.png", orientacao: "vertical", preco: "" },
     { id: "motos-iron-wings", nome: "Iron Wings", imagem: "placas/motos/iron-wings.png", orientacao: "vertical", preco: "" },
-    { id: "motos-liberdade", nome: "Liberdade", imagem: "placas/motos/liberdade.png", orientacao: "vertical", preco: "" },
+    { id: "motos-born", nome: "Born", imagem: "placas/motos/born.png", orientacao: "vertical", preco: "" },
     { id: "motos-ride-die", nome: "Ride or Die", imagem: "placas/motos/ride-die.png", orientacao: "vertical", preco: "" },
     { id: "motos-rock-ride1", nome: "Rock Ride 1", imagem: "placas/motos/rock-ride1.png", orientacao: "vertical", preco: "" },
     { id: "motos-rock-ride2", nome: "Rock Ride 2", imagem: "placas/motos/rock-ride2.png", orientacao: "vertical", preco: "" },
+    { id: "motos-deserto", nome: "Deserto", imagem: "placas/motos/deserto.png", orientacao: "vertical", preco: "" },
+    { id: "motos-alma-livre", nome: "Alma Livre", imagem: "placas/motos/alma-livre.png", orientacao: "vertical", preco: "" },
+    { id: "motos-ferrugem", nome: "Ferrugem", imagem: "placas/motos/ferrugem.png", orientacao: "vertical", preco: "" },
     { id: "motos-velho", nome: "Velho Demais", imagem: "placas/motos/velho.png", orientacao: "vertical", preco: "" },
+    { id: "motos-liberdade", nome: "Liberdade", imagem: "placas/motos/liberdade.png", orientacao: "vertical", preco: "" },
     { id: "motos-wheeling", nome: "No Grau", imagem: "placas/motos/wheeling.png", orientacao: "horizontal", preco: "" },
   ],
 
