@@ -689,7 +689,6 @@
       }
     }
 
-    /* ALTERAÇÃO SOMENTE PARA TELEFONE */
     @media (max-width: 780px){
       :root{
         --topo-altura:56px;
@@ -754,7 +753,6 @@
       }
 
       .banner-principal-wrap{
-        width:96%;
         border-radius:18px;
         padding:5px;
       }
@@ -774,113 +772,93 @@
       }
 
       .topo-vitrine{
-        grid-template-columns:1fr;
-        gap:16px;
+        grid-template-columns:125px 150px 125px;
+        gap:10px;
         justify-content:center;
-        align-items:center;
-      }
-
-      .centro-vitrine{
-        order:1;
-        min-width:0;
-        width:100%;
-        gap:8px;
-      }
-
-      .painel-lateral.esq{
-        order:2;
-        width:100%;
-      }
-
-      .painel-lateral.dir{
-        order:3;
-        width:100%;
+        align-items:end;
       }
 
       .painel-lateral{
         min-height:auto;
-        width:100%;
       }
 
       .banner-medidas-html{
-        width:100%;
-        max-width:390px;
-        min-height:auto;
-        height:auto;
-        margin:0 auto;
-        border-radius:18px;
-        padding:18px 14px 16px;
+        min-height:170px;
+        height:170px;
+        border-radius:14px;
+        padding:8px 6px 8px;
       }
 
       .banner-medidas-html::before{
-        inset:8px;
-        border-radius:13px;
+        inset:5px;
+        border-radius:10px;
       }
 
       .banner-medidas-html::after{
-        left:12px;
-        right:12px;
-        top:86px;
+        left:6px;
+        right:6px;
+        top:45px;
       }
 
       .medidas-topo{
-        font-size:30px;
-        line-height:1;
-      }
-
-      .medidas-topo div{
-        white-space:nowrap;
+        font-size:14px;
+        line-height:0.95;
       }
 
       .frase-banner{
-        margin-top:24px;
-        gap:2px;
+        margin-top:7px;
+        gap:1px;
       }
 
       .linha-branca{
-        font-size:24px;
-        line-height:1;
+        font-size:10px;
+        line-height:0.95;
       }
 
       .linha-amarela{
-        font-size:26px;
-        line-height:1;
+        font-size:11px;
+        line-height:0.95;
       }
 
       .lista-banner{
-        gap:9px;
-        margin-top:16px;
+        gap:4px;
+        margin-top:7px;
       }
 
       .lista-banner li{
-        font-size:16px;
-        gap:8px;
-        line-height:1.1;
+        font-size:8px;
+        gap:4px;
+        line-height:1;
       }
 
       .lista-banner li::before{
-        font-size:12px;
+        font-size:8px;
+      }
+
+      .centro-vitrine{
+        min-width:auto;
+        gap:6px;
       }
 
       .titulo-centro .l1{
-        font-size:16px;
+        font-size:15px;
       }
 
       .titulo-centro .l2{
-        font-size:17px;
+        font-size:16px;
       }
 
       .placa-central-wrap{
-        width:190px;
-        height:260px;
+        width:150px;
+        height:205px;
       }
 
       .faixa-destaque{
-        margin-top:20px;
+        margin-top:16px;
       }
 
       .faixa-destaque h2{
-        font-size:30px;
+        font-size:22px;
       }
 
       .vitrine-rodape{
@@ -988,38 +966,12 @@
         font-size:8px;
       }
 
-      .banner-medidas-html{
-        max-width:350px;
-        padding:16px 10px 14px;
-      }
-
-      .medidas-topo{
-        font-size:25px;
-      }
-
-      .linha-branca{
-        font-size:21px;
-      }
-
-      .linha-amarela{
-        font-size:23px;
-      }
-
-      .lista-banner li{
-        font-size:15px;
-      }
-
       .titulo-centro .l1{
         font-size:13px;
       }
 
       .titulo-centro .l2{
         font-size:14px;
-      }
-
-      .placa-central-wrap{
-        width:170px;
-        height:235px;
       }
 
       .info-placa{
@@ -1037,7 +989,6 @@
     }
   </style>
 </head>
-
 <body>
 
   <header class="topo">
