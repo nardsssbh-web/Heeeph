@@ -3,1244 +3,637 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HEEEPH - Placas Decorativas e Personalizadas !!</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <title>HEEEPH - Placas Decorativas</title>
 
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    :root{
-      --gold:#f0c400;
-      --gold2:#ffd84d;
-      --text:#fff;
-      --topo-altura:72px;
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #1b120d;
+      color: #fff;
+      overflow-x: hidden;
     }
 
-    html{
-      scroll-behavior:smooth;
-      overflow-x:hidden;
+    a {
+      text-decoration: none;
+      color: inherit;
     }
 
-    body{
-      font-family:Arial, Helvetica, sans-serif;
-      color:var(--text);
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* TOPO */
+    header {
+      width: 100%;
+      background: #120c08;
+      border-bottom: 2px solid #c99a2e;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 34px;
+      font-weight: 900;
+      color: #ffcf32;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    nav {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    nav a:hover {
+      color: #ffcf32;
+    }
+
+    .cart-link {
+      background: #ffcf32;
+      color: #1b120d;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 900;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 420px;
       background:
-        linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.22)),
-        url("banner/fundo.png") center top / cover no-repeat fixed;
-      background-color:#000;
-      overflow-x:hidden;
-      width:100%;
-      max-width:100%;
-      padding-top:var(--topo-altura);
+        linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.7)),
+        url("banner/heeeph-street.png");
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
     }
 
-    a{
-      text-decoration:none;
-      color:inherit;
+    .hero-content {
+      max-width: 850px;
     }
 
-    img{
-      display:block;
-      max-width:100%;
+    .hero h1 {
+      font-size: clamp(38px, 7vw, 78px);
+      color: #ffcf32;
+      text-shadow: 3px 3px 0 #000;
+      margin-bottom: 18px;
+      line-height: 0.95;
     }
 
-    button{
-      font-family:inherit;
+    .hero p {
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 700;
+      margin-bottom: 28px;
+      text-shadow: 2px 2px 0 #000;
     }
 
-    .container{
-      width:min(94%, 1500px);
-      margin:0 auto;
+    .btn {
+      display: inline-block;
+      background: #ffcf32;
+      color: #1b120d;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      border: 2px solid #000;
+      box-shadow: 4px 4px 0 #000;
+      transition: 0.2s;
     }
 
-    .topo{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:1000;
-      background:rgba(0,0,0,.96);
-      border-bottom:1px solid rgba(255,255,255,.05);
-      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 0 #000;
     }
 
-    .topo::after{
-      content:"";
-      display:block;
-      height:2px;
-      background:linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(240,196,0,.95) 10%,
-        rgba(240,196,0,.12) 50%,
-        rgba(240,196,0,.95) 90%,
-        transparent 100%
-      );
+    /* SEÇÃO DESTAQUE */
+    .destaque {
+      background: #20130d;
+      padding: 50px 4% 60px;
+      background-image:
+        radial-gradient(circle at top, rgba(255,207,50,0.08), transparent 35%),
+        linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.2));
     }
 
-    .topo .wrap{
-      max-width:1500px;
-      margin:0 auto;
-      padding:10px 18px 9px;
-      min-height:70px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
+    .destaque-layout {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 35px;
     }
 
-    .logo{
-      flex:0 0 auto;
-    }
-
-    .logo a{
-      font-size:26px;
-      font-weight:900;
-      letter-spacing:1px;
-      color:#fff;
-      white-space:nowrap;
-    }
-
-    .menu-area{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin-left:auto;
-      min-width:0;
-    }
-
-    .menu{
-      display:flex;
-      align-items:center;
-      gap:18px;
-      flex-wrap:wrap;
-      justify-content:center;
-      min-width:0;
-    }
-
-    .menu a{
-      color:#fff;
-      font-size:14px;
-      font-weight:800;
-      text-transform:uppercase;
-      white-space:nowrap;
-      transition:.2s ease;
-    }
-
-    .menu a:hover,
-    .menu a.ativo{
-      color:var(--gold);
-    }
-
-    .cart-link{
-      position:relative;
-      width:40px;
-      height:40px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
-    }
-
-    .cart-link img{
-      width:32px;
-      height:32px;
-      object-fit:contain;
-    }
-
-    .cart-count{
-      position:absolute;
-      top:-4px;
-      right:-4px;
-      min-width:20px;
-      height:20px;
-      padding:0 5px;
-      border-radius:999px;
-      background:var(--gold);
-      color:#000;
-      font-size:11px;
-      font-weight:900;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .hero{
-      padding-top:10px;
-      padding-bottom:26px;
-    }
-
-    .banner-principal-wrap{
-      position:relative;
-      width:min(92%, 1250px);
-      margin:0 auto 8px;
-      border-radius:22px;
-      padding:6px;
-      background:linear-gradient(145deg, rgba(110,69,22,.95), rgba(10,8,7,.96));
-      box-shadow:0 14px 30px rgba(0,0,0,.34);
-    }
-
-    .banner-principal-wrap::before{
-      content:"";
-      position:absolute;
-      inset:3px;
-      border-radius:18px;
-      border:2px solid rgba(130,82,30,.85);
-      box-shadow:inset 0 0 0 1px rgba(255,213,89,.10);
-      pointer-events:none;
-    }
-
-    .banner-principal{
-      overflow:hidden;
-      border-radius:16px;
-      background:#111;
-    }
-
-    .banner-principal img{
-      width:100%;
-      height:auto;
-    }
-
-    .area-unica{
-      width:min(92%, 1180px);
-      margin:0 auto;
-      padding:10px 18px 20px;
-      position:relative;
-      background:transparent;
-    }
-
-    .topo-vitrine{
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      gap:26px;
-      align-items:end;
-      position:relative;
-    }
-
-    .topo-vitrine::before{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      top:0;
-      height:2px;
-      background:linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(205,143,41,.85) 8%,
-        rgba(205,143,41,.22) 24%,
-        rgba(205,143,41,.10) 50%,
-        rgba(205,143,41,.22) 76%,
-        rgba(205,143,41,.85) 92%,
-        transparent 100%
-      );
-    }
-
-    .painel-lateral{
-      position:relative;
-      border-radius:18px;
-      min-height:320px;
-      display:flex;
-      align-items:stretch;
-      justify-content:center;
-    }
-
-    .banner-medidas-html{
-      width:100%;
-      min-height:320px;
-      border-radius:18px;
-      padding:18px 16px 16px;
+    .preco-card {
+      width: 31%;
+      min-width: 280px;
       background:
-        linear-gradient(rgba(0,0,0,.18), rgba(0,0,0,.18)),
-        url("banner/fundo.png") center center / cover no-repeat;
-      box-shadow:
-        inset 0 0 0 2px rgba(146,88,24,.55),
-        0 10px 20px rgba(0,0,0,.20);
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      text-align:center;
-      position:relative;
-      overflow:hidden;
+        linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
+        radial-gradient(circle, #3a2416 0%, #1a100b 70%);
+      border: 4px solid #7a5315;
+      border-radius: 28px;
+      padding: 24px 22px;
+      box-shadow: 0 0 0 5px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .banner-medidas-html::before{
-      content:"";
-      position:absolute;
-      inset:10px;
-      border:1px solid rgba(240,196,0,.22);
-      border-radius:14px;
-      pointer-events:none;
+    .preco-card h2 {
+      color: #ffcf32;
+      font-size: 38px;
+      line-height: 0.95;
+      text-align: center;
+      font-weight: 900;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 #000;
     }
 
-    .banner-medidas-html::after{
-      content:"";
-      position:absolute;
-      left:14px;
-      right:14px;
-      top:92px;
-      height:2px;
-      background:linear-gradient(90deg, transparent, rgba(240,196,0,.85), transparent);
+    .linha-preco {
+      display: block;
+      color: #ffcf32;
+      font-size: 36px;
+      line-height: 1;
+      font-weight: 900;
+      text-align: center;
+      white-space: nowrap;
+      text-shadow: 2px 2px 0 #000;
+      margin: 6px 0;
     }
 
-    .medidas-topo{
-      position:relative;
-      z-index:2;
-      font-family:'Oswald', sans-serif;
-      font-size:34px;
-      font-weight:700;
-      line-height:1;
-      color:#ffd84d;
-      text-shadow:0 2px 8px rgba(0,0,0,.35);
+    .chamada {
+      text-align: center;
+      font-size: 25px;
+      line-height: 1.05;
+      font-weight: 900;
+      margin: 26px 0 22px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 2px 2px 0 #000;
     }
 
-    .frase-banner{
-      position:relative;
-      z-index:2;
-      margin-top:20px;
-      display:flex;
-      flex-direction:column;
-      gap:4px;
+    .chamada span {
+      color: #ffcf32;
+      display: block;
     }
 
-    .linha-branca{
-      font-family:'Oswald', sans-serif;
-      font-size:28px;
-      font-weight:800;
-      line-height:.95;
-      text-transform:uppercase;
-      color:#fff;
-      text-shadow:
-        0 1px 0 rgba(0,0,0,.45),
-        0 2px 6px rgba(0,0,0,.35);
+    .beneficios {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: auto;
     }
 
-    .linha-amarela{
-      font-family:'Oswald', sans-serif;
-      font-size:30px;
-      font-weight:900;
-      line-height:.95;
-      text-transform:uppercase;
-      color:var(--gold);
-      text-shadow:
-        0 1px 0 rgba(0,0,0,.45),
-        0 2px 6px rgba(0,0,0,.35);
+    .beneficios li {
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1.05;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      text-shadow: 2px 2px 0 #000;
     }
 
-    .lista-banner{
-      list-style:none;
-      position:relative;
-      z-index:2;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      align-items:flex-start;
-      width:fit-content;
-      margin:16px auto 0;
+    .beneficios li::before {
+      content: "◆";
+      color: #ffcf32;
+      font-size: 22px;
+      flex-shrink: 0;
+      line-height: 1;
     }
 
-    .lista-banner li{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-family:'Montserrat', sans-serif;
-      font-size:18px;
-      font-weight:800;
-      line-height:1.1;
-      color:#fff;
-      text-align:left;
+    .imagem-destaque {
+      width: 34%;
+      min-width: 300px;
+      background: #fff;
+      border-radius: 0 0 22px 22px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.55);
     }
 
-    .lista-banner li::before{
-      content:"◆";
-      color:var(--gold);
-      font-size:13px;
-      flex-shrink:0;
+    .imagem-destaque img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .centro-vitrine{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:10px;
-      min-width:260px;
-      position:relative;
-      z-index:2;
+    .titulo-secao {
+      max-width: 1300px;
+      margin: 38px auto 0;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: #ffcf32;
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 900;
+      text-align: center;
+      justify-content: center;
+      text-shadow: 3px 3px 0 #000;
     }
 
-    .titulo-centro{
-      text-align:center;
-      color:#f2dfb4;
-      font-family:Georgia, "Times New Roman", serif;
-      text-shadow:0 2px 8px rgba(0,0,0,.35);
-      line-height:1.02;
+    .titulo-secao::before,
+    .titulo-secao::after {
+      content: "";
+      height: 3px;
+      background: #7a5315;
+      flex: 1;
+      max-width: 420px;
     }
 
-    .titulo-centro .l1{
-      display:block;
-      font-size:21px;
-      font-weight:500;
+    /* CATEGORIAS */
+    .categorias {
+      padding: 50px 5%;
+      background: #120c08;
     }
 
-    .titulo-centro .l2{
-      display:block;
-      font-size:23px;
-      font-weight:700;
+    .categorias h2 {
+      color: #ffcf32;
+      text-align: center;
+      font-size: clamp(32px, 5vw, 54px);
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0 #000;
     }
 
-    .placa-central-wrap{
-      width:235px;
-      height:325px;
-      border-radius:10px;
-      overflow:hidden;
-      background:#111;
-      border:2px solid rgba(255,208,0,.08);
-      box-shadow:0 8px 20px rgba(0,0,0,.28);
-      cursor:pointer;
-      transition:transform .2s ease, box-shadow .2s ease;
+    .grid-categorias {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 22px;
     }
 
-    .placa-central-wrap:hover{
-      transform:translateY(-3px);
-      box-shadow:0 14px 28px rgba(0,0,0,.35);
+    .categoria-card {
+      background: #24150e;
+      border: 2px solid #7a5315;
+      border-radius: 16px;
+      padding: 22px 16px;
+      text-align: center;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffcf32;
+      font-size: 22px;
+      font-weight: 900;
+      text-transform: uppercase;
+      box-shadow: 4px 4px 0 #000;
+      transition: 0.2s;
     }
 
-    .placa-central-wrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .categoria-card:hover {
+      transform: translateY(-3px);
+      background: #332014;
     }
 
-    .faixa-destaque{
-      margin-top:26px;
-      position:relative;
-      text-align:center;
+    /* COMO COMPRAR */
+    .como-comprar {
+      padding: 50px 5%;
+      background: #20130d;
     }
 
-    .faixa-destaque::before{
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      top:50%;
-      transform:translateY(-50%);
-      height:2px;
-      background:linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(205,143,41,.90) 8%,
-        rgba(205,143,41,.22) 24%,
-        rgba(205,143,41,.10) 50%,
-        rgba(205,143,41,.22) 76%,
-        rgba(205,143,41,.90) 92%,
-        transparent 100%
-      );
+    .como-comprar h2 {
+      color: #ffcf32;
+      text-align: center;
+      font-size: clamp(30px, 5vw, 48px);
+      margin-bottom: 28px;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0 #000;
     }
 
-    .faixa-destaque h2{
-      display:inline-block;
-      position:relative;
-      z-index:2;
-      padding:0 20px;
-      background:transparent;
-      font-size:28px;
-      font-weight:900;
-      color:var(--gold2);
-      text-shadow:0 2px 10px rgba(0,0,0,.35);
+    .passos {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
     }
 
-    .vitrine-rodape{
-      margin-top:12px;
-      display:grid;
-      grid-template-columns:100px 1fr 100px;
-      align-items:center;
-      gap:18px;
-      max-width:980px;
-      margin-left:auto;
-      margin-right:auto;
+    .passo {
+      background: #120c08;
+      border: 2px solid #7a5315;
+      border-radius: 16px;
+      padding: 22px;
+      text-align: center;
     }
 
-    .carousel-btn{
-      width:58px;
-      height:58px;
-      border-radius:50%;
-      border:none;
-      background:linear-gradient(180deg, #f2c93d, #d89d07);
-      color:#000;
-      font-size:32px;
-      font-weight:900;
-      cursor:pointer;
-      margin:0 auto;
-      transition:transform .2s ease, filter .2s ease;
-      box-shadow:0 8px 18px rgba(0,0,0,.25);
+    .passo strong {
+      color: #ffcf32;
+      display: block;
+      font-size: 24px;
+      margin-bottom: 10px;
     }
 
-    .carousel-btn:hover{
-      transform:scale(1.06);
-      filter:brightness(1.05);
+    .passo p {
+      font-size: 17px;
+      line-height: 1.35;
     }
 
-    .info-placa{
-      text-align:center;
-      background:rgba(0,0,0,.38);
-      border-radius:18px;
-      padding:12px 20px 16px;
-      border:1px solid rgba(180,110,35,.6);
-      box-shadow:0 10px 18px rgba(0,0,0,.18);
-      max-width:360px;
-      margin:0 auto;
-      position:relative;
+    /* RODAPÉ */
+    footer {
+      background: #090604;
+      border-top: 2px solid #7a5315;
+      padding: 28px 5%;
+      text-align: center;
+      color: #ddd;
+      font-size: 15px;
     }
 
-    .info-placa::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:18px;
-      box-shadow:inset 0 0 0 2px rgba(128,77,24,.35);
-      pointer-events:none;
+    footer strong {
+      color: #ffcf32;
     }
 
-    .medida-atual{
-      display:inline-block;
-      background:linear-gradient(180deg, #f2c93d, #d8a510);
-      color:#000;
-      font-weight:900;
-      font-size:15px;
-      padding:7px 18px;
-      border-radius:10px;
-      box-shadow:0 4px 10px rgba(0,0,0,.25);
-      margin-bottom:10px;
-    }
-
-    .nome-placa{
-      font-size:18px;
-      font-weight:800;
-      color:#fff;
-      margin-bottom:14px;
-      line-height:1.15;
-    }
-
-    .btn-comprar{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:240px;
-      padding:12px 18px;
-      border:none;
-      border-radius:12px;
-      background:linear-gradient(180deg, #f7cf4f, #d89d07);
-      color:#000;
-      font-size:16px;
-      font-weight:900;
-      text-transform:uppercase;
-      cursor:pointer;
-      box-shadow:0 4px 12px rgba(0,0,0,.28);
-      transition:transform .2s ease, filter .2s ease;
-    }
-
-    .btn-comprar:hover{
-      transform:translateY(-2px);
-      filter:brightness(1.04);
-    }
-
-    .faixa-acoes{
-      margin-top:18px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:flex-start;
-      gap:20px;
-      flex-wrap:wrap;
-    }
-
-    .botao-categorias{
-      display:flex;
-      justify-content:flex-start;
-      align-items:center;
-    }
-
-    .botao-categorias a{
-      display:inline-flex;
-      justify-content:center;
-      align-items:center;
-      transition:transform .2s ease;
-    }
-
-    .botao-categorias a:hover{
-      transform:scale(1.02);
-    }
-
-    .botao-categorias img{
-      width:min(100%, 430px);
-      height:auto;
-    }
-
-    .whatsapp-fixo{
-      position:fixed;
-      right:14px;
-      bottom:18px;
-      z-index:999;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .whatsapp-fixo img{
-      width:190px;
-      max-width:190px;
-      height:auto;
-      display:block;
-      filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
-    }
-
-    .footer-site{
-      background:#000;
-      color:#fff;
-      padding:24px 16px 18px;
-      margin-top:26px;
-      border-top:1px solid rgba(240,196,0,.22);
-    }
-
-    .footer-wrap{
-      width:min(94%, 1200px);
-      margin:0 auto;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:22px;
-      flex-wrap:wrap;
-    }
-
-    .footer-brand strong{
-      display:block;
-      font-size:22px;
-      font-weight:900;
-      color:var(--gold);
-      margin-bottom:6px;
-      letter-spacing:1px;
-    }
-
-    .footer-brand p{
-      font-size:14px;
-      color:rgba(255,255,255,.78);
-    }
-
-    .footer-links{
-      display:flex;
-      justify-content:flex-end;
-      gap:12px 18px;
-      flex-wrap:wrap;
-      max-width:680px;
-    }
-
-    .footer-links a{
-      font-size:13px;
-      font-weight:800;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.82);
-      transition:.2s ease;
-    }
-
-    .footer-links a:hover{
-      color:var(--gold);
-    }
-
-    .footer-copy{
-      width:min(94%, 1200px);
-      margin:18px auto 0;
-      padding-top:14px;
-      border-top:1px solid rgba(255,255,255,.08);
-      text-align:center;
-      font-size:13px;
-      color:rgba(255,255,255,.62);
-    }
-
-    @media (max-width: 1100px){
-      .topo-vitrine{
-        gap:18px;
+    /* RESPONSIVO TABLET */
+    @media (max-width: 1024px) {
+      .destaque-layout {
+        gap: 22px;
       }
 
-      .placa-central-wrap{
-        width:210px;
-        height:290px;
+      .preco-card {
+        padding: 20px 16px;
       }
 
-      .medidas-topo{
-        font-size:28px;
+      .preco-card h2 {
+        font-size: 32px;
       }
 
-      .linha-branca{
-        font-size:23px;
+      .linha-preco {
+        font-size: 29px;
       }
 
-      .linha-amarela{
-        font-size:25px;
-      }
-
-      .lista-banner li{
-        font-size:15px;
+      .beneficios li {
+        font-size: 18px;
       }
     }
 
-    @media (max-width: 780px){
-      :root{
-        --topo-altura:56px;
+    /* RESPONSIVO CELULAR - AQUI ESTÁ O CONSERTO */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        padding: 16px 4%;
       }
 
-      .topo .wrap{
-        flex-direction:row;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-        padding:8px 10px 8px;
-        min-height:54px;
-        flex-wrap:nowrap;
+      .logo {
+        font-size: 30px;
       }
 
-      .logo a{
-        font-size:18px;
-        letter-spacing:1px;
+      nav {
+        justify-content: center;
+        gap: 14px;
       }
 
-      .menu-area{
-        width:auto;
-        margin-left:auto;
-        gap:8px;
-        flex-wrap:nowrap;
-        min-width:0;
-        flex:1 1 auto;
-        justify-content:flex-end;
+      nav a {
+        font-size: 14px;
       }
 
-      .menu{
-        display:flex;
-        align-items:center;
-        justify-content:flex-end;
-        gap:8px;
-        flex-wrap:nowrap;
-        min-width:0;
-        overflow:hidden;
+      .hero {
+        min-height: 330px;
+        padding: 45px 18px;
       }
 
-      .menu a{
-        font-size:9px;
+      .destaque {
+        padding: 34px 4% 46px;
       }
 
-      .cart-link{
-        width:34px;
-        height:34px;
+      .destaque-layout {
+        flex-direction: column;
+        align-items: center;
+        gap: 26px;
       }
 
-      .cart-link img{
-        width:26px;
-        height:26px;
+      .imagem-destaque {
+        order: 1;
+        width: 94%;
+        max-width: 420px;
+        min-width: 0;
+        border-radius: 18px;
       }
 
-      .cart-count{
-        top:-2px;
-        right:-2px;
-        min-width:16px;
-        height:16px;
-        font-size:9px;
-        padding:0 4px;
+      .preco-card {
+        width: 94%;
+        max-width: 420px;
+        min-width: 0;
+        min-height: auto;
+        padding: 24px 18px;
       }
 
-      .banner-principal-wrap{
-        border-radius:18px;
-        padding:5px;
+      .preco-card:first-child {
+        order: 2;
       }
 
-      .banner-principal-wrap::before{
-        inset:3px;
-        border-radius:14px;
+      .preco-card:last-child {
+        order: 3;
       }
 
-      .banner-principal{
-        border-radius:12px;
+      .preco-card h2 {
+        font-size: 34px;
+        line-height: 1;
+        margin-bottom: 14px;
       }
 
-      .area-unica{
-        width:96%;
-        padding:8px 8px 18px;
+      .linha-preco {
+        white-space: nowrap;
+        font-size: 31px;
+        line-height: 1.05;
+        margin: 8px 0;
       }
 
-      .topo-vitrine{
-        grid-template-columns:125px 150px 125px;
-        gap:10px;
-        justify-content:center;
-        align-items:end;
+      .chamada {
+        font-size: 24px;
+        margin: 24px 0 20px;
       }
 
-      .painel-lateral{
-        min-height:auto;
+      .beneficios li {
+        font-size: 19px;
+        line-height: 1.15;
       }
 
-      .banner-medidas-html{
-        min-height:170px;
-        height:170px;
-        border-radius:14px;
-        padding:8px 6px 8px;
+      .titulo-secao {
+        margin-top: 30px;
       }
 
-      .banner-medidas-html::before{
-        inset:5px;
-        border-radius:10px;
-      }
-
-      .banner-medidas-html::after{
-        left:6px;
-        right:6px;
-        top:45px;
-      }
-
-      .medidas-topo{
-        font-size:14px;
-        line-height:0.95;
-      }
-
-      .frase-banner{
-        margin-top:7px;
-        gap:1px;
-      }
-
-      .linha-branca{
-        font-size:10px;
-        line-height:0.95;
-      }
-
-      .linha-amarela{
-        font-size:11px;
-        line-height:0.95;
-      }
-
-      .lista-banner{
-        gap:4px;
-        margin-top:7px;
-      }
-
-      .lista-banner li{
-        font-size:8px;
-        gap:4px;
-        line-height:1;
-      }
-
-      .lista-banner li::before{
-        font-size:8px;
-      }
-
-      .centro-vitrine{
-        min-width:auto;
-        gap:6px;
-      }
-
-      .titulo-centro .l1{
-        font-size:15px;
-      }
-
-      .titulo-centro .l2{
-        font-size:16px;
-      }
-
-      .placa-central-wrap{
-        width:150px;
-        height:205px;
-      }
-
-      .faixa-destaque{
-        margin-top:16px;
-      }
-
-      .faixa-destaque h2{
-        font-size:22px;
-      }
-
-      .vitrine-rodape{
-        grid-template-columns:52px 1fr 52px;
-        gap:8px;
-        max-width:100%;
-      }
-
-      .carousel-btn{
-        width:42px;
-        height:42px;
-        font-size:22px;
-      }
-
-      .info-placa{
-        max-width:260px;
-        padding:10px 10px 12px;
-        border-radius:14px;
-      }
-
-      .medida-atual{
-        font-size:13px;
-        padding:6px 14px;
-      }
-
-      .nome-placa{
-        font-size:15px;
-      }
-
-      .btn-comprar{
-        min-width:180px;
-        font-size:13px;
-        padding:10px 12px;
-      }
-
-      .faixa-acoes{
-        justify-content:center;
-      }
-
-      .botao-categorias{
-        justify-content:center;
-        width:100%;
-      }
-
-      .botao-categorias img{
-        width:min(100%, 300px);
-      }
-
-      .whatsapp-fixo{
-        right:8px;
-        bottom:8px;
-      }
-
-      .whatsapp-fixo img{
-        width:145px;
-        max-width:145px;
-      }
-
-      .footer-wrap{
-        flex-direction:column;
-        align-items:center;
-        text-align:center;
-      }
-
-      .footer-links{
-        justify-content:center;
-      }
-
-      .footer-links a{
-        font-size:12px;
+      .titulo-secao::before,
+      .titulo-secao::after {
+        max-width: 90px;
       }
     }
 
-    @media (max-width: 480px){
-      .topo .wrap{
-        padding:8px 8px 8px;
-        gap:6px;
+    /* CELULAR PEQUENO */
+    @media (max-width: 420px) {
+      .preco-card h2 {
+        font-size: 30px;
       }
 
-      .logo a{
-        font-size:16px;
+      .linha-preco {
+        font-size: 26px;
       }
 
-      .menu{
-        gap:6px;
+      .beneficios li {
+        font-size: 17px;
       }
 
-      .menu a{
-        font-size:8px;
+      .chamada {
+        font-size: 21px;
       }
 
-      .cart-link{
-        width:30px;
-        height:30px;
-      }
-
-      .cart-link img{
-        width:22px;
-        height:22px;
-      }
-
-      .cart-count{
-        min-width:14px;
-        height:14px;
-        font-size:8px;
-      }
-
-      .titulo-centro .l1{
-        font-size:13px;
-      }
-
-      .titulo-centro .l2{
-        font-size:14px;
-      }
-
-      .info-placa{
-        max-width:220px;
-      }
-
-      .btn-comprar{
-        min-width:160px;
-      }
-
-      .whatsapp-fixo img{
-        width:130px;
-        max-width:130px;
+      .categoria-card {
+        font-size: 19px;
       }
     }
   </style>
 </head>
+
 <body>
 
-  <header class="topo">
-    <div class="wrap">
-      <div class="logo">
-        <a href="index.html">HEEEPH</a>
-      </div>
+  <header>
+    <a href="index.html" class="logo">HEEEPH</a>
 
-      <div class="menu-area">
-        <nav class="menu">
-          <a href="index.html" class="ativo">HOME</a>
-          <a href="categorias.html">COLEÇÃO</a>
-          <a href="sobre.html">O QUE É HEEEPH?</a>
-          <a href="fotos-reais.html">FOTOS REAIS</a>
-          <a href="contato.html">CONTATOS</a>
-        </nav>
-
-        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
-          <img src="botoes/botao-carrinho.png" alt="Carrinho">
-          <span class="cart-count" id="cartCount">0</span>
-        </a>
-      </div>
-    </div>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="categorias.html">Categorias</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="contato.html">Contato</a>
+      <a href="carrinho.html" class="cart-link">Carrinho</a>
+    </nav>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="container">
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Placas Decorativas</h1>
+      <p>Arte, atitude e personalidade para sua parede.</p>
+      <a href="categorias.html" class="btn">Comprar Agora</a>
+    </div>
+  </section>
 
-        <div class="banner-principal-wrap">
-          <div class="banner-principal">
-            <img src="banner/banner-principal.png" alt="Banner principal HEEEPH">
+  <section class="destaque">
+    <div class="destaque-layout">
+
+      <div class="preco-card">
+        <div>
+          <h2>Preço Fixo !!!</h2>
+          <span class="linha-preco">20x28cm — R$ 24,90</span>
+          <span class="linha-preco">28x20cm — R$ 24,90</span>
+
+          <div class="chamada">
+            O tamanho que
+            <span>chama atenção!</span>
           </div>
         </div>
 
-        <div class="area-unica">
-          <div class="topo-vitrine">
-            <div class="painel-lateral esq">
-              <div class="banner-medidas-html banner-maior">
-                <div class="medidas-topo">
-                  <div>PREÇO FIXO !!!</div>
-                  <div>20x28cm — R$ 24,90</div>
-                  <div>28x20cm — R$ 24,90</div>
-                </div>
+        <ul class="beneficios">
+          <li>MDF Resistente</li>
+          <li>Impressão HD</li>
+          <li>Qualidade de Fotografia</li>
+          <li>Laminação de proteção UV</li>
+        </ul>
+      </div>
 
-                <div class="frase-banner">
-                  <span class="linha-branca">O TAMANHO QUE</span>
-                  <span class="linha-amarela">CHAMA ATENÇÃO!</span>
-                </div>
+      <div class="imagem-destaque">
+        <img src="banner/destaque.png" alt="Placa decorativa em destaque">
+      </div>
 
-                <ul class="lista-banner">
-                  <li>MDF Resistente</li>
-                  <li>Impressão HD</li>
-                  <li>Qualidade de Fotografia</li>
-                  <li>Laminação de proteção UV</li>
-                </ul>
-              </div>
-            </div>
+      <div class="preco-card">
+        <div>
+          <h2>Preço Fixo !!!</h2>
+          <span class="linha-preco">10x15cm — R$ 12,90</span>
+          <span class="linha-preco">15x10cm — R$ 12,90</span>
 
-            <div class="centro-vitrine">
-              <div class="titulo-centro">
-                <span class="l1">Placas Decorativas</span>
-                <span class="l2">Placas Personalizadas</span>
-              </div>
-
-              <div class="placa-central-wrap" id="placaClick">
-                <img id="placaPrincipal" src="placas/street/naipess.png" alt="Placa em destaque">
-              </div>
-            </div>
-
-            <div class="painel-lateral dir">
-              <div class="banner-medidas-html banner-menor">
-                <div class="medidas-topo">
-                  <div>PREÇO FIXO !!!</div>
-                  <div>10x15cm — R$ 12,90</div>
-                  <div>15x10cm — R$ 12,90</div>
-                </div>
-
-                <div class="frase-banner">
-                  <span class="linha-branca">MONTE A SUA</span>
-                  <span class="linha-amarela">COLEÇÃO!</span>
-                </div>
-
-                <ul class="lista-banner">
-                  <li>Trabalho Manual de Qualidade</li>
-                  <li>Garantia do Produto</li>
-                  <li>Fácil Aplicação e Limpeza</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="faixa-destaque">
-            <h2>Destaque</h2>
-          </div>
-
-          <div class="vitrine-rodape">
-            <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
-
-            <div class="info-placa">
-              <div class="medida-atual" id="medidaAtual">20x28cm</div>
-              <div class="nome-placa" id="nomeAtual">Naipes Baralho</div>
-              <button class="btn-comprar" id="btnComprar">Comprar Agora</button>
-            </div>
-
-            <button class="carousel-btn" id="nextBtn" aria-label="Próximo">&#8250;</button>
-          </div>
-
-          <div class="faixa-acoes">
-            <div class="botao-categorias">
-              <a href="categorias.html">
-                <img src="botoes/categorias.png" alt="Categorias">
-              </a>
-            </div>
+          <div class="chamada">
+            Monte a sua
+            <span>coleção!</span>
           </div>
         </div>
 
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer-site">
-    <div class="footer-wrap">
-      <div class="footer-brand">
-        <strong>HEEEPH</strong>
-        <p>Placas decorativas e personalizadas em MDF.</p>
+        <ul class="beneficios">
+          <li>Trabalho Manual de Qualidade</li>
+          <li>Garantia do Produto</li>
+          <li>Fácil Aplicação e Limpeza</li>
+        </ul>
       </div>
 
-      <nav class="footer-links" aria-label="Links institucionais">
-        <a href="sobre.html">Sobre</a>
-        <a href="contato.html">Contato</a>
-        <a href="politica-privacidade.html">Privacidade</a>
-        <a href="trocas-devolucoes.html">Trocas e devoluções</a>
-        <a href="politica-entrega.html">Entrega</a>
-        <a href="termos-de-uso.html">Termos</a>
-        <a href="faq.html">FAQ</a>
-      </nav>
     </div>
 
-    <div class="footer-copy">
-      © 2026 HEEEPH - Placas Decorativas
+    <div class="titulo-secao">Destaque</div>
+  </section>
+
+  <section class="categorias">
+    <h2>Escolha sua categoria</h2>
+
+    <div class="grid-categorias">
+      <a href="bebidas.html" class="categoria-card">Bebidas</a>
+      <a href="games.html" class="categoria-card">Games</a>
+      <a href="musica.html" class="categoria-card">Música</a>
+      <a href="motos.html" class="categoria-card">Motos</a>
+      <a href="garage.html" class="categoria-card">Garage</a>
+      <a href="trip.html" class="categoria-card">Trip</a>
+      <a href="infantil.html" class="categoria-card">Infantil</a>
+      <a href="street.html" class="categoria-card">Street</a>
+      <a href="bandas.html" class="categoria-card">Bandas</a>
+      <a href="home-frases.html" class="categoria-card">Frases</a>
+      <a href="rpg.html" class="categoria-card">RPG</a>
+      <a href="fotos-reais.html" class="categoria-card">Fotos Reais</a>
     </div>
+  </section>
+
+  <section class="como-comprar">
+    <h2>Como Comprar</h2>
+
+    <div class="passos">
+      <div class="passo">
+        <strong>1</strong>
+        <p>Escolha sua placa favorita nas categorias.</p>
+      </div>
+
+      <div class="passo">
+        <strong>2</strong>
+        <p>Adicione ao carrinho e confira os produtos.</p>
+      </div>
+
+      <div class="passo">
+        <strong>3</strong>
+        <p>Finalize pelo WhatsApp e informe seu CEP.</p>
+      </div>
+
+      <div class="passo">
+        <strong>4</strong>
+        <p>Calculamos o frete e combinamos o envio.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>HEEEPH</strong> — Placas decorativas com personalidade.</p>
+    <p>Envio para todo o Brasil. Frete calculado conforme o CEP.</p>
   </footer>
 
-  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
-    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
-  </a>
-
-  <script src="produtos.js"></script>
-
-  <script>
-    function getCart() {
-      const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
-      return Array.isArray(cart) ? cart : [];
-    }
-
-    function updateCartCount() {
-      const cart = getCart();
-      const total = cart.reduce((acc, item) => {
-        const qtd = Number(item.quantity || item.quantidade || 1);
-        return acc + (isNaN(qtd) ? 1 : qtd);
-      }, 0);
-
-      const countEl = document.getElementById("cartCount");
-      if (countEl) countEl.textContent = total;
-    }
-
-    const produtosDestaque =
-      typeof getProdutosDestaqueHome === "function"
-        ? getProdutosDestaqueHome()
-        : [];
-
-    let currentIndex = 0;
-
-    function pegarCategoriaDoProduto(produto) {
-      if (!produto) return "";
-      if (produto.categoria) return produto.categoria;
-      if (produto.id && String(produto.id).includes("-")) {
-        return String(produto.id).split("-")[0];
-      }
-      return "";
-    }
-
-    function renderCarouselPrincipal() {
-      const placaPrincipal = document.getElementById("placaPrincipal");
-      const medidaAtual = document.getElementById("medidaAtual");
-      const nomeAtual = document.getElementById("nomeAtual");
-
-      if (!placaPrincipal || !medidaAtual || !nomeAtual) return;
-
-      if (!produtosDestaque.length) {
-        placaPrincipal.src = "";
-        placaPrincipal.alt = "Sem destaque";
-        medidaAtual.textContent = "";
-        nomeAtual.textContent = "Nenhuma placa encontrada";
-        return;
-      }
-
-      const produto = produtosDestaque[currentIndex];
-
-      placaPrincipal.src = produto.imagem || "";
-      placaPrincipal.alt = produto.nome || "Placa em destaque";
-      medidaAtual.textContent = produto.medida || "";
-      nomeAtual.textContent = produto.nome || "";
-    }
-
-    function abrirGaleriaDoDestaque() {
-      if (!produtosDestaque.length) return;
-
-      const produto = produtosDestaque[currentIndex];
-      const categoria = pegarCategoriaDoProduto(produto);
-
-      if (!categoria || !produto.id) {
-        alert("Produto de destaque sem categoria ou id configurado.");
-        return;
-      }
-
-      localStorage.setItem("ultimaPagina", "index.html");
-      window.location.href = `${categoria}.html?produto=${encodeURIComponent(produto.id)}`;
-    }
-
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const btnComprar = document.getElementById("btnComprar");
-    const placaClick = document.getElementById("placaClick");
-
-    if (prevBtn) {
-      prevBtn.addEventListener("click", () => {
-        if (!produtosDestaque.length) return;
-        currentIndex = (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
-        renderCarouselPrincipal();
-      });
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        if (!produtosDestaque.length) return;
-        currentIndex = (currentIndex + 1) % produtosDestaque.length;
-        renderCarouselPrincipal();
-      });
-    }
-
-    if (btnComprar) {
-      btnComprar.addEventListener("click", abrirGaleriaDoDestaque);
-    }
-
-    if (placaClick) {
-      placaClick.addEventListener("click", abrirGaleriaDoDestaque);
-    }
-
-    updateCartCount();
-    renderCarouselPrincipal();
-  </script>
 </body>
 </html>
