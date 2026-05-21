@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>FAQ | HEEEPH</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --gold:#f0c400;
+      --gold2:#ffd84d;
+      --text:#fff;
+      --topo-altura:72px;
+    }
+
+    html{
+      scroll-behavior:smooth;
+      overflow-x:hidden;
+    }
+
+    body{
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.30)),
+        url("banner/fundo.png") center top / cover no-repeat fixed;
+      background-color:#000;
+      overflow-x:hidden;
+      width:100%;
+      max-width:100%;
+      padding-top:var(--topo-altura);
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    img{
+      display:block;
+      max-width:100%;
+    }
+
+    .container{
+      width:min(94%, 1100px);
+      margin:0 auto;
+    }
+
+    .topo{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:1000;
+      background:rgba(0,0,0,.96);
+      border-bottom:1px solid rgba(255,255,255,.05);
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+
+    .topo::after{
+      content:"";
+      display:block;
+      height:2px;
+      background:linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(240,196,0,.95) 10%,
+        rgba(240,196,0,.12) 50%,
+        rgba(240,196,0,.95) 90%,
+        transparent 100%
+      );
+    }
+
+    .topo .wrap{
+      max-width:1500px;
+      margin:0 auto;
+      padding:10px 18px 9px;
+      min-height:70px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .logo{
+      flex:0 0 auto;
+    }
+
+    .logo a{
+      font-size:26px;
+      font-weight:900;
+      letter-spacing:1px;
+      color:#fff;
+      white-space:nowrap;
+    }
+
+    .menu-area{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-left:auto;
+      min-width:0;
+    }
+
+    .menu{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .menu a{
+      color:#fff;
+      font-size:14px;
+      font-weight:800;
+      text-transform:uppercase;
+      white-space:nowrap;
+      transition:.2s ease;
+    }
+
+    .menu a:hover,
+    .menu a.ativo{
+      color:var(--gold);
+    }
+
+    .cart-link{
+      position:relative;
+      width:40px;
+      height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .cart-link img{
+      width:32px;
+      height:32px;
+      object-fit:contain;
+    }
+
+    .cart-count{
+      position:absolute;
+      top:-4px;
+      right:-4px;
+      min-width:20px;
+      height:20px;
+      padding:0 5px;
+      border-radius:999px;
+      background:var(--gold);
+      color:#000;
+      font-size:11px;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .pagina-faq{
+      padding:42px 0 50px;
+    }
+
+    .card-faq{
+      background:rgba(0,0,0,.58);
+      border:1px solid rgba(180,110,35,.62);
+      border-radius:24px;
+      padding:34px 34px 38px;
+      box-shadow:0 14px 34px rgba(0,0,0,.32);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card-faq::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:24px;
+      box-shadow:inset 0 0 0 2px rgba(128,77,24,.26);
+      pointer-events:none;
+    }
+
+    .titulo-pagina{
+      text-align:center;
+      margin-bottom:30px;
+      position:relative;
+      z-index:2;
+    }
+
+    .titulo-pagina h1{
+      font-size:42px;
+      color:var(--gold2);
+      margin-bottom:10px;
+      text-shadow:0 2px 10px rgba(0,0,0,.38);
+    }
+
+    .titulo-pagina p{
+      font-size:16px;
+      color:rgba(255,255,255,.86);
+      line-height:1.6;
+    }
+
+    .faq-lista{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:14px;
+    }
+
+    details{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      overflow:hidden;
+      transition:.2s ease;
+    }
+
+    details[open]{
+      background:rgba(240,196,0,.08);
+      border-color:rgba(240,196,0,.32);
+    }
+
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding:18px 20px;
+      color:var(--gold2);
+      font-size:18px;
+      font-weight:900;
+      line-height:1.35;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    summary::-webkit-details-marker{
+      display:none;
+    }
+
+    summary::after{
+      content:"+";
+      flex:0 0 auto;
+      width:28px;
+      height:28px;
+      border-radius:999px;
+      background:linear-gradient(180deg, #f7cf4f, #d89d07);
+      color:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:22px;
+      font-weight:900;
+    }
+
+    details[open] summary::after{
+      content:"−";
+    }
+
+    .resposta{
+      padding:0 20px 18px;
+      color:rgba(255,255,255,.90);
+      font-size:16px;
+      line-height:1.75;
+    }
+
+    .resposta ul{
+      margin:8px 0 0 20px;
+    }
+
+    .resposta li{
+      margin-bottom:6px;
+    }
+
+    .aviso{
+      margin-top:24px;
+      padding:16px 18px;
+      border-radius:16px;
+      background:rgba(240,196,0,.10);
+      border:1px solid rgba(240,196,0,.30);
+      color:#fff;
+      line-height:1.6;
+      font-size:15px;
+      position:relative;
+      z-index:2;
+    }
+
+    .btn-voltar{
+      margin-top:34px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      position:relative;
+      z-index:2;
+    }
+
+    .btn-voltar a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:230px;
+      padding:13px 20px;
+      border-radius:14px;
+      background:linear-gradient(180deg, #f7cf4f, #d89d07);
+      color:#000;
+      font-size:15px;
+      font-weight:900;
+      text-transform:uppercase;
+      box-shadow:0 4px 12px rgba(0,0,0,.28);
+      transition:.2s ease;
+    }
+
+    .btn-voltar a:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.04);
+    }
+
+    .footer-site{
+      background:#000;
+      color:#fff;
+      padding:24px 16px 18px;
+      margin-top:26px;
+      border-top:1px solid rgba(240,196,0,.22);
+    }
+
+    .footer-wrap{
+      width:min(94%, 1200px);
+      margin:0 auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:22px;
+      flex-wrap:wrap;
+    }
+
+    .footer-brand strong{
+      display:block;
+      font-size:22px;
+      font-weight:900;
+      color:var(--gold);
+      margin-bottom:6px;
+      letter-spacing:1px;
+    }
+
+    .footer-brand p{
+      font-size:14px;
+      color:rgba(255,255,255,.78);
+    }
+
+    .footer-links{
+      display:flex;
+      justify-content:flex-end;
+      gap:12px 18px;
+      flex-wrap:wrap;
+      max-width:680px;
+    }
+
+    .footer-links a{
+      font-size:13px;
+      font-weight:800;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.82);
+      transition:.2s ease;
+    }
+
+    .footer-links a:hover{
+      color:var(--gold);
+    }
+
+    .footer-copy{
+      width:min(94%, 1200px);
+      margin:18px auto 0;
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,.08);
+      text-align:center;
+      font-size:13px;
+      color:rgba(255,255,255,.62);
+    }
+
+    .whatsapp-fixo{
+      position:fixed;
+      right:14px;
+      bottom:18px;
+      z-index:999;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .whatsapp-fixo img{
+      width:190px;
+      max-width:190px;
+      height:auto;
+      display:block;
+      filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
+    }
+
+    @media (max-width: 780px){
+      :root{
+        --topo-altura:56px;
+      }
+
+      .topo .wrap{
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        padding:8px 10px 8px;
+        min-height:54px;
+        flex-wrap:nowrap;
+      }
+
+      .logo a{
+        font-size:18px;
+        letter-spacing:1px;
+      }
+
+      .menu-area{
+        width:auto;
+        margin-left:auto;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        flex:1 1 auto;
+        justify-content:flex-end;
+      }
+
+      .menu{
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        gap:8px;
+        flex-wrap:nowrap;
+        min-width:0;
+        overflow:hidden;
+      }
+
+      .menu a{
+        font-size:9px;
+      }
+
+      .cart-link{
+        width:34px;
+        height:34px;
+      }
+
+      .cart-link img{
+        width:26px;
+        height:26px;
+      }
+
+      .cart-count{
+        top:-2px;
+        right:-2px;
+        min-width:16px;
+        height:16px;
+        font-size:9px;
+        padding:0 4px;
+      }
+
+      .pagina-faq{
+        padding:26px 0 36px;
+      }
+
+      .card-faq{
+        padding:24px 18px 28px;
+        border-radius:20px;
+      }
+
+      .titulo-pagina h1{
+        font-size:30px;
+      }
+
+      .titulo-pagina p{
+        font-size:15px;
+      }
+
+      summary{
+        font-size:16px;
+        padding:16px 15px;
+      }
+
+      .resposta{
+        font-size:15px;
+        padding:0 15px 16px;
+      }
+
+      .footer-wrap{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+      }
+
+      .footer-links{
+        justify-content:center;
+      }
+
+      .footer-links a{
+        font-size:12px;
+      }
+
+      .whatsapp-fixo{
+        right:8px;
+        bottom:8px;
+      }
+
+      .whatsapp-fixo img{
+        width:145px;
+        max-width:145px;
+      }
+    }
+
+    @media (max-width: 480px){
+      .topo .wrap{
+        padding:8px 8px 8px;
+        gap:6px;
+      }
+
+      .logo a{
+        font-size:16px;
+      }
+
+      .menu{
+        gap:6px;
+      }
+
+      .menu a{
+        font-size:8px;
+      }
+
+      .cart-link{
+        width:30px;
+        height:30px;
+      }
+
+      .cart-link img{
+        width:22px;
+        height:22px;
+      }
+
+      .cart-count{
+        min-width:14px;
+        height:14px;
+        font-size:8px;
+      }
+
+      .titulo-pagina h1{
+        font-size:27px;
+      }
+
+      .card-faq{
+        padding:22px 15px 26px;
+      }
+
+      summary{
+        font-size:15px;
+      }
+
+      .btn-voltar a{
+        min-width:190px;
+        font-size:13px;
+      }
+
+      .whatsapp-fixo img{
+        width:130px;
+        max-width:130px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topo">
+    <div class="wrap">
+      <div class="logo">
+        <a href="index.html">HEEEPH</a>
+      </div>
+
+      <div class="menu-area">
+        <nav class="menu">
+          <a href="index.html">HOME</a>
+          <a href="categorias.html">COLEÇÃO</a>
+          <a href="sobre.html">O QUE É HEEEPH?</a>
+          <a href="fotos-reais.html">FOTOS REAIS</a>
+          <a href="contato.html">CONTATOS</a>
+        </nav>
+
+        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+          <img src="botoes/botao-carrinho.png" alt="Carrinho">
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pagina-faq">
+    <div class="container">
+      <section class="card-faq">
+
+        <div class="titulo-pagina">
+          <h1>FAQ</h1>
+          <p>
+            Perguntas frequentes sobre placas decorativas, personalização, tamanhos, pagamento,
+            entrega, trocas e atendimento da HEEEPH.
+          </p>
+        </div>
+
+        <div class="faq-lista">
+
+          <details open>
+            <summary>O que a HEEEPH vende?</summary>
+            <div class="resposta">
+              A HEEEPH vende placas decorativas e personalizadas em MDF, com temas variados como música,
+              bandas, bebidas, games, motos, street, infantil e outras coleções. Também fazemos modelos
+              personalizados conforme a ideia do cliente.
+            </div>
+          </details>
+
+          <details>
+            <summary>Quais são os tamanhos das placas?</summary>
+            <div class="resposta">
+              Os tamanhos principais são:
+              <ul>
+                <li>20x28cm na vertical;</li>
+                <li>28x20cm na horizontal;</li>
+                <li>10x15cm na vertical;</li>
+                <li>15x10cm na horizontal.</li>
+              </ul>
+              Outros tamanhos podem ser avaliados sob consulta.
+            </div>
+          </details>
+
+          <details>
+            <summary>As placas são feitas de qual material?</summary>
+            <div class="resposta">
+              As placas são produzidas em MDF, com impressão de qualidade e acabamento pensado para
+              decoração. Dependendo do modelo, pode haver laminação de proteção e acabamento manual.
+            </div>
+          </details>
+
+          <details>
+            <summary>Dá para fazer uma placa personalizada?</summary>
+            <div class="resposta">
+              Sim. Você pode enviar uma foto, frase, ideia, referência, logotipo ou tema. A HEEEPH avalia
+              o pedido e informa se é possível produzir. Em placas personalizadas, é importante conferir
+              todos os detalhes antes da aprovação final.
+            </div>
+          </details>
+
+          <details>
+            <summary>Posso mandar minha própria arte?</summary>
+            <div class="resposta">
+              Pode. O ideal é enviar a imagem com boa qualidade, nítida e no melhor tamanho possível.
+              Imagem pequena, embaçada ou retirada de print pode perder qualidade na impressão.
+            </div>
+          </details>
+
+          <details>
+            <summary>A cor da placa pode ficar diferente da tela?</summary>
+            <div class="resposta">
+              Pode haver pequena diferença de cor entre a tela do celular/computador e o produto impresso.
+              Isso acontece por causa de brilho da tela, configuração de cor, iluminação, impressão e acabamento.
+            </div>
+          </details>
+
+          <details>
+            <summary>Como faço para comprar?</summary>
+            <div class="resposta">
+              Você pode escolher o produto no site, adicionar ao carrinho e seguir as orientações de compra.
+              Se tiver dúvida, também pode chamar a HEEEPH pelo WhatsApp oficial para confirmar detalhes,
+              disponibilidade, frete e personalização.
+            </div>
+          </details>
+
+          <details>
+            <summary>Adicionar ao carrinho já garante a compra?</summary>
+            <div class="resposta">
+              Não. O carrinho serve para organizar os produtos escolhidos. A compra só é confirmada após
+              conferência das informações e confirmação do pagamento, quando aplicável.
+            </div>
+          </details>
+
+          <details>
+            <summary>Quais formas de pagamento são aceitas?</summary>
+            <div class="resposta">
+              As formas de pagamento disponíveis serão informadas no atendimento ou na finalização da compra.
+              A HEEEPH pode usar link de pagamento, transferência, Pix ou outras opções disponíveis no momento.
+            </div>
+          </details>
+
+          <details>
+            <summary>Qual é o prazo de produção?</summary>
+            <div class="resposta">
+              O prazo de produção depende do tipo de produto, quantidade e personalização. Para produtos
+              personalizados, o prazo começa após confirmação do pagamento e aprovação final da arte.
+            </div>
+          </details>
+
+          <details>
+            <summary>Como funciona a entrega?</summary>
+            <div class="resposta">
+              A entrega pode ser feita por serviço de postagem, transportadora, plataforma de frete,
+              entrega local ou retirada combinada, conforme disponibilidade. O prazo total pode incluir
+              tempo de produção e tempo de transporte.
+            </div>
+          </details>
+
+          <details>
+            <summary>Como o frete é calculado?</summary>
+            <div class="resposta">
+              O frete pode variar conforme endereço, quantidade de placas, tamanho do pedido, peso e forma
+              de envio. Quando o cálculo automático não estiver disponível, o valor pode ser informado pelo
+              atendimento antes da finalização do pedido.
+            </div>
+          </details>
+
+          <details>
+            <summary>Posso retirar o pedido pessoalmente?</summary>
+            <div class="resposta">
+              Quando houver essa possibilidade, a retirada deve ser combinada antes. O cliente deve aguardar
+              a confirmação de que o pedido está pronto antes de retirar.
+            </div>
+          </details>
+
+          <details>
+            <summary>O que acontece se eu informar o endereço errado?</summary>
+            <div class="resposta">
+              Endereço incorreto ou incompleto pode causar atraso, devolução da encomenda ou cobrança de novo
+              frete para reenvio. Por isso, confira rua, número, complemento, bairro, cidade, estado e CEP
+              antes de finalizar.
+            </div>
+          </details>
+
+          <details>
+            <summary>Posso trocar ou devolver uma placa?</summary>
+            <div class="resposta">
+              Sim, seguindo as regras da página de Trocas e Devoluções. Em compras feitas pela internet ou
+              WhatsApp, o cliente pode solicitar arrependimento em até 7 dias corridos após o recebimento,
+              quando aplicável.
+            </div>
+          </details>
+
+          <details>
+            <summary>E se a placa chegar quebrada ou com defeito?</summary>
+            <div class="resposta">
+              Entre em contato o quanto antes e envie fotos da embalagem e do produto. A HEEEPH fará a análise
+              e orientará a melhor solução, como troca, reparo, crédito ou reembolso, conforme o caso.
+            </div>
+          </details>
+
+          <details>
+            <summary>Produto personalizado pode ser devolvido?</summary>
+            <div class="resposta">
+              Produto personalizado é feito sob encomenda, conforme arte, frase, foto ou referência enviada
+              pelo cliente. Por isso, após aprovação e início da produção, cancelamentos ou trocas por gosto
+              pessoal podem não ser possíveis. Se houver erro de produção da HEEEPH, o caso será analisado.
+            </div>
+          </details>
+
+          <details>
+            <summary>A HEEEPH faz arte do zero?</summary>
+            <div class="resposta">
+              Dependendo da ideia, sim. A HEEEPH pode criar ou adaptar uma arte para placa personalizada.
+              O ideal é o cliente explicar bem o tema, frase, estilo, tamanho e referência visual desejada.
+            </div>
+          </details>
+
+          <details>
+            <summary>Posso pedir placa com banda, personagem ou marca?</summary>
+            <div class="resposta">
+              Você pode enviar a ideia para avaliação. Quando o cliente envia imagem, marca, frase, personagem
+              ou logotipo, declara ter autorização para uso daquele material. A HEEEPH pode recusar pedidos
+              que pareçam violar direitos de terceiros ou tenham conteúdo inadequado.
+            </div>
+          </details>
+
+          <details>
+            <summary>Como entro em contato?</summary>
+            <div class="resposta">
+              Você pode entrar em contato pela página de Contatos do site ou pelo botão de WhatsApp oficial
+              da HEEEPH. Chama lá e fala sem medo: placa boa nasce de conversa boa.
+            </div>
+          </details>
+
+        </div>
+
+        <div class="aviso">
+          Este FAQ resume as dúvidas mais comuns. Para detalhes completos, consulte também as páginas de
+          Política de Privacidade, Trocas e Devoluções, Política de Entrega e Termos de Uso.
+        </div>
+
+        <div class="btn-voltar">
+          <a href="index.html">Voltar para Home</a>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer-site">
+    <div class="footer-wrap">
+      <div class="footer-brand">
+        <strong>HEEEPH</strong>
+        <p>Placas decorativas e personalizadas em MDF.</p>
+      </div>
+
+      <nav class="footer-links" aria-label="Links institucionais">
+        <a href="sobre.html">Sobre</a>
+        <a href="contato.html">Contato</a>
+        <a href="politica-privacidade.html">Privacidade</a>
+        <a href="trocas-devolucoes.html">Trocas e devoluções</a>
+        <a href="politica-entrega.html">Entrega</a>
+        <a href="termos-de-uso.html">Termos</a>
+        <a href="faq.html">FAQ</a>
+      </nav>
+    </div>
+
+    <div class="footer-copy">
+      © 2026 HEEEPH - Placas Decorativas
+    </div>
+  </footer>
+
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
+  </a>
+
+  <script>
+    function getCart() {
+      const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+      return Array.isArray(cart) ? cart : [];
+    }
+
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((acc, item) => {
+        const qtd = Number(item.quantity || item.quantidade || 1);
+        return acc + (isNaN(qtd) ? 1 : qtd);
+      }, 0);
+
+      const countEl = document.getElementById("cartCount");
+      if (countEl) countEl.textContent = total;
+    }
+
+    updateCartCount();
+  </script>
+
+</body>
+</html>
