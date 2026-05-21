@@ -171,6 +171,48 @@
       align-items:center;
       justify-content:center;
     }
+    .aviso-loja-teste{
+  width:min(92%, 1180px);
+  margin:14px auto 8px;
+  padding:13px 18px;
+  border-radius:16px;
+  background:rgba(240,196,0,.14);
+  border:1px solid rgba(240,196,0,.38);
+  color:#fff;
+  text-align:center;
+  box-shadow:0 8px 18px rgba(0,0,0,.22);
+}
+
+.aviso-loja-teste strong{
+  color:var(--gold2);
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.aviso-loja-teste span{
+  display:block;
+  margin-top:4px;
+  font-size:14px;
+  line-height:1.4;
+  color:rgba(255,255,255,.92);
+}
+
+@media (max-width: 780px){
+  .aviso-loja-teste{
+    width:94%;
+    margin:10px auto 6px;
+    padding:11px 12px;
+    border-radius:14px;
+  }
+
+  .aviso-loja-teste strong{
+    font-size:13px;
+  }
+
+  .aviso-loja-teste span{
+    font-size:12px;
+  }
+}
 
     .hero{
       padding-top:10px;
@@ -1079,7 +1121,13 @@
   </header>
 
   <main>
-    <section class="hero">
+
+  <div class="aviso-loja-teste">
+    <strong>Loja em fase de testes</strong>
+    <span>Os pedidos ainda são confirmados pelo WhatsApp antes do pagamento.</span>
+  </div>
+
+  <section class="hero">
       <div class="container">
 
         <div class="banner-principal-wrap">
