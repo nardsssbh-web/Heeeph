@@ -33,7 +33,7 @@ function obterFotosReais() {
     return [];
   }
 
-  return PRODUTOS.reais || [];
+  return PRODUTOS["fotos-reais"] || [];
 }
 
 function renderizarFotosReais() {
