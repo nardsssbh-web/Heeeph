@@ -6,526 +6,8 @@
 
   <title>Política de Entrega | HEEEPH</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    :root{
-      --gold:#f0c400;
-      --gold2:#ffd84d;
-      --text:#fff;
-      --topo-altura:72px;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      overflow-x:hidden;
-    }
-
-    body{
-      font-family:Arial, Helvetica, sans-serif;
-      color:var(--text);
-      background:
-        linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.30)),
-        url("banner/fundo.png") center top / cover no-repeat fixed;
-      background-color:#000;
-      overflow-x:hidden;
-      width:100%;
-      max-width:100%;
-      padding-top:var(--topo-altura);
-    }
-
-    a{
-      text-decoration:none;
-      color:inherit;
-    }
-
-    img{
-      display:block;
-      max-width:100%;
-    }
-
-    .container{
-      width:min(94%, 1100px);
-      margin:0 auto;
-    }
-
-    .topo{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:1000;
-      background:rgba(0,0,0,.96);
-      border-bottom:1px solid rgba(255,255,255,.05);
-      box-shadow:0 8px 24px rgba(0,0,0,.35);
-    }
-
-    .topo::after{
-      content:"";
-      display:block;
-      height:2px;
-      background:linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(240,196,0,.95) 10%,
-        rgba(240,196,0,.12) 50%,
-        rgba(240,196,0,.95) 90%,
-        transparent 100%
-      );
-    }
-
-    .topo .wrap{
-      max-width:1500px;
-      margin:0 auto;
-      padding:10px 18px 9px;
-      min-height:70px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-    }
-
-    .logo{
-      flex:0 0 auto;
-    }
-
-    .logo a{
-      font-size:26px;
-      font-weight:900;
-      letter-spacing:1px;
-      color:#fff;
-      white-space:nowrap;
-    }
-
-    .menu-area{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin-left:auto;
-      min-width:0;
-    }
-
-    .menu{
-      display:flex;
-      align-items:center;
-      gap:18px;
-      flex-wrap:wrap;
-      justify-content:center;
-      min-width:0;
-    }
-
-    .menu a{
-      color:#fff;
-      font-size:14px;
-      font-weight:800;
-      text-transform:uppercase;
-      white-space:nowrap;
-      transition:.2s ease;
-    }
-
-    .menu a:hover,
-    .menu a.ativo{
-      color:var(--gold);
-    }
-
-    .cart-link{
-      position:relative;
-      width:40px;
-      height:40px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
-    }
-
-    .cart-link img{
-      width:32px;
-      height:32px;
-      object-fit:contain;
-    }
-
-    .cart-count{
-      position:absolute;
-      top:-4px;
-      right:-4px;
-      min-width:20px;
-      height:20px;
-      padding:0 5px;
-      border-radius:999px;
-      background:var(--gold);
-      color:#000;
-      font-size:11px;
-      font-weight:900;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .pagina-politica{
-      padding:42px 0 50px;
-    }
-
-    .card-politica{
-      background:rgba(0,0,0,.58);
-      border:1px solid rgba(180,110,35,.62);
-      border-radius:24px;
-      padding:34px 34px 38px;
-      box-shadow:0 14px 34px rgba(0,0,0,.32);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .card-politica::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:24px;
-      box-shadow:inset 0 0 0 2px rgba(128,77,24,.26);
-      pointer-events:none;
-    }
-
-    .titulo-pagina{
-      text-align:center;
-      margin-bottom:30px;
-    }
-
-    .titulo-pagina h1{
-      font-size:42px;
-      color:var(--gold2);
-      margin-bottom:10px;
-      text-shadow:0 2px 10px rgba(0,0,0,.38);
-    }
-
-    .titulo-pagina p{
-      font-size:16px;
-      color:rgba(255,255,255,.86);
-      line-height:1.6;
-    }
-
-    .bloco{
-      margin-top:24px;
-      position:relative;
-      z-index:2;
-    }
-
-    .bloco h2{
-      font-size:24px;
-      color:var(--gold);
-      margin-bottom:10px;
-    }
-
-    .bloco p{
-      font-size:16px;
-      line-height:1.75;
-      color:rgba(255,255,255,.90);
-      margin-bottom:12px;
-    }
-
-    .bloco ul{
-      margin:10px 0 0 20px;
-      color:rgba(255,255,255,.90);
-    }
-
-    .bloco li{
-      font-size:16px;
-      line-height:1.7;
-      margin-bottom:8px;
-    }
-
-    .aviso{
-      margin-top:24px;
-      padding:16px 18px;
-      border-radius:16px;
-      background:rgba(240,196,0,.10);
-      border:1px solid rgba(240,196,0,.30);
-      color:#fff;
-      line-height:1.6;
-      font-size:15px;
-      position:relative;
-      z-index:2;
-    }
-
-    .btn-voltar{
-      margin-top:34px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      position:relative;
-      z-index:2;
-    }
-
-    .btn-voltar a{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:230px;
-      padding:13px 20px;
-      border-radius:14px;
-      background:linear-gradient(180deg, #f7cf4f, #d89d07);
-      color:#000;
-      font-size:15px;
-      font-weight:900;
-      text-transform:uppercase;
-      box-shadow:0 4px 12px rgba(0,0,0,.28);
-      transition:.2s ease;
-    }
-
-    .btn-voltar a:hover{
-      transform:translateY(-2px);
-      filter:brightness(1.04);
-    }
-
-    .footer-site{
-      background:#000;
-      color:#fff;
-      padding:24px 16px 18px;
-      margin-top:26px;
-      border-top:1px solid rgba(240,196,0,.22);
-    }
-
-    .footer-wrap{
-      width:min(94%, 1200px);
-      margin:0 auto;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:22px;
-      flex-wrap:wrap;
-    }
-
-    .footer-brand strong{
-      display:block;
-      font-size:22px;
-      font-weight:900;
-      color:var(--gold);
-      margin-bottom:6px;
-      letter-spacing:1px;
-    }
-
-    .footer-brand p{
-      font-size:14px;
-      color:rgba(255,255,255,.78);
-    }
-
-    .footer-links{
-      display:flex;
-      justify-content:flex-end;
-      gap:12px 18px;
-      flex-wrap:wrap;
-      max-width:680px;
-    }
-
-    .footer-links a{
-      font-size:13px;
-      font-weight:800;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.82);
-      transition:.2s ease;
-    }
-
-    .footer-links a:hover{
-      color:var(--gold);
-    }
-
-    .footer-copy{
-      width:min(94%, 1200px);
-      margin:18px auto 0;
-      padding-top:14px;
-      border-top:1px solid rgba(255,255,255,.08);
-      text-align:center;
-      font-size:13px;
-      color:rgba(255,255,255,.62);
-    }
-
-    .whatsapp-fixo{
-      position:fixed;
-      right:14px;
-      bottom:18px;
-      z-index:999;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .whatsapp-fixo img{
-      width:190px;
-      max-width:190px;
-      height:auto;
-      display:block;
-      filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
-    }
-
-    @media (max-width: 780px){
-      :root{
-        --topo-altura:56px;
-      }
-
-      .topo .wrap{
-        flex-direction:row;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-        padding:8px 10px 8px;
-        min-height:54px;
-        flex-wrap:nowrap;
-      }
-
-      .logo a{
-        font-size:18px;
-        letter-spacing:1px;
-      }
-
-      .menu-area{
-        width:auto;
-        margin-left:auto;
-        gap:8px;
-        flex-wrap:nowrap;
-        min-width:0;
-        flex:1 1 auto;
-        justify-content:flex-end;
-      }
-
-      .menu{
-        display:flex;
-        align-items:center;
-        justify-content:flex-end;
-        gap:8px;
-        flex-wrap:nowrap;
-        min-width:0;
-        overflow:hidden;
-      }
-
-      .menu a{
-        font-size:9px;
-      }
-
-      .cart-link{
-        width:34px;
-        height:34px;
-      }
-
-      .cart-link img{
-        width:26px;
-        height:26px;
-      }
-
-      .cart-count{
-        top:-2px;
-        right:-2px;
-        min-width:16px;
-        height:16px;
-        font-size:9px;
-        padding:0 4px;
-      }
-
-      .pagina-politica{
-        padding:26px 0 36px;
-      }
-
-      .card-politica{
-        padding:24px 18px 28px;
-        border-radius:20px;
-      }
-
-      .titulo-pagina h1{
-        font-size:30px;
-      }
-
-      .titulo-pagina p{
-        font-size:15px;
-      }
-
-      .bloco h2{
-        font-size:21px;
-      }
-
-      .bloco p,
-      .bloco li{
-        font-size:15px;
-      }
-
-      .footer-wrap{
-        flex-direction:column;
-        align-items:center;
-        text-align:center;
-      }
-
-      .footer-links{
-        justify-content:center;
-      }
-
-      .footer-links a{
-        font-size:12px;
-      }
-
-      .whatsapp-fixo{
-        right:8px;
-        bottom:8px;
-      }
-
-      .whatsapp-fixo img{
-        width:145px;
-        max-width:145px;
-      }
-    }
-
-    @media (max-width: 480px){
-      .topo .wrap{
-        padding:8px 8px 8px;
-        gap:6px;
-      }
-
-      .logo a{
-        font-size:16px;
-      }
-
-      .menu{
-        gap:6px;
-      }
-
-      .menu a{
-        font-size:8px;
-      }
-
-      .cart-link{
-        width:30px;
-        height:30px;
-      }
-
-      .cart-link img{
-        width:22px;
-        height:22px;
-      }
-
-      .cart-count{
-        min-width:14px;
-        height:14px;
-        font-size:8px;
-      }
-
-      .titulo-pagina h1{
-        font-size:27px;
-      }
-
-      .card-politica{
-        padding:22px 15px 26px;
-      }
-
-      .btn-voltar a{
-        min-width:190px;
-        font-size:13px;
-      }
-
-      .whatsapp-fixo img{
-        width:130px;
-        max-width:130px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/geral.css">
+  <link rel="stylesheet" href="css/institucional.css">
 </head>
 
 <body>
@@ -553,15 +35,15 @@
     </div>
   </header>
 
-  <main class="pagina-politica">
-    <div class="container">
-      <section class="card-politica">
+  <main class="pagina-institucional">
+    <div class="container-institucional">
+      <section class="card-institucional">
 
         <div class="titulo-pagina">
           <h1>Política de Entrega</h1>
           <p>
-            Esta política explica como funcionam a produção, separação, envio, retirada e entrega
-            dos pedidos feitos na HEEEPH.
+            Esta política explica como funcionam a produção, separação, envio, retirada
+            e entrega dos pedidos feitos na HEEEPH.
           </p>
         </div>
 
@@ -591,9 +73,8 @@
           </p>
 
           <p>
-            Produtos personalizados, pedidos em grande quantidade ou solicitações especiais podem
-            exigir prazo maior de produção. Quando isso acontecer, a HEEEPH informará o cliente no
-            atendimento.
+            Produtos personalizados, pedidos em maior quantidade ou solicitações especiais podem exigir
+            prazo maior de produção. Quando isso acontecer, a HEEEPH informará o cliente no atendimento.
           </p>
         </div>
 
@@ -605,18 +86,18 @@
           </p>
 
           <p>
-            Esse prazo pode variar conforme a cidade, o estado, a modalidade de envio, o serviço de
-            transporte escolhido e possíveis condições externas, como feriados, greves, restrições
-            de circulação, problemas logísticos ou eventos de força maior.
+            Esse prazo pode variar conforme cidade, estado, modalidade de envio, serviço de transporte
+            escolhido e possíveis condições externas, como feriados, greves, restrições de circulação,
+            problemas logísticos ou eventos de força maior.
           </p>
         </div>
 
         <div class="bloco">
           <h2>4. Formas de entrega</h2>
           <p>
-            As formas de entrega disponíveis podem variar conforme a região do cliente e o tipo de
-            pedido. A HEEEPH poderá utilizar serviços de postagem, transportadoras, entregas locais
-            ou retirada combinada, conforme disponibilidade.
+            As formas de entrega disponíveis podem variar conforme a região do cliente e o tipo de pedido.
+            A HEEEPH poderá utilizar serviços de postagem, transportadoras, entregas locais ou retirada
+            combinada, conforme disponibilidade.
           </p>
 
           <ul>
@@ -738,12 +219,8 @@
           <h2>13. Atendimento sobre entregas</h2>
           <p>
             Para dúvidas sobre frete, prazo, rastreamento ou problemas na entrega, o cliente pode
-            entrar em contato com a HEEEPH pela página de contato ou pelo WhatsApp oficial da loja.
-          </p>
-
-          <p>
-            Atendimento bom é conversa reta: se atrasou, se voltou, se deu problema, a gente olha o
-            caso e orienta o melhor caminho.
+            entrar em contato com a HEEEPH pela página de contato, pelo WhatsApp oficial da loja
+            ou pelo e-mail heeeph@outlook.com.
           </p>
         </div>
 
@@ -796,13 +273,17 @@
 
     function updateCartCount() {
       const cart = getCart();
+
       const total = cart.reduce((acc, item) => {
-        const qtd = Number(item.quantity || item.quantidade || 1);
+        const qtd = Number(item.quantidade || item.quantity || 1);
         return acc + (isNaN(qtd) ? 1 : qtd);
       }, 0);
 
       const countEl = document.getElementById("cartCount");
-      if (countEl) countEl.textContent = total;
+
+      if (countEl) {
+        countEl.textContent = total;
+      }
     }
 
     updateCartCount();
