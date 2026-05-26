@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>ADM HEEEPH</title>
+
+  <link rel="stylesheet" href="css/geral.css">
+  <link rel="stylesheet" href="css/institucional.css">
+
+  <style>
+    .admin-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+      gap:16px;
+      margin-top:26px;
+      position:relative;
+      z-index:2;
+    }
+
+    .admin-card{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:18px;
+      min-height:150px;
+    }
+
+    .admin-card strong{
+      display:block;
+      color:var(--gold2);
+      font-size:19px;
+      margin-bottom:8px;
+    }
+
+    .admin-card p{
+      color:rgba(255,255,255,.86);
+      line-height:1.55;
+      font-size:14px;
+      margin-bottom:14px;
+    }
+
+    .admin-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      background:linear-gradient(180deg, #f7cf4f, #d89d07);
+      color:#000;
+      font-size:14px;
+      font-weight:900;
+      text-transform:uppercase;
+      transition:.2s ease;
+      border:none;
+      cursor:pointer;
+    }
+
+    .admin-btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.04);
+    }
+
+    .checklist{
+      margin-top:28px;
+      position:relative;
+      z-index:2;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .checklist h2{
+      color:var(--gold);
+      margin-bottom:14px;
+      font-size:24px;
+    }
+
+    .check-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 0;
+      color:rgba(255,255,255,.90);
+      font-size:16px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .check-item:last-child{
+      border-bottom:none;
+    }
+
+    .check-item input{
+      width:18px;
+      height:18px;
+      accent-color:#f0c400;
+    }
+
+    .admin-aviso{
+      margin-top:22px;
+      padding:14px 16px;
+      border-radius:14px;
+      background:rgba(240,196,0,.10);
+      border:1px solid rgba(240,196,0,.30);
+      color:rgba(255,255,255,.90);
+      line-height:1.6;
+      font-size:14px;
+      position:relative;
+      z-index:2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topo">
+    <div class="wrap">
+      <div class="logo">
+        <a href="index.html">HEEEPH</a>
+      </div>
+
+      <div class="menu-area">
+        <nav class="menu">
+          <a href="index.html">HOME</a>
+          <a href="categorias.html">COLEÇÃO</a>
+          <a href="sobre.html">O QUE É HEEEPH?</a>
+          <a href="fotos-reais.html">FOTOS REAIS</a>
+          <a href="contato.html">CONTATOS</a>
+        </nav>
+
+        <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
+          <img src="botoes/botao-carrinho.png" alt="Carrinho">
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pagina-institucional">
+    <div class="container-institucional">
+      <section class="card-institucional">
+
+        <div class="titulo-pagina">
+          <h1>ADM HEEEPH</h1>
+          <p>
+            Central simples para organizar pedidos, vendas, pagamentos, frete e atendimento.
+          </p>
+        </div>
+
+        <div class="admin-grid">
+
+          <div class="admin-card">
+            <strong>WhatsApp</strong>
+            <p>Atendimento, confirmação de pedidos e contato com clientes.</p>
+            <a class="admin-btn" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">
+              Abrir WhatsApp
+            </a>
+          </div>
+
+          <div class="admin-card">
+            <strong>Mercado Pago</strong>
+            <p>Conferir pagamentos, vendas na maquininha e criar links de pagamento.</p>
+            <a class="admin-btn" href="https://www.mercadopago.com.br/" target="_blank" rel="noopener noreferrer">
+              Abrir Mercado Pago
+            </a>
+          </div>
+
+          <div class="admin-card">
+            <strong>Melhor Envio</strong>
+            <p>Calcular frete, gerar etiquetas e acompanhar envios.</p>
+            <a class="admin-btn" href="https://www.melhorenvio.com.br/" target="_blank" rel="noopener noreferrer">
+              Abrir Melhor Envio
+            </a>
+          </div>
+
+          <div class="admin-card">
+            <strong>Planilha de Vendas</strong>
+            <p>Controle manual de vendas, notas, valores, taxas e observações.</p>
+            <a class="admin-btn" href="#" onclick="alert('Coloque aqui o link da sua planilha quando ela estiver no Google Drive ou OneDrive.'); return false;">
+              Abrir Planilha
+            </a>
+          </div>
+
+        </div>
+
+        <div class="checklist">
+          <h2>Checklist do pedido</h2>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Pedido confirmado com o cliente
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Tamanho e quantidade conferidos
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            CEP recebido
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Frete calculado no Melhor Envio
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Pagamento confirmado
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Nota fiscal verificada
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Placas produzidas
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Pedido embalado
+          </label>
+
+          <label class="check-item">
+            <input type="checkbox">
+            Pedido enviado ou entregue
+          </label>
+        </div>
+
+        <div class="admin-aviso">
+          Este painel é apenas uma central de atalhos e checklist. Ele não tem login seguro nem banco de dados.
+          Não coloque senha, token de API, chave do Mercado Pago ou dados sensíveis aqui.
+        </div>
+
+        <div class="btn-voltar">
+          <a href="index.html">Voltar para Home</a>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer-site">
+    <div class="footer-wrap">
+      <div class="footer-brand">
+        <strong>HEEEPH</strong>
+        <p>Placas decorativas e personalizadas em MDF.</p>
+      </div>
+
+      <nav class="footer-links" aria-label="Links institucionais">
+        <a href="sobre.html">Sobre</a>
+        <a href="contato.html">Contato</a>
+        <a href="politica-privacidade.html">Privacidade</a>
+        <a href="trocas-devolucoes.html">Trocas e devoluções</a>
+        <a href="politica-entrega.html">Entrega</a>
+        <a href="termos-de-uso.html">Termos</a>
+        <a href="faq.html">FAQ</a>
+      </nav>
+    </div>
+
+    <div class="footer-copy">
+      © 2026 HEEEPH - Placas Decorativas
+    </div>
+  </footer>
+
+  <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
+  </a>
+
+  <script src="js/geral.js"></script>
+
+</body>
+</html>
