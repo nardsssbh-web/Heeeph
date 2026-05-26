@@ -1,11 +1,11 @@
 const OPCOES_TAMANHO = {
   vertical: [
     { medida: "10x15cm", preco: 12.90 },
-    { medida: "20x28cm", preco: 29.90 }
+    { medida: "20x28cm", preco: 24.90 }
   ],
   horizontal: [
     { medida: "15x10cm", preco: 12.90 },
-    { medida: "28x20cm", preco: 29.90 }
+    { medida: "28x20cm", preco: 24.90 }
   ]
 };
 
