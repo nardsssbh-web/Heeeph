@@ -27,6 +27,15 @@ function formatarPreco(valor) {
   });
 }
 
+function produtoIndisponivel(produto) {
+  const nome = String(produto.nome || "").trim().toLowerCase();
+
+  return (
+    nome === "em breve" ||
+    nome.includes("em breve")
+  );
+}
+
 function getCart() {
   const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
   return Array.isArray(cart) ? cart : [];
@@ -85,9 +94,11 @@ function renderizarGaleria() {
   }
 
   grade.innerHTML = produtos.map(produto => {
+    const indisponivel = produtoIndisponivel(produto);
+
     return `
       <div class="item-placa" id="produto-${escaparTexto(produto.id)}">
-        <div class="placa">
+        <div class="placa ${indisponivel ? "placa-indisponivel" : ""}">
           <div class="nome-placa">${escaparTexto(produto.nome)}</div>
 
           <div class="img-box">
@@ -100,11 +111,21 @@ function renderizarGaleria() {
           </div>
         </div>
 
-        <div class="preco-placa">A partir de R$12,90</div>
-
-        <button class="btn-comprar-placa" onclick="abrirModalTamanho('${escaparTexto(produto.id)}')">
-          Comprar
-        </button>
+        ${
+          indisponivel
+            ? `
+              <div class="preco-placa produto-em-breve">Em breve</div>
+              <button class="btn-comprar-placa btn-indisponivel" disabled>
+                Indisponível
+              </button>
+            `
+            : `
+              <div class="preco-placa">A partir de R$12,90</div>
+              <button class="btn-comprar-placa" onclick="abrirModalTamanho('${escaparTexto(produto.id)}')">
+                Comprar
+              </button>
+            `
+        }
       </div>
     `;
   }).join("");
@@ -168,6 +189,12 @@ function abrirModalTamanho(idProduto) {
     alert("Produto não encontrado.");
     return;
   }
+
+  if (produtoIndisponivel(produtoSelecionado)) {
+  alert("Este produto ainda está em breve e não pode ser comprado.");
+  produtoSelecionado = null;
+  return;
+}
 
   const modal = document.getElementById("modalTamanho");
   const nome = document.getElementById("modalTamanhoNome");

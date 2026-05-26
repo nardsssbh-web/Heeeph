@@ -314,3 +314,23 @@
     font-size: 15px;
   }
 }
+
+.placa-indisponivel{
+  opacity:.72;
+  filter:grayscale(.35);
+}
+
+.produto-em-breve{
+  color:#ffd84d;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+.btn-indisponivel,
+.btn-indisponivel:hover{
+  background:#555;
+  color:#ddd;
+  cursor:not-allowed;
+  transform:none;
+  filter:none;
+}
