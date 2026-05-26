@@ -235,10 +235,10 @@ function adicionarProdutoComTamanho(medida, preco) {
   }
 
   saveCart(carrinho);
-  updateCartCount();
-  fecharModalTamanho();
+updateCartCount();
+fecharModalTamanho();
 
-  alert("Produto adicionado ao carrinho!");
+window.location.href = "carrinho.html";
 }
 
 function destacarProdutoDaUrl() {
