@@ -265,6 +265,9 @@ function adicionarProdutoComTamanho(medida, preco) {
 updateCartCount();
 fecharModalTamanho();
 
+const paginaAtual = window.location.pathname.split("/").pop() || "categorias.html";
+localStorage.setItem("ultimaPagina", paginaAtual);
+
 window.location.href = "carrinho.html";
 }
 
@@ -314,7 +317,11 @@ document.addEventListener("click", function(event) {
     fecharModalTamanho();
   }
 });
+const paginaAtualGaleria = window.location.pathname.split("/").pop();
 
+if (paginaAtualGaleria) {
+  localStorage.setItem("ultimaPagina", paginaAtualGaleria);
+}
 criarModaisSeNaoExistirem();
 renderizarGaleria();
 updateCartCount();
