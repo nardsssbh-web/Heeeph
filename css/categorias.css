@@ -43,10 +43,10 @@
 }
 
 .titulo-categorias p{
-  max-width:760px;
+  max-width:920px;
   margin:0 auto;
-  font-size:16px;
-  line-height:1.6;
+  font-size:18px;
+  line-height:1.7;
   color:rgba(255,255,255,.88);
 }
 
@@ -67,6 +67,7 @@
   border:1px solid rgba(255,255,255,.08);
   box-shadow:0 8px 18px rgba(0,0,0,.22);
   transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  padding:10px;
 }
 
 .categoria-item:hover{
@@ -79,27 +80,28 @@
   width:100%;
   height:auto;
   display:block;
+  border-radius:14px;
 }
 
 .categoria-info{
-  padding:13px 14px 15px;
+  padding:12px 10px 10px;
   text-align:center;
 }
 
 .categoria-info strong{
   display:block;
   color:var(--gold2);
-  font-size:17px;
+  font-size:19px;
   font-weight:900;
   text-transform:uppercase;
-  margin-bottom:5px;
+  margin-bottom:6px;
 }
 
 .categoria-info span{
   display:block;
-  color:rgba(255,255,255,.82);
-  font-size:13px;
-  line-height:1.35;
+  color:rgba(255,255,255,.86);
+  font-size:14px;
+  line-height:1.45;
 }
 
 .categoria-destaque{
@@ -139,9 +141,9 @@
   }
 
   .grade-categorias{
-    grid-template-columns:repeat(auto-fit, minmax(145px, 1fr));
-    gap:14px;
-  }
+  grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:12px;
+}
 
   .categoria-info{
     padding:10px 9px 12px;
