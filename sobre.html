@@ -3,292 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>O QUE É HEEEPH? - HEEEPH</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
 
-    :root {
-      --dourado: #f0c400;
-      --branco: #ffffff;
-    }
+  <title>O que é HEEEPH? | HEEEPH</title>
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #000 url("banner/fundo.png") center top / cover no-repeat fixed;
-      color: var(--branco);
-      overflow-x: hidden;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    .topo {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      width: 100%;
-      background: #000;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .topo .wrap {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 16px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .logo a {
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #fff;
-      white-space: nowrap;
-    }
-
-    .menu-area {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      margin-left: auto;
-    }
-
-    .menu {
-      display: flex;
-      align-items: center;
-      gap: 34px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .menu a {
-      color: #fff;
-      font-size: 16px;
-      font-weight: 800;
-      text-transform: uppercase;
-      transition: 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .menu a:hover,
-    .menu a.ativo {
-      color: var(--dourado);
-    }
-
-    .cart-link {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      flex-shrink: 0;
-    }
-
-    .cart-link img {
-      width: 28px;
-      height: 28px;
-      object-fit: contain;
-    }
-
-    .cart-count {
-      position: absolute;
-      top: -5px;
-      right: -6px;
-      min-width: 20px;
-      height: 20px;
-      padding: 0 5px;
-      border-radius: 999px;
-      background: var(--dourado);
-      color: #000;
-      font-size: 12px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
-    }
-
-    .site-bg {
-      min-height: calc(100vh - 92px);
-      padding: 18px 0 34px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
-    .sobre-wrap {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      padding: 0 10px;
-    }
-
-    .sobre-banner {
-      width: min(77vw, 1170px);
-    }
-
-    .sobre-banner img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    footer {
-      background: #000;
-      color: #fff;
-      text-align: center;
-      padding: 20px 15px;
-      font-size: 15px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .whatsapp-fixo {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 999;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .whatsapp-fixo img {
-      width: 250px;
-      max-width: 250px;
-      height: auto;
-      display: block;
-    }
-
-    @media (max-width: 980px) {
-      .topo .wrap {
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
-      }
-
-      .menu-area {
-        width: 100%;
-        justify-content: center;
-        margin-left: 0;
-        gap: 18px;
-      }
-
-      .menu {
-        gap: 18px;
-      }
-
-      .whatsapp-fixo img {
-        width: 220px;
-        max-width: 220px;
-      }
-
-      .sobre-banner {
-        width: min(97vw, 1100px);
-      }
-    }
-
-    @media (max-width: 700px) {
-      .topo .wrap {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 6px;
-        padding: 10px 8px;
-        flex-wrap: nowrap;
-      }
-
-      .logo a {
-        font-size: 18px;
-        letter-spacing: 1px;
-      }
-
-      .menu-area {
-        width: auto;
-        justify-content: flex-end;
-        margin-left: auto;
-        gap: 6px;
-        flex-wrap: nowrap;
-        min-width: 0;
-        flex: 1 1 auto;
-      }
-
-      .menu {
-        gap: 6px;
-        flex-wrap: nowrap;
-        justify-content: flex-end;
-        overflow: hidden;
-      }
-
-      .menu a {
-        font-size: 8px;
-        letter-spacing: 0;
-      }
-
-      .cart-link {
-        width: 30px;
-        height: 30px;
-      }
-
-      .cart-link img {
-        width: 21px;
-        height: 21px;
-      }
-
-      .cart-count {
-        top: -2px;
-        right: -2px;
-        min-width: 14px;
-        height: 14px;
-        font-size: 8px;
-        padding: 0 4px;
-      }
-
-      .site-bg {
-        padding: 10px 0 20px;
-      }
-
-      .sobre-wrap {
-        padding: 0 4px;
-      }
-
-      .sobre-banner {
-        width: 99vw;
-      }
-
-      .whatsapp-fixo {
-        right: 10px;
-        bottom: 10px;
-      }
-
-      .whatsapp-fixo img {
-        width: 190px;
-        max-width: 190px;
-      }
-
-      footer {
-        font-size: 14px;
-        padding: 18px 12px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/geral.css">
+  <link rel="stylesheet" href="css/institucional.css">
 </head>
+
 <body>
 
   <header class="topo">
@@ -303,7 +24,7 @@
           <a href="categorias.html">COLEÇÃO</a>
           <a href="sobre.html" class="ativo">O QUE É HEEEPH?</a>
           <a href="fotos-reais.html">FOTOS REAIS</a>
-          <a href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer">CONTATOS</a>
+          <a href="contato.html">CONTATOS</a>
         </nav>
 
         <a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho">
@@ -314,16 +35,106 @@
     </div>
   </header>
 
-  <main class="site-bg">
-    <div class="sobre-wrap">
-      <div class="sobre-banner">
-        <img src="banner/quem-somos.png" alt="Quem somos HEEEPH">
-      </div>
+  <main class="pagina-institucional">
+    <div class="container-institucional">
+      <section class="card-institucional">
+
+        <div class="titulo-pagina">
+          <h1>O que é HEEEPH?</h1>
+          <p>
+            A HEEEPH é uma marca de placas decorativas e personalizadas em MDF,
+            feita para quem quer tirar a parede do comum.
+          </p>
+        </div>
+
+        <div class="bloco">
+          <h2>Uma ideia com atitude</h2>
+          <p>
+            A HEEEPH nasceu com a proposta de criar placas com personalidade:
+            rock, música, games, motos, bebidas, frases, cultura alternativa,
+            decoração retrô e aquele espírito de garagem que nunca sai de moda.
+          </p>
+
+          <p>
+            Aqui a parede não precisa ser sem graça. Ela pode contar uma história,
+            mostrar um gosto, lembrar uma fase, provocar um sorriso ou deixar o ambiente
+            com cara de dono.
+          </p>
+        </div>
+
+        <div class="bloco">
+          <h2>Placas decorativas em MDF</h2>
+          <p>
+            Trabalhamos com placas em MDF, impressão de qualidade e acabamento pensado
+            para decoração. As peças podem ser usadas em quartos, bares, oficinas,
+            estúdios, áreas de churrasco, lojas, cantinhos de música e espaços temáticos.
+          </p>
+
+          <ul>
+            <li>Placas decorativas prontas;</li>
+            <li>Placas personalizadas sob pedido;</li>
+            <li>Temas variados para colecionar;</li>
+            <li>Modelos verticais e horizontais;</li>
+            <li>Opções para presente, decoração e composição de parede.</li>
+          </ul>
+        </div>
+
+        <div class="bloco">
+          <h2>Personalização</h2>
+          <p>
+            Além das coleções disponíveis no site, também fazemos placas personalizadas
+            com frases, nomes, ideias, fotos, referências e temas escolhidos pelo cliente.
+          </p>
+
+          <p>
+            A ideia é simples: você manda o conceito, a HEEEPH avalia a possibilidade
+            e ajuda a transformar aquilo em uma placa com presença.
+          </p>
+        </div>
+
+        <div class="bloco">
+          <h2>Nosso estilo</h2>
+          <p>
+            A HEEEPH não nasceu para ser uma loja fria, sem alma. A pegada é mais bruta,
+            criativa e direta: placas com cara de música alta, parede de bar, quarto gamer,
+            oficina cheia de história e casa de gente que gosta do que gosta sem pedir licença.
+          </p>
+        </div>
+
+        <div class="aviso">
+          HEEEPH é para quem olha para uma parede vazia e pensa: “aqui falta alguma coisa”.
+          E falta mesmo. Falta uma placa boa.
+        </div>
+
+        <div class="btn-voltar">
+          <a href="categorias.html">Ver Coleções</a>
+        </div>
+
+      </section>
     </div>
   </main>
 
-  <footer>
-    © 2026 HEEEPH - Placas Decorativas
+  <footer class="footer-site">
+    <div class="footer-wrap">
+      <div class="footer-brand">
+        <strong>HEEEPH</strong>
+        <p>Placas decorativas e personalizadas em MDF.</p>
+      </div>
+
+      <nav class="footer-links" aria-label="Links institucionais">
+        <a href="sobre.html">Sobre</a>
+        <a href="contato.html">Contato</a>
+        <a href="politica-privacidade.html">Privacidade</a>
+        <a href="trocas-devolucoes.html">Trocas e devoluções</a>
+        <a href="politica-entrega.html">Entrega</a>
+        <a href="termos-de-uso.html">Termos</a>
+        <a href="faq.html">FAQ</a>
+      </nav>
+    </div>
+
+    <div class="footer-copy">
+      © 2026 HEEEPH - Placas Decorativas
+    </div>
   </footer>
 
   <a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
@@ -332,14 +143,23 @@
 
   <script>
     function getCart() {
-      return JSON.parse(localStorage.getItem('heeeph_cart')) || [];
+      const cart = JSON.parse(localStorage.getItem("heeeph_cart")) || [];
+      return Array.isArray(cart) ? cart : [];
     }
 
     function updateCartCount() {
       const cart = getCart();
-      const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
-      const countEl = document.getElementById('cartCount');
-      if (countEl) countEl.textContent = total;
+
+      const total = cart.reduce((acc, item) => {
+        const qtd = Number(item.quantidade || item.quantity || 1);
+        return acc + (isNaN(qtd) ? 1 : qtd);
+      }, 0);
+
+      const countEl = document.getElementById("cartCount");
+
+      if (countEl) {
+        countEl.textContent = total;
+      }
     }
 
     updateCartCount();
