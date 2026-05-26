@@ -6,526 +6,8 @@
 
   <title>Termos de Uso | HEEEPH</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
-
-    :root{
-      --gold:#f0c400;
-      --gold2:#ffd84d;
-      --text:#fff;
-      --topo-altura:72px;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      overflow-x:hidden;
-    }
-
-    body{
-      font-family:Arial, Helvetica, sans-serif;
-      color:var(--text);
-      background:
-        linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.30)),
-        url("banner/fundo.png") center top / cover no-repeat fixed;
-      background-color:#000;
-      overflow-x:hidden;
-      width:100%;
-      max-width:100%;
-      padding-top:var(--topo-altura);
-    }
-
-    a{
-      text-decoration:none;
-      color:inherit;
-    }
-
-    img{
-      display:block;
-      max-width:100%;
-    }
-
-    .container{
-      width:min(94%, 1100px);
-      margin:0 auto;
-    }
-
-    .topo{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:1000;
-      background:rgba(0,0,0,.96);
-      border-bottom:1px solid rgba(255,255,255,.05);
-      box-shadow:0 8px 24px rgba(0,0,0,.35);
-    }
-
-    .topo::after{
-      content:"";
-      display:block;
-      height:2px;
-      background:linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(240,196,0,.95) 10%,
-        rgba(240,196,0,.12) 50%,
-        rgba(240,196,0,.95) 90%,
-        transparent 100%
-      );
-    }
-
-    .topo .wrap{
-      max-width:1500px;
-      margin:0 auto;
-      padding:10px 18px 9px;
-      min-height:70px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-    }
-
-    .logo{
-      flex:0 0 auto;
-    }
-
-    .logo a{
-      font-size:26px;
-      font-weight:900;
-      letter-spacing:1px;
-      color:#fff;
-      white-space:nowrap;
-    }
-
-    .menu-area{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      margin-left:auto;
-      min-width:0;
-    }
-
-    .menu{
-      display:flex;
-      align-items:center;
-      gap:18px;
-      flex-wrap:wrap;
-      justify-content:center;
-      min-width:0;
-    }
-
-    .menu a{
-      color:#fff;
-      font-size:14px;
-      font-weight:800;
-      text-transform:uppercase;
-      white-space:nowrap;
-      transition:.2s ease;
-    }
-
-    .menu a:hover,
-    .menu a.ativo{
-      color:var(--gold);
-    }
-
-    .cart-link{
-      position:relative;
-      width:40px;
-      height:40px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
-    }
-
-    .cart-link img{
-      width:32px;
-      height:32px;
-      object-fit:contain;
-    }
-
-    .cart-count{
-      position:absolute;
-      top:-4px;
-      right:-4px;
-      min-width:20px;
-      height:20px;
-      padding:0 5px;
-      border-radius:999px;
-      background:var(--gold);
-      color:#000;
-      font-size:11px;
-      font-weight:900;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .pagina-politica{
-      padding:42px 0 50px;
-    }
-
-    .card-politica{
-      background:rgba(0,0,0,.58);
-      border:1px solid rgba(180,110,35,.62);
-      border-radius:24px;
-      padding:34px 34px 38px;
-      box-shadow:0 14px 34px rgba(0,0,0,.32);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .card-politica::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:24px;
-      box-shadow:inset 0 0 0 2px rgba(128,77,24,.26);
-      pointer-events:none;
-    }
-
-    .titulo-pagina{
-      text-align:center;
-      margin-bottom:30px;
-    }
-
-    .titulo-pagina h1{
-      font-size:42px;
-      color:var(--gold2);
-      margin-bottom:10px;
-      text-shadow:0 2px 10px rgba(0,0,0,.38);
-    }
-
-    .titulo-pagina p{
-      font-size:16px;
-      color:rgba(255,255,255,.86);
-      line-height:1.6;
-    }
-
-    .bloco{
-      margin-top:24px;
-      position:relative;
-      z-index:2;
-    }
-
-    .bloco h2{
-      font-size:24px;
-      color:var(--gold);
-      margin-bottom:10px;
-    }
-
-    .bloco p{
-      font-size:16px;
-      line-height:1.75;
-      color:rgba(255,255,255,.90);
-      margin-bottom:12px;
-    }
-
-    .bloco ul{
-      margin:10px 0 0 20px;
-      color:rgba(255,255,255,.90);
-    }
-
-    .bloco li{
-      font-size:16px;
-      line-height:1.7;
-      margin-bottom:8px;
-    }
-
-    .aviso{
-      margin-top:24px;
-      padding:16px 18px;
-      border-radius:16px;
-      background:rgba(240,196,0,.10);
-      border:1px solid rgba(240,196,0,.30);
-      color:#fff;
-      line-height:1.6;
-      font-size:15px;
-      position:relative;
-      z-index:2;
-    }
-
-    .btn-voltar{
-      margin-top:34px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      position:relative;
-      z-index:2;
-    }
-
-    .btn-voltar a{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:230px;
-      padding:13px 20px;
-      border-radius:14px;
-      background:linear-gradient(180deg, #f7cf4f, #d89d07);
-      color:#000;
-      font-size:15px;
-      font-weight:900;
-      text-transform:uppercase;
-      box-shadow:0 4px 12px rgba(0,0,0,.28);
-      transition:.2s ease;
-    }
-
-    .btn-voltar a:hover{
-      transform:translateY(-2px);
-      filter:brightness(1.04);
-    }
-
-    .footer-site{
-      background:#000;
-      color:#fff;
-      padding:24px 16px 18px;
-      margin-top:26px;
-      border-top:1px solid rgba(240,196,0,.22);
-    }
-
-    .footer-wrap{
-      width:min(94%, 1200px);
-      margin:0 auto;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:22px;
-      flex-wrap:wrap;
-    }
-
-    .footer-brand strong{
-      display:block;
-      font-size:22px;
-      font-weight:900;
-      color:var(--gold);
-      margin-bottom:6px;
-      letter-spacing:1px;
-    }
-
-    .footer-brand p{
-      font-size:14px;
-      color:rgba(255,255,255,.78);
-    }
-
-    .footer-links{
-      display:flex;
-      justify-content:flex-end;
-      gap:12px 18px;
-      flex-wrap:wrap;
-      max-width:680px;
-    }
-
-    .footer-links a{
-      font-size:13px;
-      font-weight:800;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.82);
-      transition:.2s ease;
-    }
-
-    .footer-links a:hover{
-      color:var(--gold);
-    }
-
-    .footer-copy{
-      width:min(94%, 1200px);
-      margin:18px auto 0;
-      padding-top:14px;
-      border-top:1px solid rgba(255,255,255,.08);
-      text-align:center;
-      font-size:13px;
-      color:rgba(255,255,255,.62);
-    }
-
-    .whatsapp-fixo{
-      position:fixed;
-      right:14px;
-      bottom:18px;
-      z-index:999;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .whatsapp-fixo img{
-      width:190px;
-      max-width:190px;
-      height:auto;
-      display:block;
-      filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));
-    }
-
-    @media (max-width: 780px){
-      :root{
-        --topo-altura:56px;
-      }
-
-      .topo .wrap{
-        flex-direction:row;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-        padding:8px 10px 8px;
-        min-height:54px;
-        flex-wrap:nowrap;
-      }
-
-      .logo a{
-        font-size:18px;
-        letter-spacing:1px;
-      }
-
-      .menu-area{
-        width:auto;
-        margin-left:auto;
-        gap:8px;
-        flex-wrap:nowrap;
-        min-width:0;
-        flex:1 1 auto;
-        justify-content:flex-end;
-      }
-
-      .menu{
-        display:flex;
-        align-items:center;
-        justify-content:flex-end;
-        gap:8px;
-        flex-wrap:nowrap;
-        min-width:0;
-        overflow:hidden;
-      }
-
-      .menu a{
-        font-size:9px;
-      }
-
-      .cart-link{
-        width:34px;
-        height:34px;
-      }
-
-      .cart-link img{
-        width:26px;
-        height:26px;
-      }
-
-      .cart-count{
-        top:-2px;
-        right:-2px;
-        min-width:16px;
-        height:16px;
-        font-size:9px;
-        padding:0 4px;
-      }
-
-      .pagina-politica{
-        padding:26px 0 36px;
-      }
-
-      .card-politica{
-        padding:24px 18px 28px;
-        border-radius:20px;
-      }
-
-      .titulo-pagina h1{
-        font-size:30px;
-      }
-
-      .titulo-pagina p{
-        font-size:15px;
-      }
-
-      .bloco h2{
-        font-size:21px;
-      }
-
-      .bloco p,
-      .bloco li{
-        font-size:15px;
-      }
-
-      .footer-wrap{
-        flex-direction:column;
-        align-items:center;
-        text-align:center;
-      }
-
-      .footer-links{
-        justify-content:center;
-      }
-
-      .footer-links a{
-        font-size:12px;
-      }
-
-      .whatsapp-fixo{
-        right:8px;
-        bottom:8px;
-      }
-
-      .whatsapp-fixo img{
-        width:145px;
-        max-width:145px;
-      }
-    }
-
-    @media (max-width: 480px){
-      .topo .wrap{
-        padding:8px 8px 8px;
-        gap:6px;
-      }
-
-      .logo a{
-        font-size:16px;
-      }
-
-      .menu{
-        gap:6px;
-      }
-
-      .menu a{
-        font-size:8px;
-      }
-
-      .cart-link{
-        width:30px;
-        height:30px;
-      }
-
-      .cart-link img{
-        width:22px;
-        height:22px;
-      }
-
-      .cart-count{
-        min-width:14px;
-        height:14px;
-        font-size:8px;
-      }
-
-      .titulo-pagina h1{
-        font-size:27px;
-      }
-
-      .card-politica{
-        padding:22px 15px 26px;
-      }
-
-      .btn-voltar a{
-        min-width:190px;
-        font-size:13px;
-      }
-
-      .whatsapp-fixo img{
-        width:130px;
-        max-width:130px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/geral.css">
+  <link rel="stylesheet" href="css/institucional.css">
 </head>
 
 <body>
@@ -553,9 +35,9 @@
     </div>
   </header>
 
-  <main class="pagina-politica">
-    <div class="container">
-      <section class="card-politica">
+  <main class="pagina-institucional">
+    <div class="container-institucional">
+      <section class="card-institucional">
 
         <div class="titulo-pagina">
           <h1>Termos de Uso</h1>
@@ -592,17 +74,17 @@
           </p>
 
           <p>
-            Os produtos podem ser vendidos prontos ou feitos de forma personalizada, conforme a
-            disponibilidade, o atendimento e a aprovação do cliente.
+            Os produtos podem ser vendidos prontos ou feitos de forma personalizada, conforme disponibilidade,
+            atendimento e aprovação do cliente.
           </p>
         </div>
 
         <div class="bloco">
           <h2>3. Uso do site</h2>
           <p>
-            O cliente se compromete a utilizar o site de forma correta, sem tentar danificar,
-            invadir, copiar indevidamente, fraudar compras, manipular preços, alterar arquivos ou
-            prejudicar o funcionamento da loja.
+            O cliente se compromete a utilizar o site de forma correta, sem tentar danificar, invadir,
+            copiar indevidamente, fraudar compras, manipular preços, alterar arquivos ou prejudicar o
+            funcionamento da loja.
           </p>
 
           <ul>
@@ -630,64 +112,61 @@
         <div class="bloco">
           <h2>5. Preços e disponibilidade</h2>
           <p>
-            Os preços, promoções, produtos, medidas, categorias e condições de compra podem ser
-            alterados pela HEEEPH a qualquer momento, sem aviso prévio.
+            Os preços, promoções, produtos, medidas, categorias e condições de compra podem ser alterados
+            pela HEEEPH a qualquer momento.
           </p>
 
           <p>
-            Caso algum preço, informação ou disponibilidade esteja incorreta por erro técnico ou de
-            digitação, a HEEEPH poderá corrigir a informação e entrar em contato com o cliente antes
-            de confirmar o pedido.
+            Caso algum preço, informação ou disponibilidade esteja incorreta por erro técnico ou de digitação,
+            a HEEEPH poderá corrigir a informação e entrar em contato com o cliente antes de confirmar o pedido.
           </p>
         </div>
 
         <div class="bloco">
           <h2>6. Carrinho de compras</h2>
           <p>
-            O carrinho do site serve para organizar os produtos escolhidos pelo cliente. Ele pode
-            guardar informações temporárias no navegador, como nome do produto, quantidade, imagem
-            e valor.
+            O carrinho do site serve para organizar os produtos escolhidos pelo cliente. Ele pode guardar
+            informações temporárias no navegador, como nome do produto, quantidade, imagem e valor.
           </p>
 
           <p>
-            A inclusão de um produto no carrinho não garante reserva definitiva, preço congelado ou
-            confirmação de compra. O pedido só será considerado válido após confirmação das informações
-            e pagamento, quando aplicável.
+            A inclusão de um produto no carrinho não garante reserva definitiva, preço congelado ou confirmação
+            de compra. O pedido só será considerado válido após confirmação das informações e pagamento, quando aplicável.
           </p>
         </div>
 
         <div class="bloco">
           <h2>7. Pedidos personalizados</h2>
           <p>
-            Em pedidos personalizados, o cliente é responsável por conferir nomes, frases, imagens,
-            medidas, cores, referências e demais informações antes da aprovação final.
+            Em pedidos personalizados, o cliente é responsável por conferir nomes, frases, imagens, medidas,
+            cores, referências e demais informações antes da aprovação final.
           </p>
 
           <p>
-            Após a aprovação da arte ou início da produção, alterações podem não ser possíveis ou
-            podem gerar novo custo, dependendo da etapa em que o pedido estiver.
+            Após a aprovação da arte ou início da produção, alterações podem não ser possíveis ou podem gerar
+            novo custo, dependendo da etapa em que o pedido estiver.
           </p>
         </div>
 
         <div class="bloco">
           <h2>8. Responsabilidade pelas artes enviadas</h2>
           <p>
-            Quando o cliente envia fotos, marcas, logotipos, frases, personagens, imagens ou qualquer
-            material para personalização, declara possuir autorização para uso desse conteúdo.
+            Quando o cliente envia fotos, marcas, logotipos, frases, personagens, imagens ou qualquer material
+            para personalização, declara possuir autorização para uso desse conteúdo.
           </p>
 
           <p>
-            A HEEEPH poderá recusar pedidos que envolvam conteúdo ofensivo, ilegal, discriminatório,
-            falso, violento, pornográfico, criminoso ou que aparente violar direitos de terceiros.
+            A HEEEPH poderá recusar pedidos que envolvam conteúdo ofensivo, ilegal, discriminatório, falso,
+            violento, pornográfico, criminoso ou que aparente violar direitos de terceiros.
           </p>
         </div>
 
         <div class="bloco">
           <h2>9. Pagamentos</h2>
           <p>
-            Os pagamentos poderão ser realizados pelas formas informadas durante a compra ou no
-            atendimento. Quando houver uso de plataformas externas, links de pagamento ou serviços
-            financeiros, o cliente também estará sujeito às regras desses serviços.
+            Os pagamentos poderão ser realizados pelas formas informadas durante a compra ou no atendimento.
+            Quando houver uso de plataformas externas, links de pagamento ou serviços financeiros, o cliente
+            também estará sujeito às regras desses serviços.
           </p>
 
           <p>
@@ -711,27 +190,27 @@
         <div class="bloco">
           <h2>11. Entrega</h2>
           <p>
-            As regras de envio, retirada, frete, endereço incorreto, tentativas de entrega e atrasos
-            estão descritas na Política de Entrega da HEEEPH.
+            As regras de envio, retirada, frete, endereço incorreto, tentativas de entrega e atrasos estão
+            descritas na Política de Entrega da HEEEPH.
           </p>
 
           <p>
-            O cliente é responsável por informar corretamente o endereço de entrega e acompanhar as
-            orientações enviadas durante o atendimento.
+            O cliente é responsável por informar corretamente o endereço de entrega e acompanhar as orientações
+            enviadas durante o atendimento.
           </p>
         </div>
 
         <div class="bloco">
           <h2>12. Trocas, devoluções e arrependimento</h2>
           <p>
-            As regras de troca, devolução, defeito, produto danificado no transporte, reembolso e
-            arrependimento de compra estão descritas na página de Trocas e Devoluções.
+            As regras de troca, devolução, defeito, produto danificado no transporte, reembolso e arrependimento
+            de compra estão descritas na página de Trocas e Devoluções.
           </p>
 
           <p>
-            Para compras feitas pela internet, WhatsApp ou outro meio fora de estabelecimento físico,
-            o direito de arrependimento poderá ser solicitado em até 7 dias corridos a partir do
-            recebimento do produto, quando aplicável.
+            Para compras feitas pela internet, WhatsApp ou outro meio fora de estabelecimento físico, o direito
+            de arrependimento poderá ser solicitado em até 7 dias corridos a partir do recebimento do produto,
+            quando aplicável.
           </p>
         </div>
 
@@ -752,57 +231,47 @@
         <div class="bloco">
           <h2>14. Limitação de responsabilidade</h2>
           <p>
-            A HEEEPH busca manter o site funcionando corretamente, mas não garante que ele estará
-            livre de falhas, interrupções, erros de navegação, indisponibilidade temporária,
-            problemas de internet ou instabilidade de serviços externos.
+            A HEEEPH busca manter o site funcionando corretamente, mas não garante que ele estará livre de
+            falhas, interrupções, erros de navegação, indisponibilidade temporária, problemas de internet
+            ou instabilidade de serviços externos.
           </p>
 
           <p>
-            Também não nos responsabilizamos por danos causados por mau uso do produto, instalação
-            inadequada, exposição à umidade, calor excessivo, queda, limpeza incorreta ou alteração
-            feita pelo cliente.
+            Também não nos responsabilizamos por danos causados por mau uso do produto, instalação inadequada,
+            exposição à umidade, calor excessivo, queda, limpeza incorreta ou alteração feita pelo cliente.
           </p>
         </div>
 
         <div class="bloco">
           <h2>15. Links externos</h2>
           <p>
-            O site pode conter links para WhatsApp, plataformas de pagamento, redes sociais, serviços
-            de frete ou outros sites externos. A HEEEPH não controla o funcionamento, conteúdo,
-            segurança ou políticas desses serviços.
+            O site pode conter links para WhatsApp, plataformas de pagamento, redes sociais, serviços de frete
+            ou outros sites externos. A HEEEPH não controla o funcionamento, conteúdo, segurança ou políticas
+            desses serviços.
           </p>
         </div>
 
         <div class="bloco">
           <h2>16. Alterações nos termos</h2>
           <p>
-            Estes Termos de Uso podem ser alterados a qualquer momento para melhorar a clareza,
-            corrigir informações, adaptar o funcionamento da loja ou atender necessidades legais.
-          </p>
-
-          <p>
-            Quando houver alteração importante, a data de atualização desta página poderá ser modificada.
+            Estes Termos de Uso podem ser alterados a qualquer momento para melhorar a clareza, corrigir informações,
+            adaptar o funcionamento da loja ou atender necessidades legais.
           </p>
         </div>
 
         <div class="bloco">
           <h2>17. Atendimento</h2>
           <p>
-            Para dúvidas sobre estes termos, produtos, pedidos, prazos, personalizações ou qualquer
-            questão relacionada à HEEEPH, o cliente pode entrar em contato pela página de contato ou
-            pelo WhatsApp oficial da loja.
-          </p>
-
-          <p>
-            Aqui a conversa é no estilo antigo e correto: combinado claro, palavra firme e respeito
-            dos dois lados.
+            Para dúvidas sobre estes termos, produtos, pedidos, prazos, personalizações ou qualquer questão
+            relacionada à HEEEPH, o cliente pode entrar em contato pela página de contato, pelo WhatsApp oficial
+            da loja ou pelo e-mail heeeph@outlook.com.
           </p>
         </div>
 
         <div class="aviso">
-          Esta página é um modelo básico de Termos de Uso para a loja HEEEPH. Para uso comercial
-          definitivo, principalmente com CNPJ, nota fiscal, gateway de pagamento, anúncios, marketplace
-          ou grande volume de vendas, é recomendável revisão contábil ou jurídica.
+          Esta página é um modelo básico de Termos de Uso para a loja HEEEPH. Para uso comercial definitivo,
+          principalmente com CNPJ, nota fiscal, gateway de pagamento, anúncios, marketplace ou grande volume
+          de vendas, é recomendável revisão contábil ou jurídica.
         </div>
 
         <div class="btn-voltar">
@@ -848,13 +317,17 @@
 
     function updateCartCount() {
       const cart = getCart();
+
       const total = cart.reduce((acc, item) => {
-        const qtd = Number(item.quantity || item.quantidade || 1);
+        const qtd = Number(item.quantidade || item.quantity || 1);
         return acc + (isNaN(qtd) ? 1 : qtd);
       }, 0);
 
       const countEl = document.getElementById("cartCount");
-      if (countEl) countEl.textContent = total;
+
+      if (countEl) {
+        countEl.textContent = total;
+      }
     }
 
     updateCartCount();
