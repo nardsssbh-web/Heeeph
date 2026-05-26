@@ -128,12 +128,10 @@ function atualizarTotalComFrete() {
 
   if (!freteEl || !totalEl) return;
 
-  freteEl.textContent = freteAtual > 0 ? formatarPreco(freteAtual) : "A combinar";
+  freteEl.textContent = "A confirmar";
 
   if (subtotalAtual > 0) {
-    totalEl.textContent = freteAtual > 0
-      ? formatarPreco(subtotalAtual + freteAtual)
-      : formatarPreco(subtotalAtual);
+    totalEl.textContent = formatarPreco(subtotalAtual);
   } else {
     totalEl.textContent = "preço aqui";
   }
@@ -149,27 +147,17 @@ function calcularFrete() {
   const cepLimpo = cepFormatado.replace(/\D/g, "");
 
   input.value = cepFormatado;
-  localStorage.setItem("cepFreteSalvo", cepFormatado);
 
   if (cepLimpo.length !== 8) {
-    freteAtual = 0;
-    localStorage.removeItem("freteAtualSalvo");
+    localStorage.removeItem("cepFreteSalvo");
     mensagem.textContent = "Digite um CEP válido com 8 números.";
     atualizarTotalComFrete();
     return;
   }
 
-  const carrinho = obterCarrinhoSeguro();
+  localStorage.setItem("cepFreteSalvo", cepFormatado);
 
-  const quantidadeTotal = carrinho.reduce((total, item) => {
-    const qtd = Number(item.quantidade || item.quantity || 1);
-    return total + (isNaN(qtd) ? 1 : qtd);
-  }, 0);
-
-  freteAtual = calcularValorFretePorCEP(cepLimpo, quantidadeTotal);
-  localStorage.setItem("freteAtualSalvo", String(freteAtual));
-
-  mensagem.textContent = `Frete estimado para ${quantidadeTotal} placa(s), CEP ${cepFormatado}: ${formatarPreco(freteAtual)}.`;
+  mensagem.textContent = "CEP recebido. O frete será confirmado pelo WhatsApp antes do pagamento.";
 
   atualizarTotalComFrete();
 }
@@ -210,9 +198,7 @@ function montarMensagemWhatsApp() {
     mensagem += "\nCEP informado: " + cepSalvo;
   }
 
-  if (freteAtual > 0) {
-    mensagem += "\nFrete estimado: " + formatarPreco(freteAtual);
-  }
+  mensagem += "\nFrete: a confirmar pelo WhatsApp";
 
   if (totalProdutos > 0 && freteAtual > 0) {
     mensagem += "\nTotal com frete: " + formatarPreco(totalProdutos + freteAtual);
@@ -430,9 +416,10 @@ function excluirItem(id) {
 function limparCarrinho() {
   freteAtual = 0;
   subtotalAtual = 0;
+
   localStorage.removeItem("heeeph_cart");
   localStorage.removeItem("cepFreteSalvo");
-  localStorage.removeItem("freteAtualSalvo");
+
   renderCarrinho();
 }
 
@@ -447,7 +434,6 @@ function configurarBotaoContinuarComprando() {
 
 function restaurarFreteSalvo() {
   const cepSalvo = localStorage.getItem("cepFreteSalvo") || "";
-  const freteSalvo = Number(localStorage.getItem("freteAtualSalvo") || "0");
   const input = document.getElementById("cepFrete");
   const mensagem = document.getElementById("mensagemFrete");
 
@@ -455,29 +441,12 @@ function restaurarFreteSalvo() {
     input.value = formatarCEP(cepSalvo);
   }
 
-  if (cepSalvo && freteSalvo > 0) {
-    freteAtual = freteSalvo;
-
-    if (mensagem) {
-      mensagem.textContent = `Frete estimado para o CEP ${formatarCEP(cepSalvo)}: ${formatarPreco(freteAtual)}.`;
-    }
+  if (mensagem && cepSalvo) {
+    mensagem.textContent = "CEP recebido. O frete será confirmado pelo WhatsApp antes do pagamento.";
   }
 }
-
 function reaplicarFreteSeJaHouverCEP() {
-  const cepSalvo = localStorage.getItem("cepFreteSalvo") || "";
-
-  if (!cepSalvo) {
-    atualizarTotalComFrete();
-    return;
-  }
-
-  const input = document.getElementById("cepFrete");
-
-  if (input) {
-    input.value = formatarCEP(cepSalvo);
-    calcularFrete();
-  }
+  atualizarTotalComFrete();
 }
 
 renderCarrinho();
