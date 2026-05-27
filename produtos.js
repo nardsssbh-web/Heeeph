@@ -2,7 +2,8 @@ const DESTAQUES_HOME = [
   "placas/street/naipess.png",
   "placas/street/skatista.png",
   "placas/bebida/tequila.png",
-  "placas/bebida/melhor-rede.png"
+  "placas/bebida/melhor-rede.png",
+  "placas/home-frases/amigo-familia.png"
 ];
 
 const PRODUTOS = {
