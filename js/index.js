@@ -24,6 +24,7 @@ const produtosDestaque =
     : [];
 
 let currentIndex = 0;
+let intervaloCarrossel = null;
 
 function pegarCategoriaDoProduto(produto) {
   if (!produto) return "";
@@ -77,31 +78,53 @@ function abrirGaleriaDoDestaque() {
   window.location.href = `${categoria}.html?produto=${encodeURIComponent(produto.id)}`;
 }
 
+function irParaAnterior() {
+  if (!produtosDestaque.length) return;
+
+  currentIndex =
+    (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
+
+  renderCarouselPrincipal();
+  reiniciarCarrosselAutomatico();
+}
+
+function irParaProximo() {
+  if (!produtosDestaque.length) return;
+
+  currentIndex = (currentIndex + 1) % produtosDestaque.length;
+
+  renderCarouselPrincipal();
+  reiniciarCarrosselAutomatico();
+}
+
+function iniciarCarrosselAutomatico() {
+  if (!produtosDestaque.length || produtosDestaque.length <= 1) return;
+
+  intervaloCarrossel = setInterval(() => {
+    currentIndex = (currentIndex + 1) % produtosDestaque.length;
+    renderCarouselPrincipal();
+  }, 4000);
+}
+
+function reiniciarCarrosselAutomatico() {
+  if (intervaloCarrossel) {
+    clearInterval(intervaloCarrossel);
+  }
+
+  iniciarCarrosselAutomatico();
+}
+
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
 const btnComprar = document.getElementById("btnComprar");
 const placaClick = document.getElementById("placaClick");
 
 if (prevBtn) {
-  prevBtn.addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-
-    currentIndex =
-      (currentIndex - 1 + produtosDestaque.length) % produtosDestaque.length;
-
-    renderCarouselPrincipal();
-  });
+  prevBtn.addEventListener("click", irParaAnterior);
 }
 
 if (nextBtn) {
-  nextBtn.addEventListener("click", () => {
-    if (!produtosDestaque.length) return;
-
-    currentIndex =
-      (currentIndex + 1) % produtosDestaque.length;
-
-    renderCarouselPrincipal();
-  });
+  nextBtn.addEventListener("click", irParaProximo);
 }
 
 if (btnComprar) {
@@ -114,3 +137,4 @@ if (placaClick) {
 
 updateCartCount();
 renderCarouselPrincipal();
+iniciarCarrosselAutomatico();
