@@ -98,6 +98,7 @@ const PRODUTOS = {
     { id: "fotos-reais-foto2", nome: "Bem Vindos - Personalizado", imagem: "placas/reais/bem-vindos.png", orientacao: "horizontal", preco: "" },
     { id: "fotos-reais-foto2", nome: "W.C.Masculino - Personalizado", imagem: "placas/reais/masculino.png", orientacao: "vertical", preco: "" },
     { id: "fotos-reais-foto2", nome: "W.C.Feminino - Personalizado", imagem: "placas/reais/feminino.png", orientacao: "vertical", preco: "" },
+    { id: "fotos-reais-foto2", nome: "Enviado por cliente", imagem: "placas/reais/reais1.png", orientacao: "horizontal", preco: "" },
 
   ],
 
