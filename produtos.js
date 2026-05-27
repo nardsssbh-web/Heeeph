@@ -189,7 +189,7 @@ const PRODUTOS = {
     { id: "musica-musica1", nome: "Escala Pentatônica", imagem: "placas/musica/escala-pentatonica.png", orientacao: "vertical", preco: "" },
     { id: "musica-musica2", nome: "Modos Gregos", imagem: "placas/musica/modos.png", orientacao: "vertical", preco: "" },
     { id: "musica-musica3", nome: "Sem Música Não Dá !!!!", imagem: "placas/musica/sem-musica.png", orientacao: "vertical", preco: "" },
-    { id: "musica-musica4", nome: "Música 4", imagem: "placas/musica/musica4.png", orientacao: "vertical", preco: "" },
+    { id: "musica-musica4", nome: "Partitura Real Vivaldi", imagem: "placas/musica/violino-vivaldi.png", orientacao: "vertical", preco: "" },
     { id: "musica-musica5", nome: "Música 5", imagem: "placas/musica/musica5.png", orientacao: "vertical", preco: "" },
     { id: "musica-musica6", nome: "Música 6", imagem: "placas/musica/musica6.png", orientacao: "vertical", preco: "" },
     { id: "musica-musica7", nome: "Música 7", imagem: "placas/musica/musica7.png", orientacao: "vertical", preco: "" },
