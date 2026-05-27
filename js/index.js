@@ -103,7 +103,7 @@ function iniciarCarrosselAutomatico() {
   intervaloCarrossel = setInterval(() => {
     currentIndex = (currentIndex + 1) % produtosDestaque.length;
     renderCarouselPrincipal();
-  }, 4000);
+  }, 2000);
 }
 
 function reiniciarCarrosselAutomatico() {
