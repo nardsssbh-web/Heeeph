@@ -40,8 +40,19 @@ function pegarCategoriaDoProduto(produto) {
   return "";
 }
 
+function pegarMedidaDoProduto(produto) {
+  if (!produto) return "";
+
+  if (produto.orientacao === "horizontal") {
+    return "28x20cm";
+  }
+
+  return "20x28cm";
+}
+
 function renderCarouselPrincipal() {
   const placaPrincipal = document.getElementById("placaPrincipal");
+  const placaClick = document.getElementById("placaClick");
   const medidaAtual = document.getElementById("medidaAtual");
   const nomeAtual = document.getElementById("nomeAtual");
 
@@ -59,8 +70,18 @@ function renderCarouselPrincipal() {
 
   placaPrincipal.src = produto.imagem || "";
   placaPrincipal.alt = produto.nome || "Placa em destaque";
-  medidaAtual.textContent = produto.medida || "";
+  medidaAtual.textContent = produto.medida || pegarMedidaDoProduto(produto);
   nomeAtual.textContent = produto.nome || "";
+
+  if (placaClick) {
+    placaClick.classList.remove("placa-horizontal", "placa-vertical");
+
+    if (produto.orientacao === "horizontal") {
+      placaClick.classList.add("placa-horizontal");
+    } else {
+      placaClick.classList.add("placa-vertical");
+    }
+  }
 }
 
 function abrirGaleriaDoDestaque() {
@@ -103,7 +124,7 @@ function iniciarCarrosselAutomatico() {
   intervaloCarrossel = setInterval(() => {
     currentIndex = (currentIndex + 1) % produtosDestaque.length;
     renderCarouselPrincipal();
-  }, 2000);
+  }, 4000);
 }
 
 function reiniciarCarrosselAutomatico() {
