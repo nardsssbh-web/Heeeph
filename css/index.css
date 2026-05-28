@@ -740,46 +740,80 @@
   display:block;
 }
 /* ==============================
-   CORREÇÃO HOME NO CELULAR
+   HOME NO CELULAR - LADO A LADO
    ============================== */
 
 @media (max-width: 780px){
 
   .topo-vitrine{
-    display:flex;
-    flex-direction:column;
+    display:grid;
+    grid-template-columns: 26% 48% 26%;
+    gap:6px;
     align-items:center;
-    gap:18px;
+    width:100%;
   }
 
   .painel-lateral{
-    width:92%;
-    max-width:360px;
+    width:100%;
+    max-width:none;
     min-height:auto;
+    border-radius:12px;
   }
 
-  .painel-lateral.esq{
-    order:2;
-  }
-
+  .painel-lateral.esq,
   .painel-lateral.dir{
-    order:3;
+    order:initial;
+  }
+
+  .banner-medidas-html,
+  .banner-preco-html{
+    min-height:190px;
+    padding:8px 5px;
+    justify-content:center;
+  }
+
+  .banner-medidas-html h2,
+  .banner-preco-html h2{
+    font-size:15px;
+    line-height:1.05;
+    margin-bottom:6px;
+  }
+
+  .banner-medidas-html p,
+  .banner-preco-html p{
+    font-size:9px;
+    line-height:1.25;
+  }
+
+  .banner-preco-html ul{
+    margin:8px 0 0 10px;
+  }
+
+  .banner-preco-html li{
+    font-size:8.5px;
+    line-height:1.25;
+    margin-bottom:3px;
+  }
+
+  .preco-home{
+    font-size:17px;
+    margin:4px 0;
   }
 
   .vitrine-centro,
   .carrossel-central,
   .carrossel-home{
-    order:1;
     width:100%;
-    max-width:360px;
+    max-width:none;
     min-height:auto;
-    padding:14px 10px 18px;
+    padding:6px 4px;
+    border-radius:12px;
   }
 
   #placaClick{
-    width:240px;
-    height:240px;
-    max-width:90vw;
+    width:100%;
+    height:190px;
+    max-width:100%;
     margin:0 auto;
     display:flex;
     align-items:center;
@@ -796,56 +830,112 @@
     display:block;
   }
 
+  .titulo-carrossel,
+  .carrossel-titulo{
+    margin-bottom:4px;
+  }
+
+  .titulo-carrossel h2,
+  .carrossel-titulo h2{
+    font-size:15px;
+  }
+
+  .titulo-carrossel p,
+  .carrossel-titulo p{
+    font-size:9px;
+  }
+
+  .info-placa-atual{
+    width:100%;
+    margin:8px auto 0;
+    text-align:center;
+  }
+
+  #nomeAtual,
+  .nome-atual{
+    font-size:17px;
+    line-height:1.1;
+  }
+
+  #medidaAtual,
+  .medida-atual{
+    font-size:13px;
+  }
+
+  #btnComprar,
+  .btn-comprar-destaque{
+    width:95%;
+    min-width:0;
+    max-width:180px;
+    padding:10px 8px;
+    font-size:12px;
+    margin-top:10px;
+  }
+
   .controles-carrossel,
   .carrossel-controles{
-    width:100%;
     display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-top:14px;
-    padding:0 20px;
+    justify-content:center;
+    gap:8px;
+    margin-top:10px;
   }
 
   #prevBtn,
   #nextBtn{
-    width:52px;
-    height:52px;
-    font-size:24px;
+    width:38px;
+    height:38px;
+    font-size:20px;
+  }
+}
+
+@media (max-width: 480px){
+
+  .topo-vitrine{
+    grid-template-columns: 25% 50% 25%;
+    gap:4px;
   }
 
-  .info-placa-atual{
-    width:92%;
-    max-width:320px;
-    margin:14px auto 0;
-    text-align:center;
+  .banner-medidas-html,
+  .banner-preco-html{
+    min-height:170px;
+    padding:6px 4px;
   }
 
-  #nomeAtual{
-    font-size:22px;
-    line-height:1.2;
+  .banner-medidas-html h2,
+  .banner-preco-html h2{
+    font-size:13px;
   }
 
-  #medidaAtual{
-    font-size:18px;
+  .banner-medidas-html p,
+  .banner-preco-html p{
+    font-size:8px;
   }
 
-  #btnComprar{
-    width:90%;
-    max-width:300px;
-    margin:14px auto 0;
+  .banner-preco-html li{
+    font-size:7.5px;
   }
 
-  .banner-categorias-home,
-  .banner-categorias-wrap{
-    width:94%;
-    max-width:360px;
-    margin:26px auto 0;
+  .preco-home{
+    font-size:15px;
   }
 
-  .banner-categorias-home img,
-  .banner-categorias-wrap img{
-    width:100%;
-    height:auto;
-    display:block;
+  #placaClick{
+    height:170px;
+  }
+
+  #nomeAtual,
+  .nome-atual{
+    font-size:15px;
+  }
+
+  #medidaAtual,
+  .medida-atual{
+    font-size:12px;
+  }
+
+  #btnComprar,
+  .btn-comprar-destaque{
+    font-size:11px;
+    padding:9px 6px;
   }
 }
