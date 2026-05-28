@@ -720,3 +720,22 @@
     min-width:160px;
   }
 }
+/* AJUSTE SEGURO DO CARROSSEL - NÃO CORTAR PLACA */
+#placaClick{
+  width:300px;
+  height:300px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  margin:0 auto;
+}
+
+#placaPrincipal{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+  display:block;
+}
