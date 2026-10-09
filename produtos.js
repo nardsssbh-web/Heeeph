@@ -348,3 +348,8 @@ function contarItensCarrinho() {
   const carrinho = obterCarrinho();
   return carrinho.reduce((total, item) => total + item.quantidade, 0);
 }
+
+// O servidor usa o mesmo catalogo para validar os produtos na cotacao de frete.
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { getTodosOsProdutos };
+}

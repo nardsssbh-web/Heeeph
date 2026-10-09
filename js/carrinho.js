@@ -1,8 +1,12 @@
 const CHECKOUT_EM_TESTE = true;
-const LINK_MERCADO_PAGO = "https://link.mercadopago.com.br/heeeph";
 const WHATSAPP_HEEEPH = "5511998302901";
 
 let freteAtual = 0;
+let opcaoFreteAtual = null;
+let opcoesFrete = [];
+let freteEmTeste = false;
+let consultaFrete = 0;
+let controleFrete = null;
 let subtotalAtual = 0;
 
 function precoParaNumero(preco) {
@@ -103,68 +107,128 @@ function removerDoCarrinhoSeguro(id) {
   salvarCarrinhoSeguro(novoCarrinho);
 }
 
-function calcularValorFretePorCEP(cepLimpo, quantidadeTotal) {
-  const inicio = Number(cepLimpo.charAt(0));
-
-  let freteBase = 0;
-
-  if (inicio >= 0 && inicio <= 1) freteBase = 19.90;
-  else if (inicio >= 2 && inicio <= 3) freteBase = 24.90;
-  else if (inicio >= 4 && inicio <= 5) freteBase = 29.90;
-  else if (inicio >= 6 && inicio <= 7) freteBase = 34.90;
-  else freteBase = 39.90;
-
-  if (quantidadeTotal <= 1) return freteBase;
-  if (quantidadeTotal <= 3) return freteBase + 8.00;
-  if (quantidadeTotal <= 5) return freteBase + 15.00;
-  if (quantidadeTotal <= 8) return freteBase + 25.00;
-
-  return freteBase + 35.00;
+function invalidarFrete() {
+  consultaFrete += 1;
+  if (controleFrete) controleFrete.abort();
+  controleFrete = null;
+  freteAtual = 0;
+  opcaoFreteAtual = null;
+  opcoesFrete = [];
+  freteEmTeste = false;
+  const opcoes = document.getElementById("opcoesFrete");
+  if (opcoes) opcoes.replaceChildren();
+  const botao = document.getElementById("calcularFreteBtn");
+  if (botao) { botao.disabled = false; botao.textContent = "CALCULAR"; }
+  atualizarTotalComFrete();
 }
 
 function atualizarTotalComFrete() {
   const freteEl = document.getElementById("freteValor");
   const totalEl = document.getElementById("totalValor");
-
   if (!freteEl || !totalEl) return;
-
-  freteEl.textContent = "A confirmar";
-
-  if (subtotalAtual > 0) {
-    totalEl.textContent = formatarPreco(subtotalAtual);
-  } else {
-    totalEl.textContent = "preço aqui";
-  }
+  freteEl.textContent = opcaoFreteAtual
+    ? formatarPreco(freteAtual) + (freteEmTeste ? " (teste)" : "")
+    : "A confirmar";
+  totalEl.textContent = subtotalAtual > 0
+    ? formatarPreco(subtotalAtual + freteAtual)
+    : "Preço a confirmar";
+  const legenda = document.getElementById("legendaTotal");
+  if (legenda) legenda.textContent = opcaoFreteAtual
+    ? (freteEmTeste ? "Simulação de teste — valor não válido para pagamento." : "Inclui a entrega selecionada. Pedido sujeito à confirmação.")
+    : "Frete ainda não incluído.";
 }
 
-function calcularFrete() {
+function exibirOpcoesFrete() {
+  const container = document.getElementById("opcoesFrete");
+  container.replaceChildren();
+  opcoesFrete.forEach(opcao => {
+    const label = document.createElement("label");
+    label.className = "opcao-frete";
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "servicoFrete";
+    radio.value = opcao.id;
+    radio.addEventListener("change", () => {
+      opcaoFreteAtual = opcao;
+      freteAtual = opcao.preco;
+      atualizarTotalComFrete();
+    });
+    const detalhes = document.createElement("span");
+    const nome = document.createElement("strong");
+    nome.textContent = `${opcao.transportadora} — ${opcao.servico}`;
+    const prazo = document.createElement("small");
+    prazo.textContent = opcao.prazo === null ? "Prazo a confirmar" :
+      `${opcao.prazo} ${opcao.prazo === 1 ? "dia útil" : "dias úteis"} após a postagem`;
+    detalhes.append(nome, prazo);
+    const preco = document.createElement("strong");
+    preco.textContent = formatarPreco(opcao.preco);
+    label.append(radio, detalhes, preco);
+    container.append(label);
+  });
+}
+
+async function calcularFrete() {
   const input = document.getElementById("cepFrete");
   const mensagem = document.getElementById("mensagemFrete");
-
   if (!input || !mensagem) return;
-
-  const cepFormatado = formatarCEP(input.value);
-  const cepLimpo = cepFormatado.replace(/\D/g, "");
-
-  input.value = cepFormatado;
-
+  invalidarFrete();
+  const cepLimpo = input.value.replace(/\D/g, "");
+  input.value = formatarCEP(cepLimpo);
   if (cepLimpo.length !== 8) {
     localStorage.removeItem("cepFreteSalvo");
     mensagem.textContent = "Digite um CEP válido com 8 números.";
-    atualizarTotalComFrete();
     return;
   }
-
-  localStorage.setItem("cepFreteSalvo", cepFormatado);
-
-  mensagem.textContent = "CEP recebido. O frete será confirmado pelo WhatsApp antes do pagamento.";
-
-  atualizarTotalComFrete();
+  localStorage.setItem("cepFreteSalvo", input.value);
+  const pedido = obterCarrinhoSeguro().map(item => ({
+    id: item.id, quantidade: Number(item.quantidade || item.quantity || 1)
+  }));
+  if (!pedido.length) return;
+  const consulta = consultaFrete;
+  const botao = document.getElementById("calcularFreteBtn");
+  controleFrete = new AbortController();
+  const controleDestaConsulta = controleFrete;
+  const timeout = setTimeout(() => controleDestaConsulta.abort(), 15000);
+  botao.disabled = true;
+  botao.textContent = "CONSULTANDO…";
+  mensagem.textContent = "Consultando opções de entrega…";
+  try {
+    const resposta = await fetch("/api/frete", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cep: cepLimpo, itens: pedido }), signal: controleFrete.signal
+    });
+    const resultado = await resposta.json();
+    if (consulta !== consultaFrete) return;
+    if (!resposta.ok) throw new Error(resultado.mensagem || "Não foi possível calcular o frete.");
+    opcoesFrete = Array.isArray(resultado.opcoes) ? resultado.opcoes.filter(opcao =>
+      opcao && typeof opcao.preco === "number" && Number.isFinite(opcao.preco) && opcao.preco >= 0
+    ) : [];
+    freteEmTeste = resultado.teste === true;
+    mensagem.textContent = opcoesFrete.length
+      ? (freteEmTeste ? "Simulação de teste. Escolha uma opção para conferir o total; confirme o frete real pelo WhatsApp." : "Escolha a entrega. Os prazos são estimados após a postagem.")
+      : "Não encontramos entrega disponível para este pedido. Consulte pelo WhatsApp.";
+    exibirOpcoesFrete();
+  } catch (erro) {
+    if (consulta !== consultaFrete) return;
+    mensagem.textContent = erro.name === "AbortError"
+      ? "A consulta demorou. Tente novamente ou confirme o frete pelo WhatsApp."
+      : (erro instanceof SyntaxError ? "O cálculo automático ainda não está disponível. Confirme pelo WhatsApp." : erro.message);
+  } finally {
+    clearTimeout(timeout);
+    if (consulta === consultaFrete) {
+      controleFrete = null;
+      botao.disabled = false;
+      botao.textContent = "CALCULAR";
+    }
+  }
 }
 
 document.addEventListener("input", function (event) {
   if (event.target && event.target.id === "cepFrete") {
     event.target.value = formatarCEP(event.target.value);
+    invalidarFrete();
+    localStorage.removeItem("cepFreteSalvo");
+    document.getElementById("mensagemFrete").textContent = "Calcule o frete para este CEP.";
   }
 });
 
@@ -198,9 +262,15 @@ function montarMensagemWhatsApp() {
     mensagem += "\nCEP informado: " + cepSalvo;
   }
 
-  mensagem += "\nFrete: a confirmar pelo WhatsApp";
+  if (opcaoFreteAtual && !freteEmTeste) {
+    mensagem += `\nEntrega: ${opcaoFreteAtual.transportadora} — ${opcaoFreteAtual.servico}`;
+    mensagem += "\nFrete cotado: " + formatarPreco(freteAtual);
+    if (opcaoFreteAtual.prazo !== null) mensagem += `\nPrazo estimado após postagem: ${opcaoFreteAtual.prazo} dia(s) útil(eis)`;
+  } else {
+    mensagem += "\nFrete: a confirmar pelo WhatsApp";
+  }
 
-  if (totalProdutos > 0 && freteAtual > 0) {
+  if (totalProdutos > 0 && opcaoFreteAtual && !freteEmTeste) {
     mensagem += "\nTotal com frete: " + formatarPreco(totalProdutos + freteAtual);
   }
 
@@ -238,10 +308,13 @@ function finalizarCheckoutTeste() {
     return;
   }
 
-  window.open(LINK_MERCADO_PAGO, "_blank");
+  // O link geral não recebe o valor do pedido. Manter confirmação manual
+  // até existir um checkout que valide produtos e frete no servidor.
+  abrirWhatsAppPedido();
 }
 
 function renderCarrinho() {
+  invalidarFrete();
   const container = document.getElementById("conteudoCarrinho");
 
   if (!container) return;
@@ -306,7 +379,7 @@ function renderCarrinho() {
 
   const textoBotaoMercado = CHECKOUT_EM_TESTE
     ? "CHECKOUT EM TESTE"
-    : "PAGAR COM MERCADO PAGO";
+    : "CONFIRMAR PAGAMENTO";
 
   const avisoTeste = CHECKOUT_EM_TESTE
     ? `
@@ -344,18 +417,21 @@ function renderCarrinho() {
           <div class="frete-linha">
             <input
               type="text"
+              inputmode="numeric"
+              autocomplete="postal-code"
               id="cepFrete"
               class="cep-input"
               placeholder="Digite seu CEP"
               maxlength="9"
             />
 
-            <button class="botao botao-escuro" style="width:auto; min-width:140px;" onclick="calcularFrete()">
+            <button type="button" id="calcularFreteBtn" class="botao botao-escuro" onclick="calcularFrete()">
               CALCULAR
             </button>
           </div>
 
-          <div id="mensagemFrete" class="mensagem-frete"></div>
+          <div id="mensagemFrete" class="mensagem-frete" role="status" aria-live="polite"></div>
+          <fieldset id="opcoesFrete" class="opcoes-frete" aria-label="Opções de entrega"></fieldset>
         </div>
 
         <div class="linha-resumo">
@@ -367,6 +443,8 @@ function renderCarrinho() {
           <span>Total</span>
           <strong id="totalValor">${totalGeral > 0 ? formatarPreco(totalGeral) : "preço aqui"}</strong>
         </div>
+
+        <p id="legendaTotal" class="legenda-total">Frete ainda não incluído.</p>
 
         <div class="acoes">
           <button class="botao botao-zap" onclick="abrirWhatsAppPedido()">
@@ -442,11 +520,15 @@ function restaurarFreteSalvo() {
   }
 
   if (mensagem && cepSalvo) {
-    mensagem.textContent = "CEP recebido. O frete será confirmado pelo WhatsApp antes do pagamento.";
+    mensagem.textContent = "Clique em Calcular para consultar as opções de entrega.";
   }
 }
 function reaplicarFreteSeJaHouverCEP() {
   atualizarTotalComFrete();
 }
+
+window.addEventListener("storage", event => {
+  if (event.key === "heeeph_cart" || event.key === "cepFreteSalvo" || event.key === null) renderCarrinho();
+});
 
 renderCarrinho();
