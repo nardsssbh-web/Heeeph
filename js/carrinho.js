@@ -1,4 +1,3 @@
-const CHECKOUT_EM_TESTE = true;
 const WHATSAPP_HEEEPH = "5511998302901";
 
 let freteAtual = 0;
@@ -131,7 +130,7 @@ function atualizarTotalComFrete() {
     : "Preço a confirmar";
   const legenda = document.getElementById("legendaTotal");
   if (legenda) legenda.textContent = opcaoFreteAtual
-    ? (freteEmTeste ? "Simulação de teste — valor não válido para pagamento." : "Inclui a entrega selecionada. Pedido sujeito à confirmação.")
+    ? (freteEmTeste ? "Simulação de frete." : "Inclui a entrega selecionada.")
     : "Frete ainda não incluído.";
 }
 
@@ -296,18 +295,18 @@ function finalizarCheckoutTeste() {
     return;
   }
 
-  if (CHECKOUT_EM_TESTE) {
-    alert(
-      "Checkout em fase de teste.\n\n" +
-      "A compra online ainda NÃO será finalizada pelo site.\n\n" +
-      "Por enquanto, use o botão de WhatsApp para confirmar o pedido manualmente."
-    );
+  if (!opcaoFreteAtual || freteEmTeste) {
+    alert("Calcule o frete e escolha uma entrega antes de continuar.");
     return;
   }
-
-  // O link geral não recebe o valor do pedido. Manter confirmação manual
-  // até existir um checkout que valide produtos e frete no servidor.
-  abrirWhatsAppPedido();
+  sessionStorage.setItem('heeeph_checkout', JSON.stringify({
+    cep: document.getElementById('cepFrete').value.replace(/\D/g, ''),
+    servico: opcaoFreteAtual.id, frete: opcaoFreteAtual.preco,
+    itens: carrinho.map(item => ({ id: item.id, medida: item.medida,
+      quantidade: Number(item.quantidade || item.quantity || 1) }))
+  }));
+  sessionStorage.removeItem('heeeph_pedido_teste');
+  window.location.href = 'pagamento.html';
 }
 
 function renderCarrinho() {
@@ -374,18 +373,13 @@ function renderCarrinho() {
 
   subtotalAtual = totalGeral;
 
-  const textoBotaoMercado = CHECKOUT_EM_TESTE
-    ? "CHECKOUT EM TESTE"
-    : "CONFIRMAR PAGAMENTO";
-
-  const avisoTeste = CHECKOUT_EM_TESTE
-    ? `
+  const textoBotaoMercado = "IR PARA PAGAMENTO";
+  const avisoTeste = `
       <div class="aviso-teste">
         <strong>Checkout em fase de teste.</strong><br>
-        A compra online ainda não está liberada. O botão do Mercado Pago está bloqueado para evitar pagamento real antes dos testes.
+        Pagamento em teste. Use somente dados e cartões de teste do Mercado Pago.
       </div>
-    `
-    : "";
+    `;
 
   container.innerHTML = `
     <div class="carrinho-box">
@@ -445,16 +439,12 @@ function renderCarrinho() {
         <p id="legendaTotal" class="legenda-total">Frete ainda não incluído.</p>
 
         <div class="acoes">
-          <button class="botao botao-zap" onclick="abrirWhatsAppPedido()">
-            FINALIZAR PELO WHATSAPP
-          </button>
-
           <button class="botao botao-mercado" onclick="finalizarCheckoutTeste()">
             ${textoBotaoMercado}
           </button>
 
           <a class="botao botao-continuar" href="#" id="btnContinuarComprando">
-            CONTINUAR COMPRANDO
+            VOLTAR À GALERIA
           </a>
 
           <button class="botao botao-esvaziar" onclick="limparCarrinho()">
@@ -506,7 +496,8 @@ function configurarBotaoContinuarComprando() {
   if (!botao) return;
 
   const ultimaPagina = localStorage.getItem("ultimaPagina") || "categorias.html";
-  botao.href = ultimaPagina;
+  const galerias = ['bandas.html','bebidas.html','garage.html','games.html','infantil.html','motos.html','musica.html','rpg.html','street.html','trip.html','home-frases.html','fotos-reais.html','categorias.html'];
+  botao.href = galerias.includes(ultimaPagina) ? ultimaPagina : 'categorias.html';
 }
 
 function restaurarFreteSalvo() {

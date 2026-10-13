@@ -1,0 +1,73 @@
+(() => {
+  const $ = id => document.getElementById(id);
+  const preco = centavos => (centavos / 100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  let entrada, pedido, controller, emPagamento = false;
+  const avisar = texto => { $('mensagem').textContent = texto; };
+  function linha(texto) { const p = document.createElement('p'); p.className='item'; p.textContent=texto; $('resumo').append(p); }
+  function resumo(p) {
+    $('resumo').replaceChildren();
+    p.itens.forEach(i=>linha(`${i.quantidade} × ${i.nome} — ${i.medida} — ${preco(i.centavos*i.quantidade)}`));
+    linha(`Entrega: ${p.frete.transportadora} — ${p.frete.servico} — ${preco(p.frete.centavos)}`);
+    p.pacotes.forEach((x,i)=>linha(`Pacote ${i+1}: ${x.gramas} g — ${x.length} × ${x.width} × ${x.height} cm${x.estimado?' (peso estimado)':''}`));
+    $('total').textContent='Total: '+preco(p.total);
+  }
+  async function api(body, autenticado = false) {
+    const r = await fetch('/api/checkout', {method:'POST',headers:{'Content-Type':'application/json',...(autenticado?{Authorization:'Bearer '+pedido.token}:{})},body:JSON.stringify(body)});
+    const d = await r.json();
+    if (!r.ok) { const e = new Error(d.mensagem || 'Não foi possível continuar.'); e.dados=d; throw e; }
+    return d;
+  }
+  function guardar(p) { pedido={...pedido,...p}; sessionStorage.setItem('heeeph_pedido_teste',JSON.stringify({id:pedido.id,token:pedido.token})); }
+  function resultado(p) {
+    guardar(p); resumo(p); const pg=p.pagamento;
+    if (!pg) { avisar('Pedido guardado. Escolha como pagar.'); return; }
+    $('entrega').hidden=true; $('meios').hidden=true; $('resultado').hidden=false;
+    $('pedidoNumero').textContent='Pedido de teste: '+p.id;
+    $('statusTitulo').textContent=pg.aprovado?'Pagamento de teste aprovado':'Pagamento de teste: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
+    $('statusTexto').textContent=pg.aprovado?'O servidor confirmou o pagamento e o valor total. Este pedido é apenas um teste.':'O pagamento ainda não foi confirmado. Consulte novamente antes de tentar outro pagamento.';
+    $('pixResultado').hidden=!pg.pix;
+    if(pg.pix){ $('pixCodigo').value=pg.pix.codigo; if(pg.pix.imagem && /^[A-Za-z0-9+/=]+$/.test(pg.pix.imagem)){ $('qr').src='data:image/png;base64,'+pg.pix.imagem; $('qr').hidden=false; }else $('qr').hidden=true; }
+    avisar('');
+  }
+  async function pagar(metodo, formData, tipo) {
+    if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
+    try { resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo},true)); }
+    catch(e){ avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
+    finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
+  }
+  $('entrega').addEventListener('submit',async e=>{
+    e.preventDefault(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…');
+    const f=new FormData(e.target), cliente={nome:f.get('nome'),email:f.get('email'),cpf:f.get('cpf'),telefone:f.get('telefone'),termos:f.get('termos')==='on',endereco:{}};
+    for(const k of ['rua','numero','complemento','bairro','cidade','uf']) cliente.endereco[k]=f.get(k);
+    try{pedido=await api({...entrada,cliente,acao:'preparar'});guardar(pedido);resumo(pedido);$('entrega').hidden=true;$('meios').hidden=false;avisar('Confira o total e escolha o pagamento de teste.');}
+    catch(e){avisar(e.message);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
+    finally{$('conferir').disabled=false;}
+  });
+  $('pix').addEventListener('click',()=>pagar('pix').catch(()=>{}));
+  $('cartao').addEventListener('click',async()=>{
+    if(controller||emPagamento)return;
+    try{
+      if(typeof MercadoPago!=='function')throw new Error('Não foi possível carregar o formulário de cartão. Recarregue a página.');
+      const mp=new MercadoPago(pedido.publicKey,{locale:'pt-BR'});
+      controller=await mp.bricks().create('cardPayment','cardPaymentBrick_container',{
+        initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'dark'}}},
+        callbacks:{onReady:()=>{},onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData.paymentTypeId),onError:()=>avisar('Confira os dados do cartão de teste.')}
+      });
+    }catch(e){avisar(e.message);}
+  });
+  $('consultar').addEventListener('click',async()=>{
+    $('consultar').disabled=true;
+    try{resultado(await api({acao:'status',id:pedido.id},true));}catch(e){avisar(e.message);}finally{$('consultar').disabled=false;}
+  });
+  $('copiar').addEventListener('click',()=>navigator.clipboard.writeText($('pixCodigo').value).then(()=>avisar('Código copiado.')).catch(()=>avisar('Selecione o código e copie.')));
+  window.addEventListener('pagehide',()=>{if(controller)controller.unmount();});
+  for(const uf of ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']){const o=document.createElement('option');o.value=o.textContent=uf;$('entrega').elements.uf.append(o);}
+  (async()=>{
+    try{
+      entrada=JSON.parse(sessionStorage.getItem('heeeph_checkout'));if(!entrada?.itens?.length)throw new Error('Volte ao carrinho, escolha o frete e clique em Ir para pagamento.');
+      $('cep').textContent='CEP de entrega: '+entrada.cep;
+      const anterior=JSON.parse(sessionStorage.getItem('heeeph_pedido_teste'));
+      if(anterior?.id&&anterior.token){pedido=anterior;const p=await api({acao:'status',id:pedido.id},true);if(p.pagamento)resultado(p);else if(p.tentativa){resumo(p);$('entrega').hidden=true;$('resultado').hidden=false;$('statusTitulo').textContent='Tentativa em conferência';$('pedidoNumero').textContent='Pedido de teste: '+p.id;avisar('Já existe uma tentativa de pagamento. Consulte novamente; não inicie outra cobrança.');}else{sessionStorage.removeItem('heeeph_pedido_teste');avisar('Preencha os dados para conferir o pedido.');}}
+    }catch(e){avisar(e.message);}
+  })();
+})();

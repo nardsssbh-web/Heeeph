@@ -3,6 +3,18 @@
     "api/frete.js": {
       "includeFiles": "{produtos.js,config/frete.json,js/embalagens.js}",
       "maxDuration": 15
+    },
+    "api/checkout.js": {
+      "includeFiles": "{produtos.js,config/frete.json,js/embalagens.js}",
+      "maxDuration": 60
+    },
+    "api/mercado-pago-webhook.js": {
+      "includeFiles": "{produtos.js,config/frete.json,js/embalagens.js}",
+      "maxDuration": 60
+    },
+    "api/pedidos.js": {
+      "includeFiles": "{produtos.js,config/frete.json,js/embalagens.js}",
+      "maxDuration": 60
     }
   }
 }

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Pagamento | HEEEPH</title><link rel="stylesheet" href="css/geral.css"><link rel="stylesheet" href="css/pagamento.css"></head>
+<body><main class="checkout"><a href="index.html" class="marca">HEEEPH</a><h1>Entrega e pagamento</h1><p class="aviso">Ambiente de teste. Use dados e cartões de teste do Mercado Pago. Nenhum pedido desta página será enviado.</p>
+<p id="mensagem" role="status" aria-live="polite"></p>
+<div class="colunas"><section><form id="entrega"><h2>Dados de entrega</h2><p id="cep"></p>
+<label>Nome completo<input name="nome" autocomplete="name" required maxlength="100"></label>
+<label>E-mail<input name="email" type="email" autocomplete="email" required maxlength="150"></label>
+<div class="dupla"><label>CPF<input name="cpf" inputmode="numeric" required maxlength="14"></label><label>Telefone com DDD<input name="telefone" autocomplete="tel" required maxlength="18"></label></div>
+<label>Rua<input name="rua" autocomplete="address-line1" required maxlength="150"></label>
+<div class="dupla"><label>Número<input name="numero" required maxlength="20"></label><label>Complemento<input name="complemento" autocomplete="address-line2" maxlength="100"></label></div>
+<label>Bairro<input name="bairro" required maxlength="100"></label>
+<div class="dupla"><label>Cidade<input name="cidade" autocomplete="address-level2" required maxlength="100"></label><label>UF<select name="uf" required><option value="">Selecione</option></select></label></div>
+<label class="aceite"><input name="termos" type="checkbox" required> Li e aceito os <a href="termos-de-uso.html" target="_blank" rel="noopener">termos</a> e a <a href="politica-privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</label>
+<button id="conferir" type="submit">Conferir pedido e continuar</button></form>
+<section id="meios" hidden><h2>Pagamento de teste</h2><p>Use o e-mail do comprador de teste. Para cartão, preencha somente os cartões de teste fornecidos pelo Mercado Pago.</p><button id="pix" type="button">Gerar Pix de teste</button><button id="cartao" type="button">Pagar com cartão de teste</button><div id="cardPaymentBrick_container"></div></section>
+<section id="resultado" hidden><h2 id="statusTitulo"></h2><p id="pedidoNumero"></p><p id="statusTexto"></p><div id="pixResultado" hidden><img id="qr" alt="QR Code Pix de teste"><label>Pix copia e cola<textarea id="pixCodigo" readonly></textarea></label><button id="copiar" type="button">Copiar código</button></div><button id="consultar" type="button">Consultar pagamento</button><p>Pedido de teste: não haverá postagem.</p></section></section>
+<aside><h2>Seu pedido</h2><div id="resumo"></div><p id="total"></p><a href="carrinho.html">Voltar ao carrinho</a></aside></div></main>
+<script src="https://sdk.mercadopago.com/js/v2"></script><script src="js/pagamento.js"></script></body></html>
