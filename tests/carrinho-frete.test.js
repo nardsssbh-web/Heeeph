@@ -25,6 +25,27 @@ function preparar(fetch) {
   return { contexto, elementos, eventos };
 }
 
+test('envia o tamanho e altera somente a versão selecionada da mesma arte', async () => {
+  let pedido;
+  const { contexto } = preparar(async (url, options) => {
+    pedido = JSON.parse(options.body);
+    return { ok: true, json: async () => ({ opcoes: [] }) };
+  });
+  vm.runInContext(`localStorage.setItem('heeeph_cart', JSON.stringify([
+    {id:'placa', medida:'10x15cm', quantidade:1, quantity:1},
+    {id:'placa', medida:'20x28cm', quantidade:2, quantity:2}
+  ])); alterarQuantidadeSeguro(1, 1);`, contexto);
+  await vm.runInContext('calcularFrete()', contexto);
+  assert.deepEqual(pedido.itens, [
+    {id:'placa', medida:'10x15cm', quantidade:1},
+    {id:'placa', medida:'20x28cm', quantidade:3}
+  ]);
+  vm.runInContext('removerDoCarrinhoSeguro(0)', contexto);
+  const restante = JSON.parse(vm.runInContext("localStorage.getItem('heeeph_cart')", contexto));
+  assert.equal(restante.length, 1);
+  assert.equal(restante[0].medida, '20x28cm');
+});
+
 test('seleção soma frete ao subtotal e CEP editado limpa a seleção', async () => {
   const { contexto, elementos, eventos } = preparar(async () => ({ ok: true, json: async () => ({ opcoes: [
     { id: '1', transportadora: 'Correios', servico: 'PAC', preco: 24.53, prazo: 4 }

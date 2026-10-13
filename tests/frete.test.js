@@ -2,29 +2,26 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { montarCotacao, normalizarOpcoes } = require('../lib/frete.js');
 const handler = require('../api/frete.js');
-const catalogo = [{ id: 'placa', preco: 'R$ 1.234,50' }];
-const config = { cepOrigem: '06414025', embalagensPorProduto: {
-  placa: { width: 25, length: 32, height: 2, weight: 0.5 }
-} };
-const body = { cep: '30220060', itens: [{ id: 'placa', quantidade: 2, preco: 0.01, weight: 0.01 }] };
+const catalogo = [{ id: 'placa', orientacao: 'vertical', preco: '' }];
+const config = { cepOrigem: '06414025' };
+const body = { cep: '30220060', itens: [{ id: 'placa', medida: '20x28cm', quantidade: 2, preco: 0.01, weight: 0.01 }] };
 
-test('usa preço e pacote do servidor, com quantidade unitária e seguro', () => {
+test('agrupa produtos por tamanho e usa preços oficiais da galeria no seguro', () => {
   const cotacao = montarCotacao(body, catalogo, config);
-  assert.equal(cotacao.products[0].insurance_value, 1234.5);
-  assert.equal(cotacao.products[0].weight, 0.5);
-  assert.equal(cotacao.products[0].quantity, 2);
-  assert.equal(cotacao.from.postal_code, '06414025');
+  assert.deepEqual(cotacao.volumes, [{ width: 25, length: 30, height: 2, weight: 0.33, insurance: 49.8 }]);
+  assert.equal(cotacao.products, undefined);
+  const misto = montarCotacao({ ...body, itens: [...body.itens, { id: 'placa', medida: '10x15cm', quantidade: 4 }] }, catalogo, config);
+  assert.deepEqual(misto.volumes, [{ width: 25, length: 30, height: 3, weight: 0.49, insurance: 101.4 }]);
 });
-test('bloqueia todo o pedido se faltar embalagem ou preço real', () => {
-  assert.throws(() => montarCotacao(body, catalogo, { ...config, embalagensPorProduto: {} }), /WhatsApp/);
-  assert.throws(() => montarCotacao(body, [{ id: 'placa', preco: '' }], config), /WhatsApp/);
-});
-test('recusa CEP inválido, quantidade fracionária, duplicatas e produto desconhecido', () => {
+test('recusa CEP, quantidades, tamanhos ausentes, orientação incompatível e IDs ambíguos', () => {
   assert.throws(() => montarCotacao({ ...body, cep: '123' }, catalogo, config), /CEP/);
-  assert.throws(() => montarCotacao({ ...body, itens: [{ id: 'placa', quantidade: 1.5 }] }, catalogo, config), /quantidades/);
+  assert.throws(() => montarCotacao({ ...body, itens: [{ id: 'placa', medida: '20x28', quantidade: 1.5 }] }, catalogo, config), /quantidades/);
   assert.throws(() => montarCotacao({ ...body, itens: [...body.itens, ...body.itens] }, catalogo, config), /quantidades/);
   assert.throws(() => montarCotacao(body, [], config), /WhatsApp/);
   assert.throws(() => montarCotacao(body, [...catalogo, ...catalogo], config), /WhatsApp/);
+  for (const medida of [undefined, '30x40cm', '28x20cm']) {
+    assert.throws(() => montarCotacao({ ...body, itens: [{ id: 'placa', medida, quantidade: 1 }] }, catalogo, config));
+  }
 });
 test('usa tarifa customizada, aceita frete zero e filtra serviços indisponíveis', () => {
   const opcoes = normalizarOpcoes([
@@ -67,16 +64,16 @@ test('endpoint consulta sandbox com segredo no servidor e bloqueia sandbox em pr
     process.env.MELHOR_ENVIO_AMBIENTE = 'sandbox';
     process.env.VERCEL_ENV = 'preview';
     produto.preco = 25;
-    configuracao.embalagensPorProduto[produto.id] = config.embalagensPorProduto.placa;
+
     let chamadas = 0;
     global.fetch = async (url, options) => {
       chamadas++;
       assert.match(url, /sandbox.melhorenvio.com.br/);
       assert.equal(options.headers.Authorization, 'Bearer segredo-de-teste');
-      assert.equal(JSON.parse(options.body).products[0].insurance_value, 25);
+      assert.equal(JSON.parse(options.body).volumes[0].insurance, 24.9);
       return { ok: true, json: async () => [{ id: 1, name: 'PAC', company: { name: 'Correios' }, custom_price: '24.53', custom_delivery_time: 4 }] };
     };
-    const req = { method: 'POST', body: { cep: '30220060', itens: [{ id: produto.id, quantidade: 1 }] } };
+    const req = { method: 'POST', body: { cep: '30220060', itens: [{ id: produto.id, medida: '20x28cm', quantidade: 1 }] } };
     const sucesso = res();
     await handler(req, sucesso);
     assert.equal(sucesso.code, 200);
@@ -96,7 +93,7 @@ test('endpoint consulta sandbox com segredo no servidor e bloqueia sandbox em pr
     assert.doesNotMatch(JSON.stringify(falha.data), /segredo/);
   } finally {
     produto.preco = precoOriginal;
-    delete configuracao.embalagensPorProduto[produto.id];
+
     global.fetch = fetchOriginal;
     for (const key of Object.keys(process.env)) if (!(key in envOriginal)) delete process.env[key];
     Object.assign(process.env, envOriginal);

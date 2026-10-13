@@ -75,36 +75,33 @@ function updateCartCount() {
   }
 }
 
-function alterarQuantidadeSeguro(id, mudanca) {
-  if (typeof alterarQuantidade === "function") {
-    alterarQuantidade(id, mudanca);
-    return;
-  }
-
+function alterarQuantidadeSeguro(indice, mudanca) {
   const carrinho = obterCarrinhoSeguro();
-
-  const novoCarrinho = carrinho.map(item => {
-    if (item.id === id) {
-      const qtdAtual = Number(item.quantidade || item.quantity || 1);
-      const novaQtd = Math.max(1, qtdAtual + mudanca);
-      return { ...item, quantidade: novaQtd };
-    }
-
-    return item;
-  });
-
-  salvarCarrinhoSeguro(novoCarrinho);
+  const item = carrinho[indice];
+  if (!item) return;
+  const quantidade = Number(item.quantidade || item.quantity || 1) + mudanca;
+  if (quantidade <= 0) carrinho.splice(indice, 1);
+  else { item.quantidade = quantidade; item.quantity = quantidade; }
+  salvarCarrinhoSeguro(carrinho);
 }
 
-function removerDoCarrinhoSeguro(id) {
-  if (typeof removerDoCarrinho === "function") {
-    removerDoCarrinho(id);
-    return;
-  }
-
+function removerDoCarrinhoSeguro(indice) {
   const carrinho = obterCarrinhoSeguro();
-  const novoCarrinho = carrinho.filter(item => item.id !== id);
-  salvarCarrinhoSeguro(novoCarrinho);
+  carrinho.splice(indice, 1);
+  salvarCarrinhoSeguro(carrinho);
+}
+
+function resumoPacotes() {
+  const elemento = document.getElementById('resumoPacotes');
+  if (!elemento || typeof EmbalagensHEEEPH === 'undefined') return;
+  try {
+    const pacotes = EmbalagensHEEEPH.agrupar(obterCarrinhoSeguro().map(item => ({
+      medida: item.medida, quantidade: Number(item.quantidade || item.quantity || 1)
+    })));
+    elemento.textContent = pacotes.map((p, i) =>
+      `Pacote ${i + 1}: ${p.grandes} grande(s) + ${p.pequenas} pequena(s) — ${p.gramas} g — ${p.length} × ${p.width} × ${p.height} cm${p.estimado ? ' (peso estimado)' : ''}`
+    ).join(' | ');
+  } catch (erro) { elemento.textContent = erro.message; }
 }
 
 function invalidarFrete() {
@@ -181,7 +178,7 @@ async function calcularFrete() {
   }
   localStorage.setItem("cepFreteSalvo", input.value);
   const pedido = obterCarrinhoSeguro().map(item => ({
-    id: item.id, quantidade: Number(item.quantidade || item.quantity || 1)
+    id: item.id, medida: item.medida, quantidade: Number(item.quantidade || item.quantity || 1)
   }));
   if (!pedido.length) return;
   const consulta = consultaFrete;
@@ -340,7 +337,7 @@ function renderCarrinho() {
   let totalItens = 0;
   let totalGeral = 0;
 
-  const listaHtml = carrinho.map(item => {
+  const listaHtml = carrinho.map((item, indice) => {
     const quantidade = Number(item.quantidade || item.quantity || 1);
     const precoUnitario = precoParaNumero(item.preco);
     const subtotal = precoUnitario * quantidade;
@@ -360,12 +357,12 @@ function renderCarrinho() {
           <div class="item-preco">${precoUnitario > 0 ? formatarPreco(precoUnitario) : (item.preco || "preço aqui")}</div>
 
           <div class="quantidade-area">
-            <button class="quantidade-btn" onclick="diminuirQuantidade('${item.id}')">-</button>
+            <button class="quantidade-btn" onclick="diminuirQuantidade(${indice})">-</button>
             <span class="quantidade-numero">${quantidade}</span>
-            <button class="quantidade-btn" onclick="aumentarQuantidade('${item.id}')">+</button>
+            <button class="quantidade-btn" onclick="aumentarQuantidade(${indice})">+</button>
           </div>
 
-          <button class="remover-btn" onclick="excluirItem('${item.id}')">REMOVER</button>
+          <button class="remover-btn" onclick="excluirItem(${indice})">REMOVER</button>
         </div>
 
         <div class="subtotal-item">
@@ -430,6 +427,7 @@ function renderCarrinho() {
             </button>
           </div>
 
+          <p id="resumoPacotes" class="mensagem-frete" aria-live="polite"></p>
           <div id="mensagemFrete" class="mensagem-frete" role="status" aria-live="polite"></div>
           <fieldset id="opcoesFrete" class="opcoes-frete" aria-label="Opções de entrega"></fieldset>
         </div>
@@ -467,6 +465,7 @@ function renderCarrinho() {
     </div>
   `;
 
+  resumoPacotes();
   configurarBotaoContinuarComprando();
   restaurarFreteSalvo();
   atualizarTotalComFrete();

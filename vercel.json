@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/frete.js": {
-      "includeFiles": "{produtos.js,config/frete.json}",
+      "includeFiles": "{produtos.js,config/frete.json,js/embalagens.js}",
       "maxDuration": 15
     }
   }
