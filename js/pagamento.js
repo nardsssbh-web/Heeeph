@@ -60,14 +60,26 @@
   }
   async function api(body, autenticado = false) {
     const r = await fetch('/api/checkout', {method:'POST',headers:{'Content-Type':'application/json',...(autenticado?{Authorization:'Bearer '+pedido.token}:{})},body:JSON.stringify(body)});
-    const d = await r.json();
+    const d = await r.json().catch(() => ({mensagem:'O servidor não respondeu corretamente. Consulte o pedido antes de repetir o pagamento.'}));
     if (!r.ok) { const e = new Error(d.mensagem || 'Não foi possível continuar.'); e.dados=d; throw e; }
     return d;
   }
   function guardar(p) { pedido={...pedido,...p}; sessionStorage.setItem('heeeph_pedido_teste',JSON.stringify({id:pedido.id,token:pedido.token})); }
   function resultado(p) {
     guardar(p); resumo(p); const pg=p.pagamento;
-    if (!pg) { avisar('Pedido guardado. Escolha como pagar.', 'info'); return; }
+    $('recuperarPix').hidden = !p.recuperarPix || Boolean(pg);
+    if (!pg) {
+      $('entrega').hidden=true; $('meios').hidden=Boolean(p.tentativa || p.expirado); $('resultado').hidden=!p.tentativa;
+      $('pixResultado').hidden=true; $('qr').hidden=true;
+      if (p.tentativa) {
+        $('statusTitulo').textContent='Tentativa em conferência';
+        $('pedidoNumero').textContent='Pedido de teste: '+p.id;
+        $('statusTexto').textContent='O servidor consulta o Mercado Pago pela referência deste pedido. Enquanto o resultado não for confirmado, uma nova cobrança fica bloqueada.';
+        avisar('A tentativa ainda não foi localizada ou confirmada. Aguarde e consulte novamente.', 'info');
+      } else if (p.expirado) { avisar('A sessão expirou. Volte ao carrinho para conferir os valores.'); }
+      else avisar(p.ultimaFalha?.mensagem || 'Pedido guardado. Escolha como pagar.', p.ultimaFalha ? 'erro' : 'info');
+      return;
+    }
     $('entrega').hidden=true; $('meios').hidden=true; $('resultado').hidden=false;
     $('pedidoNumero').textContent='Pedido de teste: '+p.id;
     $('statusTitulo').textContent=pg.aprovado?'Pagamento de teste aprovado':'Pagamento de teste: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
@@ -79,7 +91,7 @@
   async function pagar(metodo, formData, tipo) {
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
     try { resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo},true)); }
-    catch(e){ avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
+    catch(e){ try { resultado(await api({acao:'status',id:pedido.id},true)); } catch (_) {} avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
     finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
   }
   $('entrega').addEventListener('submit',async e=>{
@@ -98,9 +110,16 @@
       const mp=new MercadoPago(pedido.publicKey,{locale:'pt-BR'});
       controller=await mp.bricks().create('cardPayment','cardPaymentBrick_container',{
         initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'dark'}}},
-        callbacks:{onReady:()=>{},onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData.paymentTypeId),onError:()=>avisar('Confira os dados do cartão de teste.')}
+        callbacks:{onReady:()=>{},onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData?.paymentTypeId || formData.payment_type_id),onError:()=>avisar('Confira os dados do cartão de teste.')}
       });
     }catch(e){avisar(e.message);}
+  });
+  $('recuperarPix').addEventListener('click', async () => {
+    if (emPagamento) return;
+    emPagamento=true; $('recuperarPix').disabled=true;
+    try { resultado(await api({acao:'recuperarPix',id:pedido.id},true)); }
+    catch(e) { try { resultado(await api({acao:'status',id:pedido.id},true)); } catch (_) {} avisar(e.message); }
+    finally { emPagamento=false; $('recuperarPix').disabled=false; }
   });
   $('consultar').addEventListener('click',async()=>{
     $('consultar').disabled=true;
@@ -114,7 +133,8 @@
       entrada=JSON.parse(sessionStorage.getItem('heeeph_checkout'));if(!entrada?.itens?.length)throw new Error('Volte ao carrinho, escolha o frete e clique em Ir para pagamento.');
       $('cep').textContent='CEP de entrega: '+entrada.cep;
       const anterior=JSON.parse(sessionStorage.getItem('heeeph_pedido_teste'));
-      if(anterior?.id&&anterior.token){pedido=anterior;const p=await api({acao:'status',id:pedido.id},true);if(p.pagamento)resultado(p);else if(p.tentativa){resumo(p);$('entrega').hidden=true;$('resultado').hidden=false;$('statusTitulo').textContent='Tentativa em conferência';$('pedidoNumero').textContent='Pedido de teste: '+p.id;avisar('Já existe uma tentativa de pagamento. Consulte novamente; não inicie outra cobrança.');}else{sessionStorage.removeItem('heeeph_pedido_teste');avisar('Preencha os dados para conferir o pedido.', 'info');}}
+      if(anterior?.id&&anterior.token){pedido=anterior;resultado(await api({acao:'status',id:pedido.id},true));}
+      else avisar('Preencha os dados para conferir o pedido.', 'info');
     }catch(e){avisar(e.message);}
   })();
 })();

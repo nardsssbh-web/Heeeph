@@ -1,0 +1,13 @@
+HEEEPH — correção do checkout de teste — 14/10/2026
+
+1. Extraia este ZIP.
+2. Copie api, lib, js, docs, tests e pagamento.html para a raiz da pasta local Heeeph. Aceite substituir os arquivos correspondentes.
+3. Confira as alterações no GitHub Desktop e faça um único commit e push.
+4. Aguarde o deploy ficar Ready.
+5. No pedido antigo, clique em Consultar pagamento. Se a tentativa foi Pix, poderá aparecer Recuperar a mesma tentativa de Pix.
+
+31 testes locais com APIs simuladas passaram. Não foram usadas suas credenciais da Vercel nem executadas cobranças em sua conta.
+
+IMPORTANTE: a API Orders exige credenciais da aplicação do vendedor de teste, conforme docs/checkout-teste.md. O código não habilita pagamentos reais nem compra etiquetas.
+
+Cartão antigo sem ID e sem resultado na busca permanece em conferência até verificação no Mercado Pago; a ausência na busca não garante que não houve cobrança.
