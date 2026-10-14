@@ -1,0 +1,4 @@
+PAINEL HEEEPH — AJUSTE VISUAL
+Copie as pastas js e css deste ZIP para dentro de Heeeph, substituindo os arquivos. Faça Commit e Push origin. Após a publicação, abra pedidos.html e pressione Ctrl+F5.
+O topo mostra a etapa salva do pedido. A situação do pagamento aparece separada. Os produtos estão destacados antes dos dados do cliente. Atualizar pagamento consulta na mesma tela e mostra o retorno dentro do pedido, com horário ou mensagem de erro. Não abre página externa.
+As pastas tests e docs contêm teste e instruções. 37 testes locais passaram com APIs simuladas. Verificação visual no navegador publicado ainda necessária. A chave permanece igual. Mantém o modo de teste.
