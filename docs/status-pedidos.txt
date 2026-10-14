@@ -1,0 +1,9 @@
+ATUALIZAÇÃO DO PAINEL — STATUS E EXCLUIR
+
+Copie as pastas api, js, css e tests deste ZIP para dentro da pasta Heeeph atual, aceitando substituir. Faça Commit e Push origin. Depois da publicação, recarregue pedidos.html com Ctrl+F5. A chave de acesso continua a mesma.
+
+Cada pedido tem uma lista: Recebido, Em Preparação, Saiu para entrega e Entregue. Escolha e clique em Salvar status. Pedidos antigos aparecem inicialmente como Recebido. O status é manual e não é rastreamento automático da transportadora. Não altera o pagamento e não gera etiqueta. Os pedidos continuam de teste.
+
+Excluir pede confirmação e remove o pedido do painel de forma persistente. Não cancela, não estorna e não apaga o pagamento do Mercado Pago. O registro técnico original é mantido durante o prazo de retenção para conferência; não é eliminação definitiva de todos os dados. Consultas e notificações de pagamento não fazem o pedido reaparecer na lista.
+
+36 testes locais passaram com respostas simuladas, incluindo gravação das quatro etapas, consulta preservando o status, acesso não autorizado e exclusão com confirmação.
