@@ -2,7 +2,54 @@
   const $ = id => document.getElementById(id);
   const preco = centavos => (centavos / 100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   let entrada, pedido, controller, emPagamento = false;
-  const avisar = texto => { $('mensagem').textContent = texto; };
+  function limparErros() {
+    $('entrega').querySelectorAll('[aria-invalid]').forEach(c => {
+      c.removeAttribute('aria-invalid');
+      c.removeAttribute('aria-describedby');
+    });
+    $('entrega').querySelectorAll('.erro-campo').forEach(e => e.remove());
+  }
+  function campoDaMensagem(texto) {
+    const regras = {nome:/nome|sobrenome/i,email:/e-mail/i,cpf:/CPF/i,telefone:/telefone|DDD/i,
+      rua:/a rua/i,numero:/o número/i,bairro:/o bairro/i,cidade:/a cidade/i,uf:/estado|UF/i,
+      complemento:/complemento/i,termos:/Aceite os termos/i};
+    return Object.keys(regras).find(k => regras[k].test(texto));
+  }
+  function avisar(texto, tipo = 'erro', campo) {
+    const mensagem = $('mensagem');
+    mensagem.textContent = texto;
+    mensagem.dataset.tipo = tipo;
+    mensagem.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');
+    mensagem.setAttribute('aria-live', tipo === 'erro' ? 'assertive' : 'polite');
+    if (!texto || tipo !== 'erro') return;
+    limparErros();
+    const controle = !$('entrega').hidden && $('entrega').elements[campo || campoDaMensagem(texto)];
+    if (controle) {
+      const detalhe = document.createElement('span');
+      detalhe.id = 'erro-' + controle.name;
+      detalhe.className = 'erro-campo';
+      detalhe.textContent = texto;
+      controle.closest('label').append(detalhe);
+      controle.setAttribute('aria-invalid', 'true');
+      controle.setAttribute('aria-describedby', detalhe.id);
+      controle.focus({preventScroll:true});
+      controle.scrollIntoView({block:'center'});
+    } else mensagem.scrollIntoView({block:'center'});
+  }
+  $('entrega').addEventListener('invalid', e => {
+    e.preventDefault();
+    const primeiro = Array.from($('entrega').elements).find(c => c.validity && !c.validity.valid);
+    if (e.target !== primeiro) return;
+    const texto = e.target.name === 'termos' ? 'Aceite os termos e a política de privacidade.' :
+      e.target.validity.typeMismatch ? 'Confira seu e-mail.' :
+      'Preencha ' + e.target.closest('label').firstChild.textContent.trim().toLowerCase() + '.';
+    avisar(texto, 'erro', e.target.name);
+  }, true);
+  $('entrega').addEventListener('input', e => {
+    if (!e.target.hasAttribute('aria-invalid')) return;
+    limparErros();
+    avisar('', 'info');
+  });
   function linha(texto) { const p = document.createElement('p'); p.className='item'; p.textContent=texto; $('resumo').append(p); }
   function resumo(p) {
     $('resumo').replaceChildren();
@@ -20,7 +67,7 @@
   function guardar(p) { pedido={...pedido,...p}; sessionStorage.setItem('heeeph_pedido_teste',JSON.stringify({id:pedido.id,token:pedido.token})); }
   function resultado(p) {
     guardar(p); resumo(p); const pg=p.pagamento;
-    if (!pg) { avisar('Pedido guardado. Escolha como pagar.'); return; }
+    if (!pg) { avisar('Pedido guardado. Escolha como pagar.', 'info'); return; }
     $('entrega').hidden=true; $('meios').hidden=true; $('resultado').hidden=false;
     $('pedidoNumero').textContent='Pedido de teste: '+p.id;
     $('statusTitulo').textContent=pg.aprovado?'Pagamento de teste aprovado':'Pagamento de teste: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
@@ -36,10 +83,10 @@
     finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
   }
   $('entrega').addEventListener('submit',async e=>{
-    e.preventDefault(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…');
+    e.preventDefault(); limparErros(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…', 'info');
     const f=new FormData(e.target), cliente={nome:f.get('nome'),email:f.get('email'),cpf:f.get('cpf'),telefone:f.get('telefone'),termos:f.get('termos')==='on',endereco:{}};
     for(const k of ['rua','numero','complemento','bairro','cidade','uf']) cliente.endereco[k]=f.get(k);
-    try{pedido=await api({...entrada,cliente,acao:'preparar'});guardar(pedido);resumo(pedido);$('entrega').hidden=true;$('meios').hidden=false;avisar('Confira o total e escolha o pagamento de teste.');}
+    try{pedido=await api({...entrada,cliente,acao:'preparar'});guardar(pedido);resumo(pedido);$('entrega').hidden=true;$('meios').hidden=false;avisar('Confira o total e escolha o pagamento de teste.', 'info');$('meios').scrollIntoView({block:'start'});}
     catch(e){avisar(e.message);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
     finally{$('conferir').disabled=false;}
   });
@@ -59,7 +106,7 @@
     $('consultar').disabled=true;
     try{resultado(await api({acao:'status',id:pedido.id},true));}catch(e){avisar(e.message);}finally{$('consultar').disabled=false;}
   });
-  $('copiar').addEventListener('click',()=>navigator.clipboard.writeText($('pixCodigo').value).then(()=>avisar('Código copiado.')).catch(()=>avisar('Selecione o código e copie.')));
+  $('copiar').addEventListener('click',()=>navigator.clipboard.writeText($('pixCodigo').value).then(()=>avisar('Código copiado.', 'info')).catch(()=>avisar('Selecione o código e copie.')));
   window.addEventListener('pagehide',()=>{if(controller)controller.unmount();});
   for(const uf of ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']){const o=document.createElement('option');o.value=o.textContent=uf;$('entrega').elements.uf.append(o);}
   (async()=>{
@@ -67,7 +114,8 @@
       entrada=JSON.parse(sessionStorage.getItem('heeeph_checkout'));if(!entrada?.itens?.length)throw new Error('Volte ao carrinho, escolha o frete e clique em Ir para pagamento.');
       $('cep').textContent='CEP de entrega: '+entrada.cep;
       const anterior=JSON.parse(sessionStorage.getItem('heeeph_pedido_teste'));
-      if(anterior?.id&&anterior.token){pedido=anterior;const p=await api({acao:'status',id:pedido.id},true);if(p.pagamento)resultado(p);else if(p.tentativa){resumo(p);$('entrega').hidden=true;$('resultado').hidden=false;$('statusTitulo').textContent='Tentativa em conferência';$('pedidoNumero').textContent='Pedido de teste: '+p.id;avisar('Já existe uma tentativa de pagamento. Consulte novamente; não inicie outra cobrança.');}else{sessionStorage.removeItem('heeeph_pedido_teste');avisar('Preencha os dados para conferir o pedido.');}}
+      if(anterior?.id&&anterior.token){pedido=anterior;const p=await api({acao:'status',id:pedido.id},true);if(p.pagamento)resultado(p);else if(p.tentativa){resumo(p);$('entrega').hidden=true;$('resultado').hidden=false;$('statusTitulo').textContent='Tentativa em conferência';$('pedidoNumero').textContent='Pedido de teste: '+p.id;avisar('Já existe uma tentativa de pagamento. Consulte novamente; não inicie outra cobrança.');}else{sessionStorage.removeItem('heeeph_pedido_teste');avisar('Preencha os dados para conferir o pedido.', 'info');}}
     }catch(e){avisar(e.message);}
   })();
 })();
+
