@@ -19,3 +19,4 @@ module.exports = async (req, res) => {
       ...(e.frete ? { frete:e.frete } : {}), ...(e.codigoMP ? { codigo:e.codigoMP } : {}) });
   }
 };
+

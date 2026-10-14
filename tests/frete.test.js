@@ -99,3 +99,4 @@ test('endpoint consulta sandbox com segredo no servidor e bloqueia sandbox em pr
     Object.assign(process.env, envOriginal);
   }
 });
+

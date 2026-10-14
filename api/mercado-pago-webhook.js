@@ -13,3 +13,4 @@ module.exports=async(req,res)=>{
     return res.status(200).end();
   }catch(e){return res.status(503).end();}
 };
+

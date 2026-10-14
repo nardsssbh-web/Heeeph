@@ -60,3 +60,4 @@ respostas simuladas e não acessam a conta Melhor Envio nem compram etiquetas.
 
 Referências: [Cotação](https://docs.melhorenvio.com.br/reference/calculo-de-fretes-por-produtos),
 [Vercel Functions](https://vercel.com/docs/functions/runtimes/node-js).
+

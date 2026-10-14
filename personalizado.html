@@ -35,3 +35,4 @@ for(const id of ids.filter(id=>!['photo','status','canvas','export','remove'].in
 ui.export.onclick=()=>{if(!photo&&!ui.words.value.trim()){ui.status.textContent='Adicione uma foto ou um texto antes de baixar.';return;}const [w,h]=dimensions(),output=document.createElement('canvas');output.width=Math.round(w/2.54*300);output.height=Math.round(h/2.54*300);ui.export.disabled=true;try{render(output);output.toBlob(blob=>{ui.export.disabled=false;if(!blob){ui.status.textContent='Não foi possível exportar. Tente novamente.';return;}const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='HEEEPH-personalizada-'+w+'x'+h+'cm.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),60000);},'image/png');}catch(error){ui.export.disabled=false;ui.status.textContent='Não foi possível exportar neste aparelho. Tente uma medida menor.';}};
 update();
 </script></body></html>
+

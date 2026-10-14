@@ -522,3 +522,4 @@ window.addEventListener("storage", event => {
 });
 
 renderCarrinho();
+

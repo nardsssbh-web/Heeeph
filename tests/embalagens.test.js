@@ -28,3 +28,4 @@ test('pedidos maiores usam vários pacotes; 1G+3P não inventa uma combinação 
   assert.equal(agrupar([{ medida: '20x28', quantidade: 6 }]).length, 2);
   assert.equal(agrupar([{ medida: '20x28', quantidade: 1 }, { medida: '10x15', quantidade: 3 }]).length, 2);
 });
+

@@ -90,3 +90,4 @@ test('sandbox aparece como teste e não vira valor comercial no WhatsApp', async
   assert.match(mensagem, /Frete: a confirmar/);
   assert.doesNotMatch(mensagem, /Total com frete/);
 });
+

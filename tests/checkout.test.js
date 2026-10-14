@@ -94,3 +94,4 @@ test('busca vazia após timeout mantém bloqueio; recuperação Pix reutiliza ch
 test('e-mail real é recusado antes de criar um pagamento',()=>{
  assert.throws(()=>c.clienteValido({...body.cliente,email:'comprador@example.com'},body.cep),/@testuser.com/);
 });
+

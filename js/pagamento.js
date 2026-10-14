@@ -91,7 +91,7 @@
   async function pagar(metodo, formData, tipo) {
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
     try { resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo},true)); }
-    catch(e){ try { resultado(await api({acao:'status',id:pedido.id},true)); } catch (_) {} avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
+    catch(e){ try { const recuperado=await api({acao:'status',id:pedido.id},true); resultado(recuperado); if(recuperado.pagamento){avisar('Pagamento recuperado. Confira a situação abaixo.', 'info');return;} } catch (_) {} avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
     finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
   }
   $('entrega').addEventListener('submit',async e=>{
@@ -109,7 +109,7 @@
       if(typeof MercadoPago!=='function')throw new Error('Não foi possível carregar o formulário de cartão. Recarregue a página.');
       const mp=new MercadoPago(pedido.publicKey,{locale:'pt-BR'});
       controller=await mp.bricks().create('cardPayment','cardPaymentBrick_container',{
-        initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'dark'}}},
+        initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'default'}}},
         callbacks:{onReady:()=>{},onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData?.paymentTypeId || formData.payment_type_id),onError:()=>avisar('Confira os dados do cartão de teste.')}
       });
     }catch(e){avisar(e.message);}
@@ -122,8 +122,8 @@
     finally { emPagamento=false; $('recuperarPix').disabled=false; }
   });
   $('consultar').addEventListener('click',async()=>{
-    $('consultar').disabled=true;
-    try{resultado(await api({acao:'status',id:pedido.id},true));}catch(e){avisar(e.message);}finally{$('consultar').disabled=false;}
+    $('consultar').disabled=true; $('consultar').textContent='Consultando…'; avisar('Consultando o pagamento…', 'info');
+    try{const p=await api({acao:'status',id:pedido.id},true);resultado(p);avisar('Consulta atualizada às '+new Date().toLocaleTimeString('pt-BR')+'. '+(p.pagamento?.aprovado?'Pagamento de teste aprovado.':p.tentativa?'Tentativa ainda em conferência.':p.pagamento?'Pagamento ainda não aprovado.':'Nenhum pagamento iniciado.'), 'info');}catch(e){avisar(e.message);}finally{$('consultar').disabled=false; $('consultar').textContent='Atualizar situação do pagamento';}
   });
   $('copiar').addEventListener('click',()=>navigator.clipboard.writeText($('pixCodigo').value).then(()=>avisar('Código copiado.', 'info')).catch(()=>avisar('Selecione o código e copie.')));
   window.addEventListener('pagehide',()=>{if(controller)controller.unmount();});
@@ -138,4 +138,5 @@
     }catch(e){avisar(e.message);}
   })();
 })();
+
 

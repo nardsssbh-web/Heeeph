@@ -69,3 +69,4 @@ Não houve acesso às credenciais da Vercel nem execução de pagamento com a co
 Referências adicionais:
 https://www.mercadopago.com.br/developers/en/reference/online-payments/checkout-api/create-order/post
 https://www.mercadopago.com.br/developers/pt/reference/online-payments/checkout-api/search-order/get
+

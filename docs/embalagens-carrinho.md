@@ -36,3 +36,4 @@ O último peso deriva de 404 g medidos + 80 g de duas pequenas + 5 g de etiqueta
 `node --test tests/*.test.js`
 
 Testes incluem todas as combinações até 50 placas, reprodução das pesagens, tamanho/preço no servidor, seguro por volume, variantes da mesma arte e resposta de cotação antiga.
+
