@@ -1,11 +1,11 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
 async function tela(resposta,armazenamento={}){
- const nodes={};const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},scrollIntoView(){}});
+ const nodes={};const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
  for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso'])nodes[id]=el();
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
- const ctx=vm.createContext({console,fetch:async()=>({ok:true,json:async()=>({...base,...resposta})}),document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
+ const ctx=vm.createContext({console,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async()=>({ok:true,json:async()=>({...base,...resposta})}),document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);return nodes;
 }
 test('pedido restaurado sem tentativa volta aos meios e recupera public key',async()=>{const n=await tela({});assert.equal(n.meios.hidden,false);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Escolha como pagar/);});
@@ -25,4 +25,19 @@ test('recupera preparação interrompida antes de preencher outro formulário',a
 test('produção não informa ao comprador que um pedido aprovado é simulação',async()=>{
  const n=await tela({teste:false,pagamento:{aprovado:true,status:'processed'}});
  assert.equal(n.statusTitulo.textContent,'Pagamento aprovado');assert.doesNotMatch(n.statusTexto.textContent,/teste/);assert.doesNotMatch(n.avisoAmbiente.textContent,/teste/);
+});
+
+test('Pix restaurado gera QR local a partir do copia e cola quando a imagem do provedor está vazia',async()=>{
+ const codigo='00020126580014br.gov.bcb.pix0136b76aa9c2-2ec4-4110-954e-ebfe34f05b615204000053039865406200.005802BR5918TESTUSER20543760926009Sao Paulo62250521mpqrinter1046697480436304B70B';
+ const n=await tela({pagamento:{status:'action_required',pix:{codigo,imagem:''}}});
+ assert.equal(n.pixCodigo.value,codigo);assert.equal(n.qr.hidden,false);assert.match(n.qr.src,/^data:image\/gif;base64,/);assert.equal(n.copiar.disabled,false);
+ const bytes=Buffer.from(n.qr.src.split(',')[1],'base64');assert.equal(bytes.subarray(0,6).toString(),'GIF87a');assert.ok(bytes.readUInt16LE(6)>200);
+});
+test('Pix sem código informa ausência e mantém cópia e imagem indisponíveis',async()=>{
+ const n=await tela({pagamento:{status:'action_required',pix:{codigo:'',imagem:''}}});
+ assert.equal(n.qr.hidden,true);assert.equal(n.copiar.disabled,true);assert.match(n.mensagem.textContent,/não retornou os dados/);
+});
+test('imagem Pix do provedor com erro usa o mesmo copia e cola para gerar QR',async()=>{
+ const n=await tela({pagamento:{status:'action_required',pix:{codigo:'000201TESTE',imagem:'AAAA'}}});
+ n.qr.onerror();assert.match(n.qr.src,/^data:image\/gif;base64,/);assert.equal(n.qr.hidden,false);
 });

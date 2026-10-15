@@ -88,6 +88,29 @@
     $('cartao').textContent=teste?'Pagar com cartão de teste':'Pagar com cartão';
     $('envioAviso').textContent=teste?'Pedido de teste: não haverá postagem.':'As etapas de entrega são atualizadas manualmente pela loja.';
   }
+  function mostrarPix(pg) {
+    const qr = $('qr'), pix = pg?.pix;
+    qr.hidden=true; qr.removeAttribute('src'); qr.onerror=null;
+    $('pixCodigo').value=pix?.codigo || '';
+    $('copiar').disabled=!pix?.codigo;
+    $('pixResultado').hidden=!pix;
+    if(!pix) return;
+    function gerarLocalmente() {
+      qr.onerror=null; qr.hidden=true;
+      if(!pix.codigo || typeof qrcode !== 'function') return false;
+      try {
+        qrcode.stringToBytes=qrcode.stringToBytesFuncs['UTF-8'];
+        const codigo=qrcode(0,'M'); codigo.addData(pix.codigo); codigo.make();
+        qr.src=codigo.createDataURL(6,24); qr.hidden=false; return true;
+      } catch (_) { return false; }
+    }
+    if(pix.imagem && /^[A-Za-z0-9+/=]+$/.test(pix.imagem)) {
+      qr.onerror=()=>{if(!gerarLocalmente())avisar('Não foi possível exibir o QR Code. Use o código copia e cola ou consulte o pagamento.', 'info');};
+      qr.src='data:image/png;base64,'+pix.imagem; qr.hidden=false;
+    } else if(!gerarLocalmente()) {
+      avisar(pix.codigo?'Use o código Pix copia e cola.':'O Mercado Pago ainda não retornou os dados do Pix. Consulte o pagamento desta tentativa; não gere outra cobrança.', 'info');
+    }
+  }
   function resultado(p) {
     ambienteTela(p.teste !== false);
     guardar(p); resumo(p); $('pedidoResumo').textContent='Pedido '+p.id; const pg=p.pagamento;
@@ -108,9 +131,8 @@
     $('pedidoNumero').textContent=(p.teste!==false?'Pedido de teste: ':'Pedido: ')+p.id;
     $('statusTitulo').textContent=pg.aprovado?(p.teste!==false?'Pagamento de teste aprovado':'Pagamento aprovado'):'Pagamento: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
     $('statusTexto').textContent=pg.aprovado?('O servidor confirmou o pagamento e o valor total.'+(p.teste!==false?' Este pedido é apenas um teste.':'')):'O pagamento ainda não foi confirmado. Consulte novamente antes de tentar outro pagamento.';
-    $('pixResultado').hidden=!pg.pix;
-    if(pg.pix){ $('pixCodigo').value=pg.pix.codigo; if(pg.pix.imagem && /^[A-Za-z0-9+/=]+$/.test(pg.pix.imagem)){ $('qr').src='data:image/png;base64,'+pg.pix.imagem; $('qr').hidden=false; }else $('qr').hidden=true; }
     avisar('');
+    mostrarPix(pg);
   }
   async function pagar(metodo, formData, tipo) {
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;

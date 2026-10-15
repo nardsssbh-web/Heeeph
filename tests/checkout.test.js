@@ -21,6 +21,19 @@ function fixture(){
  };
  return{requests,db,setPreco:v=>preco=v,setTest:v=>testUser=v,setTimeout:v=>timeout=v,setRecusa:v=>recusa=v,setSemVendedor:v=>semVendedor=v,get orders(){return orders;},close(){global.fetch=previous;process.env=env;}};
 }
+test('consulta Pix recupera código e ausência de imagem sem criar outra order',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);await c.pagar(p.id,p.token,{metodo:'pix'});
+  const order=await c.mp('/v1/orders/ORDTEST');
+  Object.assign(order,{status:'action_required',status_detail:'waiting_transfer',total_paid_amount:'0.00'});
+  Object.assign(order.transactions.payments[0],{status:'action_required',status_detail:'waiting_transfer',payment_method:{id:'pix',qr_code:'000201TESTE',qr_code_base64:''}});
+  const r=await c.status(p.id,p.token);
+  assert.equal(r.pagamento.pix.codigo,'000201TESTE');assert.equal(r.pagamento.pix.imagem,'');assert.equal(r.pagamento.aprovado,false);assert.equal(f.orders,1);
+  delete order.transactions.payments[0].payment_method.qr_code;
+  const semDados=await c.status(p.id,p.token);assert.equal(semDados.pagamento.pix.codigo,'');assert.equal(f.orders,1);
+ }finally{f.close();}
+});
+
 test('preços e volumes são do servidor; informações do cliente e cartões não alteram o total',()=>{
  const b=structuredClone(body);b.itens[0].preco=.01;b.itens[0].peso=1;
  const v=c.itensValidados(b);assert.equal(v.subtotal,1290);assert.equal(v.pacotes[0].gramas,50);
