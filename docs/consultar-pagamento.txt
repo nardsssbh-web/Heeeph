@@ -1,0 +1,3 @@
+Copie as pastas js e css para dentro de Heeeph e aceite substituir. Faça Commit e Push origin. Após publicar, recarregue pedidos.html com Ctrl+F5.
+Botão: Consultar Pagamento. Retorno verde: aprovado. Amarelo: aguardando confirmação. Vermelho: recusado/cancelado ou erro de consulta. Azul: consulta em andamento ou sem pagamento iniciado/confirmado. A mensagem escrita acompanha a cor. Status e Excluir preservados.
+37 testes locais passaram com APIs simuladas.
