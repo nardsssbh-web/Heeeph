@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const c=require('../lib/checkout'),{assinaturaValida}=require('../lib/webhook');
-const body={cep:'30220060',itens:[{id:'games-free-fire',medida:'10x15cm',quantidade:1}],servico:'1',frete:10.79,cliente:{nome:'Comprador Teste',email:'teste@testuser.com',cpf:'19119119100',telefone:'11987654321',termos:true,endereco:{rua:'Rua Teste',numero:'10',bairro:'Centro',cidade:'Belo Horizonte',uf:'MG',complemento:''}}};
+const body={chavePreparacao:'c'.repeat(64),cep:'30220060',itens:[{id:'games-free-fire',medida:'10x15cm',quantidade:1}],servico:'1',frete:10.79,cliente:{nome:'Comprador Teste',email:'teste@testuser.com',cpf:'19119119100',telefone:'11987654321',termos:true,endereco:{rua:'Rua Teste',numero:'10',bairro:'Centro',cidade:'Belo Horizonte',uf:'MG',complemento:''}}};
 function fixture(){
  const db=new Map(),requests=[];const previous=global.fetch;const env={...process.env};
  Object.assign(process.env,{CHECKOUT_TESTE_ATIVO:'true',MERCADO_PAGO_ACCESS_TOKEN_TEST:'segredo-mp',MERCADO_PAGO_PUBLIC_KEY_TEST:'public-test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'segredo-db',FRETE_ATIVO:'true',MELHOR_ENVIO_AMBIENTE:'producao',MELHOR_ENVIO_TOKEN:'segredo-frete',MELHOR_ENVIO_USER_AGENT:'HEEEPH'});
@@ -93,5 +93,113 @@ test('busca vazia após timeout mantém bloqueio; recuperação Pix reutiliza ch
 });
 test('e-mail real é recusado antes de criar um pagamento',()=>{
  assert.throws(()=>c.clienteValido({...body.cliente,email:'comprador@example.com'},body.cep),/@testuser.com/);
+});
+
+test('preparação recupera a mesma identidade após perder a resposta e recusa alteração do pedido',async()=>{
+ const f=fixture();try{
+  const a=await c.preparar(body),b=await c.preparar(structuredClone(body));
+  assert.equal(a.id,b.id);assert.equal(a.token,b.token);assert.equal(f.orders,0);
+  await assert.rejects(()=>c.preparar({...body,frete:1}),{status:409});
+  await assert.rejects(()=>c.preparar({...body,chavePreparacao:'curta'}),{status:400});
+ }finally{f.close();}
+});
+
+test('duas chamadas simultâneas criam somente uma cobrança',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);
+  const resultados=await Promise.allSettled([c.pagar(p.id,p.token,{metodo:'pix'}),c.pagar(p.id,p.token,{metodo:'pix'})]);
+  assert.equal(resultados.filter(r=>r.status==='fulfilled').length,1);
+  assert.equal(resultados.find(r=>r.status==='rejected').reason.status,409);assert.equal(f.orders,1);
+  assert.equal((await c.status(p.id,p.token)).pagamento.aprovado,true);
+ }finally{f.close();}
+});
+
+test('bloqueio de outro processo não é removido nem inicia cobrança',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body),key=c.prefixo+'lock:'+p.id;f.db.set(key,'outro-processo');
+  await assert.rejects(()=>c.pagar(p.id,p.token,{metodo:'pix'}),{status:409});
+  assert.equal(f.db.get(key),'outro-processo');assert.equal(f.orders,0);
+ }finally{f.close();}
+});
+
+test('Pix incerto antigo não é reenviado automaticamente',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);f.setTimeout(true);await assert.rejects(()=>c.pagar(p.id,p.token,{metodo:'pix'}));
+  const raw=JSON.parse(f.db.get(c.prefixo+p.id));raw.criadoEm=new Date(Date.now()-31*60000).toISOString();f.db.set(c.prefixo+p.id,JSON.stringify(raw));
+  await assert.rejects(()=>c.recuperarPix(p.id,p.token),{status:409});assert.equal(f.orders,1);
+ }finally{f.close();}
+});
+
+test('webhook exige assinatura e consulta a API; repetir evento não cria cobrança',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);await c.pagar(p.id,p.token,{metodo:'pix'});
+  process.env.MERCADO_PAGO_WEBHOOK_SECRET_TEST='segredo-assinatura';
+  const handler=require('../api/mercado-pago-webhook'),id='ORDTEST',rid='req',ts='1742505638683';
+  const sign=crypto.createHmac('sha256','segredo-assinatura').update(`id:${id};request-id:${rid};ts:${ts};`).digest('hex');
+  const req={method:'POST',query:{'data.id':id},headers:{'x-request-id':rid,'x-signature':`ts=${ts},v1=${sign}`},body:{data:{status:'processed',total_amount:'.01'}}};
+  const call=async(r)=>{const res={setHeader(){},status(s){this.code=s;return this;},end(){return this;}};await handler(r,res);return res.code;};
+  assert.equal(await call({...req,headers:{}}),401);
+  assert.equal(await call(req),200);assert.equal(await call(req),200);assert.equal(f.orders,1);
+  assert.equal((await c.status(p.id,p.token)).pagamento.aprovado,true);
+  const local=JSON.parse(f.db.get(c.prefixo+p.id));local.pagamento.mpId='ORDOUTRO';f.db.set(c.prefixo+p.id,JSON.stringify(local));
+  assert.equal(await call(req),503);
+ }finally{f.close();}
+});
+
+test('produção desativada, sem credenciais próprias ou em Preview não cria cobrança',async()=>{
+ const f=fixture();try{
+  process.env.CHECKOUT_AMBIENTE='producao';
+  await assert.rejects(()=>c.configurado(),{status:503});
+  process.env.CHECKOUT_PRODUCAO_ATIVO='true';
+  await assert.rejects(()=>c.configurado(),{status:503});
+  Object.assign(process.env,{MERCADO_PAGO_PUBLIC_KEY_PROD:'public-prod',MERCADO_PAGO_ACCESS_TOKEN_PROD:'token-prod',MERCADO_PAGO_WEBHOOK_SECRET_PROD:'secret-prod',MERCADO_PAGO_VENDEDOR_ID_PROD:'123',UPSTASH_REDIS_REST_URL_PROD:'https://redis.test',UPSTASH_REDIS_REST_TOKEN_PROD:'db-prod',VERCEL_ENV:'preview'});
+  await assert.rejects(()=>c.configurado(),{status:503});assert.equal(f.orders,0);
+  process.env.VERCEL_ENV='production';await assert.rejects(()=>c.configurado(),{status:503}); // conta de teste
+  f.setTest(false);assert.equal(await c.configurado(),'123');
+  process.env.MERCADO_PAGO_VENDEDOR_ID_PROD='999';await assert.rejects(()=>c.configurado(),{status:503});
+ }finally{f.close();}
+});
+
+test('produção usa namespace, credenciais e retenção próprios; recusa CPF inválido',async()=>{
+ const f=fixture();try{
+  const teste=await c.preparar(body);
+  Object.assign(process.env,{CHECKOUT_AMBIENTE:'producao',CHECKOUT_PRODUCAO_ATIVO:'true',MERCADO_PAGO_PUBLIC_KEY_PROD:'public-prod',MERCADO_PAGO_ACCESS_TOKEN_PROD:'token-prod',MERCADO_PAGO_WEBHOOK_SECRET_PROD:'secret-prod',MERCADO_PAGO_VENDEDOR_ID_PROD:'123',UPSTASH_REDIS_REST_URL_PROD:'https://redis.test',UPSTASH_REDIS_REST_TOKEN_PROD:'db-prod',VERCEL_ENV:'production'});f.setTest(false);
+  await assert.rejects(()=>c.buscar(teste.id),{status:404});
+  const b=structuredClone(body);b.cliente.email='cliente@example.com';b.cliente.cpf='52998224725';
+  const p=await c.preparar(b);assert.notEqual(p.id,teste.id);assert.equal(p.teste,false);assert.equal(p.publicKey,'public-prod');
+  assert.equal(c.prefixo,'heeeph:producao:');assert.deepEqual(c.expiracao(),[]);
+  const grava=f.requests.filter(r=>r.url==='https://redis.test').map(r=>JSON.parse(r.opts.body)).find(cmd=>cmd[0]==='SET'&&cmd[1]===c.prefixo+p.id);
+  assert.equal(grava.includes('EX'),false);assert.ok(f.db.has('heeeph:teste:'+teste.id));
+  assert.equal(f.requests.filter(r=>r.url.endsWith('/users/me')).at(-1).opts.headers.Authorization,'Bearer token-prod');
+  assert.throws(()=>c.clienteValido({...b.cliente,cpf:'11111111111'},b.cep),/CPF/);
+  assert.throws(()=>c.clienteValido({...b.cliente,cpf:'52998224726'},b.cep),/CPF/);
+ }finally{f.close();}
+});
+
+test('pedido ou pagamento de outro ambiente/identificador não é aceito',()=>{
+ const p={id:'ref',vendedor:'123',total:100,ambiente:'producao'};
+ assert.throws(()=>c.conferirPagamento(p,{id:'ORDTEST'}),{status:409});
+ assert.throws(()=>c.conferirPagamento({...p,ambiente:'teste',mpRecuperacao:'ORDORIGINAL'},{id:'ORDOUTRO'}),{status:409});
+});
+
+test('aprovação de produção exige os valores da transação e não aceita arredondar centavos incorretos',()=>{
+ const env={...process.env};try{
+  process.env.CHECKOUT_AMBIENTE='producao';
+  const p={id:'ref',ambiente:'producao',total:100,vendedor:'123'};
+  const payment={status:'processed',status_detail:'accredited',amount:'1.00',paid_amount:'1.00'};
+  const d={id:'ORDTEST',external_reference:p.id,user_id:123,country_code:'BRA',total_amount:'1.00',total_paid_amount:'1.00',status:'processed',status_detail:'accredited',transactions:{payments:[payment]}};
+  assert.equal(c.conferirPagamento(p,d).aprovado,true);
+  for(const value of [undefined,'0.01','NaN','1.004'])assert.equal(c.conferirPagamento(p,{...d,transactions:{payments:[{...payment,paid_amount:value}]}}).aprovado,false);
+ }finally{process.env=env;}
+});
+
+test('desativar novas cobranças preserva consulta e reconciliação dos pagamentos existentes',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);await c.pagar(p.id,p.token,{metodo:'pix'});
+  process.env.CHECKOUT_TESTE_ATIVO='false';
+  assert.equal((await c.status(p.id,p.token)).pagamento.aprovado,true);
+  await c.notificar('ORDTEST');
+  await assert.rejects(()=>c.preparar({...body,chavePreparacao:'d'.repeat(64)}),{status:503});assert.equal(f.orders,1);
+ }finally{f.close();}
 });
 

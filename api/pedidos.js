@@ -2,7 +2,7 @@ const crypto=require('node:crypto');
 const c=require('../lib/checkout');
 const etapas=['Recebido','Em Preparação','Saiu para entrega','Entregue'];
 async function gestao(id){const raw=await c.redis(['GET',c.prefixo+'gestao:'+id]);return raw?JSON.parse(raw):{status:'Recebido'};}
-function seguro(p,g){const {tokenHash,cotacao,proximaChave,mpRecuperacao,...dados}=p;return {...dados,gestao:g};}
+function seguro(p,g){const {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento}=p;return {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,gestao:g};}
 module.exports=async(req,res)=>{
   res.setHeader('Cache-Control','no-store');
   if(req.method!=='POST')return res.status(405).end();
@@ -12,27 +12,29 @@ module.exports=async(req,res)=>{
   try{
     const b=typeof req.body==='string'?JSON.parse(req.body):req.body||{};
     if(['etapa','excluir'].includes(b.acao)){
+      return await c.exclusivo(b.id,async()=>{
       const p=await c.buscar(b.id);
       if(b.acao==='etapa'&&!etapas.includes(b.status))return res.status(400).json({mensagem:'Status do pedido inválido.'});
       if(b.acao==='excluir'&&b.confirmacao!==p.id)return res.status(400).json({mensagem:'Confirme o pedido que deseja excluir.'});
       const g=await gestao(p.id);
       if(g.excluido)return res.status(404).json({mensagem:'Pedido excluído do painel.'});
       const atualizado={...g,atualizadoEm:new Date().toISOString(),...(b.acao==='excluir'?{excluido:true}:{status:b.status})};
-      await c.redis(['SET',c.prefixo+'gestao:'+p.id,JSON.stringify(atualizado),'EX',30*86400]);
-      return res.json(b.acao==='excluir'?{excluido:true,id:p.id}:{pedido:seguro(p,atualizado),teste:true});
+      await c.redis(['SET',c.prefixo+'gestao:'+p.id,JSON.stringify(atualizado),...c.expiracao()]);
+      return res.json(b.acao==='excluir'?{excluido:true,id:p.id}:{pedido:seguro(p,atualizado),teste:c.ambiente().teste});
+      });
     }
     if(b.acao==='consultar'){
       const p=await c.buscar(b.id);
       const g=await gestao(p.id);
       if(g.excluido)return res.status(404).json({mensagem:'Pedido excluído do painel.'});
       const atualizado=await c.atualizar(p);
-      return res.json({pedido:seguro(atualizado,g),teste:true});
+      return res.json({pedido:seguro(atualizado,g),teste:c.ambiente().teste});
     }
     if(b.acao&&b.acao!=='listar')return res.status(400).json({mensagem:'Ação não permitida.'});
     const ids=await c.redis(['ZREVRANGE',c.prefixo+'lista',0,49]);
     const pedidos=[];
     for(const id of ids){try{const p=await c.buscar(id); const g=await gestao(p.id);if(!g.excluido)pedidos.push(seguro(p,g));}catch(e){if(e.status!==404)throw e;}}
-    return res.json({pedidos,teste:true});
-  }catch(e){return res.status(503).json({mensagem:'Não foi possível carregar os pedidos.'});}
+    return res.json({pedidos,teste:c.ambiente().teste});
+  }catch(e){return res.status(e instanceof SyntaxError?400:e.status||503).json({mensagem:'Não foi possível carregar os pedidos.'});}
 };
 

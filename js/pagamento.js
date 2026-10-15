@@ -61,19 +61,43 @@
   async function api(body, autenticado = false) {
     const r = await fetch('/api/checkout', {method:'POST',headers:{'Content-Type':'application/json',...(autenticado?{Authorization:'Bearer '+pedido.token}:{})},body:JSON.stringify(body)});
     const d = await r.json().catch(() => ({mensagem:'O servidor não respondeu corretamente. Consulte o pedido antes de repetir o pagamento.'}));
-    if (!r.ok) { const e = new Error(d.mensagem || 'Não foi possível continuar.'); e.dados=d; throw e; }
+    if (!r.ok) { const e = new Error(d.mensagem || 'Não foi possível continuar.'); e.dados=d; e.status=r.status; throw e; }
     return d;
   }
   function guardar(p) { pedido={...pedido,...p}; sessionStorage.setItem('heeeph_pedido_teste',JSON.stringify({id:pedido.id,token:pedido.token})); }
+  async function preparar(body) {
+    let pendente=JSON.parse(sessionStorage.getItem('heeeph_preparacao'));
+    if(!pendente){
+      const chavePreparacao=Array.from(crypto.getRandomValues(new Uint8Array(32)),x=>x.toString(16).padStart(2,'0')).join('');
+      pendente={...body,acao:'preparar',chavePreparacao};
+      sessionStorage.setItem('heeeph_preparacao',JSON.stringify(pendente));
+    }
+    try {
+      const p=await api(pendente); guardar(p);
+      sessionStorage.removeItem('heeeph_preparacao'); return p;
+    } catch(e) {
+      if([400,422].includes(e.status)||e.dados?.frete)sessionStorage.removeItem('heeeph_preparacao');
+      throw e;
+    }
+  }
+  function ambienteTela(teste) {
+    $('avisoAmbiente').textContent=teste?'Ambiente de teste. Use dados e cartões de teste do Mercado Pago. Nenhum pedido desta página será enviado.':'Pagamento seguro pelo Mercado Pago. Guarde o número do seu pedido.';
+    $('meiosTitulo').textContent=teste?'Pagamento de teste':'Pagamento';
+    $('meiosTexto').textContent=teste?'Use o e-mail do comprador e cartões de teste do Mercado Pago.':'Escolha Pix ou cartão e confira o total antes de confirmar.';
+    $('pix').textContent=teste?'Gerar Pix de teste':'Gerar Pix';
+    $('cartao').textContent=teste?'Pagar com cartão de teste':'Pagar com cartão';
+    $('envioAviso').textContent=teste?'Pedido de teste: não haverá postagem.':'As etapas de entrega são atualizadas manualmente pela loja.';
+  }
   function resultado(p) {
-    guardar(p); resumo(p); const pg=p.pagamento;
+    ambienteTela(p.teste !== false);
+    guardar(p); resumo(p); $('pedidoResumo').textContent='Pedido '+p.id; const pg=p.pagamento;
     $('recuperarPix').hidden = !p.recuperarPix || Boolean(pg);
     if (!pg) {
       $('entrega').hidden=true; $('meios').hidden=Boolean(p.tentativa || p.expirado); $('resultado').hidden=!p.tentativa;
       $('pixResultado').hidden=true; $('qr').hidden=true;
       if (p.tentativa) {
         $('statusTitulo').textContent='Tentativa em conferência';
-        $('pedidoNumero').textContent='Pedido de teste: '+p.id;
+        $('pedidoNumero').textContent=(p.teste!==false?'Pedido de teste: ':'Pedido: ')+p.id;
         $('statusTexto').textContent='O servidor consulta o Mercado Pago pela referência deste pedido. Enquanto o resultado não for confirmado, uma nova cobrança fica bloqueada.';
         avisar('A tentativa ainda não foi localizada ou confirmada. Aguarde e consulte novamente.', 'info');
       } else if (p.expirado) { avisar('A sessão expirou. Volte ao carrinho para conferir os valores.'); }
@@ -81,9 +105,9 @@
       return;
     }
     $('entrega').hidden=true; $('meios').hidden=true; $('resultado').hidden=false;
-    $('pedidoNumero').textContent='Pedido de teste: '+p.id;
-    $('statusTitulo').textContent=pg.aprovado?'Pagamento de teste aprovado':'Pagamento de teste: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
-    $('statusTexto').textContent=pg.aprovado?'O servidor confirmou o pagamento e o valor total. Este pedido é apenas um teste.':'O pagamento ainda não foi confirmado. Consulte novamente antes de tentar outro pagamento.';
+    $('pedidoNumero').textContent=(p.teste!==false?'Pedido de teste: ':'Pedido: ')+p.id;
+    $('statusTitulo').textContent=pg.aprovado?(p.teste!==false?'Pagamento de teste aprovado':'Pagamento aprovado'):'Pagamento: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
+    $('statusTexto').textContent=pg.aprovado?('O servidor confirmou o pagamento e o valor total.'+(p.teste!==false?' Este pedido é apenas um teste.':'')):'O pagamento ainda não foi confirmado. Consulte novamente antes de tentar outro pagamento.';
     $('pixResultado').hidden=!pg.pix;
     if(pg.pix){ $('pixCodigo').value=pg.pix.codigo; if(pg.pix.imagem && /^[A-Za-z0-9+/=]+$/.test(pg.pix.imagem)){ $('qr').src='data:image/png;base64,'+pg.pix.imagem; $('qr').hidden=false; }else $('qr').hidden=true; }
     avisar('');
@@ -98,7 +122,7 @@
     e.preventDefault(); limparErros(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…', 'info');
     const f=new FormData(e.target), cliente={nome:f.get('nome'),email:f.get('email'),cpf:f.get('cpf'),telefone:f.get('telefone'),termos:f.get('termos')==='on',endereco:{}};
     for(const k of ['rua','numero','complemento','bairro','cidade','uf']) cliente.endereco[k]=f.get(k);
-    try{pedido=await api({...entrada,cliente,acao:'preparar'});guardar(pedido);resumo(pedido);$('entrega').hidden=true;$('meios').hidden=false;avisar('Confira o total e escolha o pagamento de teste.', 'info');$('meios').scrollIntoView({block:'start'});}
+    try{pedido=await preparar({...entrada,cliente});resultado(pedido);avisar('Pedido '+pedido.id+' guardado. Confira o total e escolha o pagamento.', 'info');$('meios').scrollIntoView({block:'start'});}
     catch(e){avisar(e.message);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
     finally{$('conferir').disabled=false;}
   });
@@ -110,7 +134,7 @@
       const mp=new MercadoPago(pedido.publicKey,{locale:'pt-BR'});
       controller=await mp.bricks().create('cardPayment','cardPaymentBrick_container',{
         initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'default'}}},
-        callbacks:{onReady:()=>{},onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData?.paymentTypeId || formData.payment_type_id),onError:()=>avisar('Confira os dados do cartão de teste.')}
+        callbacks:{onReady:()=>{},onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData?.paymentTypeId || formData.payment_type_id),onError:()=>avisar('Confira os dados do cartão.')}
       });
     }catch(e){avisar(e.message);}
   });
@@ -123,18 +147,20 @@
   });
   $('consultar').addEventListener('click',async()=>{
     $('consultar').disabled=true; $('consultar').textContent='Consultando…'; avisar('Consultando o pagamento…', 'info');
-    try{const p=await api({acao:'status',id:pedido.id},true);resultado(p);avisar('Consulta atualizada às '+new Date().toLocaleTimeString('pt-BR')+'. '+(p.pagamento?.aprovado?'Pagamento de teste aprovado.':p.tentativa?'Tentativa ainda em conferência.':p.pagamento?'Pagamento ainda não aprovado.':'Nenhum pagamento iniciado.'), 'info');}catch(e){avisar(e.message);}finally{$('consultar').disabled=false; $('consultar').textContent='Atualizar situação do pagamento';}
+    try{const p=await api({acao:'status',id:pedido.id},true);resultado(p);avisar('Consulta atualizada às '+new Date().toLocaleTimeString('pt-BR')+'. '+(p.pagamento?.aprovado?'Pagamento aprovado.':p.tentativa?'Tentativa ainda em conferência.':p.pagamento?'Pagamento ainda não aprovado.':'Nenhum pagamento iniciado.'), 'info');}catch(e){avisar(e.message);}finally{$('consultar').disabled=false; $('consultar').textContent='Consultar Pagamento';}
   });
   $('copiar').addEventListener('click',()=>navigator.clipboard.writeText($('pixCodigo').value).then(()=>avisar('Código copiado.', 'info')).catch(()=>avisar('Selecione o código e copie.')));
   window.addEventListener('pagehide',()=>{if(controller)controller.unmount();});
   for(const uf of ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']){const o=document.createElement('option');o.value=o.textContent=uf;$('entrega').elements.uf.append(o);}
   (async()=>{
     try{
+      const anterior=JSON.parse(sessionStorage.getItem('heeeph_pedido_teste'));
+      if(anterior?.id&&anterior.token){pedido=anterior;resultado(await api({acao:'status',id:pedido.id},true));return;}
+      if(sessionStorage.getItem('heeeph_preparacao')){resultado(await preparar());return;}
+      ambienteTela((await api({acao:'configuracao'})).teste !== false);
       entrada=JSON.parse(sessionStorage.getItem('heeeph_checkout'));if(!entrada?.itens?.length)throw new Error('Volte ao carrinho, escolha o frete e clique em Ir para pagamento.');
       $('cep').textContent='CEP de entrega: '+entrada.cep;
-      const anterior=JSON.parse(sessionStorage.getItem('heeeph_pedido_teste'));
-      if(anterior?.id&&anterior.token){pedido=anterior;resultado(await api({acao:'status',id:pedido.id},true));}
-      else avisar('Preencha os dados para conferir o pedido.', 'info');
+      avisar('Preencha os dados para conferir o pedido.', 'info');
     }catch(e){avisar(e.message);}
   })();
 })();

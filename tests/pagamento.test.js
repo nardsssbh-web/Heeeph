@@ -1,9 +1,10 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
-async function tela(resposta){
+async function tela(resposta,armazenamento={}){
  const nodes={};const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},scrollIntoView(){}});
- for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','recuperarPix'])nodes[id]=el();
+ for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso'])nodes[id]=el();
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
+ Object.assign(values,armazenamento);
  const ctx=vm.createContext({console,fetch:async()=>({ok:true,json:async()=>({...base,...resposta})}),document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);return nodes;
 }
@@ -12,3 +13,16 @@ test('tentativa incerta mostra consulta e recuperação Pix, sem mensagem engano
 test('recusa explícita mostra erro e permite corrigir pagamento',async()=>{const n=await tela({ultimaFalha:{mensagem:'Confira os dados.'}});assert.equal(n.meios.hidden,false);assert.equal(n.mensagem.dataset.tipo,'erro');assert.equal(n.mensagem.textContent,'Confira os dados.');});
 
 test('consulta informa atualização mesmo quando o pagamento já estava aprovado',async()=>{const n=await tela({pagamento:{aprovado:true,status:'processed'}});await n.consultar.click();assert.match(n.mensagem.textContent,/Consulta atualizada/);assert.match(n.mensagem.textContent,/aprovado/);assert.equal(n.consultar.disabled,false);});
+
+test('recupera pedido mesmo sem carrinho salvo e sempre mostra seu número',async()=>{
+ const n=await tela({pagamento:{aprovado:true,status:'processed'}},{heeeph_checkout:null});
+ assert.equal(n.resultado.hidden,false);assert.match(n.pedidoResumo.textContent,new RegExp(base.id));assert.doesNotMatch(n.mensagem.textContent,/Volte ao carrinho/);
+});
+test('recupera preparação interrompida antes de preencher outro formulário',async()=>{
+ const n=await tela({token:'b'.repeat(64)},{heeeph_pedido_teste:null,heeeph_checkout:null,heeeph_preparacao:JSON.stringify({acao:'preparar',chavePreparacao:'c'.repeat(64)})});
+ assert.equal(n.meios.hidden,false);assert.equal(n.entrega.hidden,true);assert.match(n.pedidoResumo.textContent,new RegExp(base.id));
+});
+test('produção não informa ao comprador que um pedido aprovado é simulação',async()=>{
+ const n=await tela({teste:false,pagamento:{aprovado:true,status:'processed'}});
+ assert.equal(n.statusTitulo.textContent,'Pagamento aprovado');assert.doesNotMatch(n.statusTexto.textContent,/teste/);assert.doesNotMatch(n.avisoAmbiente.textContent,/teste/);
+});
