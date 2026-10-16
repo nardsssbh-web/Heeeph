@@ -1,5 +1,9 @@
 # Receptor isolado de teste
 
+Estado atual: o simulador do Mercado Pago entregou notificações assinadas com HTTP 200 para orders existentes recusada e aprovada. A entrega automática do Pix aprovado ainda retorna HTTP 401 por assinatura divergente. Uma prova local da chave do painel retornou 200; isso não comprova entrega automática. Evidências atuais e identificadores: `docs/validacao-integrada-preview.md`. Os deploys, erros e pendências específicos abaixo são histórico, não o estado final da integração.
+
+URL estável de teste: `https://heeeph-webhook-teste-nardsssbh-9766s-projects.vercel.app/api/mercado-pago-webhook`. Atualizar o alias ao publicar outra versão Preview; não trocar a URL cadastrada a cada deploy.
+
 Projeto Vercel: `heeeph-webhook-teste` (`prj_dl8AyJ4sJBP5RJxj0T5YeLgon9jb`), sem conexão Git e sem domínio do site.
 
 Estado validado em 16/10/2026: deploy `dpl_CbwnbjQLooChdskW8TeZgZzSz4fN` READY, somente Preview, endpoint `https://heeeph-webhook-teste-1j4qv8p5a-nardsssbh-9766s-projects.vercel.app/api/mercado-pago-webhook`. Após correção do Access Token divergente, a notificação da order existente retornou **HTTP 200**, assinatura válida, vendedor de teste confirmado e persistência confirmada no Redis às `2026-10-16T13:33:22.725Z`. O pedido continuou `failed`/não aprovado conforme a API. Não houve criação ou reenvio de cobrança. Detalhes e evidências em `docs/webhook-preview.md`. Os apontamentos de bloqueio abaixo são histórico da investigação.
