@@ -1,6 +1,22 @@
 # Validação integrada — 16/10/2026
 
-Somente a branch `codex/preparacao-vendas`, ambiente de teste. Main, Production e dados anteriores preservados. Nenhuma credencial regenerada nesta rodada. Testes locais não substituem as evidências dos provedores abaixo.
+Alterações de código somente na branch `codex/preparacao-vendas`, ambiente de teste. Main e dados anteriores preservados. Production recebeu exclusivamente o redeploy do mesmo código para a troca de credencial de teste expressamente autorizada, conforme adendo abaixo. Testes locais não substituem as evidências dos provedores.
+
+## Adendo: troca de credenciais e investigação da assinatura
+
+Em 16/10/2026, o usuário autorizou atualizar o Access Token de teste nos consumidores e redeployar o mesmo código de Production. As duas entradas `MERCADO_PAGO_ACCESS_TOKEN_TEST` foram salvas como Secret: heeeph em Production/Preview; heeeph-webhook-teste somente Preview. Nenhum valor foi gravado neste documento.
+
+Deploys READY após a troca: Production `dpl_2SmVjNnLTXXSrZ5apjSbPjWKewvM`, preservando exatamente `fef09e51f541e173191e05a23e7f5129a7365c2b`; site Preview `dpl_EKVYEG6i1ZaPmrTd674tSbSSE2BG`, commit `7ac8ba1832c54156d9b6bccb3a5102f5ab8d4d85`; receptor Preview `dpl_AvbFYVcp3ny9cU1p6mhsUTPmzvuh`. Site público respondeu HTTP 200; receptor sem assinatura respondeu HTTP 401. Essas provas não comprovam revogação da credencial antiga nem acesso ao Mercado Pago com a nova.
+
+O usuário também autorizou a renovação adicional do Client Secret da aplicação fictícia após exposição acidental em ferramenta. Ele informou apenas ter copiado o valor, sem confirmação de renovação; não marcar essa rotação como concluída nem regenerar repetidamente. O checkout não usa Client ID/Client Secret. A revogação desses segredos permanece uma pendência de segurança.
+
+Após login manual no vendedor de teste, foi possível acessar a aplicação `2764236022861400`. A configuração de Webhooks no seu Modo de produção estava com URL vazia; Modo de teste tinha a URL antiga. Foi cadastrado o evento Order (Mercado Pago) e o mesmo receptor isolado, com o identificador público `?origem=conta-teste` para distinguir as duas opções no simulador. Essa seção pertence à conta fictícia; não é Production da Vercel nem a aplicação real. A orientação de login no vendedor fictício e Modo de produção aparece na documentação oficial de notificações Orders de Point; sua aplicabilidade ao problema de assinatura deste checkout continua sendo validada, não é uma causa definitivamente comprovada.
+
+Simulação inicial nessa configuração, usando somente a order aprovada existente `ORDTST01M52K43WFFZCQB6PE4P9K3ZQB`, chegou ao receptor às 13:13:17 de São Paulo em 16/10/2026 e retornou HTTP 401. Log: `assinatura_divergente`, request ID presente e variante em minúsculas também divergente. Nenhuma consulta ao provedor ou alteração do pedido nessa chamada. Naquele momento, ainda faltava cadastrar a assinatura correspondente no receptor e redeployar somente Preview; o resultado da correção está registrado a seguir.
+
+Atualização posterior: o usuário salvou a assinatura dessa configuração como `MERCADO_PAGO_WEBHOOK_SECRET_TEST`, Secret e somente Preview do receptor. Redeploy `dpl_7fYu9tDAE3QeBvbGdtQZ2VtqhA3j` READY. A repetição pelo simulador do Mercado Pago da mesma order aprovada retornou **HTTP 200**, às 13:19:40.88 de São Paulo em 16/10/2026. Logs desse deploy confirmam vendedor de teste `3763192972`, `assinaturaValidada=true` e `MP_WEBHOOK_TESTE {"resultado":"processado_e_persistido","http":200,"assinaturaValidada":true}`. Assim, o token atualizado permite consultar o provedor e o receptor confirma gravação autenticada do pedido existente. Não houve nova cobrança nem consulta pelo comprador para produzir essa evidência.
+
+Essa entrega é uma simulação enviada pelo próprio provedor, não uma prova de retry automático. O webhook automático aprovado continua pendente de confirmação com os identificadores existentes. A leitura independente no navegador de dados Redis pediu código do autenticador; nenhum código foi solicitado para substituir a prova de logs, nem houve tentativa de contornar a verificação. A assinatura da rota protegida do site heeeph ainda deve ser alinhada em Preview; não alterar sua entrada de Production.
 
 ## Evidências confirmadas
 
@@ -77,3 +93,4 @@ Produção permanece no commit `fef09e51f541e173191e05a23e7f5129a7365c2b`; nenhu
 - [Teste Pix Orders API](https://www.mercadopago.com.br/developers/pt/docs/checkout-api-orders/integration-test/pix)
 - [Teste de cartões Orders API](https://www.mercadopago.com.br/developers/en/docs/checkout-api-orders/integration-test/cards)
 - [Contrato de criação de order](https://www.mercadopago.com.br/developers/en/reference/online-payments/checkout-api/create-order/post)
+- [Notificações Orders de Point: orientação para configurar a conta fictícia](https://www.mercadopago.com.br/developers/en/docs/mp-point/notifications)
