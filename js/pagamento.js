@@ -93,8 +93,9 @@
     qr.hidden=true; qr.removeAttribute('src'); qr.onerror=null;
     $('pixCodigo').value=pix?.codigo || '';
     $('copiar').disabled=!pix?.codigo;
-    $('pixResultado').hidden=!pix;
-    if(!pix) return;
+    const encerrado=pg?.aprovado||['failed','canceled','cancelled','expired','rejected'].includes(pg?.status);
+    $('pixResultado').hidden=!pix||encerrado;
+    if(!pix||encerrado){$('pixCodigo').value='';$('copiar').disabled=true;return;}
     function gerarLocalmente() {
       qr.onerror=null; qr.hidden=true;
       if(!pix.codigo || typeof qrcode !== 'function') return false;

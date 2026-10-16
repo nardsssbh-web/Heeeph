@@ -50,6 +50,14 @@ test('Pix sem código informa ausência e mantém cópia e imagem indisponíveis
  const n=await tela({pagamento:{status:'action_required',pix:{codigo:'',imagem:''}}});
  assert.equal(n.qr.hidden,true);assert.equal(n.copiar.disabled,true);assert.match(n.mensagem.textContent,/não retornou os dados/);
 });
+
+test('Pix aprovado não mostra código vazio nem aviso para aguardar ou pagar outra vez',async()=>{
+ for(const pix of [{codigo:'',imagem:''},{codigo:'000201TESTE',imagem:''}]){
+  const n=await tela({pagamento:{aprovado:true,status:'processed',pix}});
+  assert.equal(n.pixResultado.hidden,true);assert.equal(n.qr.hidden,true);assert.equal(n.copiar.disabled,true);assert.equal(n.pixCodigo.value,'');
+  assert.equal(n.statusTitulo.textContent,'Pagamento de teste aprovado');assert.equal(n.mensagem.textContent,'');
+ }
+});
 test('imagem Pix do provedor com erro usa o mesmo copia e cola para gerar QR',async()=>{
  const n=await tela({pagamento:{status:'action_required',pix:{codigo:'000201TESTE',imagem:'AAAA'}}});
  n.qr.onerror();assert.match(n.qr.src,/^data:image\/gif;base64,/);assert.equal(n.qr.hidden,false);

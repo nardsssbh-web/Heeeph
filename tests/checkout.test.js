@@ -72,6 +72,17 @@ test('402 com order em data preserva identificador e códigos seguros, sem reenv
  }finally{f.close();}
 });
 
+test('APRO Teste produz first_name APRO e last_name Teste sem alterar o nome salvo ou enviar pagamento',()=>{
+ for(const nome of ['APRO Teste','  APRO   Teste  ']){
+  const cliente=c.clienteValido({...body.cliente,nome,email:'test@testuser.com'},body.cep);
+  const salvo=cliente.nome;
+  const p={id:'pedido-local',cliente,itens:[],total:100,frete:{centavos:0,transportadora:'JeT',servico:'Standard'}};
+  const payload=c.payloadPagamento(p,{id:'pix',type:'bank_transfer'});
+  assert.equal(payload.payer.first_name,'APRO');assert.equal(payload.payer.last_name,'Teste');assert.equal(payload.payer.email,'test@testuser.com');
+  assert.equal(cliente.nome,salvo);
+ }
+});
+
 test('preços e volumes são do servidor; informações do cliente e cartões não alteram o total',()=>{
  const b=structuredClone(body);b.itens[0].preco=.01;b.itens[0].peso=1;
  const v=c.itensValidados(b);assert.equal(v.subtotal,1290);assert.equal(v.pacotes[0].gramas,50);
