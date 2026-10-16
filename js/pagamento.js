@@ -2,6 +2,7 @@
   const $ = id => document.getElementById(id);
   const preco = centavos => (centavos / 100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   let entrada, pedido, controller, emPagamento = false;
+  $('conferir').disabled=true;
   function limparErros() {
     $('entrega').querySelectorAll('[aria-invalid]').forEach(c => {
       c.removeAttribute('aria-invalid');
@@ -144,7 +145,9 @@
     finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
   }
   $('entrega').addEventListener('submit',async e=>{
-    e.preventDefault(); limparErros(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…', 'info');
+    e.preventDefault();
+    if(!entrada?.itens?.length){avisar('Volte ao carrinho e confira o frete antes de continuar.');return;}
+    limparErros(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…', 'info');
     const f=new FormData(e.target), cliente={nome:f.get('nome'),email:f.get('email'),cpf:f.get('cpf'),telefone:f.get('telefone'),termos:f.get('termos')==='on',endereco:{}};
     for(const k of ['rua','numero','complemento','bairro','cidade','uf']) cliente.endereco[k]=f.get(k);
     try{pedido=await preparar({...entrada,cliente});resultado(pedido);avisar('Pedido '+pedido.id+' guardado. Confira o total e escolha o pagamento.', 'info');$('meios').scrollIntoView({block:'start'});}
@@ -161,6 +164,7 @@
       entrada=d.checkout;sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada));
       sessionStorage.removeItem('heeeph_pedido_teste');sessionStorage.removeItem('heeeph_preparacao');pedido=null;
       $('resultado').hidden=$('meios').hidden=true;$('entrega').hidden=false;
+      $('conferir').disabled=false;
       $('pedidoResumo').textContent='Revise os dados para preparar um novo pedido.';
       $('cep').textContent='CEP de entrega: '+entrada.cep;
       avisar('Revise os dados de entrega. Ao continuar, um novo pedido será preparado para você escolher Pix ou cartão. Nenhum pagamento foi iniciado.','info');
@@ -201,6 +205,7 @@
       ambienteTela((await api({acao:'configuracao'})).teste !== false);
       entrada=JSON.parse(sessionStorage.getItem('heeeph_checkout'));if(!entrada?.itens?.length)throw new Error('Volte ao carrinho, escolha o frete e clique em Ir para pagamento.');
       $('cep').textContent='CEP de entrega: '+entrada.cep;
+      $('conferir').disabled=false;
       avisar('Preencha os dados para conferir o pedido.', 'info');
     }catch(e){avisar(e.message);}
   })();

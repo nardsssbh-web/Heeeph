@@ -1,11 +1,11 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
-async function tela(resposta,armazenamento={}){
+async function tela(resposta,armazenamento={},opcoes={}){
  const nodes={},chamadas=[];const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
  for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento'])nodes[id]=el();
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
- const ctx=vm.createContext({console,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{chamadas.push(JSON.parse(opts.body).acao);return {ok:true,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
+ const ctx=vm.createContext({console,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;return nodes;
 }
 test('pedido restaurado sem tentativa volta aos meios e recupera public key',async()=>{const n=await tela({});assert.equal(n.meios.hidden,false);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Escolha como pagar/);});
@@ -22,7 +22,12 @@ test('revisão liberada volta aos dados sem chamar pagar nem preparar',async()=>
  const checkout={cep:'01001000',itens:[{id:'x'}],frete:10,servico:'1'};
  const n=await tela({pagamento:{status:'failed',trocaPermitida:true},checkout});
  await n.trocarPagamento.click();assert.equal(n.entrega.hidden,false);assert.equal(n.meios.hidden,true);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Nenhum pagamento foi iniciado/);
- assert.deepEqual(n.chamadas,['status','liberarNovaCompra']);
+ assert.equal(n.conferir.disabled,false);assert.deepEqual(n.chamadas,['status','liberarNovaCompra']);
+});
+test('falha na configuração bloqueia preparação sem carrinho carregado',async()=>{
+ const n=await tela({mensagem:'Origem não autorizada.'},{heeeph_pedido_teste:null},{falhar:true});
+ assert.equal(n.conferir.disabled,true);await n.entrega.submit({preventDefault(){}});
+ assert.deepEqual(n.chamadas,['configuracao']);assert.match(n.mensagem.textContent,/Volte ao carrinho/);
 });
 
 test('consulta informa atualização mesmo quando o pagamento já estava aprovado',async()=>{const n=await tela({pagamento:{aprovado:true,status:'processed'}});await n.consultar.click();assert.match(n.mensagem.textContent,/Consulta atualizada/);assert.match(n.mensagem.textContent,/aprovado/);assert.equal(n.consultar.disabled,false);});

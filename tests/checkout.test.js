@@ -9,6 +9,13 @@ test('diagnóstico identifica campo conhecido sem guardar valores ou mensagens d
 test('diagnóstico aceita detalhes textuais e caminhos JSON Pointer sem valores',()=>{
  assert.deepEqual(c.diagnosticoMP({errors:[{code:'property_value',details:['/payer/email: segredo','/transactions/payments/0/expiration_time: valor privado']}]},400),{http:400,codigos:['property_value'],campos:['payer.email','transactions.payments[0].expiration_time']});
 });
+test('payload omite complemento vazio em ambos os endereços e preserva complemento informado e cadastro',()=>{
+ const p={id:'a'.repeat(32),total:100,cliente:c.clienteValido(body.cliente,body.cep),itens:[],frete:{centavos:100}};
+ const vazio=c.payloadPagamento(p,{id:'pix',type:'bank_transfer'});
+ assert.equal(Object.hasOwn(vazio.payer.address,'complement'),false);assert.equal(Object.hasOwn(vazio.shipment.address,'complement'),false);assert.equal(p.cliente.endereco.complement,'');
+ p.cliente.endereco.complement='Apto 303';const preenchido=c.payloadPagamento(p,{id:'pix',type:'bank_transfer'});
+ assert.equal(preenchido.payer.address.complement,'Apto 303');assert.equal(preenchido.shipment.address.complement,'Apto 303');
+});
 function fixture(){
  const db=new Map(),requests=[];const previous=global.fetch;const env={...process.env};
  Object.assign(process.env,{CHECKOUT_TESTE_ATIVO:'true',MERCADO_PAGO_ACCESS_TOKEN_TEST:'segredo-mp',MERCADO_PAGO_PUBLIC_KEY_TEST:'public-test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'segredo-db',FRETE_ATIVO:'true',MELHOR_ENVIO_AMBIENTE:'producao',MELHOR_ENVIO_TOKEN:'segredo-frete',MELHOR_ENVIO_USER_AGENT:'HEEEPH'});
