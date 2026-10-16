@@ -216,3 +216,16 @@ test('desativar novas cobranças preserva consulta e reconciliação dos pagamen
  }finally{f.close();}
 });
 
+
+test('consulta preserva motivo da transação e Pix sem copiar dados extras nem criar cobrança',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);await c.pagar(p.id,p.token,{metodo:'pix'});
+  const order=await c.mp('/v1/orders/ORDTEST');
+  Object.assign(order,{status:'failed',status_detail:'failed',total_paid_amount:'0.00'});
+  Object.assign(order.transactions.payments[0],{status:'failed',status_detail:'rejected_by_issuer',secret:'nao-expor',payment_method:{id:'pix',qr_code:'',qr_code_base64:''}});
+  const r=await c.status(p.id,p.token);
+  assert.deepEqual(r.pagamento.transacoes,[{status:'failed',detalhe:'rejected_by_issuer',metodo:'pix'}]);
+  assert.equal(r.pagamento.aprovado,false);assert.equal(r.pagamento.pix.codigo,'');assert.equal(f.orders,1);
+  assert.ok(!JSON.stringify(r).includes('nao-expor'));
+ }finally{f.close();}
+});
