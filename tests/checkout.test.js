@@ -43,6 +43,8 @@ test('consulta Pix recupera código e ausência de imagem sem criar outra order'
   Object.assign(order,{status:'action_required',status_detail:'waiting_transfer',total_paid_amount:'0.00'});
   Object.assign(order.transactions.payments[0],{status:'action_required',status_detail:'waiting_transfer',payment_method:{id:'pix',qr_code:'000201TESTE',qr_code_base64:''}});
   const r=await c.status(p.id,p.token);
+  order.integration_data={application_id:'935313633293399'};
+  assert.equal((await c.status(p.id,p.token)).pagamento.aplicacao,'935313633293399');
   assert.equal(r.pagamento.pix.codigo,'000201TESTE');assert.equal(r.pagamento.pix.imagem,'');assert.equal(r.pagamento.aprovado,false);assert.equal(f.orders,1);
   delete order.transactions.payments[0].payment_method.qr_code;
   const semDados=await c.status(p.id,p.token);assert.equal(semDados.pagamento.pix.codigo,'');assert.equal(f.orders,1);
