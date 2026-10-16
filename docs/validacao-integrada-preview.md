@@ -10,7 +10,7 @@ O histórico de teste mostrou somente os eventos antigos recusados e nenhum cont
 
 A entrega retornou HTTP 401 no receptor antigo, request dtr68-1792181923970-11d7fad1b763. Desta vez o diagnóstico foi assinatura_divergente, requestIdPresente=true, varianteMinusculaConfere=true. Isso confirma criptograficamente a correspondência do segredo e identifica o problema do manifesto: o ID foi assinado em minúsculas. As tentativas anteriores, com outro segredo, não confirmavam essa variante.
 
-Correção: aceitar HMAC completo do ID original (simulador) ou normalizado para minúsculas (automático), sem mudar o ID consultado no provedor ou salvo no Redis. Não há bypass da assinatura. Chave, ID, request ID e timestamp alterados continuam recusados. Receptor corrigido publicado somente em Preview: dpl_9D4k1oGpANTaVsYNFqEBaN7QxAY4, mantendo o alias público isolado. Os 78 testes passaram. Aguardar a repetição da mesma notificação; não criar outro pagamento.
+Correção: aceitar HMAC completo do ID original (simulador) ou normalizado para minúsculas (automático), sem mudar o ID consultado no provedor ou salvo no Redis. Não há bypass da assinatura. Chave, ID, request ID e timestamp alterados continuam recusados. Receptor corrigido publicado somente em Preview: dpl_9D4k1oGpANTaVsYNFqEBaN7QxAY4, mantendo o alias público isolado. Os 78 testes passaram. Retry automático confirmado às 17:37:51 de São Paulo (20:37:51.433Z), request Vercel sckw9-1792183071433-5570bf2beb57: HTTP 200 no receptor corrigido. Os parâmetros identificam o mesmo pedido e a mesma order; o User Agent é MercadoPago WebHook v1.0 order. Logs às 20:37:52.169Z confirmam vendedor de teste e assinatura válida; às 20:37:53.196Z, resultado processado_e_persistido. Nenhum simulador, consulta pelo comprador ou novo pagamento foi usado para esse retry. A recuperação pela página foi verificada somente depois dessa evidência.
 
 ## Adendo: troca de credenciais e investigação da assinatura
 
@@ -77,7 +77,7 @@ O registro do Pix aprovado existente não contém código/imagem após as consul
 
 ## Ainda em validação
 
-- Pix: QR/copia e cola e recuperação após reload comprovados; assinatura da notificação automática ainda divergente.
+- Pix: QR/copia e cola, recuperação e entrega automática assinada comprovados na rodada atual.
 - Cartão: aprovação, recusa, retorno para revisão e recuperação após reload comprovados com o provedor em teste. Parcelamento com juros, débito e autenticação 3DS não foram exercitados nesta rodada.
 - Revisão final das correções, publicação Preview e conferência visual da versão final.
 
@@ -95,7 +95,7 @@ Produção permanece no commit `fef09e51f541e173191e05a23e7f5129a7365c2b`; nenhu
 
 ## Configurações externas pendentes
 
-- Mercado Pago: resolver a assinatura da entrega automática na aplicação efetivamente indicada nas orders de teste. Preservar HMAC; obter a chave correspondente diretamente no painel e cadastrar somente em Preview se uma diferença for confirmada. Repetir uma notificação existente e conferir HTTP 200 e persistência sem consulta manual do comprador. Não criar cobrança para essa prova.
+- Mercado Pago: assinatura e processamento automático em teste confirmados após alinhamento da chave existente e normalização do ID no HMAC. Preservar essa configuração; nenhuma nova credencial é necessária para repetir notificações existentes. Produção exige preparação e autorização próprias.
 - Vercel: manter a proteção geral do site e o receptor isolado; as credenciais atuais permitem os testes comprovados. As antigas cópias manuais Redis do receptor não são usadas pelo runtime. A revogação independente dos tokens antigos não foi repetida nesta rodada.
 - Para futura produção: preparar banco exclusivo sem expiração automática de pedidos, retenção/backup e credenciais `UPSTASH_REDIS_REST_URL_PROD`, `UPSTASH_REDIS_REST_TOKEN_PROD`; credenciais e assinatura `MERCADO_PAGO_ACCESS_TOKEN_PROD`, `MERCADO_PAGO_PUBLIC_KEY_PROD`, `MERCADO_PAGO_WEBHOOK_SECRET_PROD`, vendedor `MERCADO_PAGO_VENDEDOR_ID_PROD` e endpoint de produção. Não cadastrar/ativar agora sem autorização.
 - Melhor Envio: a cotação existente funcionou. Compra de etiqueta e rastreamento automático exigem implementação e validação próprias; não constam como prontas.

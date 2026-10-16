@@ -93,7 +93,7 @@ function renderizarGaleria() {
     return;
   }
 
-  grade.innerHTML = produtos.map(produto => {
+  grade.innerHTML = produtos.map((produto, indice) => {
     const indisponivel = produtoIndisponivel(produto);
 
     return `
@@ -104,6 +104,8 @@ function renderizarGaleria() {
           <div class="img-box">
             <img
               class="zoomable"
+              loading="${indice < 2 ? 'eager' : 'lazy'}"
+              decoding="async"
               src="${escaparTexto(produto.imagem)}"
               alt="${escaparTexto(produto.nome)}"
               onclick="abrirZoom('${escaparTexto(produto.imagem)}', '${escaparTexto(produto.nome)}')"

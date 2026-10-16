@@ -1,4 +1,5 @@
 const c = require('../lib/checkout');
+const {ErroCEP}=require('../lib/cep');
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') { res.setHeader('Allow','POST'); return res.status(405).json({ mensagem:'Método não permitido.' }); }
@@ -21,10 +22,10 @@ module.exports = async (req, res) => {
     if (b.acao === 'liberarNovaCompra') return res.json(await c.liberarNovaCompra(b.id, token));
     throw new c.ErroCheckout('Ação não permitida.');
   } catch (e) {
-    const conhecido = e instanceof c.ErroCheckout || e instanceof c.ErroFrete;
+    const conhecido = e instanceof c.ErroCheckout || e instanceof c.ErroFrete || e instanceof ErroCEP;
     return res.status(e instanceof SyntaxError ? 400 : conhecido ? e.status : e.status === 422 ? 422 : 502).json({
       mensagem: conhecido ? e.message : e instanceof SyntaxError ? 'Confira os dados do pedido.' : 'Não foi possível concluir. Consulte o pedido antes de repetir o pagamento.',
-      ...(e.frete ? { frete:e.frete } : {}), ...(e.codigoMP ? { codigo:e.codigoMP } : {}) });
+      ...(e.frete ? { frete:e.frete } : {}), ...(e.campo ? {campo:e.campo} : {}), ...(e.codigoMP ? { codigo:e.codigoMP } : {}) });
   }
 };
 

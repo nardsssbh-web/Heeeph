@@ -91,3 +91,11 @@ test('sandbox aparece como teste e não vira valor comercial no WhatsApp', async
   assert.doesNotMatch(mensagem, /Total com frete/);
 });
 
+test('carrinho não interpreta HTML adulterado nem carrega imagem externa',()=>{
+ const {contexto,elementos}=preparar(async()=>{});elementos.conteudoCarrinho={innerHTML:''};
+ vm.runInContext(`localStorage.setItem('heeeph_cart',JSON.stringify([{id:'placa',nome:'<script>alert(1)</script>',medida:'<iframe>',imagem:'https://externo.test/rastrear.png',preco:'<b>preço</b>',quantidade:1}]));renderCarrinho();`,contexto);
+ const html=elementos.conteudoCarrinho.innerHTML;assert.doesNotMatch(html,/<script>|<iframe>|<b>|https:\/\/externo/);assert.match(html,/&lt;script&gt;/);assert.match(html,/&lt;iframe&gt;/);
+ assert.equal(vm.runInContext("imagemDoCarrinho('placas/bebida/in-vino.png')",contexto),'placas/bebida/in-vino.png');
+ assert.equal(vm.runInContext("imagemDoCarrinho('placas/../api/pedidos.png')",contexto),'');
+});
+

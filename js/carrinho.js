@@ -8,6 +8,14 @@ let consultaFrete = 0;
 let controleFrete = null;
 let subtotalAtual = 0;
 
+function escaparHtml(valor) {
+  return String(valor ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+}
+function imagemDoCarrinho(valor) {
+  const caminho=String(valor || '');
+  return /^placas\/[^?#]+\.(png|jpe?g|webp|gif)$/i.test(caminho)&&!caminho.split('/').includes('..')?escaparHtml(caminho):'';
+}
+
 function precoParaNumero(preco) {
   if (!preco) return 0;
   if (typeof preco === "number") return preco;
@@ -347,13 +355,13 @@ function renderCarrinho() {
     return `
       <div class="item-carrinho">
         <div class="item-img">
-          <img src="${item.imagem || ""}" alt="${item.nome || "Produto"}">
+          <img src="${imagemDoCarrinho(item.imagem)}" alt="${escaparHtml(item.nome || "Produto")}" decoding="async">
         </div>
 
         <div class="item-info">
-          <h2>${item.nome || "Produto"}</h2>
-          <div class="item-medida">${item.medida || ""}</div>
-          <div class="item-preco">${precoUnitario > 0 ? formatarPreco(precoUnitario) : (item.preco || "preço aqui")}</div>
+          <h2>${escaparHtml(item.nome || "Produto")}</h2>
+          <div class="item-medida">${escaparHtml(item.medida || "")}</div>
+          <div class="item-preco">${precoUnitario > 0 ? formatarPreco(precoUnitario) : escaparHtml(item.preco || "preço aqui")}</div>
 
           <div class="quantidade-area">
             <button class="quantidade-btn" onclick="diminuirQuantidade(${indice})">-</button>
@@ -365,7 +373,7 @@ function renderCarrinho() {
         </div>
 
         <div class="subtotal-item">
-          ${precoUnitario > 0 ? formatarPreco(subtotal) : (item.preco || "preço aqui")}
+          ${precoUnitario > 0 ? formatarPreco(subtotal) : escaparHtml(item.preco || "preço aqui")}
         </div>
       </div>
     `;

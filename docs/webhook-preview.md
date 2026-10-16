@@ -1,6 +1,6 @@
 # Webhook de teste — Preview
 
-**Rodada integrada de 16/10/2026:** o simulador foi validado para recusa e aprovação. Após alinhar o segredo, um único novo Pix fictício permitiu diagnosticar a entrega automática: o HMAC confere com o ID em minúsculas. O validador foi corrigido mantendo a assinatura obrigatória; a repetição automática da mesma notificação está em observação. Ver o resultado atual em `validacao-integrada-preview.md`; as demais seções são histórico. URL estável: `https://heeeph-webhook-teste-nardsssbh-9766s-projects.vercel.app/api/mercado-pago-webhook`.
+**Rodada integrada de 16/10/2026:** o simulador foi validado para recusa e aprovação. Após alinhar o segredo, um único novo Pix fictício permitiu diagnosticar a entrega automática: o HMAC confere com o ID em minúsculas. O validador foi corrigido mantendo a assinatura obrigatória; a repetição automática da mesma notificação retornou HTTP 200 com assinatura e persistência confirmadas às 17:37:51 de São Paulo. Ver o resultado atual em `validacao-integrada-preview.md`; as demais seções são histórico. URL estável: `https://heeeph-webhook-teste-nardsssbh-9766s-projects.vercel.app/api/mercado-pago-webhook`.
 
 Endpoint: `POST /api/mercado-pago-webhook`. A Orders API envia o evento **Order (Mercado Pago)**, com `type=order` e `data.id=ORD...` na query. Não selecionar Payment da API legada nem QR presencial.
 

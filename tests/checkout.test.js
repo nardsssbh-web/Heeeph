@@ -31,6 +31,7 @@ function fixture(){
  let preco=10.79,testUser=true,orders=0,timeout=false,lastOrder,recusa=false,semVendedor=false;
  global.fetch=async(url,opts={})=>{
   requests.push({url,opts});const json=d=>({ok:true,json:async()=>d});
+  if(url.includes('viacep.com.br'))return json({cep:'30220-060',logradouro:'Rua Teste',bairro:'Centro',localidade:'Belo Horizonte',uf:'MG'});
   if(url==='https://redis.test'){
    const [cmd,key,value,...args]=JSON.parse(opts.body);let result;
    if(cmd==='SET'){if(args.includes('NX')&&db.has(key))result=null;else{db.set(key,value);result='OK';}}
@@ -114,6 +115,14 @@ test('preços e volumes são do servidor; informações do cliente e cartões n�
  const v=c.itensValidados(b);assert.equal(v.subtotal,1290);assert.equal(v.pacotes[0].gramas,50);
  const p={id:'abc',cliente:c.clienteValido(b.cliente,b.cep),itens:v.itens,total:2369,frete:{centavos:1079,transportadora:'JeT',servico:'Standard'}};
  const payload=c.payloadPagamento(p,{id:'pix',type:'bank_transfer'});assert.equal(payload.total_amount,'23.69');assert.equal(payload.shipment.address.zip_code,b.cep);assert.equal(payload.items[1].unit_price,'10.79');
+});
+
+test('servidor recusa endereço divergente antes de persistir pedido ou criar cobrança',async()=>{
+ const f=fixture();try{
+  const b=structuredClone(body);b.cliente.endereco.cidade='Outra Cidade';const salvo=structuredClone(b);
+  await assert.rejects(()=>c.preparar(b),{status:422,campo:'cidade'});assert.equal(f.orders,0);assert.deepEqual(b,salvo);
+  assert.equal([...f.db.keys()].some(k=>/^heeeph:teste:[a-f0-9]{32}$/.test(k)),false);
+ }finally{f.close();}
 });
 test('frete indisponível ou alterado exige confirmação; zero é aceito',()=>{
  assert.throws(()=>c.conferirFrete([],1,10),{status:409});assert.throws(()=>c.conferirFrete([{id:'1',preco:12}],1,10),{status:409});assert.equal(c.conferirFrete([{id:'1',preco:0}],1,0).centavos,0);

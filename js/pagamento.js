@@ -2,6 +2,7 @@
   const $ = id => document.getElementById(id);
   const preco = centavos => (centavos / 100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
   let entrada, pedido, controller, emPagamento = false, validandoCartao = false;
+  let referenciaCEP;
   $('conferir').disabled=true;
   function limparErros() {
     $('entrega').querySelectorAll('[aria-invalid]').forEach(c => {
@@ -66,6 +67,19 @@
     return d;
   }
   function guardar(p) { pedido={...pedido,...p}; sessionStorage.setItem('heeeph_pedido_teste',JSON.stringify({id:pedido.id,token:pedido.token})); }
+  async function conferirCEP(preencher=false){
+    if(referenciaCEP?.cep!==entrada.cep){
+      $('cepConferencia').textContent='Conferindo o endereço do CEP…';
+      const r=await fetch('/api/cep?cep='+encodeURIComponent(entrada.cep));
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok)throw new Error(d.mensagem||'Não foi possível conferir o CEP agora. Seus dados foram preservados; tente novamente.');
+      referenciaCEP=d;
+    }
+    const campos=$('entrega').elements;
+    if(preencher)for(const k of ['rua','bairro','cidade','uf'])if(!campos[k].value)campos[k].value=referenciaCEP[k]||'';
+    $('cepConferencia').textContent='Endereço do CEP: '+[referenciaCEP.rua,referenciaCEP.bairro,referenciaCEP.cidade,referenciaCEP.uf].filter(Boolean).join(' — ')+'. Confira o número e o complemento.';
+    return referenciaCEP;
+  }
   async function preparar(body) {
     let pendente=JSON.parse(sessionStorage.getItem('heeeph_preparacao'));
     if(!pendente){
@@ -150,8 +164,13 @@
     limparErros(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…', 'info');
     const f=new FormData(e.target), cliente={nome:f.get('nome'),email:f.get('email'),cpf:f.get('cpf'),telefone:f.get('telefone'),termos:f.get('termos')==='on',endereco:{}};
     for(const k of ['rua','numero','complemento','bairro','cidade','uf']) cliente.endereco[k]=f.get(k);
-    try{pedido=await preparar({...entrada,cliente});resultado(pedido);avisar('Pedido '+pedido.id+' guardado. Confira o total e escolha o pagamento.', 'info');$('meios').scrollIntoView({block:'start'});}
-    catch(e){avisar(e.message);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
+    try{
+      const referencia=await conferirCEP();
+      const erro=EnderecosHEEEPH.divergencia(cliente.endereco,referencia);
+      if(erro){avisar(erro.mensagem,'erro',erro.campo);return;}
+      pedido=await preparar({...entrada,cliente});resultado(pedido);avisar('Pedido '+pedido.id+' guardado. Confira o total e escolha o pagamento.', 'info');$('meios').scrollIntoView({block:'start'});
+    }
+    catch(e){avisar(e.message,'erro',e.dados?.campo);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
     finally{$('conferir').disabled=false;}
   });
   $('pix').addEventListener('click',()=>pagar('pix').catch(()=>{}));
@@ -240,6 +259,7 @@
       $('cep').textContent='CEP de entrega: '+entrada.cep;
       $('conferir').disabled=false;
       avisar('Preencha os dados para conferir o pedido.', 'info');
+      try{await conferirCEP(true);}catch(e){$('cepConferencia').textContent=e.message;avisar(e.message);}
     }catch(e){avisar(e.message);}
   })();
 })();

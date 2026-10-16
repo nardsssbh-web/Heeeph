@@ -2,10 +2,11 @@ const test=require('node:test'),assert=require('node:assert/strict'),vm=require(
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
 async function tela(resposta,armazenamento={},opcoes={}){
  const nodes={},chamadas=[];const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
- for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento','confirmarCartao'])nodes[id]=el();
+ for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','cepConferencia','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento','confirmarCartao'])nodes[id]=el();
+ for(const k of ['nome','email','cpf','telefone','rua','numero','complemento','bairro','cidade','uf','termos'])nodes.entrega.elements[k]=Object.assign(el(),{name:k,value:opcoes.campos?.[k]||'',focus(){},closest(){return {append(){}};}});
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
- const ctx=vm.createContext({console,setTimeout,clearTimeout,MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
+ const ctx=vm.createContext({console,setTimeout,clearTimeout,FormData:class{constructor(form){this.form=form;}get(k){return this.form.elements[k].value;}},EnderecosHEEEPH:require('../js/enderecos'),MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{if(url.startsWith('/api/cep?')){chamadas.push('cep');return {ok:!opcoes.cepFalha,json:async()=>opcoes.cepFalha?{mensagem:'CEP indisponível. Dados preservados.'}:{cep:'01001000',rua:'Praça da Sé',bairro:'Sé',cidade:'São Paulo',uf:'SP'}};}chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;return nodes;
 }
 test('pedido restaurado sem tentativa volta aos meios e recupera public key',async()=>{const n=await tela({});assert.equal(n.meios.hidden,false);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Escolha como pagar/);});
@@ -28,6 +29,23 @@ test('falha na configuração bloqueia preparação sem carrinho carregado',asyn
  const n=await tela({mensagem:'Origem não autorizada.'},{heeeph_pedido_teste:null},{falhar:true});
  assert.equal(n.conferir.disabled,true);await n.entrega.submit({preventDefault(){}});
  assert.deepEqual(n.chamadas,['configuracao']);assert.match(n.mensagem.textContent,/Volte ao carrinho/);
+});
+
+test('CEP preenche somente campos vazios e preserva nome, número e endereço já digitado',async()=>{
+ const n=await tela({}, {heeeph_pedido_teste:null},{campos:{nome:'Comprador Teste',numero:'42',rua:'Rua já preenchida',complemento:'Apto 3'}});
+ const f=n.entrega.elements;assert.equal(f.rua.value,'Rua já preenchida');assert.equal(f.numero.value,'42');assert.equal(f.complemento.value,'Apto 3');assert.equal(f.nome.value,'Comprador Teste');assert.equal(f.cidade.value,'São Paulo');assert.equal(f.uf.value,'SP');assert.deepEqual(n.chamadas,['configuracao','cep']);
+});
+
+test('divergência de endereço é mostrada antes de preparar pedido, sem limpar os dados',async()=>{
+ const n=await tela({}, {heeeph_pedido_teste:null},{campos:{nome:'Comprador Teste',numero:'42',cidade:'Outra Cidade'}});
+ await n.entrega.submit({preventDefault(){},target:n.entrega});
+ assert.deepEqual(n.chamadas,['configuracao','cep']);assert.match(n.mensagem.textContent,/cidade não corresponde/);assert.equal(n.entrega.elements.cidade.value,'Outra Cidade');assert.equal(n.entrega.elements.numero.value,'42');assert.equal(n.conferir.disabled,false);
+});
+
+test('indisponibilidade do CEP mantém formulário e permite repetir apenas a consulta',async()=>{
+ const n=await tela({}, {heeeph_pedido_teste:null},{cepFalha:true,campos:{nome:'Comprador Teste',rua:'Rua digitada',numero:'42'}});
+ await n.entrega.submit({preventDefault(){},target:n.entrega});
+ assert.deepEqual(n.chamadas,['configuracao','cep','cep']);assert.equal(n.entrega.elements.rua.value,'Rua digitada');assert.equal(n.entrega.elements.nome.value,'Comprador Teste');assert.equal(n.conferir.disabled,false);assert.match(n.mensagem.textContent,/preservados/);
 });
 test('botão próprio valida pelo Brick antes de um único envio e bloqueia cliques simultâneos',async()=>{
  let configuracao,liberar;const sequencia=[];

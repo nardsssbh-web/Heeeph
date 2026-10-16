@@ -73,7 +73,7 @@ Configurar proteção dos deployments de Preview, acesso dos administradores, lo
 
 ## Validação antes de liberar
 
-Rodar `node --test tests/*.test.js` e `git diff --check`. Resultado desta revisão: 50 testes passaram com APIs simuladas (antes: 36/37). Conferido no navegador local com pedido fictício: produtos destacados, etapa salva no topo e retorno verde ao consultar. A prévia não usou APIs ou chaves reais. O Card Payment Brick hospedado, parcelas em diferentes dispositivos, contas externas, Redis real e deploy Vercel ainda precisam de validação integrada.
+Rodar `node --test tests/*.test.js` e `git diff --check`. Atualização em 16/10/2026: 78 testes passaram com APIs simuladas. As evidências integradas de Pix/QR/copia e cola, cartão aprovado/recusado e revisão, frete, Redis e recuperação estão em `validacao-integrada-preview.md`. A conferência do webhook automático é registrada separadamente do simulador. Parcelamento com juros, débito, diferentes dispositivos e 3DS continuam pendentes; não inferir sua validação dos demais casos.
 
 Em Preview, usando contas de teste: cartão aprovado/recusado, Pix pendente/aprovado/expirado, recarregar após preparar e após pagar, resposta perdida, dois cliques/abas, alteração de frete, webhook válido/inválido/repetido, acesso ao painel sem chave/com chave, quatro etapas e exclusão. Conferir valores diretamente no Mercado Pago e registros no Redis. Nunca limpar manualmente uma tentativa para “tentar de novo”.
 
