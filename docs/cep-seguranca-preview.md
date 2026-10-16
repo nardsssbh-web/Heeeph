@@ -26,6 +26,7 @@ Metadados de `MERCADO_PAGO_WEBHOOK_SECRET_TEST` conferidos nos dois projetos: Se
 - Removida `precoNumero`, função sem referências em `lib/frete.js`. Sem novos pacotes ou dependências. Scripts temporários fora do commit; nenhuma imagem ou registro excluído.
 - Galeria mantém as duas primeiras imagens com carregamento imediato e usa lazy loading nas demais, com decodificação assíncrona. Fontes originais preservadas; imagens grandes ainda podem limitar a experiência em conexão lenta.
 - Número do pedido passa a quebrar linha em espaços estreitos. Visual existente preservado.
+- Contêiner do cartão oculto enquanto vazio, eliminando a faixa branca antes de abrir o Brick. O formulário carregado mantém fundo claro e parcelas legíveis.
 
 ## Verificação
 

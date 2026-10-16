@@ -10,6 +10,7 @@ input[aria-invalid="true"],select[aria-invalid="true"]{border:2px solid #ff6262;
 
 /* Formulário de cartão claro para manter as opções nativas legíveis. */
 #cardPaymentBrick_container{background:#fff;color:#111;color-scheme:light;border-radius:10px;padding:12px;margin-top:16px}
+#cardPaymentBrick_container:empty{display:none}
 #cardPaymentBrick_container select,#cardPaymentBrick_container option{background:#fff!important;color:#111!important;color-scheme:light}
 .painel-filtros{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.painel-filtros input{flex:2;min-width:180px}.painel-filtros select{flex:1;min-width:160px}.pedido-card{border:1px solid #555;border-radius:10px;padding:18px;margin:18px 0;overflow-wrap:anywhere}.pedido-card h2{font-size:20px}.pedido-card dl{display:grid;grid-template-columns:130px 1fr;gap:8px}.pedido-card dt{font-weight:bold}.pedido-card dd{margin:0}.pedido-card table{width:100%;border-collapse:collapse}.pedido-card td,.pedido-card th{text-align:left;padding:8px;border-bottom:1px solid #444}.selo{font-weight:bold;color:#ffda65}.aprovado{color:#9be7a7}@media print{body{background:#fff;color:#111}.marca,h1,h2,a{color:#111}.painel-filtros,#acesso,button,#mensagem,#sair{display:none!important}.pedido-card{break-inside:avoid}.selo,.aprovado{color:#111}}
 
