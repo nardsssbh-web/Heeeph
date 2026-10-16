@@ -1,5 +1,7 @@
 # Validação integrada — 16/10/2026
 
+Resultado mais recente: [CEP, segurança, frete misto, inspeção responsiva e webhook automático confirmado](cep-seguranca-preview.md). As evidências e erros anteriores abaixo foram preservados como histórico.
+
 Alterações de código somente na branch `codex/preparacao-vendas`, ambiente de teste. Main e dados anteriores preservados. Production recebeu exclusivamente o redeploy do mesmo código para a troca de credencial de teste expressamente autorizada, conforme adendo abaixo. Testes locais não substituem as evidências dos provedores.
 
 ## Rodada atual: assinatura automática com ID normalizado
@@ -79,7 +81,7 @@ O registro do Pix aprovado existente não contém código/imagem após as consul
 
 - Pix: QR/copia e cola, recuperação e entrega automática assinada comprovados na rodada atual.
 - Cartão: aprovação, recusa, retorno para revisão e recuperação após reload comprovados com o provedor em teste. Parcelamento com juros, débito e autenticação 3DS não foram exercitados nesta rodada.
-- Revisão final das correções, publicação Preview e conferência visual da versão final.
+- Revisão das correções, publicação Preview e conferência visual concluídas na rodada de CEP/segurança. Aparelho físico, rede móvel e campos seguros do cartão no celular continuam pendentes.
 
 Correções adicionais: o alias estável da branch era bloqueado por CORS/origem no checkout. Agora é aceita somente a URL exata informada pela variável de sistema `VERCEL_BRANCH_URL`, exclusivamente em Preview. Testes rejeitam outros domínios e impedem reutilizar essa exceção em Production. O formulário também fica bloqueado enquanto a configuração inicial não termina, evitando preparar um pedido incompleto após erro de inicialização. O envio mostra retorno visível e abrir o cartão limpa a mensagem anterior de Pix.
 
