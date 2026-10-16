@@ -16,6 +16,15 @@ test('payload omite complemento vazio em ambos os endereços e preserva compleme
  p.cliente.endereco.complement='Apto 303';const preenchido=c.payloadPagamento(p,{id:'pix',type:'bank_transfer'});
  assert.equal(preenchido.payer.address.complement,'Apto 303');assert.equal(preenchido.shipment.address.complement,'Apto 303');
 });
+test('recusa final pelo emissor aceita montantes nominais observados na API, sem liberar pendência ou valor parcial',()=>{
+ const p={id:'a'.repeat(32),ambiente:'teste',vendedor:'3763192972',total:3450};
+ const d={id:'ORDTEST',user_id:3763192972,country_code:'BRA',external_reference:p.id,total_amount:'34.50',total_paid_amount:'34.50',status:'failed',status_detail:'failed',transactions:{payments:[{amount:'34.50',paid_amount:'34.50',status:'failed',status_detail:'rejected_by_issuer',payment_method:{id:'master'}}]}};
+ assert.equal(c.conferirPagamento(p,d).trocaPermitida,true);assert.equal(c.conferirPagamento(p,d).aprovado,false);
+ for(const status of ['processing','action_required','processed','refunded']){const x=structuredClone(d);x.status=status;assert.equal(c.conferirPagamento(p,x).trocaPermitida,false);}
+ for(const alvo of ['order','payment']){const x=structuredClone(d);if(alvo==='order')x.total_paid_amount='1.00';else x.transactions.payments[0].paid_amount='1.00';assert.equal(c.conferirPagamento(p,x).trocaPermitida,false);}
+ const retry=structuredClone(d);retry.status_detail='waiting_retry';assert.equal(c.conferirPagamento(p,retry).trocaPermitida,false);
+ const multiplo=structuredClone(d);multiplo.transactions.payments.push(structuredClone(d.transactions.payments[0]));assert.equal(c.conferirPagamento(p,multiplo).trocaPermitida,false);
+});
 function fixture(){
  const db=new Map(),requests=[];const previous=global.fetch;const env={...process.env};
  Object.assign(process.env,{CHECKOUT_TESTE_ATIVO:'true',MERCADO_PAGO_ACCESS_TOKEN_TEST:'segredo-mp',MERCADO_PAGO_PUBLIC_KEY_TEST:'public-test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'segredo-db',FRETE_ATIVO:'true',MELHOR_ENVIO_AMBIENTE:'producao',MELHOR_ENVIO_TOKEN:'segredo-frete',MELHOR_ENVIO_USER_AGENT:'HEEEPH'});
@@ -56,7 +65,7 @@ test('troca reconsulta recusa, preserva pedido e não cria pagamento; pendente o
   const p=await c.preparar(body);await c.pagar(p.id,p.token,{metodo:'pix'});
   const order=await c.mp('/v1/orders/ORDTEST');
   await assert.rejects(()=>c.liberarNovaCompra(p.id,p.token),{status:409});
-  Object.assign(order,{status:'failed',total_paid_amount:'0.00'});Object.assign(order.transactions.payments[0],{status:'failed',paid_amount:'0.00'});
+  Object.assign(order,{status:'failed',status_detail:'failed',total_paid_amount:'0.00'});Object.assign(order.transactions.payments[0],{status:'failed',status_detail:'rejected_by_issuer',paid_amount:'0.00'});
   await assert.rejects(()=>c.liberarNovaCompra(p.id,'f'.repeat(64)),{status:401});
   const r=await c.liberarNovaCompra(p.id,p.token);assert.equal(r.checkout.cep,body.cep);assert.equal(r.checkout.frete,10.79);assert.equal(f.orders,1);assert.ok(f.db.has(c.prefixo+p.id));
   order.status='processing';await assert.rejects(()=>c.liberarNovaCompra(p.id,p.token),{status:409});
