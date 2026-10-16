@@ -2,10 +2,10 @@ const test=require('node:test'),assert=require('node:assert/strict'),vm=require(
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
 async function tela(resposta,armazenamento={},opcoes={}){
  const nodes={},chamadas=[];const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
- for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento'])nodes[id]=el();
+ for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento','confirmarCartao'])nodes[id]=el();
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
- const ctx=vm.createContext({console,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
+ const ctx=vm.createContext({console,setTimeout,clearTimeout,MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;return nodes;
 }
 test('pedido restaurado sem tentativa volta aos meios e recupera public key',async()=>{const n=await tela({});assert.equal(n.meios.hidden,false);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Escolha como pagar/);});
@@ -28,6 +28,17 @@ test('falha na configuração bloqueia preparação sem carrinho carregado',asyn
  const n=await tela({mensagem:'Origem não autorizada.'},{heeeph_pedido_teste:null},{falhar:true});
  assert.equal(n.conferir.disabled,true);await n.entrega.submit({preventDefault(){}});
  assert.deepEqual(n.chamadas,['configuracao']);assert.match(n.mensagem.textContent,/Volte ao carrinho/);
+});
+test('botão próprio valida pelo Brick antes de um único envio e bloqueia cliques simultâneos',async()=>{
+ let configuracao,liberar;const sequencia=[];
+ function sdk(){return {bricks:()=>({create:async(_,__,config)=>{configuracao=config;config.callbacks.onReady();return {getFormData:async()=>{sequencia.push('form');await new Promise(r=>liberar=r);return {token:'token-simulado'};},getAdditionalData:async()=>{sequencia.push('adicional');return {paymentTypeId:'credit_card'};}};}})};}
+ const n=await tela({}, {},{sdk});await n.cartao.click();assert.equal(configuracao.customization.visual.hidePaymentButton,true);assert.equal(n.confirmarCartao.hidden,false);
+ const primeira=n.confirmarCartao.click();await n.confirmarCartao.click();assert.equal(n.pix.disabled,true);assert.deepEqual(n.chamadas,['status']);liberar();await primeira;
+ assert.deepEqual(sequencia,['form','adicional']);assert.deepEqual(n.chamadas,['status','pagar']);assert.equal(n.confirmarCartao.disabled,false);
+});
+test('validação incompleta do Brick dá retorno visível sem chamar pagar',async()=>{
+ function sdk(){return {bricks:()=>({create:async(_,__,config)=>{config.callbacks.onReady();return {getFormData:async()=>{throw {cause:'incomplete_fields'};}};}})};}
+ const n=await tela({}, {},{sdk});await n.cartao.click();await n.confirmarCartao.click();assert.deepEqual(n.chamadas,['status']);assert.match(n.mensagem.textContent,/todos os campos/);assert.equal(n.pix.disabled,false);
 });
 
 test('consulta informa atualização mesmo quando o pagamento já estava aprovado',async()=>{const n=await tela({pagamento:{aprovado:true,status:'processed'}});await n.consultar.click();assert.match(n.mensagem.textContent,/Consulta atualizada/);assert.match(n.mensagem.textContent,/aprovado/);assert.equal(n.consultar.disabled,false);});

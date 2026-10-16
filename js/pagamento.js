@@ -1,7 +1,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const preco = centavos => (centavos / 100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  let entrada, pedido, controller, emPagamento = false;
+  let entrada, pedido, controller, emPagamento = false, validandoCartao = false;
   $('conferir').disabled=true;
   function limparErros() {
     $('entrega').querySelectorAll('[aria-invalid]').forEach(c => {
@@ -161,6 +161,7 @@
     try{
       const d=await api({acao:'liberarNovaCompra',id:pedido.id},true);
       if(controller){controller.unmount();controller=null;}
+      $('confirmarCartao').hidden=true;
       entrada=d.checkout;sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada));
       sessionStorage.removeItem('heeeph_pedido_teste');sessionStorage.removeItem('heeeph_preparacao');pedido=null;
       $('resultado').hidden=$('meios').hidden=true;$('entrega').hidden=false;
@@ -177,11 +178,38 @@
     try{
       if(typeof MercadoPago!=='function')throw new Error('Não foi possível carregar o formulário de cartão. Recarregue a página.');
       const mp=new MercadoPago(pedido.publicKey,{locale:'pt-BR'});
+      let pronto=false;
+      const ativar=()=>{if(pronto&&controller)$('confirmarCartao').hidden=false;};
       controller=await mp.bricks().create('cardPayment','cardPaymentBrick_container',{
-        initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'default'}}},
-        callbacks:{onReady:()=>avisar('Formulário de cartão carregado. Confira os dados e as parcelas antes de pagar.', 'info'),onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData?.paymentTypeId || formData.payment_type_id),onError:()=>avisar('Não foi possível validar o cartão. Confira todos os campos do formulário; nenhum novo pagamento foi confirmado.')}
+        initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'default'},hidePaymentButton:true}},
+        callbacks:{onReady:()=>{pronto=true;ativar();avisar('Formulário de cartão carregado. Confira os dados e as parcelas antes de pagar.', 'info');},onError:erroCartao}
       });
+      ativar();
     }catch(e){avisar(e.message);}
+  });
+  function erroCartao(e) {
+    const causas={incomplete_fields:'Preencha todos os campos do cartão e selecione as parcelas.',
+      no_payment_method_for_provided_bin:'Confira o número e a bandeira do cartão.',
+      get_payment_installments_failed:'Não foi possível carregar as parcelas. Reabra o formulário antes de pagar.',
+      card_token_creation_failed:'Não foi possível validar o cartão no Mercado Pago. Confira os dados.',
+      secure_fields_card_token_creation_failed:'Não foi possível validar os campos seguros do cartão. Reabra o formulário.'};
+    avisar(causas[e?.cause]||'Não foi possível validar o cartão. Confira todos os campos do formulário.');
+  }
+  $('confirmarCartao').addEventListener('click',async()=>{
+    if(emPagamento||validandoCartao||!controller)return;
+    validandoCartao=true;$('confirmarCartao').disabled=$('pix').disabled=$('cartao').disabled=true;
+    avisar('Validando os dados do cartão no Mercado Pago…','info');
+    let timer,coletado=false;
+    try{
+      // Métodos oficiais do Brick; os dados brutos continuam nos campos seguros do provedor.
+      const coletar=async()=>{const formData=await controller.getFormData();return {formData,adicional:await controller.getAdditionalData()};};
+      const {formData,adicional}=await Promise.race([coletar(),new Promise((_,rejeitar)=>{timer=setTimeout(()=>rejeitar({cause:'card_token_creation_failed'}),20000);})]);
+      clearTimeout(timer);
+      if(!formData?.token)throw {cause:'card_token_creation_failed'};
+      coletado=true;validandoCartao=false;
+      await pagar('cartao',formData,adicional?.paymentTypeId||formData.payment_type_id);
+    }catch(e){if(!coletado)erroCartao(e);}
+    finally{clearTimeout(timer);validandoCartao=false;$('confirmarCartao').disabled=$('pix').disabled=$('cartao').disabled=false;}
   });
   $('recuperarPix').addEventListener('click', async () => {
     if (emPagamento) return;

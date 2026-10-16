@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/mercado-pago-webhook.js": {
+      "maxDuration": 60,
+      "includeFiles": "{produtos.js,config/frete.json,js/embalagens.js}"
+    }
+  },
+  "routes": [
+    { "src": "/api/mercado-pago-webhook", "dest": "/api/mercado-pago-webhook.js" },
+    { "src": "/.*", "status": 404 }
+  ]
+}
