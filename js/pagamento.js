@@ -138,6 +138,7 @@
   }
   async function pagar(metodo, formData, tipo) {
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
+    avisar('Enviando o pagamento. Aguarde a confirmação desta tentativa…', 'info');
     try { resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo},true)); }
     catch(e){ try { const recuperado=await api({acao:'status',id:pedido.id},true); resultado(recuperado); if(recuperado.pagamento){avisar('Pagamento recuperado. Confira a situação abaixo.', 'info');return;} } catch (_) {} avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
     finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
@@ -174,7 +175,7 @@
       const mp=new MercadoPago(pedido.publicKey,{locale:'pt-BR'});
       controller=await mp.bricks().create('cardPayment','cardPaymentBrick_container',{
         initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'default'}}},
-        callbacks:{onReady:()=>{},onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData?.paymentTypeId || formData.payment_type_id),onError:()=>avisar('Confira os dados do cartão.')}
+        callbacks:{onReady:()=>avisar('Formulário de cartão carregado. Confira os dados e as parcelas antes de pagar.', 'info'),onSubmit:(formData,additionalData)=>pagar('cartao',formData,additionalData?.paymentTypeId || formData.payment_type_id),onError:()=>avisar('Não foi possível validar o cartão. Confira todos os campos do formulário; nenhum novo pagamento foi confirmado.')}
       });
     }catch(e){avisar(e.message);}
   });
