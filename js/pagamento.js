@@ -114,6 +114,7 @@
   function resultado(p) {
     ambienteTela(p.teste !== false);
     guardar(p); resumo(p); $('pedidoResumo').textContent='Pedido '+p.id; const pg=p.pagamento;
+    $('trocarPagamento').hidden=!pg?.trocaPermitida;
     $('recuperarPix').hidden = !p.recuperarPix || Boolean(pg);
     if (!pg) {
       $('entrega').hidden=true; $('meios').hidden=Boolean(p.tentativa || p.expirado); $('resultado').hidden=!p.tentativa;
@@ -130,7 +131,7 @@
     $('entrega').hidden=true; $('meios').hidden=true; $('resultado').hidden=false;
     $('pedidoNumero').textContent=(p.teste!==false?'Pedido de teste: ':'Pedido: ')+p.id;
     $('statusTitulo').textContent=pg.aprovado?(p.teste!==false?'Pagamento de teste aprovado':'Pagamento aprovado'):'Pagamento: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
-    $('statusTexto').textContent=pg.aprovado?('O servidor confirmou o pagamento e o valor total.'+(p.teste!==false?' Este pedido é apenas um teste.':'')):'O pagamento ainda não foi confirmado. Consulte novamente antes de tentar outro pagamento.';
+    $('statusTexto').textContent=pg.aprovado?('O servidor confirmou o pagamento e o valor total.'+(p.teste!==false?' Este pedido é apenas um teste.':'')):pg.trocaPermitida?'O pagamento foi recusado. Você pode revisar os dados e escolher outra forma de pagamento. O pedido recusado será preservado.':'O pagamento ainda precisa de conferência. Consulte novamente antes de tentar outro pagamento.';
     avisar('');
     mostrarPix(pg);
   }
@@ -149,6 +150,22 @@
     finally{$('conferir').disabled=false;}
   });
   $('pix').addEventListener('click',()=>pagar('pix').catch(()=>{}));
+  $('trocarPagamento').addEventListener('click',async()=>{
+    if(emPagamento)return;emPagamento=true;$('trocarPagamento').disabled=true;
+    avisar('Conferindo a tentativa anterior antes de liberar a troca…','info');
+    try{
+      const d=await api({acao:'liberarNovaCompra',id:pedido.id},true);
+      if(controller){controller.unmount();controller=null;}
+      entrada=d.checkout;sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada));
+      sessionStorage.removeItem('heeeph_pedido_teste');sessionStorage.removeItem('heeeph_preparacao');pedido=null;
+      $('resultado').hidden=$('meios').hidden=true;$('entrega').hidden=false;
+      $('pedidoResumo').textContent='Revise os dados para preparar um novo pedido.';
+      $('cep').textContent='CEP de entrega: '+entrada.cep;
+      avisar('Revise os dados de entrega. Ao continuar, um novo pedido será preparado para você escolher Pix ou cartão. Nenhum pagamento foi iniciado.','info');
+      $('entrega').scrollIntoView({block:'start'});
+    }catch(e){avisar(e.message);}
+    finally{emPagamento=false;$('trocarPagamento').disabled=false;}
+  });
   $('cartao').addEventListener('click',async()=>{
     if(controller||emPagamento)return;
     try{

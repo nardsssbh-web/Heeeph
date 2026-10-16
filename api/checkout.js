@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
     if (b.acao === 'pagar') return res.json(await c.pagar(b.id, token, b));
     if (b.acao === 'recuperarPix') return res.json(await c.recuperarPix(b.id, token));
     if (b.acao === 'status') return res.json(await c.status(b.id, token));
+    if (b.acao === 'liberarNovaCompra') return res.json(await c.liberarNovaCompra(b.id, token));
     throw new c.ErroCheckout('Ação não permitida.');
   } catch (e) {
     const conhecido = e instanceof c.ErroCheckout || e instanceof c.ErroFrete;

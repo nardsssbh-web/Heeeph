@@ -34,6 +34,19 @@ test('consulta Pix recupera código e ausência de imagem sem criar outra order'
  }finally{f.close();}
 });
 
+test('troca reconsulta recusa, preserva pedido e não cria pagamento; pendente ou pago é bloqueado',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);await c.pagar(p.id,p.token,{metodo:'pix'});
+  const order=await c.mp('/v1/orders/ORDTEST');
+  await assert.rejects(()=>c.liberarNovaCompra(p.id,p.token),{status:409});
+  Object.assign(order,{status:'failed',total_paid_amount:'0.00'});Object.assign(order.transactions.payments[0],{status:'failed',paid_amount:'0.00'});
+  await assert.rejects(()=>c.liberarNovaCompra(p.id,'f'.repeat(64)),{status:401});
+  const r=await c.liberarNovaCompra(p.id,p.token);assert.equal(r.checkout.cep,body.cep);assert.equal(r.checkout.frete,10.79);assert.equal(f.orders,1);assert.ok(f.db.has(c.prefixo+p.id));
+  order.status='processing';await assert.rejects(()=>c.liberarNovaCompra(p.id,p.token),{status:409});
+  order.status='failed';order.total_paid_amount='1.00';await assert.rejects(()=>c.liberarNovaCompra(p.id,p.token),{status:409});assert.equal(f.orders,1);
+ }finally{f.close();}
+});
+
 test('preços e volumes são do servidor; informações do cliente e cartões não alteram o total',()=>{
  const b=structuredClone(body);b.itens[0].preco=.01;b.itens[0].peso=1;
  const v=c.itensValidados(b);assert.equal(v.subtotal,1290);assert.equal(v.pacotes[0].gramas,50);
