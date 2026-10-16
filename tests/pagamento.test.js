@@ -40,6 +40,10 @@ test('validação incompleta do Brick dá retorno visível sem chamar pagar',asy
  function sdk(){return {bricks:()=>({create:async(_,__,config)=>{config.callbacks.onReady();return {getFormData:async()=>{throw {cause:'incomplete_fields'};}};}})};}
  const n=await tela({}, {},{sdk});await n.cartao.click();await n.confirmarCartao.click();assert.deepEqual(n.chamadas,['status']);assert.match(n.mensagem.textContent,/todos os campos/);assert.equal(n.pix.disabled,false);
 });
+test('retorno envelopado do SDK conserva token e tipo sem repetir coleta ou pagamento',async()=>{
+ function sdk(){return {bricks:()=>({create:async(_,__,config)=>{config.callbacks.onReady();return {getFormData:async()=>({formData:{token:'token-simulado'},additionalData:{paymentTypeId:'credit_card'}}),getAdditionalData(){throw Error('Não deve recolher o que o SDK já retornou');}};}})};}
+ const n=await tela({}, {},{sdk});await n.cartao.click();await n.confirmarCartao.click();assert.deepEqual(n.chamadas,['status','pagar']);
+});
 
 test('consulta informa atualização mesmo quando o pagamento já estava aprovado',async()=>{const n=await tela({pagamento:{aprovado:true,status:'processed'}});await n.consultar.click();assert.match(n.mensagem.textContent,/Consulta atualizada/);assert.match(n.mensagem.textContent,/aprovado/);assert.equal(n.consultar.disabled,false);});
 

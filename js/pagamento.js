@@ -193,7 +193,7 @@
       get_payment_installments_failed:'Não foi possível carregar as parcelas. Reabra o formulário antes de pagar.',
       card_token_creation_failed:'Não foi possível validar o cartão no Mercado Pago. Confira os dados.',
       secure_fields_card_token_creation_failed:'Não foi possível validar os campos seguros do cartão. Reabra o formulário.'};
-    avisar(causas[e?.cause]||'Não foi possível validar o cartão. Confira todos os campos do formulário.');
+    avisar(causas[e?.cause||e?.[0]?.cause]||'Não foi possível validar o cartão. Confira todos os campos do formulário.');
   }
   $('confirmarCartao').addEventListener('click',async()=>{
     if(emPagamento||validandoCartao||!controller)return;
@@ -202,7 +202,12 @@
     let timer,coletado=false;
     try{
       // Métodos oficiais do Brick; os dados brutos continuam nos campos seguros do provedor.
-      const coletar=async()=>{const formData=await controller.getFormData();return {formData,adicional:await controller.getAdditionalData()};};
+      const coletar=async()=>{
+        const retorno=await controller.getFormData();
+        const formData=retorno?.formData||retorno;
+        if(pedido.teste!==false)console.info('CHECKOUT_CARTAO_TESTE',{fase:'formulario_validado',tokenPresente:Boolean(formData?.token),retornoEnvelopado:Boolean(retorno?.formData)});
+        return {formData,adicional:retorno?.additionalData||await controller.getAdditionalData()};
+      };
       const {formData,adicional}=await Promise.race([coletar(),new Promise((_,rejeitar)=>{timer=setTimeout(()=>rejeitar({cause:'card_token_creation_failed'}),20000);})]);
       clearTimeout(timer);
       if(!formData?.token)throw {cause:'card_token_creation_failed'};
