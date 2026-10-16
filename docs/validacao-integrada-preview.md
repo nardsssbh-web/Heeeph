@@ -2,6 +2,16 @@
 
 Alterações de código somente na branch `codex/preparacao-vendas`, ambiente de teste. Main e dados anteriores preservados. Production recebeu exclusivamente o redeploy do mesmo código para a troca de credencial de teste expressamente autorizada, conforme adendo abaixo. Testes locais não substituem as evidências dos provedores.
 
+## Rodada atual: assinatura automática com ID normalizado
+
+Conferência dos metadados: MERCADO_PAGO_WEBHOOK_SECRET_TEST é Secret e exclusivamente Preview nos dois projetos. Os deploys atuais são posteriores aos respectivos salvamentos; não era necessário repetir o redeploy apenas pela configuração. Não foram lidos ou comparados os valores.
+
+O histórico de teste mostrou somente os eventos antigos recusados e nenhum controle de reenvio. Para gerar a evidência automática que faltava, foi criado um único Pix simulado autorizado: pedido 5b33e17f2c74d1f18875f0879fdb5b3f, order ORDTST01M535VQTM3J1GQWPSYD78S89Z, total R$ 34,50. QR e copia e cola apareceram. Não houve consulta/reload pelo comprador antes de observar o webhook. O provedor informou order.processed, accredited e live_mode=false às 17:18:43 de São Paulo em 16/10/2026.
+
+A entrega retornou HTTP 401 no receptor antigo, request dtr68-1792181923970-11d7fad1b763. Desta vez o diagnóstico foi assinatura_divergente, requestIdPresente=true, varianteMinusculaConfere=true. Isso confirma criptograficamente a correspondência do segredo e identifica o problema do manifesto: o ID foi assinado em minúsculas. As tentativas anteriores, com outro segredo, não confirmavam essa variante.
+
+Correção: aceitar HMAC completo do ID original (simulador) ou normalizado para minúsculas (automático), sem mudar o ID consultado no provedor ou salvo no Redis. Não há bypass da assinatura. Chave, ID, request ID e timestamp alterados continuam recusados. Receptor corrigido publicado somente em Preview: dpl_9D4k1oGpANTaVsYNFqEBaN7QxAY4, mantendo o alias público isolado. Os 78 testes passaram. Aguardar a repetição da mesma notificação; não criar outro pagamento.
+
 ## Adendo: troca de credenciais e investigação da assinatura
 
 Em 16/10/2026, o usuário autorizou atualizar o Access Token de teste nos consumidores e redeployar o mesmo código de Production. As duas entradas `MERCADO_PAGO_ACCESS_TOKEN_TEST` foram salvas como Secret: heeeph em Production/Preview; heeeph-webhook-teste somente Preview. Nenhum valor foi gravado neste documento.

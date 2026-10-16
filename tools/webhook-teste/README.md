@@ -1,6 +1,6 @@
 # Receptor isolado de teste
 
-Estado atual: o simulador do Mercado Pago entregou notificações assinadas com HTTP 200 para orders existentes recusada e aprovada. A entrega automática do Pix aprovado ainda retorna HTTP 401 por assinatura divergente. Uma prova local da chave do painel retornou 200; isso não comprova entrega automática. Evidências atuais e identificadores: `docs/validacao-integrada-preview.md`. Os deploys, erros e pendências específicos abaixo são histórico, não o estado final da integração.
+Estado atual: simulador assinado validado com HTTP 200. Após alinhar o segredo, a entrega automática confirmou HMAC com o ID em minúsculas; o validador foi corrigido e a repetição da mesma notificação está em observação. Evidências atuais e identificadores: `docs/validacao-integrada-preview.md`. Os deploys, erros e pendências específicos abaixo são histórico, não o estado final da integração.
 
 URL estável de teste: `https://heeeph-webhook-teste-nardsssbh-9766s-projects.vercel.app/api/mercado-pago-webhook`. Atualizar o alias ao publicar outra versão Preview; não trocar a URL cadastrada a cada deploy.
 

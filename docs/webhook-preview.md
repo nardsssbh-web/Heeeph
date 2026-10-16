@@ -1,10 +1,10 @@
 # Webhook de teste — Preview
 
-**Rodada integrada de 16/10/2026:** o simulador foi validado para recusa e aprovação, mas a notificação automática do Pix `ORDTST01M52GMMYRJ01VFEGWDFKPAVW2` recebeu HTTP 401. Os logs confirmam assinatura divergente, com variante em minúsculas também divergente. Não confundir sucesso do simulador com entrega automática validada. A URL de teste agora usa o alias estável do receptor: `https://heeeph-webhook-teste-nardsssbh-9766s-projects.vercel.app/api/mercado-pago-webhook`. Ver os resultados atuais em `validacao-integrada-preview.md`; as seções anteriores à rodada integrada são histórico.
+**Rodada integrada de 16/10/2026:** o simulador foi validado para recusa e aprovação. Após alinhar o segredo, um único novo Pix fictício permitiu diagnosticar a entrega automática: o HMAC confere com o ID em minúsculas. O validador foi corrigido mantendo a assinatura obrigatória; a repetição automática da mesma notificação está em observação. Ver o resultado atual em `validacao-integrada-preview.md`; as demais seções são histórico. URL estável: `https://heeeph-webhook-teste-nardsssbh-9766s-projects.vercel.app/api/mercado-pago-webhook`.
 
 Endpoint: `POST /api/mercado-pago-webhook`. A Orders API envia o evento **Order (Mercado Pago)**, com `type=order` e `data.id=ORD...` na query. Não selecionar Payment da API legada nem QR presencial.
 
-A validação usa HMAC SHA-256 sobre `id:<data.id>;request-id:<x-request-id>;ts:<ts>;`, com o segredo da aplicação. Não converter o ID da order para minúsculas. Depois de validar a assinatura, consultar a mesma order na API e conferir vendedor, referência e valores. O corpo da notificação não confirma aprovação. Repetir a notificação não cria cobrança.
+A validação usa HMAC SHA-256 sobre `id:<data.id>;request-id:<x-request-id>;ts:<ts>;`, com o segredo da aplicação. O manifesto aceita o ID original do simulador e o ID em minúsculas observado na entrega automática; ambos exigem HMAC válido. A consulta à API e a persistência mantêm o ID original. Depois de validar a assinatura, conferir vendedor, referência e valores. O corpo da notificação não confirma aprovação. Repetir a notificação não cria cobrança.
 
 ## Configuração privada
 
