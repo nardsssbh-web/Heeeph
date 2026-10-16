@@ -201,7 +201,10 @@ test('webhook exige assinatura e consulta a API; repetir evento não cria cobran
   const req={method:'POST',query:{'data.id':id},headers:{'x-request-id':rid,'x-signature':`ts=${ts},v1=${sign}`},body:{data:{status:'processed',total_amount:'.01'}}};
   const call=async(r)=>{const res={setHeader(){},status(s){this.code=s;return this;},end(){return this;}};await handler(r,res);return res.code;};
   assert.equal(await call({...req,headers:{}}),401);
+  assert.equal(JSON.parse(f.db.get(c.prefixo+p.id)).webhookRecebido,undefined);
   assert.equal(await call(req),200);assert.equal(await call(req),200);assert.equal(f.orders,1);
+  const evidencia=JSON.parse(f.db.get(c.prefixo+p.id)).webhookRecebido;
+  assert.equal(evidencia.assinaturaValidada,true);assert.equal(evidencia.mpId,id);assert.ok(evidencia.em);assert.equal(evidencia.status,'processed');
   assert.equal((await c.status(p.id,p.token)).pagamento.aprovado,true);
   const local=JSON.parse(f.db.get(c.prefixo+p.id));local.pagamento.mpId='ORDOUTRO';f.db.set(c.prefixo+p.id,JSON.stringify(local));
   assert.equal(await call(req),503);

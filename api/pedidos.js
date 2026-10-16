@@ -2,7 +2,7 @@ const crypto=require('node:crypto');
 const c=require('../lib/checkout');
 const etapas=['Recebido','Em Preparação','Saiu para entrega','Entregue'];
 async function gestao(id){const raw=await c.redis(['GET',c.prefixo+'gestao:'+id]);return raw?JSON.parse(raw):{status:'Recebido'};}
-function seguro(p,g){const {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,respostaMP}=p;return {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,respostaMP,gestao:g};}
+function seguro(p,g){const {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,respostaMP,webhookRecebido}=p;return {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,respostaMP,webhookRecebido,gestao:g};}
 module.exports=async(req,res)=>{
   res.setHeader('Cache-Control','no-store');
   if(req.method!=='POST')return res.status(405).end();
