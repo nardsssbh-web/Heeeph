@@ -2,7 +2,7 @@ const crypto=require('node:crypto');
 const c=require('../lib/checkout');
 const etapas=['Recebido','Em Preparação','Saiu para entrega','Entregue'];
 async function gestao(id){const raw=await c.redis(['GET',c.prefixo+'gestao:'+id]);return raw?JSON.parse(raw):{status:'Recebido'};}
-function seguro(p,g){const {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento}=p;return {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,gestao:g};}
+function seguro(p,g){const {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,respostaMP}=p;return {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,respostaMP,gestao:g};}
 module.exports=async(req,res)=>{
   res.setHeader('Cache-Control','no-store');
   if(req.method!=='POST')return res.status(405).end();
@@ -28,7 +28,7 @@ module.exports=async(req,res)=>{
       const g=await gestao(p.id);
       if(g.excluido)return res.status(404).json({mensagem:'Pedido excluído do painel.'});
       const atualizado=await c.atualizar(p);
-      return res.json({pedido:seguro(atualizado,g),teste:c.ambiente().teste});
+      return res.json({pedido:{...seguro(atualizado,g),payloadPix:await c.conferirPayloadPix(atualizado)},teste:c.ambiente().teste});
     }
     if(b.acao&&b.acao!=='listar')return res.status(400).json({mensagem:'Ação não permitida.'});
     const ids=await c.redis(['ZREVRANGE',c.prefixo+'lista',0,49]);

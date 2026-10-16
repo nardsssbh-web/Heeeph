@@ -1,5 +1,9 @@
 # QR do Pix no Preview
 
+O painel administrativo pode conferir o payload Pix reconstruído contra a impressão digital persistida antes do envio. Somente se houver correspondência exibe se `payer.first_name` era `APRO` e se `payer.email` era `test@testuser.com`. Isso não cria nem reenvia pagamento. Se a impressão não existir ou divergir, informa que não foi possível comprovar, sem apresentar uma reconstrução como evidência de envio.
+
+O diagnóstico de HTTP do Mercado Pago preserva apenas código de resposta, códigos estruturados de erro/causa e identificador de requisição. Não registra corpo, mensagens livres, documentos, endereço, cabeçalhos de autenticação ou tokens. HTTP 402 é aceito como order existente somente quando há identificador e referência, tanto no corpo principal quanto no envelope `data`; o estado e o total continuam conferidos. Erros sem identificação mantêm a tentativa bloqueada. Logs históricos que guardaram apenas `failed` não ganham detalhes retroativamente; a consulta por GET pode fornecer apenas `processing_error`.
+
 A Orders API de testes pode retornar `payment_method.qr_code` preenchido com `qr_code_base64` vazio. A documentação oficial mostra esse retorno:
 https://www.mercadopago.com.br/developers/pt/docs/checkout-api-orders/integration-test/pix
 

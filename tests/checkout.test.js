@@ -47,6 +47,31 @@ test('troca reconsulta recusa, preserva pedido e não cria pagamento; pendente o
  }finally{f.close();}
 });
 
+test('confere APRO e email contra fingerprint sem criar outra cobrança nem revelar payload',async()=>{
+ const f=fixture();try{
+  const b=structuredClone(body);b.cliente.nome='APRO TESTE';b.cliente.email='test@testuser.com';
+  const p=await c.preparar(b);await c.pagar(p.id,p.token,{metodo:'pix'});
+  const registro=JSON.parse(f.db.get(c.prefixo+p.id));
+  assert.deepEqual(await c.conferirPayloadPix(registro),{conferido:true,primeiroNomeAPRO:true,emailTeste:true});
+  registro.cliente.nome='Outro Nome';assert.equal((await c.conferirPayloadPix(registro)).conferido,false);assert.equal(f.orders,1);
+ }finally{f.close();}
+});
+
+test('402 com order em data preserva identificador e códigos seguros, sem reenviar pagamento',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body),anterior=global.fetch;let posts=0;
+  const order={id:'ORD402',external_reference:p.id,total_amount:'23.69',total_paid_amount:'0.00',country_code:'BRA',user_id:123,status:'failed',status_detail:'failed',transactions:{payments:[{status:'failed',status_detail:'processing_error',payment_method:{id:'pix'}}]}};
+  global.fetch=async(url,opts={})=>{
+   if(url.endsWith('/v1/orders')&&opts.method==='POST'){posts++;return {ok:false,status:402,headers:{get:()=> 'req-seguro-123'},json:async()=>({errors:[{code:'failed',message:'segredo que não pode sair',cause:[{code:'processing_error',description:'cpf secreto'}]}],data:order})};}
+   if(url.endsWith('/v1/orders/ORD402'))return {ok:true,status:200,json:async()=>order};
+   return anterior(url,opts);
+  };
+  const r=await c.pagar(p.id,p.token,{metodo:'pix'});assert.equal(r.pagamento.mpId,'ORD402');assert.equal(r.pagamento.aprovado,false);
+  const guardado=JSON.parse(f.db.get(c.prefixo+p.id));assert.deepEqual(guardado.respostaMP,{http:402,codigos:['failed','processing_error'],requestId:'req-seguro-123'});assert.ok(!JSON.stringify(guardado).includes('segredo que não pode sair'));
+  await c.status(p.id,p.token);assert.equal(posts,1);
+ }finally{f.close();}
+});
+
 test('preços e volumes são do servidor; informações do cliente e cartões não alteram o total',()=>{
  const b=structuredClone(body);b.itens[0].preco=.01;b.itens[0].peso=1;
  const v=c.itensValidados(b);assert.equal(v.subtotal,1290);assert.equal(v.pacotes[0].gramas,50);
