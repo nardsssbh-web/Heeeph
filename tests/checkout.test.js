@@ -22,6 +22,10 @@ test('recusa final pelo emissor aceita montantes nominais observados na API, sem
  assert.equal(c.conferirPagamento(p,d).trocaPermitida,true);assert.equal(c.conferirPagamento(p,d).aprovado,false);
  for(const status of ['processing','action_required','processed','refunded']){const x=structuredClone(d);x.status=status;assert.equal(c.conferirPagamento(p,x).trocaPermitida,false);}
  for(const alvo of ['order','payment']){const x=structuredClone(d);if(alvo==='order')x.total_paid_amount='1.00';else x.transactions.payments[0].paid_amount='1.00';assert.equal(c.conferirPagamento(p,x).trocaPermitida,false);}
+ for(const detalhe of ['3ds_challenge_failed','cc_rejected_3ds_challenge']){
+  const x=structuredClone(d);x.transactions.payments[0].status_detail=detalhe;assert.equal(c.conferirPagamento(p,x).trocaPermitida,true);assert.equal(c.conferirPagamento(p,x).aprovado,false);
+  x.transactions.payments[0].paid_amount='1.00';assert.equal(c.conferirPagamento(p,x).trocaPermitida,false);
+ }
  const retry=structuredClone(d);retry.status_detail='waiting_retry';assert.equal(c.conferirPagamento(p,retry).trocaPermitida,false);
  const multiplo=structuredClone(d);multiplo.transactions.payments.push(structuredClone(d.transactions.payments[0]));assert.equal(c.conferirPagamento(p,multiplo).trocaPermitida,false);
 });

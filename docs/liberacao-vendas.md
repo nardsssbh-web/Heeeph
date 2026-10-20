@@ -28,7 +28,7 @@ O erro silencioso de abertura do cartão foi corrigido; o usuário alinhou a Pub
 | `CHECKOUT_AMBIENTE` | Selecionar teste | Preview: manter `teste` |
 | `CHECKOUT_TESTE_ATIVO` | Simulações | Preview: configuração existente |
 | `CHECKOUT_PRODUCAO_ATIVO` | Novas cobranças reais | Manter desativado |
-| `CHECKOUT_3DS_ATIVO` | Solicitar 3DS no crédito | Somente Preview durante validação; padrão desativado |
+| `CHECKOUT_3DS_ATIVO` | Solicitar 3DS no crédito | Config `true`, criado somente em Preview nesta rodada; padrão do código desativado |
 | `MERCADO_PAGO_PUBLIC_KEY_TEST` | Campos seguros/tokenização | Preview próprio; anterior Production preservado |
 | `MERCADO_PAGO_ACCESS_TOKEN_TEST` | API de orders simuladas | Configuração existente do checkout/receptor |
 | `MERCADO_PAGO_WEBHOOK_SECRET_TEST` | HMAC de teste | Preview dos dois projetos |
@@ -53,6 +53,16 @@ Tokens, assinaturas e chave administrativa devem ser Secret e nunca enviados no 
 Permanece pendente confirmar no telefone a nova mensagem “Código copiado”. O comportamento foi testado localmente.
 
 ## Verificação técnica
+
+### Evidência integrada de 3DS após a publicação
+
+A Preview `a1e1ec2` apresentou o iframe real de teste do Mercado Pago para `APRO-CHOK`. Pedido `ff41cae3d9a0b9918a6c05ee580eb01c`, R$ 59,91, order `ORDTST01M5DCJER4774XCWJ38KAKBGHE`. A confirmação ilustrativa disparou consulta; a resposta inicial ainda estava pendente e não foi tratada como aprovada. Em seguida, o registro recebeu `processed/accredited`, com webhook autenticado às **16:29:14**; a página confirmou aprovação na consulta das 16:29:32. O iframe foi removido após aprovação. Não houve SMS real, código de conta ou cobrança real.
+
+Essa evidência resolve a aprovação com desafio no navegador integrado. Expiração de 40 minutos, desafio em telefone físico e coleta de dispositivo/qualidade da aplicação continuam separados e não são inferidos dessa aprovação.
+
+O cenário `OTHE-CHNO` foi executado em outro pedido: `3694d1624eb765327b9902a4a6328f2f`, order `ORDTST01M5DCQAR68SQT5SZ3CJFQY8F7`, R$ 59,91. O desafio foi apresentado e concluído; a API confirmou `failed/failed`, transação `3ds_challenge_failed`, com webhook autenticado às **16:31:28**. A primeira coleta de dados do SDK falhou antes do envio; a repetição dessa coleta produziu a única order dessa tentativa, sem reenviar pagamento existente.
+
+Identificada e corrigida a transição de recusa 3DS para revisão: a API pode devolver montantes nominais em campos de pagamento em recusas finais. A liberação exige recusa nos dois níveis, uma única transação, montante exato e valores zero ou nominais exatos, limitados aos detalhes de recusa final conhecidos. Pendências, valor parcial/divergente e estado de repetição continuam bloqueados. A aprovação nunca é inferida de montantes nominais.
 
 80 testes direcionados passaram: `checkout`, `pagamento`, `pedidos`, `pedidos-tela` e `webhook-teste`. Cobrem isolamento Redis, 3DS pendente, URLs inválidas, mensagem forjada, consulta sem nova cobrança e ocultação da URL no painel. São simulações, separadas das evidências integradas acima.
 
