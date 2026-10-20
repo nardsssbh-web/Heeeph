@@ -7,7 +7,7 @@ async function tela(resposta,armazenamento={},opcoes={}){
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
  const ctx=vm.createContext({console,setTimeout,clearTimeout,FormData:class{constructor(form){this.form=form;}get(k){return this.form.elements[k].value;}},EnderecosHEEEPH:require('../js/enderecos'),MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{if(url.startsWith('/api/cep?')){chamadas.push('cep');return {ok:!opcoes.cepFalha,json:async()=>opcoes.cepFalha?{mensagem:'CEP indisponível. Dados preservados.'}:{cep:'01001000',rua:'Praça da Sé',bairro:'Sé',cidade:'São Paulo',uf:'SP'}};}chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
- for(const id of ['retomada','retomadaTexto','retomarPedido','persistenciaAviso'])nodes[id]=Object.assign(el(),{hidden:true});
+ for(const id of ['retomada','retomadaTexto','retomarPedido','persistenciaAviso','novoCarrinho'])nodes[id]=Object.assign(el(),{hidden:true});
  const recibos={...opcoes.recibos};
  nodes.pixCopiaAviso=el();
  ctx.navigator={clipboard:opcoes.clipboard};
@@ -69,6 +69,25 @@ test('clipboard ausente ou negado mantém código e dá instrução local de có
  for(const clipboard of [undefined,{writeText:async()=>{throw Error('NotAllowedError');}}]){
   const n=await tela({pagamento:{status:'action_required',pix:{codigo:'000201TESTE'}}},{},{clipboard});await n.copiar.click();
   assert.match(n.pixCopiaAviso.textContent,/não permitiu copiar/);assert.doesNotMatch(n.pixCopiaAviso.textContent,/Código copiado\./);assert.equal(n.pixCodigo.value,'000201TESTE');assert.equal(n.copiar.disabled,false);assert.deepEqual(n.chamadas,['status']);
+ }
+});
+
+test('novo carrinho após pedido pago, recusado ou sem cobrança consulta antes e não prepara nem paga',async()=>{
+ const recibos={heeeph_pedido_recuperavel:JSON.stringify({id:base.id,token:'b'.repeat(64),guardadoEm:Date.now()})};
+ for(const pagamento of [null,{status:'processed',aprovado:true},{status:'failed',trocaPermitida:true}]){
+  const n=await tela({expirado:true,pagamento},{heeeph_pedido_teste:null},{recibos});
+  assert.equal(n.novoCarrinho.hidden,false);await n.novoCarrinho.click();
+  assert.equal(n.entrega.hidden,false);assert.equal(n.conferir.disabled,false);assert.equal(n.meios.hidden,true);
+  assert.deepEqual(n.chamadas,['configuracao','status','cep']);assert.match(n.pedidoResumo.textContent,/anterior preservado/);
+  assert.equal(JSON.parse(n.recibos.heeeph_pedido_recuperavel).id,base.id);
+ }
+});
+
+test('novo carrinho com pagamento pendente ou tentativa incerta retoma original sem liberar outra compra',async()=>{
+ const recibos={heeeph_pedido_recuperavel:JSON.stringify({id:base.id,token:'b'.repeat(64),guardadoEm:Date.now()})};
+ for(const resposta of [{tentativa:true},{pagamento:{status:'action_required'}},{pagamento:{status:'processing'}}]){
+  const n=await tela(resposta,{heeeph_pedido_teste:null},{recibos});await n.novoCarrinho.click();
+  assert.equal(n.entrega.hidden,true);assert.deepEqual(n.chamadas,['configuracao','status']);assert.match(n.mensagem.textContent,/outra compra não foi preparada/);assert.match(n.pedidoResumo.textContent,new RegExp(base.id));
  }
 });
 test('pedido restaurado sem tentativa volta aos meios e recupera public key',async()=>{const n=await tela({});assert.equal(n.meios.hidden,false);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Escolha como pagar/);});

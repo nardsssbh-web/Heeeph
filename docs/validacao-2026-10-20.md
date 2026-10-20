@@ -18,12 +18,15 @@ Branch: `codex/preparacao-vendas`. Main, código e configuração de Production 
 - Confirmação de cópia ao lado do botão: “Copiando código…”, “Copiado!” e “Código copiado.” somente após o navegador confirmar. Se o clipboard estiver ausente ou recusar, instrução local de cópia manual; código preservado e nenhum pagamento reenviado. O aviso antigo ficava no topo da página, fora da área do botão. Inspeção local de 390 px confirmou o novo retorno com código fictício, sem integração financeira; falta confirmação dessa revisão no telefone.
 - Servidor exige `test@testuser.com` no ambiente de teste, após normalizar espaços e caixa. Impede repetir a falha observada com `teste@testuser.com`, antes de salvar novo pedido ou chamar pagamentos. Regra de e-mail de produção preservada; pedidos anteriores continuam consultáveis.
 - Painel exibe o identificador público da aplicação Mercado Pago quando a API o retorna, para facilitar investigação sem mostrar credenciais.
+- Quando o cliente escolhe conferir outro carrinho tendo uma referência anterior, a página consulta primeiro o pedido salvo. Só mostra outro formulário se não existir tentativa pendente/incerta, ou se o pagamento anterior estiver aprovado ou recusado de forma final. Pendência retoma a tentativa original. A escolha não prepara pedido nem envia pagamento; o registro anterior e sua referência persistente são mantidos até o novo pedido ser salvo. Corrige o bloqueio de uma compra seguinte por um pedido antigo/expirado. Retomada e conferência do novo carrinho não executam simultaneamente.
 
 ## Verificações e limites
 
 64 testes direcionados passaram: `node --test tests/checkout.test.js tests/pagamento.test.js tests/webhook-teste.test.js`. Incluem cópia confirmada/negada/indisponível, preservação de código, recuperação sem sessão/carrinho, assinatura e isolamento, além do bloqueio do erro de digitação no e-mail de teste. Respostas simuladas não comprovam integração real; as evidências do telefone, do painel e dos provedores estão separadas acima.
 
 Também passaram os 5 testes de `tests/pedidos-tela.test.js` e `tests/pedidos.test.js`: autenticação, consulta, entrega separada do pagamento e exclusão lógica. Total desta rodada: 69 testes direcionados, nenhum falhou. `git diff --check` passou; revisão de 91 arquivos de texto, incluindo CJS, não detectou possíveis segredos ou arquivos de credenciais. Isso não garante ausência de toda vulnerabilidade.
+
+Após a correção da escolha de outro carrinho, a execução conjunta dos mesmos cinco arquivos passou com 71 testes, nenhum falhou. Inclui os novos cenários de pedido anterior pago/recusado/sem cobrança e de bloqueio por pendência/incerteza. Esses testes não criam cobranças nos provedores.
 
 Não estão concluídos: confirmação de cópia nessa revisão no telefone, cartão em aparelho físico e aprovação automática do último Pix. O banco definitivo, retenção/backup de produção, credenciais e webhook reais isolados e avaliação de antifraude/3DS continuam requisitos anteriores à liberação de vendas. Compra de etiqueta e rastreamento automático não implementados; etapas de entrega manuais.
 

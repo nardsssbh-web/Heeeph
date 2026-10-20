@@ -94,13 +94,44 @@
     $('retomada').hidden=true;
   }
   $('retomarPedido').addEventListener('click',async()=>{
+    if(emPagamento)return;
     const recibo=reciboSalvo();
     if(!recibo){$('retomada').hidden=true;avisar('A referência local expirou. Consulte a loja com o número do pedido antes de repetir o pagamento.');return;}
-    $('retomarPedido').disabled=$('conferir').disabled=true;
+    emPagamento=true;$('novoCarrinho').disabled=$('retomarPedido').disabled=$('conferir').disabled=true;
     pedido={id:recibo.id,token:recibo.token};
     try{resultado(await api({acao:'status',id:pedido.id},true));}
     catch(e){avisar(e.message);}
-    finally{$('retomarPedido').disabled=false;}
+    finally{emPagamento=false;$('novoCarrinho').disabled=$('retomarPedido').disabled=false;}
+  });
+  $('novoCarrinho').addEventListener('click',async()=>{
+    if(emPagamento)return;
+    const recibo=reciboSalvo();
+    if(!recibo){avisar('Retome o pedido salvo ou consulte a loja antes de preparar outra compra.');return;}
+    emPagamento=true;$('novoCarrinho').disabled=$('retomarPedido').disabled=true;
+    pedido={id:recibo.id,token:recibo.token};
+    avisar('Consultando o pedido anterior antes de conferir outro carrinho…','info');
+    try{
+      const anterior=await api({acao:'status',id:pedido.id},true);
+      if(anterior.tentativa || (anterior.pagamento && !anterior.pagamento.aprovado && !anterior.pagamento.trocaPermitida)){
+        resultado(anterior);
+        avisar('O pedido anterior ainda precisa de confirmação. Ele foi retomado; outra compra não foi preparada.','info');return;
+      }
+      const carrinho=JSON.parse(lerSessao('heeeph_checkout'));
+      if(!carrinho?.itens?.length)throw new Error('Volte ao carrinho e confira os itens e o frete. O pedido anterior permanece salvo.');
+      // Só uma escolha explícita, após a consulta acima, libera outra preparação.
+      // A referência persistente anterior permanece até salvar o novo pedido.
+      sessionStorage.removeItem('heeeph_pedido_teste');sessionStorage.removeItem('heeeph_preparacao');
+      entrada=carrinho;pedido=null;referenciaCEP=null;
+      $('retomada').hidden=$('resultado').hidden=$('meios').hidden=$('pixResultado').hidden=true;
+      $('persistenciaAviso').hidden=true;
+      $('entrega').hidden=false;$('resumo').replaceChildren();$('total').textContent='';
+      $('pedidoResumo').textContent='Pedido anterior preservado: '+recibo.id;
+      $('cep').textContent='CEP de entrega: '+entrada.cep;
+      $('conferir').disabled=false;
+      avisar('Confira os dados para preparar outro pedido. Nenhum pagamento foi iniciado.','info');
+      try{await conferirCEP(true);}catch(e){$('cepConferencia').textContent=e.message;}
+    }catch(e){avisar(e.message);}
+    finally{emPagamento=false;$('novoCarrinho').disabled=$('retomarPedido').disabled=false;}
   });
   async function conferirCEP(preencher=false){
     if(referenciaCEP?.cep!==entrada.cep){
@@ -313,6 +344,7 @@
       ambienteTela((await api({acao:'configuracao'})).teste !== false);
       if(recibo){
         $('entrega').hidden=true;
+        try{$('novoCarrinho').hidden=!JSON.parse(lerSessao('heeeph_checkout'))?.itens?.length;}catch(_){}
         $('pedidoResumo').textContent='Pedido salvo: '+recibo.id;
         avisar('Há um pedido salvo. Use o botão de retomada para consultar esta mesma tentativa, sem gerar outro pagamento.','info');
         return;
