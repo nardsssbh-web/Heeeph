@@ -66,7 +66,33 @@
     if (!r.ok) { const e = new Error(d.mensagem || 'Não foi possível continuar.'); e.dados=d; e.status=r.status; throw e; }
     return d;
   }
-  function guardar(p) { pedido={...pedido,...p}; sessionStorage.setItem('heeeph_pedido_teste',JSON.stringify({id:pedido.id,token:pedido.token})); }
+  const chaveRecuperacao='heeeph_pedido_recuperavel';
+  function reciboSalvo() {
+    try {
+      const r=JSON.parse(localStorage.getItem(chaveRecuperacao));
+      if(r && /^[a-f0-9]{32}$/.test(r.id) && /^[a-f0-9]{64}$/.test(r.token) &&
+        Number.isFinite(r.guardadoEm) && Date.now()-r.guardadoEm>=0 && Date.now()-r.guardadoEm<86400000)return r;
+      localStorage.removeItem(chaveRecuperacao);
+    }catch(_){} // Armazenamento indisponível não impede consultar a sessão atual.
+    return null;
+  }
+  function guardar(p) {
+    pedido={...pedido,...p};
+    const recibo={id:pedido.id,token:pedido.token};
+    sessionStorage.setItem('heeeph_pedido_teste',JSON.stringify(recibo));
+    // Somente a referência de acesso, sem nome, CPF, endereço ou dados de cartão.
+    try{localStorage.setItem(chaveRecuperacao,JSON.stringify({...recibo,guardadoEm:Date.now()}));}catch(_){}
+    $('retomada').hidden=true;
+  }
+  $('retomarPedido').addEventListener('click',async()=>{
+    const recibo=reciboSalvo();
+    if(!recibo){$('retomada').hidden=true;avisar('A referência local expirou. Consulte a loja com o número do pedido antes de repetir o pagamento.');return;}
+    $('retomarPedido').disabled=$('conferir').disabled=true;
+    pedido={id:recibo.id,token:recibo.token};
+    try{resultado(await api({acao:'status',id:pedido.id},true));}
+    catch(e){avisar(e.message);}
+    finally{$('retomarPedido').disabled=false;}
+  });
   async function conferirCEP(preencher=false){
     if(referenciaCEP?.cep!==entrada.cep){
       $('cepConferencia').textContent='Conferindo o endereço do CEP…';
@@ -253,6 +279,11 @@
     try{
       const anterior=JSON.parse(sessionStorage.getItem('heeeph_pedido_teste'));
       if(anterior?.id&&anterior.token){pedido=anterior;resultado(await api({acao:'status',id:pedido.id},true));return;}
+      const recibo=reciboSalvo();
+      if(recibo){
+        $('retomada').hidden=false;
+        $('retomadaTexto').textContent='Há um pedido salvo neste navegador: '+recibo.id+'. Retome-o para conferir o pagamento antes de preparar outro pedido. A referência fica disponível por até 24 horas desde a última consulta.';
+      }
       if(sessionStorage.getItem('heeeph_preparacao')){resultado(await preparar());return;}
       ambienteTela((await api({acao:'configuracao'})).teste !== false);
       entrada=JSON.parse(sessionStorage.getItem('heeeph_checkout'));if(!entrada?.itens?.length)throw new Error('Volte ao carrinho, escolha o frete e clique em Ir para pagamento.');

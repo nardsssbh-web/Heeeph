@@ -7,8 +7,33 @@ async function tela(resposta,armazenamento={},opcoes={}){
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
  const ctx=vm.createContext({console,setTimeout,clearTimeout,FormData:class{constructor(form){this.form=form;}get(k){return this.form.elements[k].value;}},EnderecosHEEEPH:require('../js/enderecos'),MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{if(url.startsWith('/api/cep?')){chamadas.push('cep');return {ok:!opcoes.cepFalha,json:async()=>opcoes.cepFalha?{mensagem:'CEP indisponível. Dados preservados.'}:{cep:'01001000',rua:'Praça da Sé',bairro:'Sé',cidade:'São Paulo',uf:'SP'}};}chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
- vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;return nodes;
+ for(const id of ['retomada','retomadaTexto','retomarPedido'])nodes[id]=Object.assign(el(),{hidden:true});
+ const recibos={...opcoes.recibos};
+ ctx.localStorage={getItem:k=>{if(opcoes.storageBloqueado)throw Error('SecurityError');return recibos[k]||null;},setItem:(k,v)=>{if(opcoes.storageBloqueado)throw Error('QuotaExceededError');recibos[k]=v;},removeItem:k=>delete recibos[k]};
+ vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;nodes.recibos=recibos;return nodes;
 }
+
+test('retoma a mesma referência após perder sessão, sem carrinho e sem criar pagamento',async()=>{
+ const recibo={id:base.id,token:'b'.repeat(64),guardadoEm:Date.now()};
+ const n=await tela({pagamento:{status:'action_required',pix:{codigo:'000201TESTE'}}},{heeeph_pedido_teste:null,heeeph_checkout:null},{recibos:{heeeph_pedido_recuperavel:JSON.stringify(recibo)}});
+ assert.equal(n.retomada.hidden,false);assert.match(n.retomadaTexto.textContent,new RegExp(base.id));
+ assert.deepEqual(n.chamadas,['configuracao']);
+ await n.retomarPedido.click();
+ assert.deepEqual(n.chamadas,['configuracao','status']);assert.match(n.pedidoResumo.textContent,new RegExp(base.id));assert.equal(n.entrega.hidden,true);assert.equal(n.retomada.hidden,true);assert.equal(n.pixCodigo.value,'000201TESTE');
+ const salvo=JSON.parse(n.recibos.heeeph_pedido_recuperavel);assert.deepEqual(Object.keys(salvo).sort(),['guardadoEm','id','token']);
+});
+
+test('referência expirada ou inválida não oferece acesso nem inicia consulta',async()=>{
+ for(const r of [{id:base.id,token:'b'.repeat(64),guardadoEm:Date.now()-86400001},{id:base.id,token:'inválido',guardadoEm:Date.now()}]){
+  const n=await tela({}, {heeeph_pedido_teste:null},{recibos:{heeeph_pedido_recuperavel:JSON.stringify(r)}});
+  assert.equal(n.retomada.hidden,true);assert.deepEqual(n.chamadas,['configuracao','cep']);assert.equal(n.recibos.heeeph_pedido_recuperavel,undefined);
+ }
+});
+
+test('armazenamento persistente bloqueado mantém recuperação pela sessão',async()=>{
+ const n=await tela({pagamento:{status:'processed',aprovado:true}},{},{storageBloqueado:true});
+ assert.deepEqual(n.chamadas,['status']);assert.equal(n.statusTitulo.textContent,'Pagamento de teste aprovado');
+});
 test('pedido restaurado sem tentativa volta aos meios e recupera public key',async()=>{const n=await tela({});assert.equal(n.meios.hidden,false);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Escolha como pagar/);});
 test('tentativa incerta mostra consulta e recuperação Pix, sem mensagem enganosa',async()=>{const n=await tela({tentativa:true,recuperarPix:true});assert.equal(n.meios.hidden,true);assert.equal(n.resultado.hidden,false);assert.equal(n.recuperarPix.hidden,false);assert.doesNotMatch(n.mensagem.textContent,/Escolha como pagar/);});
 test('recusa explícita mostra erro e permite corrigir pagamento',async()=>{const n=await tela({ultimaFalha:{mensagem:'Confira os dados.'}});assert.equal(n.meios.hidden,false);assert.equal(n.mensagem.dataset.tipo,'erro');assert.equal(n.mensagem.textContent,'Confira os dados.');});
