@@ -30,6 +30,14 @@ Após a correção da escolha de outro carrinho, a execução conjunta dos mesmo
 
 Não estão concluídos: confirmação de cópia nessa revisão no telefone, cartão em aparelho físico e aprovação automática do último Pix. O banco definitivo, retenção/backup de produção, credenciais e webhook reais isolados e avaliação de antifraude/3DS continuam requisitos anteriores à liberação de vendas. Compra de etiqueta e rastreamento automático não implementados; etapas de entrega manuais.
 
+### Atualização após a aprovação do último Pix
+
+O painel autenticado confirmou posteriormente o pedido `23c31e00209d60836910aae06b252bcc` como `processed/accredited`, R$ 49,40, com webhook autenticado persistido como `processed` às **11:14:15 de São Paulo em 20/10/2026**. A consulta manual anterior era das 11:13:37 e mostrava pendência; recarregar a lista revelou a atualização assinada posterior. Portanto, a pendência de aprovação desse Pix descrita acima foi resolvida, sem nova cobrança, reenvio ou alteração manual do estado do pagamento. Não foi obtido código HTTP dessa entrega nos logs nesta rodada; a prova aqui é o registro persistido pelo receptor após validar a assinatura e consultar a Orders API.
+
+Corrigido também um retorno antigo do painel: atualizar a lista agora limpa mensagens de consultas anteriores, evitando exibir “Aguardando confirmação” antigo abaixo de um pedido já aprovado pelo webhook. O teste da tela cobre essa transição.
+
+Permanecem pendentes a confirmação da nova mensagem de cópia no telefone e o cartão em aparelho físico. Retomada do mesmo pedido, QR, copia e cola e aprovação com webhook do pedido do telefone estão comprovados pelas evidências acima.
+
 Endereço estável de teste: https://heeeph-git-codex-preparacao-vendas-nardsssbh-9766s-projects.vercel.app/
 
 Referência oficial consultada em 20/10/2026: [teste Pix com Orders API](https://www.mercadopago.com.br/developers/pt/docs/checkout-api-orders/integration-test/pix). A documentação indica `test@testuser.com` e `payer.first_name=APRO`, com atualização posterior para aprovação; não informa prazo garantido nessa página. Não considerar um pagamento aprovado enquanto o provedor não confirmar os estados e os valores.

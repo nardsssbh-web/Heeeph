@@ -17,6 +17,10 @@ test('status no topo, produto destacado e consulta com retorno no próprio pedid
   p={...p,pagamento};await all(card()).find(n=>n.textContent==='Consultar Pagamento').click();
   assert.equal(all(card()).find(n=>n.className==='retorno-pedido').dataset.tipo,cor);
  }
+ p={...p,pagamento:{status:'processing'}};await all(card()).find(n=>n.textContent==='Consultar Pagamento').click();
+ assert.equal(all(card()).find(n=>n.className==='retorno-pedido').dataset.tipo,'pendente');
+ p={...p,pagamento:{aprovado:true,status:'processed'}};await ids.acesso.submit({preventDefault(){}});
+ assert.ok(all(card()).some(n=>n.className==='selo aprovado'));assert.equal(all(card()).some(n=>n.className==='retorno-pedido'&&/Aguardando/.test(n.textContent)),false);
  let liberar;
  ctx.fetch=async()=>{await new Promise(r=>liberar=r);throw new Error('Falha simulada');};
  const button=all(card()).find(n=>n.textContent==='Consultar Pagamento'),consulta=button.click();
