@@ -273,7 +273,10 @@
       if(typeof mp.getIdentificationTypes==='function'){
         try{await mp.getIdentificationTypes();}
         catch(e){
-          if(pedido.teste!==false)console.warn('CHECKOUT_CARTAO_TESTE',{fase:'configuracao_indisponivel',status:Number(e?.status)||null});
+          if(pedido.teste!==false){
+            const texto=String(e?.message||e?.[0]?.message||e?.cause||'');
+            console.warn('CHECKOUT_CARTAO_TESTE '+JSON.stringify({fase:'configuracao_indisponivel',status:Number(e?.status)||null,chavePresente:Boolean(pedido.publicKey),chaveRecusada:/public.?key|invalid.*key|unauthorized|credentials|401|403/i.test(texto),falhaRede:/fetch|network|timeout/i.test(texto)}));
+          }
           throw new Error('Não foi possível carregar a configuração do cartão no Mercado Pago. Nenhum pagamento foi enviado. O pedido permanece salvo.');
         }
       }
