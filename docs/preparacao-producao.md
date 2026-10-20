@@ -1,5 +1,7 @@
 # Preparação para vendas — 15/10/2026
 
+**Estado atual:** consulte [Liberação de vendas — 20/10/2026](liberacao-vendas.md). As limitações históricas abaixo sobre recuperação apenas na aba e ausência de apresentação 3DS foram revistas; o desafio ainda exige validação integrada antes da liberação real.
+
 Registro histórico da auditoria inicial. O estado atual dos deploys, das integrações e das pendências está em [Validação integrada de Preview](validacao-integrada-preview.md). As referências abaixo a ausência de push/deploy descrevem apenas o início da preparação, não a rodada integrada de 16/10/2026. Production continua fora da autorização desta rodada.
 
 Código preparado em `codex/preparacao-vendas`, a partir de `fef09e5`. Sem push, deploy, acesso às credenciais ou cobrança real. Esta revisão substitui as orientações antigas de copiar ZIP e publicar diretamente na main. Não executar essas instruções antigas durante a revisão.

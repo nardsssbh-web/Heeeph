@@ -1,5 +1,7 @@
 # Validação de 20/10/2026 — somente teste e Preview
 
+**Atualização:** [Liberação de vendas](liberacao-vendas.md) reúne os testes posteriores de cartão no telefone, webhooks e preparação 3DS. As pendências históricas abaixo devem ser lidas com essa atualização.
+
 Branch: `codex/preparacao-vendas`. Main, código e configuração de Production preservados. Nenhuma credencial gerada ou renovada. Nenhum pagamento real nem etiqueta comprada. Os pedidos existentes foram preservados.
 
 ## Evidências reaproveitadas e novas

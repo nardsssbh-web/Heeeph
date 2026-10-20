@@ -198,6 +198,7 @@
   function resultado(p) {
     ambienteTela(p.teste !== false);
     guardar(p); resumo(p); $('pedidoResumo').textContent='Pedido '+p.id; const pg=p.pagamento;
+    mostrarAutenticacao(pg);
     $('trocarPagamento').hidden=!pg?.trocaPermitida;
     $('recuperarPix').hidden = !p.recuperarPix || Boolean(pg);
     if (!pg) {
@@ -218,7 +219,25 @@
     $('statusTexto').textContent=pg.aprovado?('O servidor confirmou o pagamento e o valor total.'+(p.teste!==false?' Este pedido é apenas um teste.':'')):pg.trocaPermitida?'O pagamento foi recusado. Você pode revisar os dados e escolher outra forma de pagamento. O pedido recusado será preservado.':'O pagamento ainda precisa de conferência. Consulte novamente antes de tentar outro pagamento.';
     avisar('');
     mostrarPix(pg);
+    if(pg.autenticacao?.necessaria)$('statusTexto').textContent='O banco exige autenticação do cartão. Conclua a verificação abaixo e consulte este mesmo pagamento. Não envie outro pagamento.';
   }
+  function mostrarAutenticacao(pg){
+    const quadro=$('desafio3ds'),secao=$('autenticacaoCartao');
+    const necessario=pg?.autenticacao?.necessaria&&!pg.aprovado&&pg.status==='action_required';
+    secao.hidden=!necessario;
+    let url;
+    try{const u=new URL(pg?.autenticacao?.url);if(u.protocol==='https:'&&u.hostname==='www.mercadopago.com.br'&&!u.port&&!u.username&&!u.password&&!u.hash&&/^\/auth\/card\/validation\/pages\/remedies\/[a-zA-Z0-9-]+$/.test(u.pathname))url=u.href;}catch(_){}
+    quadro.hidden=!necessario||!url;
+    if(quadro.hidden){quadro.removeAttribute('src');}
+    else if(quadro.src!==url)quadro.src=url;
+    $('autenticacaoTexto').textContent=url?'Faça a verificação solicitada pelo banco. Ao terminar, use Consultar pagamento.':'A autenticação ainda não pôde ser exibida. Consulte este pedido; não inicie outro pagamento.';
+  }
+  window.addEventListener('message',async e=>{
+    const quadro=$('desafio3ds');
+    if(quadro.hidden||!quadro.src||e.source!==quadro.contentWindow||e.origin!==new URL(quadro.src).origin||e.data?.status!=='COMPLETE'||$('consultar').disabled)return;
+    // A mensagem apenas dispara a consulta; aprovação depende da API autenticada.
+    await $('consultar').click();
+  });
   async function pagar(metodo, formData, tipo) {
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
     avisar('Enviando o pagamento. Aguarde a confirmação desta tentativa…', 'info');

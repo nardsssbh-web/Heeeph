@@ -32,7 +32,7 @@ function fixture(){
  global.fetch=async(url,opts={})=>{
   requests.push({url,opts});const json=d=>({ok:true,json:async()=>d});
   if(url.includes('viacep.com.br'))return json({cep:'30220-060',logradouro:'Rua Teste',bairro:'Centro',localidade:'Belo Horizonte',uf:'MG'});
-  if(url==='https://redis.test'){
+  if(url==='https://redis.test'||url==='https://redis-prod.test'){
    const [cmd,key,value,...args]=JSON.parse(opts.body);let result;
    if(cmd==='SET'){if(args.includes('NX')&&db.has(key))result=null;else{db.set(key,value);result='OK';}}
    else if(cmd==='GET')result=db.get(key)||null;else if(cmd==='ZADD')result=1;else if(cmd==='EVAL'){const k=JSON.parse(opts.body)[3],fp=JSON.parse(opts.body)[4];result=db.get(k)===fp?Number(db.delete(k)):0;}else throw Error(cmd);
@@ -46,6 +46,43 @@ function fixture(){
  };
  return{requests,db,setPreco:v=>preco=v,setTest:v=>testUser=v,setTimeout:v=>timeout=v,setRecusa:v=>recusa=v,setSemVendedor:v=>semVendedor=v,get orders(){return orders;},close(){global.fetch=previous;process.env=env;}};
 }
+
+test('produção bloqueia qualquer acesso ao Redis de teste antes de enviar comando',async()=>{
+ const f=fixture();try{
+  process.env.CHECKOUT_AMBIENTE='producao';process.env.VERCEL_ENV='production';process.env.UPSTASH_REDIS_REST_TOKEN_PROD='token-producao';
+  for(const url of ['https://redis.test','https://REDIS.test/','https://redis.test/outro','http://redis-prod.test','https://usuario@redis-prod.test']){
+   process.env.UPSTASH_REDIS_REST_URL_PROD=url;
+   await assert.rejects(()=>c.redis(['SET','prova','sem-gravacao']),{status:503});
+  }
+  process.env.UPSTASH_REDIS_REST_URL_PROD='https://redis-prod.test';process.env.UPSTASH_REDIS_REST_TOKEN_PROD='segredo-db';
+  await assert.rejects(()=>c.redis(['GET','prova']),{status:503});assert.equal(f.requests.length,0);
+  process.env.UPSTASH_REDIS_REST_TOKEN_PROD='token-producao';process.env.VERCEL_ENV='preview';
+  await assert.rejects(()=>c.redis(['SET','prova','nada']),{status:503});assert.equal(f.requests.length,0);
+ }finally{f.close();}
+});
+
+test('3DS é opt-in no servidor e não modifica payload Pix',()=>{
+ const f=fixture();try{
+  const p={id:'a'.repeat(32),total:100,cliente:c.clienteValido(body.cliente,body.cep),itens:[],frete:{centavos:100}};
+  delete process.env.CHECKOUT_3DS_ATIVO;assert.equal(c.payloadPagamento(p,{type:'credit_card'}).config,undefined);
+  const pix=c.payloadPagamento(p,{id:'pix',type:'bank_transfer'});process.env.CHECKOUT_3DS_ATIVO='true';
+  assert.deepEqual(c.payloadPagamento(p,{id:'pix',type:'bank_transfer'}),pix);
+  assert.deepEqual(c.payloadPagamento(p,{type:'credit_card'}).config,{online:{transaction_security:{validation:'on_fraud_risk',liability_shift:'required'}}});
+ }finally{f.close();}
+});
+
+test('Challenge pendente não aprova nem libera nova cobrança; URL aceita somente origem e caminho oficiais',()=>{
+ const p={id:'a'.repeat(32),ambiente:'teste',vendedor:'123',total:100};
+ const d={id:'ORDTEST',user_id:123,country_code:'BRA',external_reference:p.id,total_amount:'1.00',total_paid_amount:'0.00',status:'action_required',status_detail:'pending_challenge',transactions:{payments:[{amount:'1.00',status:'action_required',status_detail:'pending_challenge',payment_method:{id:'master',transaction_security:{url:'https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture?guest_token=ficticio'}}}]}};
+ const pg=c.conferirPagamento(p,d);assert.equal(pg.aprovado,false);assert.equal(pg.trocaPermitida,false);assert.match(pg.autenticacao.url,/remedies/);
+ for(const u of ['javascript:alert(1)','https://www.mercadopago.com.br.atacante.test/auth/card/validation/pages/remedies/a','https://atacante.test','https://www.mercadopago.com.br/redirect','https://usuario@www.mercadopago.com.br/auth/card/validation/pages/remedies/a']){
+  d.transactions.payments[0].payment_method.transaction_security.url=u;assert.equal(c.conferirPagamento(p,d).autenticacao.url,null);
+ }
+});
+
+test('consulta administrativa de cartão não executa diagnóstico de payload Pix',async()=>{
+ assert.equal(await c.conferirPayloadPix({cliente:{},itens:[{}],pagamento:{transacoes:[{metodo:'master'}]}}),null);
+});
 test('consulta Pix recupera código e ausência de imagem sem criar outra order',async()=>{
  const f=fixture();try{
   const p=await c.preparar(body);await c.pagar(p.id,p.token,{metodo:'pix'});
@@ -261,7 +298,7 @@ test('produção desativada, sem credenciais próprias ou em Preview não cria c
   await assert.rejects(()=>c.configurado(),{status:503});
   process.env.CHECKOUT_PRODUCAO_ATIVO='true';
   await assert.rejects(()=>c.configurado(),{status:503});
-  Object.assign(process.env,{MERCADO_PAGO_PUBLIC_KEY_PROD:'public-prod',MERCADO_PAGO_ACCESS_TOKEN_PROD:'token-prod',MERCADO_PAGO_WEBHOOK_SECRET_PROD:'secret-prod',MERCADO_PAGO_VENDEDOR_ID_PROD:'123',UPSTASH_REDIS_REST_URL_PROD:'https://redis.test',UPSTASH_REDIS_REST_TOKEN_PROD:'db-prod',VERCEL_ENV:'preview'});
+  Object.assign(process.env,{MERCADO_PAGO_PUBLIC_KEY_PROD:'public-prod',MERCADO_PAGO_ACCESS_TOKEN_PROD:'token-prod',MERCADO_PAGO_WEBHOOK_SECRET_PROD:'secret-prod',MERCADO_PAGO_VENDEDOR_ID_PROD:'123',UPSTASH_REDIS_REST_URL_PROD:'https://redis-prod.test',UPSTASH_REDIS_REST_TOKEN_PROD:'db-prod',VERCEL_ENV:'preview'});
   await assert.rejects(()=>c.configurado(),{status:503});assert.equal(f.orders,0);
   process.env.VERCEL_ENV='production';await assert.rejects(()=>c.configurado(),{status:503}); // conta de teste
   f.setTest(false);assert.equal(await c.configurado(),'123');
@@ -272,12 +309,12 @@ test('produção desativada, sem credenciais próprias ou em Preview não cria c
 test('produção usa namespace, credenciais e retenção próprios; recusa CPF inválido',async()=>{
  const f=fixture();try{
   const teste=await c.preparar(body);
-  Object.assign(process.env,{CHECKOUT_AMBIENTE:'producao',CHECKOUT_PRODUCAO_ATIVO:'true',MERCADO_PAGO_PUBLIC_KEY_PROD:'public-prod',MERCADO_PAGO_ACCESS_TOKEN_PROD:'token-prod',MERCADO_PAGO_WEBHOOK_SECRET_PROD:'secret-prod',MERCADO_PAGO_VENDEDOR_ID_PROD:'123',UPSTASH_REDIS_REST_URL_PROD:'https://redis.test',UPSTASH_REDIS_REST_TOKEN_PROD:'db-prod',VERCEL_ENV:'production'});f.setTest(false);
+  Object.assign(process.env,{CHECKOUT_AMBIENTE:'producao',CHECKOUT_PRODUCAO_ATIVO:'true',MERCADO_PAGO_PUBLIC_KEY_PROD:'public-prod',MERCADO_PAGO_ACCESS_TOKEN_PROD:'token-prod',MERCADO_PAGO_WEBHOOK_SECRET_PROD:'secret-prod',MERCADO_PAGO_VENDEDOR_ID_PROD:'123',UPSTASH_REDIS_REST_URL_PROD:'https://redis-prod.test',UPSTASH_REDIS_REST_TOKEN_PROD:'db-prod',VERCEL_ENV:'production'});f.setTest(false);
   await assert.rejects(()=>c.buscar(teste.id),{status:404});
   const b=structuredClone(body);b.cliente.email='cliente@example.com';b.cliente.cpf='52998224725';
   const p=await c.preparar(b);assert.notEqual(p.id,teste.id);assert.equal(p.teste,false);assert.equal(p.publicKey,'public-prod');
   assert.equal(c.prefixo,'heeeph:producao:');assert.deepEqual(c.expiracao(),[]);
-  const grava=f.requests.filter(r=>r.url==='https://redis.test').map(r=>JSON.parse(r.opts.body)).find(cmd=>cmd[0]==='SET'&&cmd[1]===c.prefixo+p.id);
+  const grava=f.requests.filter(r=>r.url==='https://redis-prod.test').map(r=>JSON.parse(r.opts.body)).find(cmd=>cmd[0]==='SET'&&cmd[1]===c.prefixo+p.id);
   assert.equal(grava.includes('EX'),false);assert.ok(f.db.has('heeeph:teste:'+teste.id));
   assert.equal(f.requests.filter(r=>r.url.endsWith('/users/me')).at(-1).opts.headers.Authorization,'Bearer token-prod');
   assert.throws(()=>c.clienteValido({...b.cliente,cpf:'11111111111'},b.cep),/CPF/);

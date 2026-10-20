@@ -9,6 +9,9 @@ async function tela(resposta,armazenamento={},opcoes={}){
  const ctx=vm.createContext({console,setTimeout,clearTimeout,FormData:class{constructor(form){this.form=form;}get(k){return this.form.elements[k].value;}},EnderecosHEEEPH:require('../js/enderecos'),MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{if(url.startsWith('/api/cep?')){chamadas.push('cep');return {ok:!opcoes.cepFalha,json:async()=>opcoes.cepFalha?{mensagem:'CEP indisponível. Dados preservados.'}:{cep:'01001000',rua:'Praça da Sé',bairro:'Sé',cidade:'São Paulo',uf:'SP'}};}chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  for(const id of ['retomada','retomadaTexto','retomarPedido','persistenciaAviso','novoCarrinho'])nodes[id]=Object.assign(el(),{hidden:true});
  nodes.cardPaymentBrick_container=el();
+ for(const id of ['autenticacaoCartao','desafio3ds','autenticacaoTexto'])nodes[id]=el();
+ nodes.desafio3ds.contentWindow={};nodes.desafio3ds.hidden=true;
+ const eventos={};ctx.URL=URL;ctx.window.addEventListener=(nome,fn)=>eventos[nome]=fn;nodes.eventos=eventos;
  const recibos={...opcoes.recibos};
  nodes.pixCopiaAviso=el();
  ctx.navigator={clipboard:opcoes.clipboard};
@@ -160,6 +163,19 @@ test('falha na configuração pública do SDK não cria Brick nem envia pagament
  const n=await tela({}, {},{sdk});await n.cartao.click();assert.match(n.mensagem.textContent,/configuração do cartão/);assert.deepEqual(n.chamadas,['status']);assert.equal(n.cartao.disabled,false);
 });
 test('consulta informa atualização mesmo quando o pagamento já estava aprovado',async()=>{const n=await tela({pagamento:{aprovado:true,status:'processed'}});await n.consultar.click();assert.match(n.mensagem.textContent,/Consulta atualizada/);assert.match(n.mensagem.textContent,/aprovado/);assert.equal(n.consultar.disabled,false);});
+test('3DS retoma desafio do mesmo pedido e somente mensagem da origem e iframe corretos consulta status',async()=>{
+ const url='https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture?guest_token=ficticio';
+ const n=await tela({pagamento:{status:'action_required',detalhe:'pending_challenge',autenticacao:{necessaria:true,url}}});
+ assert.equal(n.autenticacaoCartao.hidden,false);assert.equal(n.desafio3ds.src,url);assert.equal(n.trocarPagamento.hidden,true);
+ for(const e of [{origin:'https://atacante.test',source:n.desafio3ds.contentWindow,data:{status:'COMPLETE'}},{origin:'https://www.mercadopago.com.br',source:{},data:{status:'COMPLETE'}}])await n.eventos.message(e);
+ assert.deepEqual(n.chamadas,['status']);
+ await n.eventos.message({origin:'https://www.mercadopago.com.br',source:n.desafio3ds.contentWindow,data:{status:'COMPLETE'}});
+ assert.deepEqual(n.chamadas,['status','status']);assert.doesNotMatch(n.statusTitulo.textContent,/aprovado/);
+});
+test('URL 3DS externa não é incorporada e pagamento aprovado remove desafio antigo',async()=>{
+ const n=await tela({pagamento:{status:'action_required',autenticacao:{necessaria:true,url:'https://atacante.test'}}});assert.equal(n.desafio3ds.hidden,true);assert.equal(n.desafio3ds.src,undefined);assert.match(n.autenticacaoTexto.textContent,/não pôde ser exibida/);
+ const p=await tela({pagamento:{status:'processed',aprovado:true,autenticacao:{necessaria:true,url:'https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture'}}});assert.equal(p.autenticacaoCartao.hidden,true);assert.equal(p.desafio3ds.src,undefined);
+});
 
 test('recupera pedido mesmo sem carrinho salvo e sempre mostra seu número',async()=>{
  const n=await tela({pagamento:{aprovado:true,status:'processed'}},{heeeph_checkout:null});
