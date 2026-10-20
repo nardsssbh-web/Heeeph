@@ -43,7 +43,7 @@ Tokens, assinaturas e chave administrativa devem ser Secret e nunca enviados no 
 
 ## Pendências externas e critérios de liberação
 
-1. **3DS:** testar `APRO-CHOK` e `OTHE-CHNO`, iframe real, conclusão, reload e resultado por API/webhook. Simulações não comprovam integração. A lista aceita apenas `www.mercadopago.com.br` no caminho de autenticação; investigar outro destino antes de ampliar.
+1. **3DS:** aprovação e recusa com desafio real de teste e webhook foram comprovadas no navegador integrado; aprovação também no telefone físico, conforme evidências abaixo. Ainda faltam recarga durante o desafio e expiração completa. A lista aceita apenas `www.mercadopago.com.br` no caminho de autenticação; investigar outro destino antes de ampliar.
 2. **Antifraude:** conferir coleta de dispositivo e qualidade da integração da aplicação real. O iframe 3DS não comprova essa etapa nem a configuração comercial da conta.
 3. **Redis:** definir região/plano, retenção, backups e restauração em banco separado. Sem TTL não significa backup. Não criar recurso pago ou migrar registros sem decisão explícita.
 4. **Mercado Pago real:** confirmar vendedor/aplicação, pares de credenciais, Pix/cartão, parcelamento e evento Order em `https://heeeph.com.br/api/mercado-pago-webhook`; validar assinatura, API e persistência. Preservar proteção geral e receptor de teste.
@@ -59,6 +59,8 @@ Permanece pendente confirmar no telefone a nova mensagem “Código copiado”. 
 A Preview `a1e1ec2` apresentou o iframe real de teste do Mercado Pago para `APRO-CHOK`. Pedido `ff41cae3d9a0b9918a6c05ee580eb01c`, R$ 59,91, order `ORDTST01M5DCJER4774XCWJ38KAKBGHE`. A confirmação ilustrativa disparou consulta; a resposta inicial ainda estava pendente e não foi tratada como aprovada. Em seguida, o registro recebeu `processed/accredited`, com webhook autenticado às **16:29:14**; a página confirmou aprovação na consulta das 16:29:32. O iframe foi removido após aprovação. Não houve SMS real, código de conta ou cobrança real.
 
 Essa evidência resolve a aprovação com desafio no navegador integrado. Expiração de 40 minutos, desafio em telefone físico e coleta de dispositivo/qualidade da aplicação continuam separados e não são inferidos dessa aprovação.
+
+**Validação posterior no telefone físico:** o usuário concluiu o desafio de teste no pedido `797a8963df8d52e637ca03212f5ad925`, R$ 34,50. A tela inicialmente permaneceu pendente, com o iframe vazio após a conclusão; a consulta manual às 18:31:53 confirmou aprovação no mesmo pedido. O painel carregado posteriormente confirmou `master/processed/accredited`, order `ORDTST01M5DKAC5EQGR2ACPB5BVSYGTC`, e webhook autenticado `processed` às **18:27:03**, anterior à consulta manual. Assim, apresentação/conclusão do desafio, aprovação e recebimento assinado estão comprovados também no aparelho. Não foi criado nem reenviado pagamento para conferir esses registros. A atualização imediata para estado final não é garantida: consultar o mesmo pagamento após concluir o desafio. Expiração completa e antifraude/qualidade da aplicação continuam pendentes.
 
 O cenário `OTHE-CHNO` foi executado em outro pedido: `3694d1624eb765327b9902a4a6328f2f`, order `ORDTST01M5DCQAR68SQT5SZ3CJFQY8F7`, R$ 59,91. O desafio foi apresentado e concluído; a API confirmou `failed/failed`, transação `3ds_challenge_failed`, com webhook autenticado às **16:31:28**. A primeira coleta de dados do SDK falhou antes do envio; a repetição dessa coleta produziu a única order dessa tentativa, sem reenviar pagamento existente.
 
