@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const c=require('../lib/checkout'),{assinaturaValida}=require('../lib/webhook');
-const body={chavePreparacao:'c'.repeat(64),cep:'30220060',itens:[{id:'games-free-fire',medida:'10x15cm',quantidade:1}],servico:'1',frete:10.79,cliente:{nome:'Comprador Teste',email:'teste@testuser.com',cpf:'19119119100',telefone:'11987654321',termos:true,endereco:{rua:'Rua Teste',numero:'10',bairro:'Centro',cidade:'Belo Horizonte',uf:'MG',complemento:''}}};
+const body={chavePreparacao:'c'.repeat(64),cep:'30220060',itens:[{id:'games-free-fire',medida:'10x15cm',quantidade:1}],servico:'1',frete:10.79,cliente:{nome:'Comprador Teste',email:'test@testuser.com',cpf:'19119119100',telefone:'11987654321',termos:true,endereco:{rua:'Rua Teste',numero:'10',bairro:'Centro',cidade:'Belo Horizonte',uf:'MG',complemento:''}}};
 test('diagnóstico identifica campo conhecido sem guardar valores ou mensagens do provedor',()=>{
  const d=c.diagnosticoMP({errors:[{code:'property_value',message:"invalid transactions.payments[0].expiration_time value 'segredo'; payer.email test@testuser.com",details:[{field:'payer.identification.number',description:'12345678909'}]}]},400,'req-teste');
  assert.deepEqual(d,{http:400,codigos:['property_value'],campos:['transactions.payments[0].expiration_time','payer.email','payer.identification.number'],requestId:'req-teste'});
@@ -190,6 +190,15 @@ test('busca vazia após timeout mantém bloqueio; recuperação Pix reutiliza ch
 });
 test('e-mail real é recusado antes de criar um pagamento',()=>{
  assert.throws(()=>c.clienteValido({...body.cliente,email:'comprador@example.com'},body.cep),/@testuser.com/);
+});
+
+test('erro de digitação no e-mail de teste é bloqueado antes de gravar pedido ou chamar pagamentos',async()=>{
+ const f=fixture();try{
+  const b=structuredClone(body);b.cliente.email='teste@testuser.com';
+  await assert.rejects(()=>c.preparar(b),/exatamente.*test@testuser.com/);
+  assert.equal(f.orders,0);assert.equal([...f.db.keys()].some(k=>/^heeeph:teste:[a-f0-9]{32}$/.test(k)),false);
+  assert.equal(c.clienteValido({...body.cliente,email:' TEST@TESTUSER.COM '},body.cep).email,'test@testuser.com');
+ }finally{f.close();}
 });
 
 test('preparação recupera a mesma identidade após perder a resposta e recusa alteração do pedido',async()=>{

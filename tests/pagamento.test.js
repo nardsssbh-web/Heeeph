@@ -9,6 +9,8 @@ async function tela(resposta,armazenamento={},opcoes={}){
  const ctx=vm.createContext({console,setTimeout,clearTimeout,FormData:class{constructor(form){this.form=form;}get(k){return this.form.elements[k].value;}},EnderecosHEEEPH:require('../js/enderecos'),MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{if(url.startsWith('/api/cep?')){chamadas.push('cep');return {ok:!opcoes.cepFalha,json:async()=>opcoes.cepFalha?{mensagem:'CEP indisponível. Dados preservados.'}:{cep:'01001000',rua:'Praça da Sé',bairro:'Sé',cidade:'São Paulo',uf:'SP'}};}chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  for(const id of ['retomada','retomadaTexto','retomarPedido','persistenciaAviso'])nodes[id]=Object.assign(el(),{hidden:true});
  const recibos={...opcoes.recibos};
+ nodes.pixCopiaAviso=el();
+ ctx.navigator={clipboard:opcoes.clipboard};
  if(opcoes.sessaoBloqueada)ctx.sessionStorage={getItem(){throw Error('SecurityError');},setItem(){throw Error('SecurityError');}};
  ctx.localStorage={getItem:k=>{if(opcoes.storageBloqueado)throw Error('SecurityError');return recibos[k]||null;},setItem:(k,v)=>{if(opcoes.storageBloqueado)throw Error('QuotaExceededError');if(!opcoes.storageIgnoraGravacao)recibos[k]=v;},removeItem:k=>delete recibos[k]};
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;nodes.recibos=recibos;return nodes;
@@ -55,6 +57,19 @@ test('sessão indisponível não impede retomar pela referência persistente',as
  const n=await tela({}, {},{sessaoBloqueada:true,recibos:{heeeph_pedido_recuperavel:JSON.stringify(recibo)}});
  assert.equal(n.retomada.hidden,false);assert.equal(n.entrega.hidden,true);await n.retomarPedido.click();
  assert.deepEqual(n.chamadas,['configuracao','status']);assert.match(n.pedidoResumo.textContent,new RegExp(base.id));assert.match(n.persistenciaAviso.textContent,/Pedido salvo neste navegador/);
+});
+
+test('cópia Pix confirma junto ao botão somente após clipboard resolver, sem enviar pagamento',async()=>{
+ let liberar,copiado;const n=await tela({pagamento:{status:'action_required',pix:{codigo:'000201TESTE'}}},{},{clipboard:{writeText:async valor=>{copiado=valor;await new Promise(r=>liberar=r);}}});
+ const copia=n.copiar.click();assert.equal(n.copiar.disabled,true);assert.equal(n.pixCopiaAviso.textContent,'Copiando código…');
+ liberar();await copia;assert.equal(copiado,'000201TESTE');assert.equal(n.pixCopiaAviso.textContent,'Código copiado.');assert.equal(n.copiar.textContent,'Copiado!');assert.deepEqual(n.chamadas,['status']);
+});
+
+test('clipboard ausente ou negado mantém código e dá instrução local de cópia manual',async()=>{
+ for(const clipboard of [undefined,{writeText:async()=>{throw Error('NotAllowedError');}}]){
+  const n=await tela({pagamento:{status:'action_required',pix:{codigo:'000201TESTE'}}},{},{clipboard});await n.copiar.click();
+  assert.match(n.pixCopiaAviso.textContent,/não permitiu copiar/);assert.doesNotMatch(n.pixCopiaAviso.textContent,/Código copiado\./);assert.equal(n.pixCodigo.value,'000201TESTE');assert.equal(n.copiar.disabled,false);assert.deepEqual(n.chamadas,['status']);
+ }
 });
 test('pedido restaurado sem tentativa volta aos meios e recupera public key',async()=>{const n=await tela({});assert.equal(n.meios.hidden,false);assert.equal(n.resultado.hidden,true);assert.match(n.mensagem.textContent,/Escolha como pagar/);});
 test('tentativa incerta mostra consulta e recuperação Pix, sem mensagem enganosa',async()=>{const n=await tela({tentativa:true,recuperarPix:true});assert.equal(n.meios.hidden,true);assert.equal(n.resultado.hidden,false);assert.equal(n.recuperarPix.hidden,false);assert.doesNotMatch(n.mensagem.textContent,/Escolha como pagar/);});

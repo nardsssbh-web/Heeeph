@@ -131,7 +131,7 @@
     }
   }
   function ambienteTela(teste) {
-    $('avisoAmbiente').textContent=teste?'Ambiente de teste. Use dados e cartões de teste do Mercado Pago. Nenhum pedido desta página será enviado.':'Pagamento seguro pelo Mercado Pago. Guarde o número do seu pedido.';
+    $('avisoAmbiente').textContent=teste?'Ambiente de teste. Use dados e cartões de teste do Mercado Pago e o e-mail test@testuser.com. Nenhum pedido desta página será enviado.':'Pagamento seguro pelo Mercado Pago. Guarde o número do seu pedido.';
     $('meiosTitulo').textContent=teste?'Pagamento de teste':'Pagamento';
     $('meiosTexto').textContent=teste?'Use o e-mail do comprador e cartões de teste do Mercado Pago.':'Escolha Pix ou cartão e confira o total antes de confirmar.';
     $('pix').textContent=teste?'Gerar Pix de teste':'Gerar Pix';
@@ -142,6 +142,8 @@
     const qr = $('qr'), pix = pg?.pix;
     qr.hidden=true; qr.removeAttribute('src'); qr.onerror=null;
     $('pixCodigo').value=pix?.codigo || '';
+    $('pixCopiaAviso').textContent='';
+    $('copiar').textContent='Copiar código';
     $('copiar').disabled=!pix?.codigo;
     const encerrado=pg?.aprovado||['failed','canceled','cancelled','expired','rejected'].includes(pg?.status);
     $('pixResultado').hidden=!pix||encerrado;
@@ -281,7 +283,20 @@
     $('consultar').disabled=true; $('consultar').textContent='Consultando…'; avisar('Consultando o pagamento…', 'info');
     try{const p=await api({acao:'status',id:pedido.id},true);resultado(p);avisar('Consulta atualizada às '+new Date().toLocaleTimeString('pt-BR')+'. '+(p.pagamento?.aprovado?'Pagamento aprovado.':p.tentativa?'Tentativa ainda em conferência.':p.pagamento?'Pagamento ainda não aprovado.':'Nenhum pagamento iniciado.'), 'info');}catch(e){avisar(e.message);}finally{$('consultar').disabled=false; $('consultar').textContent='Consultar Pagamento';}
   });
-  $('copiar').addEventListener('click',()=>navigator.clipboard.writeText($('pixCodigo').value).then(()=>avisar('Código copiado.', 'info')).catch(()=>avisar('Selecione o código e copie.')));
+  $('copiar').addEventListener('click',async()=>{
+    const codigo=$('pixCodigo').value;
+    if(!codigo){$('pixCopiaAviso').textContent='Não há código Pix disponível para copiar. Consulte este pedido.';return;}
+    $('copiar').disabled=true;
+    $('pixCopiaAviso').textContent='Copiando código…';
+    try{
+      if(typeof navigator.clipboard?.writeText!=='function')throw new Error('Cópia indisponível');
+      await navigator.clipboard.writeText(codigo);
+      $('copiar').textContent='Copiado!';
+      $('pixCopiaAviso').textContent='Código copiado.';
+    }catch(_){
+      $('pixCopiaAviso').textContent='O navegador não permitiu copiar automaticamente. Toque e segure no código acima, selecione tudo e escolha Copiar.';
+    }finally{$('copiar').disabled=!$('pixCodigo').value;}
+  });
   window.addEventListener('pagehide',()=>{if(controller)controller.unmount();});
   for(const uf of ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']){const o=document.createElement('option');o.value=o.textContent=uf;$('entrega').elements.uf.append(o);}
   (async()=>{
