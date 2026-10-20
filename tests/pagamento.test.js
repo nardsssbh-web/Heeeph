@@ -8,6 +8,7 @@ async function tela(resposta,armazenamento={},opcoes={}){
  Object.assign(values,armazenamento);
  const ctx=vm.createContext({console,setTimeout,clearTimeout,FormData:class{constructor(form){this.form=form;}get(k){return this.form.elements[k].value;}},EnderecosHEEEPH:require('../js/enderecos'),MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{if(url.startsWith('/api/cep?')){chamadas.push('cep');return {ok:!opcoes.cepFalha,json:async()=>opcoes.cepFalha?{mensagem:'CEP indisponível. Dados preservados.'}:{cep:'01001000',rua:'Praça da Sé',bairro:'Sé',cidade:'São Paulo',uf:'SP'}};}chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
  for(const id of ['retomada','retomadaTexto','retomarPedido','persistenciaAviso','novoCarrinho'])nodes[id]=Object.assign(el(),{hidden:true});
+ nodes.cardPaymentBrick_container=el();
  const recibos={...opcoes.recibos};
  nodes.pixCopiaAviso=el();
  ctx.navigator={clipboard:opcoes.clipboard};
@@ -144,6 +145,20 @@ test('retorno envelopado do SDK conserva token e tipo sem repetir coleta ou paga
  const n=await tela({}, {},{sdk});await n.cartao.click();await n.confirmarCartao.click();assert.deepEqual(n.chamadas,['status','pagar']);
 });
 
+test('SDK que resolve null informa falha e permite reabrir sem enviar pagamento',async()=>{
+ let tentativas=0,liberar;
+ function sdk(){return {bricks:()=>({create:()=>{tentativas++;return new Promise(r=>liberar=r);}})};}
+ const n=await tela({}, {},{sdk});const abertura=n.cartao.click();await n.cartao.click();
+ assert.equal(tentativas,1);assert.equal(n.pix.disabled,true);assert.match(n.mensagem.textContent,/Carregando/);
+ liberar(null);await abertura;assert.match(n.mensagem.textContent,/Nenhum pagamento foi enviado/);
+ assert.equal(n.cartao.disabled,false);assert.equal(n.pix.disabled,false);assert.equal(n.confirmarCartao.hidden,true);
+ assert.deepEqual(n.chamadas,['status']);
+ const segunda=n.cartao.click();assert.equal(tentativas,2);liberar(null);await segunda;
+});
+test('falha na configuração pública do SDK não cria Brick nem envia pagamento',async()=>{
+ function sdk(){return {getIdentificationTypes:async()=>{throw {status:401};},bricks(){throw Error('Não deveria criar');}};}
+ const n=await tela({}, {},{sdk});await n.cartao.click();assert.match(n.mensagem.textContent,/configuração do cartão/);assert.deepEqual(n.chamadas,['status']);assert.equal(n.cartao.disabled,false);
+});
 test('consulta informa atualização mesmo quando o pagamento já estava aprovado',async()=>{const n=await tela({pagamento:{aprovado:true,status:'processed'}});await n.consultar.click();assert.match(n.mensagem.textContent,/Consulta atualizada/);assert.match(n.mensagem.textContent,/aprovado/);assert.equal(n.consultar.disabled,false);});
 
 test('recupera pedido mesmo sem carrinho salvo e sempre mostra seu número',async()=>{

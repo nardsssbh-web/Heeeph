@@ -1,7 +1,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const preco = centavos => (centavos / 100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  let entrada, pedido, controller, emPagamento = false, validandoCartao = false;
+  let entrada, pedido, controller, emPagamento = false, validandoCartao = false, abrindoCartao = false;
   let referenciaCEP;
   $('conferir').disabled=true;
   function limparErros() {
@@ -261,18 +261,34 @@
     finally{emPagamento=false;$('trocarPagamento').disabled=false;}
   });
   $('cartao').addEventListener('click',async()=>{
-    if(controller||emPagamento)return;
+    if(controller||emPagamento||abrindoCartao)return;
+    abrindoCartao=true;$('cartao').disabled=$('pix').disabled=true;
+    $('confirmarCartao').hidden=true;
+    $('cartao').textContent='Carregando cartão…';
+    avisar('Carregando o formulário seguro do Mercado Pago…','info');
     try{
       if(typeof MercadoPago!=='function')throw new Error('Não foi possível carregar o formulário de cartão. Recarregue a página.');
       const mp=new MercadoPago(pedido.publicKey,{locale:'pt-BR'});
+      // Consulta pública do SDK: diagnostica acesso à configuração, sem tokenizar ou pagar.
+      if(typeof mp.getIdentificationTypes==='function'){
+        try{await mp.getIdentificationTypes();}
+        catch(e){
+          if(pedido.teste!==false)console.warn('CHECKOUT_CARTAO_TESTE',{fase:'configuracao_indisponivel',status:Number(e?.status)||null});
+          throw new Error('Não foi possível carregar a configuração do cartão no Mercado Pago. Nenhum pagamento foi enviado. O pedido permanece salvo.');
+        }
+      }
       let pronto=false;
       const ativar=()=>{if(pronto&&controller)$('confirmarCartao').hidden=false;};
       controller=await mp.bricks().create('cardPayment','cardPaymentBrick_container',{
         initialization:{amount:pedido.total/100},customization:{visual:{style:{theme:'default'},hidePaymentButton:true}},
         callbacks:{onReady:()=>{pronto=true;ativar();avisar('Formulário de cartão carregado. Confira os dados e as parcelas antes de pagar.', 'info');},onError:erroCartao}
       });
+      // O SDK também pode resolver com null sem chamar onError.
+      if(!controller)throw new Error('O Mercado Pago não conseguiu abrir o formulário de cartão. Nenhum pagamento foi enviado. Tente abrir o cartão novamente; se persistir, recarregue esta mesma página para retomar o pedido.');
       ativar();
-    }catch(e){avisar(e.message);}
+      $('cardPaymentBrick_container').scrollIntoView({block:'start'});
+    }catch(e){controller=null;avisar(e.message||'Não foi possível abrir o formulário de cartão. Nenhum pagamento foi enviado.');}
+    finally{abrindoCartao=false;$('cartao').disabled=$('pix').disabled=false;$('cartao').textContent=pedido.teste!==false?'Pagar com cartão de teste':'Pagar com cartão';}
   });
   function erroCartao(e) {
     const causas={incomplete_fields:'Preencha todos os campos do cartão e selecione as parcelas.',
