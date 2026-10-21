@@ -241,7 +241,10 @@
   async function pagar(metodo, formData, tipo) {
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
     avisar('Enviando o pagamento. Aguarde a confirmação desta tentativa…', 'info');
-    try { resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo},true)); }
+    try {
+      const deviceId=window.MP_DEVICE_SESSION_ID;
+      resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo,...(typeof deviceId==='string'&&/^[a-zA-Z0-9_-]{1,256}$/.test(deviceId)?{deviceId}:{})},true));
+    }
     catch(e){ try { const recuperado=await api({acao:'status',id:pedido.id},true); resultado(recuperado); if(recuperado.pagamento){avisar('Pagamento recuperado. Confira a situação abaixo.', 'info');return;} } catch (_) {} avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
     finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
   }

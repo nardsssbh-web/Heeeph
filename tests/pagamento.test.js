@@ -17,8 +17,23 @@ async function tela(resposta,armazenamento={},opcoes={}){
  ctx.navigator={clipboard:opcoes.clipboard};
  if(opcoes.sessaoBloqueada)ctx.sessionStorage={getItem(){throw Error('SecurityError');},setItem(){throw Error('SecurityError');}};
  ctx.localStorage={getItem:k=>{if(opcoes.storageBloqueado)throw Error('SecurityError');return recibos[k]||null;},setItem:(k,v)=>{if(opcoes.storageBloqueado)throw Error('QuotaExceededError');if(!opcoes.storageIgnoraGravacao)recibos[k]=v;},removeItem:k=>delete recibos[k]};
+ const enviados=[],fetchOriginal=ctx.fetch;
+ ctx.fetch=async(url,opts)=>{if(url==='/api/checkout')enviados.push(JSON.parse(opts.body));return fetchOriginal(url,opts);};
+ ctx.window.MP_DEVICE_SESSION_ID=opcoes.deviceId;nodes.enviados=enviados;
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;nodes.recibos=recibos;return nodes;
 }
+
+test('identificador do SDK acompanha apenas o envio de pagamento e não fica no recibo',async()=>{
+ const n=await tela({}, {},{deviceId:'device-ficticio_123'});
+ await n.pix.click();
+ assert.equal(n.enviados.find(r=>r.acao==='pagar').deviceId,'device-ficticio_123');
+ assert.equal(n.enviados.filter(r=>r.acao!=='pagar').some(r=>'deviceId' in r),false);
+ assert.equal(JSON.stringify(n.recibos).includes('device-ficticio_123'),false);
+ for(const deviceId of [undefined,'invalido\r\nheader',{},'x'.repeat(257)]){
+  const t=await tela({}, {},{deviceId});await t.pix.click();
+  assert.equal('deviceId' in t.enviados.find(r=>r.acao==='pagar'),false);
+ }
+});
 
 test('retoma a mesma referência após perder sessão, sem carrinho e sem criar pagamento',async()=>{
  const recibo={id:base.id,token:'b'.repeat(64),guardadoEm:Date.now()};

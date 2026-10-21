@@ -51,6 +51,32 @@ function fixture(){
  return{requests,db,setPreco:v=>preco=v,setTest:v=>testUser=v,setTimeout:v=>timeout=v,setRecusa:v=>recusa=v,setSemVendedor:v=>semVendedor=v,get orders(){return orders;},close(){global.fetch=previous;process.env=env;}};
 }
 
+test('device ID é transitório, não altera idempotência nem é enviado em consultas',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);
+  await c.pagar(p.id,p.token,{metodo:'pix',deviceId:'device-ficticio_123'});
+  const cria=f.requests.find(r=>r.url.endsWith('/v1/orders'));
+  assert.equal(cria.opts.headers['X-meli-session-id'],'device-ficticio_123');
+  assert.equal(cria.opts.headers['X-Idempotency-Key'],'heeeph-teste-'+p.id);
+  assert.equal(cria.opts.body.includes('device-ficticio_123'),false);
+  assert.equal([...f.db.values()].some(v=>String(v).includes('device-ficticio_123')),false);
+  await c.pagar(p.id,p.token,{metodo:'pix',deviceId:'outro-dispositivo'});
+  assert.equal(f.orders,1);
+  assert.equal(f.requests.filter(r=>!r.url.endsWith('/v1/orders')).some(r=>r.opts.headers?.['X-meli-session-id']),false);
+ }finally{f.close();}
+});
+
+test('header de dispositivo ignora conteúdo inválido e nunca acompanha outros endpoints',async()=>{
+ const f=fixture();try{
+  for(const id of [undefined,{},'invalido\r\nAuthorization: outro','x'.repeat(257)]){
+   await c.mp('/v1/orders','POST',{external_reference:'a'.repeat(32),total_amount:'1.00'},'chave-ficticia',id);
+   assert.equal('X-meli-session-id' in f.requests.at(-1).opts.headers,false);
+  }
+  await c.mp('/users/me','GET',undefined,undefined,'device-ficticio_123');
+  assert.equal('X-meli-session-id' in f.requests.at(-1).opts.headers,false);
+ }finally{f.close();}
+});
+
 test('produção bloqueia qualquer acesso ao Redis de teste antes de enviar comando',async()=>{
  const f=fixture();try{
   process.env.CHECKOUT_AMBIENTE='producao';process.env.VERCEL_ENV='production';process.env.UPSTASH_REDIS_REST_TOKEN_PROD='token-producao';
