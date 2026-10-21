@@ -24,12 +24,12 @@ async function tela(resposta,armazenamento={},opcoes={}){
 }
 
 test('identificador do SDK acompanha apenas o envio de pagamento e não fica no recibo',async()=>{
- const n=await tela({}, {},{deviceId:'device-ficticio_123'});
+ const n=await tela({}, {},{deviceId:'device.ficticio_123:456/abc=='});
  await n.pix.click();
- assert.equal(n.enviados.find(r=>r.acao==='pagar').deviceId,'device-ficticio_123');
+ assert.equal(n.enviados.find(r=>r.acao==='pagar').deviceId,'device.ficticio_123:456/abc==');
  assert.equal(n.enviados.filter(r=>r.acao!=='pagar').some(r=>'deviceId' in r),false);
- assert.equal(JSON.stringify(n.recibos).includes('device-ficticio_123'),false);
- for(const deviceId of [undefined,'invalido\r\nheader',{},'x'.repeat(257)]){
+ assert.equal(JSON.stringify(n.recibos).includes('device.ficticio_123:456/abc=='),false);
+ for(const deviceId of [undefined,'invalido\r\nheader','com espaco','controle\0','não-ascii',{},'x'.repeat(513)]){
   const t=await tela({}, {},{deviceId});await t.pix.click();
   assert.equal('deviceId' in t.enviados.find(r=>r.acao==='pagar'),false);
  }

@@ -1,6 +1,8 @@
 (() => {
   const $ = id => document.getElementById(id);
   const preco = centavos => (centavos / 100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  // O identificador é opaco: aceitar caracteres ASCII de header, sem espaços/controles.
+  const dispositivoValido = valor => typeof valor==='string'&&/^[\x21-\x7e]{1,512}$/.test(valor);
   let entrada, pedido, controller, emPagamento = false, validandoCartao = false, abrindoCartao = false;
   let referenciaCEP;
   $('conferir').disabled=true;
@@ -196,7 +198,7 @@
     }
   }
   function resultado(p) {
-    if(p.teste!==false)console.info('CHECKOUT_DISPOSITIVO_TESTE '+JSON.stringify({fase:'consulta',presente:typeof window.MP_DEVICE_SESSION_ID==='string'&&/^[a-zA-Z0-9_-]{1,256}$/.test(window.MP_DEVICE_SESSION_ID)}));
+    if(p.teste!==false)console.info('CHECKOUT_DISPOSITIVO_TESTE '+JSON.stringify({fase:'consulta',obtido:typeof window.MP_DEVICE_SESSION_ID==='string',presente:dispositivoValido(window.MP_DEVICE_SESSION_ID)}));
     ambienteTela(p.teste !== false);
     guardar(p); resumo(p); $('pedidoResumo').textContent='Pedido '+p.id; const pg=p.pagamento;
     mostrarAutenticacao(pg);
@@ -244,8 +246,8 @@
     avisar('Enviando o pagamento. Aguarde a confirmação desta tentativa…', 'info');
     try {
       const deviceId=window.MP_DEVICE_SESSION_ID;
-      if(pedido.teste!==false)console.info('CHECKOUT_DISPOSITIVO_TESTE '+JSON.stringify({presente:typeof deviceId==='string'&&/^[a-zA-Z0-9_-]{1,256}$/.test(deviceId)}));
-      resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo,...(typeof deviceId==='string'&&/^[a-zA-Z0-9_-]{1,256}$/.test(deviceId)?{deviceId}:{})},true));
+      if(pedido.teste!==false)console.info('CHECKOUT_DISPOSITIVO_TESTE '+JSON.stringify({obtido:typeof deviceId==='string',presente:dispositivoValido(deviceId)}));
+      resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo,...(dispositivoValido(deviceId)?{deviceId}:{})},true));
     }
     catch(e){ try { const recuperado=await api({acao:'status',id:pedido.id},true); resultado(recuperado); if(recuperado.pagamento){avisar('Pagamento recuperado. Confira a situação abaixo.', 'info');return;} } catch (_) {} avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
     finally{emPagamento=false; $('pix').disabled=$('cartao').disabled=false;}
