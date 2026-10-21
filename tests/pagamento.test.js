@@ -20,8 +20,20 @@ async function tela(resposta,armazenamento={},opcoes={}){
  const enviados=[],fetchOriginal=ctx.fetch;
  ctx.fetch=async(url,opts)=>{if(url==='/api/checkout')enviados.push(JSON.parse(opts.body));return fetchOriginal(url,opts);};
  ctx.window.MP_DEVICE_SESSION_ID=opcoes.deviceId;nodes.enviados=enviados;
+ ctx.window.location={href:opcoes.url||'https://loja.test/pagamento.html'};
+ nodes.diagnosticoDispositivo=Object.assign(el(),{hidden:true});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;nodes.recibos=recibos;return nodes;
 }
+
+test('diagnóstico explícito mostra somente confirmação da coleta em teste, sem identificador nem nova cobrança',async()=>{
+ const url='https://loja.test/pagamento.html?diagnostico=dispositivo';
+ const n=await tela({}, {},{url,deviceId:'device.ficticio:123'});
+ assert.equal(n.diagnosticoDispositivo.hidden,false);assert.match(n.diagnosticoDispositivo.textContent,/coleta do dispositivo confirmada/);
+ assert.equal(n.diagnosticoDispositivo.textContent.includes('device.ficticio'),false);assert.deepEqual(n.chamadas,['status']);
+ const ausente=await tela({}, {},{url});assert.match(ausente.diagnosticoDispositivo.textContent,/ainda não confirmada/);assert.deepEqual(ausente.chamadas,['status']);
+ const normal=await tela({}, {},{deviceId:'device.ficticio:123'});assert.equal(normal.diagnosticoDispositivo.hidden,true);
+ const real=await tela({teste:false}, {},{url,deviceId:'device.ficticio:123'});assert.equal(real.diagnosticoDispositivo.hidden,true);
+});
 
 test('identificador do SDK acompanha apenas o envio de pagamento e não fica no recibo',async()=>{
  const n=await tela({}, {},{deviceId:'device.ficticio_123:456/abc=='});

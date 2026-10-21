@@ -164,6 +164,12 @@
     }
   }
   function ambienteTela(teste) {
+    const diagnostico=$('diagnosticoDispositivo');
+    const mostrarDiagnostico=teste&&window.location?.href&&new URL(window.location.href).searchParams.get('diagnostico')==='dispositivo';
+    if(diagnostico){
+      diagnostico.hidden=!mostrarDiagnostico;
+      if(mostrarDiagnostico)diagnostico.textContent=dispositivoValido(window.MP_DEVICE_SESSION_ID)?'Diagnóstico de teste: coleta do dispositivo confirmada.':'Diagnóstico de teste: coleta do dispositivo ainda não confirmada. Aguarde alguns segundos e consulte este mesmo pedido novamente.';
+    }
     $('avisoAmbiente').textContent=teste?'Ambiente de teste. Use dados e cartões de teste do Mercado Pago e o e-mail test@testuser.com. Nenhum pedido desta página será enviado.':'Pagamento seguro pelo Mercado Pago. Guarde o número do seu pedido.';
     $('meiosTitulo').textContent=teste?'Pagamento de teste':'Pagamento';
     $('meiosTexto').textContent=teste?'Use o e-mail do comprador e cartões de teste do Mercado Pago.':'Escolha Pix ou cartão e confira o total antes de confirmar.';
