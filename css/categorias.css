@@ -202,3 +202,33 @@
 }
 .banner-simulador:hover,.banner-simulador:focus-visible{background:#ffdb83;transform:translateY(-2px)}
 @media(max-width:780px){.categorias-card{padding-top:14px}.titulo-categorias{padding:32px 15px}.banner-simulador{width:100%;max-width:310px}}
+
+/* Banner de categorias em tela cheia, com a grade original abaixo. */
+.pagina-categorias{padding-top:0}
+.categorias-card{overflow:visible;border:0;background:transparent;box-shadow:none;padding-top:0}
+.categorias-card::before{display:none}
+.titulo-categorias{
+  width:100vw;
+  width:100dvw;
+  max-width:none;
+  min-height:calc(100vh - 75px);
+  min-height:calc(100svh - 75px);
+  margin-left:50%;
+  transform:translateX(-50%);
+  margin-bottom:32px;
+  border-radius:0;
+  border-left:0;border-right:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:50px max(18px,calc((100vw - 1080px)/2));
+}
+.titulo-categorias p{margin-left:auto;margin-right:auto}
+@media(max-width:780px){
+  .pagina-categorias{padding-top:0}
+  .categorias-card{padding-top:0}
+  .titulo-categorias{
+    min-height:calc(100svh - 65px);
+    padding:38px 18px;
+    margin-bottom:24px;
+  }
+}
