@@ -243,6 +243,7 @@
     avisar('Enviando o pagamento. Aguarde a confirmação desta tentativa…', 'info');
     try {
       const deviceId=window.MP_DEVICE_SESSION_ID;
+      if(pedido.teste!==false)console.info('CHECKOUT_DISPOSITIVO_TESTE '+JSON.stringify({presente:typeof deviceId==='string'&&/^[a-zA-Z0-9_-]{1,256}$/.test(deviceId)}));
       resultado(await api({acao:'pagar',id:pedido.id,metodo,formData,tipo,...(typeof deviceId==='string'&&/^[a-zA-Z0-9_-]{1,256}$/.test(deviceId)?{deviceId}:{})},true));
     }
     catch(e){ try { const recuperado=await api({acao:'status',id:pedido.id},true); resultado(recuperado); if(recuperado.pagamento){avisar('Pagamento recuperado. Confira a situação abaixo.', 'info');return;} } catch (_) {} avisar(e.message); if(e.dados?.frete) avisar('O frete mudou. Volte ao carrinho e calcule novamente antes de pagar.'); throw e; }
