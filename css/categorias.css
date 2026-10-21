@@ -168,3 +168,37 @@
     font-size:27px;
   }
 }
+
+/* Banner renovado: botões e links das categorias permanecem iguais. */
+.categorias-card{padding-top:20px}
+.titulo-categorias{
+  isolation:isolate;
+  overflow:hidden;
+  padding:clamp(30px,5.4vw,68px) 20px;
+  border:1px solid rgba(255,197,74,.32);
+  border-radius:20px;
+  background:
+    radial-gradient(ellipse at 18% 20%,rgba(240,150,41,.25),transparent 50%),
+    radial-gradient(ellipse at 92% 95%,rgba(255,197,74,.12),transparent 48%),
+    linear-gradient(135deg,#222324 0%,#0d0f13 60%,#292019 100%);
+  box-shadow:inset 0 0 65px rgba(0,0,0,.35),0 12px 28px rgba(0,0,0,.24);
+  margin-bottom:25px;
+}
+.titulo-categorias::before{
+  content:"";
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(110deg,transparent 0 35px,rgba(255,255,255,.018) 36px 37px,transparent 38px 75px);
+  pointer-events:none;z-index:-1;
+}
+.banner-selo{font-weight:800;letter-spacing:.25em;font-size:clamp(10px,1.2vw,13px);color:#eacb95;margin-bottom:13px}
+.titulo-categorias h1{font-size:clamp(29px,5vw,60px);line-height:1.06;letter-spacing:.015em;color:#fff;margin:0 0 16px;text-shadow:0 3px 18px #000}
+.titulo-categorias h1 span{color:#ffc44c}
+.titulo-categorias p{max-width:660px;font-size:clamp(14px,1.7vw,18px);line-height:1.5;color:#e7e1d7}
+.banner-simulador{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:21px;padding:13px 23px;border-radius:8px;
+  background:#ffc44c;color:#191817;font-size:13px;font-weight:900;
+  text-decoration:none;box-shadow:0 6px 22px rgba(0,0,0,.32)
+}
+.banner-simulador:hover,.banner-simulador:focus-visible{background:#ffdb83;transform:translateY(-2px)}
+@media(max-width:780px){.categorias-card{padding-top:14px}.titulo-categorias{padding:32px 15px}.banner-simulador{width:100%;max-width:310px}}
