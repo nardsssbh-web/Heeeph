@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste na sua parede | HEEEPH</title>
+<meta name="description" content="Simule uma placa decorativa HEEEPH na fotografia da sua parede.">
+<style>
+:root{font-family:Arial,Helvetica,sans-serif;color:#f6f6f6;background:#141414;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}
+a{color:inherit}.topo{background:#0b0b0b;border-bottom:3px solid #f8b900;padding:18px max(18px,calc((100vw - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}
+.marca{font-weight:900;font-size:28px;letter-spacing:2px;text-decoration:none;color:#ffc400}
+.voltar{font-size:14px;text-decoration:none;border:1px solid #777;border-radius:9px;padding:10px}
+main{max-width:1120px;margin:auto;padding:24px 16px 45px}h1{font-size:clamp(24px,3vw,36px);margin:0 0 8px}p{line-height:1.5}.intro{color:#bbb;margin:0 0 24px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px;align-items:start}
+.palco{position:relative;min-height:350px;aspect-ratio:4/3;background:linear-gradient(120deg,#343434,#525252);border:2px dashed #777;border-radius:14px;overflow:hidden;touch-action:none}
+.palco canvas{width:100%;height:100%;display:block;position:absolute;inset:0;touch-action:none}
+.placeholder{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:32px;pointer-events:none;color:#eee}
+.placeholder strong{display:block;font-size:23px}.placeholder span{display:block;margin-top:9px;color:#ccc}
+.palco.tem-foto{border-style:solid;border-color:#555}.palco.tem-foto .placeholder{display:none}
+.controles{background:#222;border:1px solid #383838;border-radius:14px;padding:18px;display:grid;gap:15px}
+h2{font-size:18px;margin:0}.grupo{display:grid;gap:7px}label{font-weight:700;font-size:13px}
+input[type=file]{width:100%;font-size:13px;max-width:100%}input[type=range]{width:100%;accent-color:#ffcd20}
+select{width:100%;background:#333;color:white;padding:11px;border:1px solid #666;border-radius:7px}
+.botao{border:0;border-radius:9px;padding:12px;font-weight:800;background:#ffc400;color:#161616;min-height:45px}
+.secundario{background:#3b3b3b;color:white;border:1px solid #666}.botao:disabled{opacity:.5;cursor:not-allowed}
+.dois{display:grid;grid-template-columns:1fr 1fr;gap:8px}.dica{color:#bbb;font-size:12px;margin:0}
+.aviso{background:#292720;border-left:3px solid #ffc400;border-radius:4px;padding:12px;color:#eee;font-size:13px}
+.estado{min-height:19px;font-size:13px;color:#ffd86c}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.palco{min-height:230px}.topo{padding:14px 16px}.marca{font-size:24px}}
+</style>
+</head>
+<body>
+<header class="topo"><a class="marca" href="index.html">HEEEPH</a><a class="voltar" href="categorias.html">← Voltar à coleção</a></header>
+<main>
+<h1>Veja na sua parede</h1>
+<p class="intro">Fotografe seu espaço, escolha a arte e experimente a decoração antes de comprar.</p>
+<div class="layout">
+<section aria-label="Prévia da parede">
+<div class="palco" id="palco">
+<canvas id="canvas" aria-label="Montagem da placa na fotografia"></canvas>
+<div class="placeholder"><div><strong>Sua parede fica aqui</strong><span>Escolha uma foto do ambiente para começar.</span></div></div>
+</div>
+<p class="dica">Arraste a placa com o dedo ou mouse. Use o controle de tamanho para aumentar ou diminuir. A foto fica somente no seu dispositivo.</p>
+</section>
+<aside class="controles" aria-label="Controles do simulador">
+<h2>Monte sua decoração</h2>
+<div class="grupo"><label for="foto">1. Foto da parede</label><input id="foto" type="file" accept="image/*"></div>
+<div class="grupo"><label for="arte">2. Foto da placa (arte)</label><input id="arte" type="file" accept="image/*"></div>
+<div class="grupo"><label for="medida">3. Tamanho da placa</label>
+<select id="medida"><option value="20x28">20 × 28 cm (vertical)</option><option value="28x20">28 × 20 cm (horizontal)</option><option value="10x15">10 × 15 cm (vertical)</option><option value="15x10">15 × 10 cm (horizontal)</option></select></div>
+<div class="grupo"><label for="escala">Tamanho na foto: <output id="escalaValor">100%</output></label><input id="escala" type="range" min="20" max="250" value="100"></div>
+<div class="grupo"><label for="giro">Inclinação: <output id="giroValor">0°</output></label><input id="giro" type="range" min="-35" max="35" value="0"></div>
+<div class="dois"><button class="botao secundario" id="centralizar" type="button">Centralizar</button><button class="botao secundario" id="limpar" type="button">Recomeçar</button></div>
+<button class="botao" type="button" id="salvar" disabled>Salvar montagem</button>
+<div class="estado" role="status" id="estado"></div>
+<div class="aviso"><strong>Importante:</strong> a simulação é visual. Sem uma medida de referência da parede, o tamanho mostrado não corresponde necessariamente ao tamanho real da placa.</div>
+</aside>
+</div>
+</main>
+<script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id),canvas=$("canvas"),ctx=canvas.getContext("2d"),palco=$("palco");
+let parede=null,placa=null,x=.5,y=.5,scale=1,angle=0,drag=null;
+let naturalW=1200,naturalH=900;
+const limitar=(v,a,b)=>Math.max(a,Math.min(b,v));
+function estado(t){$("estado").textContent=t;}
+function dimensoes(){const [w,h]=$("medida").value.split("x").map(Number);return {w,h};}
+function resize(){
+ const r=palco.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,2);
+ const w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));
+ if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
+ render();
+}
+function desenho(ctx,w,h){
+ ctx.clearRect(0,0,w,h);
+ if(parede){const s=Math.min(w/parede.width,h/parede.height);const pw=parede.width*s,ph=parede.height*s;
+ ctx.fillStyle="#292929";ctx.fillRect(0,0,w,h);
+ ctx.drawImage(parede,(w-pw)/2,(h-ph)/2,pw,ph);
+ }
+ if(placa&&parede){
+ const {w:mw,h:mh}=dimensoes();let pw=w*.21*scale,ph=pw*mh/mw;
+ ctx.save();ctx.translate(x*w,y*h);ctx.rotate(angle*Math.PI/180);
+ ctx.shadowColor="rgba(0,0,0,.55)";ctx.shadowBlur=Math.max(6,w*.012);ctx.shadowOffsetY=Math.max(3,w*.006);
+ ctx.fillStyle="#1c1c1c";ctx.fillRect(-pw/2-2,-ph/2-2,pw+4,ph+4);
+ ctx.drawImage(placa,-pw/2,-ph/2,pw,ph);ctx.restore();
+ }
+}
+function render(){desenho(ctx,canvas.width,canvas.height);}
+async function carregar(file){
+ if(!file||!file.type.startsWith("image/"))throw Error("Escolha uma imagem válida.");
+ if(file.size>20*1024*1024)throw Error("A imagem deve ter no máximo 20 MB.");
+ const url=URL.createObjectURL(file);
+ try {
+ const img=new Image();img.src=url;await img.decode();
+ if(!img.naturalWidth||!img.naturalHeight)throw Error("Imagem inválida.");
+ return img;
+ }finally{URL.revokeObjectURL(url);}
+}
+$("foto").addEventListener("change",async e=>{
+ try{const f=e.target.files[0];if(!f)return;parede=await carregar(f);
+ palco.classList.add("tem-foto");$("salvar").disabled=!placa;estado("Foto da parede carregada.");resize();}
+ catch(err){estado(err.message);}
+});
+$("arte").addEventListener("change",async e=>{
+ try{const f=e.target.files[0];if(!f)return;placa=await carregar(f);$("salvar").disabled=!parede;estado("Arte carregada. Arraste para posicionar.");render();}
+ catch(err){estado(err.message);}
+});
+const params=new URLSearchParams(location.search),urlPlaca=params.get("placa");
+if(urlPlaca){
+ try{const u=new URL(urlPlaca,location.href);
+ if(u.origin===location.origin&&/\.(png|jpe?g|webp)$/i.test(u.pathname)){
+ const img=new Image();img.onload=()=>{placa=img;$("salvar").disabled=!parede;estado("Placa selecionada. Carregue sua parede.");render();};
+ img.onerror=()=>estado("Não foi possível carregar a placa selecionada.");img.src=u.href;
+ }}catch(_){}
+}
+$("medida").addEventListener("change",render);
+$("escala").addEventListener("input",e=>{scale=Number(e.target.value)/100;$("escalaValor").textContent=e.target.value+"%";render();});
+$("giro").addEventListener("input",e=>{angle=Number(e.target.value);$("giroValor").textContent=e.target.value+"°";render();});
+$("centralizar").addEventListener("click",()=>{x=.5;y=.5;scale=1;angle=0;$("escala").value=100;$("giro").value=0;$("escalaValor").textContent="100%";$("giroValor").textContent="0°";render();});
+$("limpar").addEventListener("click",()=>{parede=null;placa=null;x=.5;y=.5;scale=1;angle=0;$("foto").value="";$("arte").value="";$("escala").value=100;$("giro").value=0;$("escalaValor").textContent="100%";$("giroValor").textContent="0°";palco.classList.remove("tem-foto");$("salvar").disabled=true;estado("");render();});
+function coords(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height};}
+canvas.addEventListener("pointerdown",e=>{if(!parede||!placa)return;const p=coords(e);drag={id:e.pointerId,dx:p.x-x,dy:p.y-y};canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener("pointermove",e=>{if(!drag||drag.id!==e.pointerId)return;const p=coords(e);x=limitar(p.x-drag.dx,0,1);y=limitar(p.y-drag.dy,0,1);render();});
+const stop=e=>{if(drag&&drag.id===e.pointerId)drag=null;};canvas.addEventListener("pointerup",stop);canvas.addEventListener("pointercancel",stop);
+$("salvar").addEventListener("click",()=>{
+ if(!parede||!placa)return;
+ const out=document.createElement("canvas");out.width=1600;out.height=Math.round(1600*canvas.height/canvas.width);
+ desenho(out.getContext("2d"),out.width,out.height);
+ out.toBlob(blob=>{if(!blob){estado("Não foi possível salvar.");return;}
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="HEEEPH-minha-parede.png";a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);estado("Montagem pronta para salvar.");},"image/png");
+});
+new ResizeObserver(resize).observe(palco);resize();
+})();
+</script>
+</body></html>
