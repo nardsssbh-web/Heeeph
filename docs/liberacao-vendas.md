@@ -43,7 +43,7 @@ Tokens, assinaturas e chave administrativa devem ser Secret e nunca enviados no 
 
 ## Pendências externas e critérios de liberação
 
-1. **3DS:** aprovação e recusa com desafio real de teste e webhook foram comprovadas no navegador integrado; aprovação também no telefone físico, conforme evidências abaixo. Ainda faltam recarga durante o desafio e expiração completa. A lista aceita apenas `www.mercadopago.com.br` no caminho de autenticação; investigar outro destino antes de ampliar.
+1. **3DS:** aprovação e recusa com desafio real de teste e webhook foram comprovadas no navegador integrado; aprovação também no telefone físico, conforme evidências abaixo. Recarga durante desafio comprovada em 21/10/2026 no pedido `d063209eadb2c854ca96477292af269a`: mesmo pedido e desafio restaurados; aprovação posterior, sem nova cobrança. Ainda falta expiração completa. A lista aceita apenas `www.mercadopago.com.br` no caminho de autenticação; investigar outro destino antes de ampliar.
 2. **Antifraude:** em 21/10/2026 foi acrescentado o encaminhamento transitório de `window.MP_DEVICE_SESSION_ID`, coletado pelo SDK já existente, ao header `X-meli-session-id` somente no POST de criação da order. Valores ausentes/inválidos são omitidos, sem bloquear ou reenviar uma cobrança. O identificador não integra payload, fingerprint, Redis, recibo ou logs. Testes locais cobrem envio, validação, ausência de persistência e idempotência. Ainda falta confirmar coleta e encaminhamento no ambiente integrado e conferir a qualidade da aplicação real; esses resultados não são inferidos dos testes locais ou do iframe 3DS.
 3. **Armazenamento sem custo adicional:** em 21/10/2026 o usuário escolheu manter a Vercel e preparar a destinação exclusiva do Redis gratuito à operação real após concluir as verificações. Migração para a Hostinger suspensa e proposta paga descartada. Encerrar acesso dos consumidores de teste, inclusive deployments antigos, antes de guardar dados reais. Histórico e limitações em [banco-producao.md](banco-producao.md). Sem TTL não significa backup; disponibilidade e restauração ainda precisam de validação.
 4. **Mercado Pago real:** confirmar vendedor/aplicação, pares de credenciais, Pix/cartão, parcelamento e evento Order em `https://heeeph.com.br/api/mercado-pago-webhook`; validar assinatura, API e persistência. Preservar proteção geral e receptor de teste.
@@ -53,6 +53,10 @@ Tokens, assinaturas e chave administrativa devem ser Secret e nunca enviados no 
 Permanece pendente confirmar no telefone a nova mensagem “Código copiado”. O comportamento foi testado localmente.
 
 ## Verificação técnica
+
+### Recarga integrada de 3DS — 21/10/2026
+
+Pedido fictício `d063209eadb2c854ca96477292af269a`, R$ 59,91 (duas placas Whiskey e JeT), order `ORDTST01M5FE2RJW3V25TKX8P670Q8AW`. Na Preview `607e494`, APRO-CHOK apresentou o desafio do provedor. A página foi recarregada antes da confirmação; a consulta restaurou o mesmo identificador e o desafio pendente. Após confirmar o código ilustrativo pelo teclado, a primeira consulta permaneceu pendente. Consulta manual às 11:34:50 confirmou aprovação e removeu o iframe. O painel confirmou `master/processed/accredited`, aplicação `2764236022861400`, e webhook autenticado às 11:34:32. Uma única order foi criada nesta tentativa; não houve cobrança real. O envio do identificador antifraude ainda não foi comprovado por essa evidência.
 
 ### Evidência integrada de 3DS após a publicação
 

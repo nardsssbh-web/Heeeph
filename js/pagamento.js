@@ -196,6 +196,7 @@
     }
   }
   function resultado(p) {
+    if(p.teste!==false)console.info('CHECKOUT_DISPOSITIVO_TESTE '+JSON.stringify({fase:'consulta',presente:typeof window.MP_DEVICE_SESSION_ID==='string'&&/^[a-zA-Z0-9_-]{1,256}$/.test(window.MP_DEVICE_SESSION_ID)}));
     ambienteTela(p.teste !== false);
     guardar(p); resumo(p); $('pedidoResumo').textContent='Pedido '+p.id; const pg=p.pagamento;
     mostrarAutenticacao(pg);
