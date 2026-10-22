@@ -476,3 +476,13 @@ body.fundo-categorias{
     max-width:136px;
   }
 }
+
+/* Placas um pouco maiores, mantendo 4 por linha e o mesmo gap de 8px. */
+@media(min-width:781px){
+  body.fundo-categorias .pagina-categorias .categoria-item{
+    max-width:160px;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-item img{
+    max-width:152px;
+  }
+}
