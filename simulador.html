@@ -12,6 +12,23 @@ html{min-height:100%;background:#1b100b}
 body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,0,.40)),url("banner/fundo-madeira.png");background-color:#1b100b;background-position:center top;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}
 @media(max-width:760px){body{background-attachment:scroll}}
 .purchase-montagem{margin:18px 0 8px;padding-top:15px;border-top:1px solid #555963}.purchase-montagem button{width:100%;font-size:15px}.purchase-montagem .hint{margin:8px 0 0}
+
+/* Visualizador acompanha a rolagem sem mudar a disposição dos controles. */
+@media(min-width:761px){
+  .layout>.panel:first-child{position:sticky;top:14px;align-self:start;z-index:3}
+}
+@media(max-width:760px){
+  .stage.preview-floating{
+    position:fixed;top:12px;right:12px;left:auto;
+    width:min(230px,58vw);height:auto;min-height:0;
+    z-index:50;border:2px solid var(--gold);
+    box-shadow:0 12px 32px rgba(0,0,0,.75);
+    background:#17191d;
+  }
+  .stage.preview-floating canvas{width:100%;height:auto;max-height:36dvh;object-fit:contain}
+  .stage.preview-floating .placeholder{padding:18px 8px;font-size:12px}
+  .stage.preview-floating .placeholder strong{font-size:14px}
+}
 </style>
 </head>
 <body>
@@ -345,6 +362,34 @@ $('buySelected').addEventListener('click',()=>{
   try{localStorage.setItem('heeeph_cart',JSON.stringify(cart));localStorage.setItem('ultimaPagina','simulador.html');window.location.href='carrinho.html'}
   catch(e){message('Não foi possível salvar as placas no carrinho. Verifique o armazenamento do navegador.')}
 });
+
+/* No celular, a prévia se transforma em janela flutuante ao rolar a página.
+   Um espaçador preserva a posição original e evita saltos na rolagem. */
+const previewStage=$('stage');
+const previewSpacer=document.createElement('div');
+previewSpacer.style.display='none';
+previewStage.parentNode.insertBefore(previewSpacer,previewStage);
+function syncFloatingPreview(){
+  const mobile=window.matchMedia('(max-width:760px)').matches;
+  if(!mobile){
+    previewStage.classList.remove('preview-floating');
+    previewSpacer.style.display='none';
+    return;
+  }
+  const floating=previewStage.classList.contains('preview-floating');
+  if(!floating){
+    previewSpacer.style.height=previewStage.offsetHeight+'px';
+    previewSpacer.style.display='block';
+  }
+  const anchor=previewSpacer.getBoundingClientRect();
+  const layoutBottom=document.querySelector('.layout').getBoundingClientRect().bottom;
+  const shouldFloat=anchor.top<8 && layoutBottom>100;
+  previewStage.classList.toggle('preview-floating',shouldFloat);
+  previewSpacer.style.display=shouldFloat?'block':'none';
+}
+window.addEventListener('scroll',syncFloatingPreview,{passive:true});
+window.addEventListener('resize',syncFloatingPreview);
+syncFloatingPreview();
 const q=new URLSearchParams(location.search),id=q.get('produto');if(id){for(const [category,items] of Object.entries(catalog)){const match=items.find(p=>p.id===id);if(match){
   slotProducts[0]={...match,category};
   slotOrientations[0]=match.orientacao==='horizontal'?'horizontal':'vertical';
