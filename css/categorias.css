@@ -280,3 +280,61 @@ body.fundo-categorias{
   body.fundo-categorias{background-attachment:scroll;background-position:center top}
   .fundo-categorias .titulo-categorias{padding:30px 15px}
 }
+
+/* Coleções HEEEPH: arte completa percorre a página junto com os botões. */
+html:has(body.fundo-categorias){background:#130c08}
+body.fundo-categorias{
+  background:#130c08 !important;
+}
+.fundo-categorias .pagina-categorias{
+  background-image:url("../banner/colecoes-heeeph.png");
+  background-repeat:no-repeat;
+  background-position:center top;
+  background-size:100% 100%;
+  min-height:100vh;
+  padding:clamp(200px,22vw,350px) 0 clamp(145px,15vw,245px);
+}
+.fundo-categorias .categorias-container{width:min(76%,1140px)}
+.fundo-categorias .categorias-card{padding:0;border:0;box-shadow:none;background:transparent}
+.fundo-categorias .grade-categorias{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(12px,2vw,28px);
+  align-items:stretch;
+}
+.fundo-categorias .categoria-item,
+.fundo-categorias .categoria-item.categoria-destaque{
+  background:transparent;
+  border:0;
+  box-shadow:none;
+  padding:0;
+  border-radius:14px;
+}
+.fundo-categorias .categoria-item:hover,
+.fundo-categorias .categoria-item:focus-visible{
+  transform:translateY(-4px);
+  filter:brightness(1.12);
+  box-shadow:none;
+}
+.fundo-categorias .categoria-item img{width:100%;height:auto;object-fit:contain}
+.fundo-categorias .categoria-info{
+  padding:9px 4px 4px;
+  background:transparent;
+  text-shadow:0 2px 5px #000,0 1px 3px #000;
+}
+.fundo-categorias .categoria-info strong{font-size:clamp(15px,1.7vw,22px)}
+.fundo-categorias .categoria-info span{font-size:clamp(12px,1.1vw,16px)}
+.fundo-categorias .topo{background:rgba(0,0,0,.10)}
+@media(max-width:780px){
+  .fundo-categorias .pagina-categorias{
+    padding:clamp(150px,33vw,250px) 0 clamp(120px,25vw,210px);
+    background-size:100% 100%;
+  }
+  .fundo-categorias .categorias-container{width:85%}
+  .fundo-categorias .grade-categorias{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+}
+@media(max-width:480px){
+  .fundo-categorias .categorias-container{width:90%}
+  .fundo-categorias .pagina-categorias{padding-top:155px;padding-bottom:125px}
+  .fundo-categorias .categoria-info strong{font-size:14px}
+  .fundo-categorias .categoria-info span{font-size:12px}
+}
