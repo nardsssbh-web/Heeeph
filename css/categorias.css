@@ -486,3 +486,19 @@ body.fundo-categorias{
     max-width:152px;
   }
 }
+
+/* Placas +16px e conjunto 35px mais baixo, sem aumentar o gap. */
+@media(min-width:781px){
+  body.fundo-categorias .pagina-categorias .grade-categorias{
+    position:relative;
+    top:35px;
+    column-gap:8px !important;
+    row-gap:12px !important;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-item{
+    max-width:178px;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-item img{
+    max-width:168px;
+  }
+}
