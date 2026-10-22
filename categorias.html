@@ -32,7 +32,7 @@
   <link rel="stylesheet" href="css/categorias.css">
 </head>
 
-<body>
+<body class="fundo-categorias">
 
   <header class="topo">
     <div class="wrap">
@@ -61,24 +61,6 @@
     <div class="categorias-container">
       <section class="categorias-card">
 
-        <div class="banner-categorias-scroll" id="bannerImagemScroll" hidden>
-          <div class="banner-categorias-imagem" aria-label="Coleções HEEEPH">
-            <img id="imagemBannerCategorias" src="banner/banner-categorias-heeeph.jpg" alt="Coleções HEEEPH: Bandas, Bebidas, Games, Garage, Home Frases, Infantil, Motos, Música, RPG, Street, Trip e Fotos Reais." decoding="async">
-            <a class="banner-area" style="--x:14%;--y:27.3%" href="bandas.html" aria-label="Abrir categoria Bandas"><span>Bandas</span></a>
-            <a class="banner-area" style="--x:26.4%;--y:27.3%" href="bebidas.html" aria-label="Abrir categoria Bebidas"><span>Bebidas</span></a>
-            <a class="banner-area" style="--x:38.7%;--y:27.3%" href="games.html" aria-label="Abrir categoria Games"><span>Games</span></a>
-            <a class="banner-area" style="--x:50.9%;--y:27.3%" href="garage.html" aria-label="Abrir categoria Garage"><span>Garage</span></a>
-            <a class="banner-area" style="--x:63.1%;--y:27.3%" href="home-frases.html" aria-label="Abrir categoria Home Frases"><span>Home Frases</span></a>
-            <a class="banner-area" style="--x:75.5%;--y:27.3%" href="infantil.html" aria-label="Abrir categoria Infantil"><span>Infantil</span></a>
-            <a class="banner-area" style="--x:14%;--y:55.6%" href="motos.html" aria-label="Abrir categoria Motos"><span>Motos</span></a>
-            <a class="banner-area" style="--x:26.4%;--y:55.6%" href="musica.html" aria-label="Abrir categoria Música"><span>Música</span></a>
-            <a class="banner-area" style="--x:38.7%;--y:55.6%" href="rpg.html" aria-label="Abrir categoria RPG"><span>RPG</span></a>
-            <a class="banner-area" style="--x:50.9%;--y:55.6%" href="street.html" aria-label="Abrir categoria Street"><span>Street</span></a>
-            <a class="banner-area" style="--x:63.1%;--y:55.6%" href="trip.html" aria-label="Abrir categoria Trip"><span>Trip</span></a>
-            <a class="banner-area" style="--x:75.5%;--y:55.6%" href="fotos-reais.html" aria-label="Abrir categoria Fotos Reais"><span>Fotos Reais</span></a>
-            <a class="banner-area banner-whatsapp" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Pedir placa pelo WhatsApp"><span>WhatsApp HEEEPH</span></a>
-          </div>
-        </div>
         <div class="titulo-categorias" id="bannerAnterior">
           <div class="banner-selo">HEEEPH • PLACAS DECORATIVAS</div>
           <h1>ESCOLHA SUA <span>COLEÇÃO</span></h1>
@@ -221,21 +203,7 @@
     <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
   </a>
 
-  <script>
-    (() => {
-      const imagem = document.getElementById('imagemBannerCategorias');
-      const scroll = document.getElementById('bannerImagemScroll');
-      if (!imagem || !scroll) return;
-      imagem.addEventListener('load', () => {
-        if (!imagem.naturalWidth) return;
-        scroll.hidden = false;
-        for (const id of ['bannerAnterior','gradeCategorias','avisoCategorias']) {
-          const el = document.getElementById(id); if (el) el.hidden = true;
-        }
-      });
-    })();
-  </script>
-  <script src="js/geral.js"></script>
+<script src="js/geral.js"></script>
 
 </body>
 </html>
