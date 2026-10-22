@@ -75,7 +75,7 @@ function message(s){status.textContent=s}
 function loadFile(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('Não foi possível abrir esta imagem.'))};img.src=url})}
 function loadAsset(path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Não foi possível carregar esta placa.'));img.src=path})}
 function layoutTypes(){
- const m=/^(\d)G(?:(\d)P)?$|^(\d)P$/.exec(layout.value);
+ const m=/^(\d+)G(?:(\d+)P)?$|^(\d+)P$/.exec(layout.value);
  return m?[...Array(Number(m[1]||0)).fill('G'),...Array(Number(m[2]||m[3]||0)).fill('P')]:[];
 }
 function plaquesGeometry(){
@@ -220,13 +220,14 @@ function refreshCounts(){
  const types=layoutTypes(),g=types.filter(t=>t==='G').length,p=types.length-g;
  countG.textContent=g;countP.textContent=p;
  $('minusG').disabled=g===0||g+p===1;$('minusP').disabled=p===0||g+p===1;
- $('plusG').disabled=g===3;$('plusP').disabled=p===3;
+ $('plusG').disabled=false;$('plusP').disabled=false;
 }
 function changeCount(type,delta){
  const types=layoutTypes(),g=types.filter(t=>t==='G').length,p=types.length-g;
  const nextG=g+(type==='G'?delta:0),nextP=p+(type==='P'?delta:0);
- if(nextG<0||nextP<0||nextG>3||nextP>3||nextG+nextP<1)return;
- layout.value=nextG?(nextG+'G'+(nextP?nextP+'P':'')):(nextP+'P');
+ if(nextG<0||nextP<0||nextG+nextP<1)return;
+ const value=nextG?(nextG+'G'+(nextP?nextP+'P':'')):(nextP+'P');
+ layout.replaceChildren(new Option(value,value));layout.value=value;
  layout.dispatchEvent(new Event('change'));
 }
 for(const type of ['G','P']){
