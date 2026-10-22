@@ -220,7 +220,7 @@ function buildSlotPicker(){
       categorySelect.value=previous.category;fillSlotProducts();sel.value=previous.imagem;
     }
     categorySelect.addEventListener('change',()=>{
-      slotProducts[index]=null;fillSlotProducts();slotImages[index]=null;draw();
+      slotProducts[index]=null;slotOrientations[index]='vertical';orientation.value='vertical';fillSlotProducts();slotImages[index]=null;draw();
     });
     sel.addEventListener('change',async()=>{
       if(!sel.value){slotProducts[index]=null;slotImages[index]=null;draw();return}
@@ -231,6 +231,8 @@ function buildSlotPicker(){
         const product=(catalog[categorySelect.value]||[]).find(p=>p.imagem===path);
         if(!product){message('Placa não encontrada no catálogo.');return}
         slotProducts[index]={...product,category:categorySelect.value};
+        slotOrientations[index]=product.orientacao==='horizontal'?'horizontal':'vertical';
+        orientation.value=slotOrientations[index];
         slotImages[index]=img;draw();message('Placa '+(index+1)+' adicionada à montagem.');
       }catch(e){message(e.message)}
     });
@@ -309,8 +311,7 @@ function renderArrangementCards(){
   button.append(graphic,label);
   button.addEventListener('click',()=>{
    arrangement.value=mode;
-   if(mode.startsWith('horizontal-'))slotOrientations[0]='horizontal';
-   else if(three)slotOrientations[0]='vertical';
+   // O modelo altera somente a disposição; a orientação vem do cadastro de cada placa.
    buildSlotPicker();arrangement.dispatchEvent(new Event('change'));
   });
   host.append(button);
@@ -319,7 +320,7 @@ function renderArrangementCards(){
 refreshCounts();renderArrangementCards();
 layout.addEventListener('change',()=>{slotImages.length=layoutTypes().length;slotProducts.length=layoutTypes().length;slotScales.length=layoutTypes().length;slotOrientations.length=layoutTypes().length;slotOffsets.length=0;buildSlotPicker();refreshCounts();renderArrangementCards();draw()});arrangement.addEventListener('change',()=>{slotOffsets.length=0;renderArrangementCards();draw()});
 for(const el of [scale,rotation,distance])el.addEventListener('input',()=>{$('scaleValue').textContent=scale.value+'%';$('rotationValue').textContent=rotation.value+'°';draw()});
-$('reset').addEventListener('click',()=>{position.x=.5;position.y=.5;scale.value=100;rotation.value=0;slotOffsets.length=0;slotScales.fill(100);slotOrientations.fill('vertical');buildSlotPicker();$('scaleValue').textContent='100%';$('rotationValue').textContent='0°';draw()});
+$('reset').addEventListener('click',()=>{position.x=.5;position.y=.5;scale.value=100;rotation.value=0;slotOffsets.length=0;slotScales.fill(100);slotOrientations.forEach((_,i)=>{slotOrientations[i]=slotProducts[i]?.orientacao==='horizontal'?'horizontal':'vertical'});buildSlotPicker();$('scaleValue').textContent='100%';$('rotationValue').textContent='0°';draw()});
 function point(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*canvas.width,y:(e.clientY-r.top)/r.height*canvas.height}}
 canvas.addEventListener('pointerdown',e=>{
  const items=plaquesGeometry(),p=point(e);
