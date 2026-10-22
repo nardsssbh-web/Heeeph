@@ -443,3 +443,29 @@ body.fundo-categorias{
     line-height:1.22;
   }
 }
+
+/* Parede central: grade de 4 colunas estreita e sem espaçamento excessivo. */
+@media(min-width:781px){
+  body.fundo-categorias .pagina-categorias .categorias-container{
+    width:min(56vw,690px) !important;
+    max-width:690px !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+  body.fundo-categorias .pagina-categorias .grade-categorias{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    column-gap:8px !important;
+    row-gap:12px !important;
+    justify-content:center;
+    justify-items:center;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-item{
+    width:100%;
+    max-width:145px;
+    margin:0 auto;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-item img{
+    max-width:120px;
+  }
+}
