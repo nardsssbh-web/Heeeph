@@ -338,3 +338,26 @@ body.fundo-categorias{
   .fundo-categorias .categoria-info strong{font-size:14px}
   .fundo-categorias .categoria-info span{font-size:12px}
 }
+
+/* Ajuste de escala: 12 placas pequenas, como quadros presos na parede. */
+@media(min-width:1000px){
+  .fundo-categorias .pagina-categorias{
+    min-height:clamp(1000px,112vw,1580px);
+    padding-top:clamp(255px,23vw,330px);
+    padding-bottom:clamp(170px,15vw,230px);
+  }
+  .fundo-categorias .categorias-container{width:min(82%,1200px)}
+  .fundo-categorias .grade-categorias{
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:clamp(14px,1.6vw,24px);
+  }
+  .fundo-categorias .categoria-item{align-self:start;height:auto}
+  .fundo-categorias .categoria-item img{width:100%;max-width:175px;margin:0 auto}
+  .fundo-categorias .categoria-info{padding:7px 2px 2px}
+  .fundo-categorias .categoria-info strong{font-size:clamp(13px,1.15vw,17px);margin-bottom:4px}
+  .fundo-categorias .categoria-info span{font-size:clamp(11px,.88vw,13px);line-height:1.3}
+}
+@media(min-width:781px) and (max-width:999px){
+  .fundo-categorias .grade-categorias{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .fundo-categorias .categoria-item img{max-width:175px;margin:0 auto}
+}
