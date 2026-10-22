@@ -525,3 +525,15 @@ body.fundo-categorias{
     row-gap:12px !important;
   }
 }
+
+/* Descer ainda mais o conjunto de 12 placas na parede, sem mudar a grade. */
+@media(min-width:781px){
+  body.fundo-categorias .pagina-categorias{
+    padding-top:clamp(520px,43vw,650px);
+  }
+  body.fundo-categorias .pagina-categorias .grade-categorias{
+    top:0;
+    column-gap:8px !important;
+    row-gap:12px !important;
+  }
+}
