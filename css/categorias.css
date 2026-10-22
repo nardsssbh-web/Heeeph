@@ -512,3 +512,16 @@ body.fundo-categorias{
     top:0;
   }
 }
+
+/* Posição solicitada: baixar toda a grade para dentro do retângulo de parede
+   indicado na referência, sem desenhar o contorno amarelo. */
+@media(min-width:781px){
+  body.fundo-categorias .pagina-categorias{
+    padding-top:clamp(355px,32vw,440px);
+  }
+  body.fundo-categorias .pagina-categorias .grade-categorias{
+    top:0;
+    column-gap:8px !important;
+    row-gap:12px !important;
+  }
+}
