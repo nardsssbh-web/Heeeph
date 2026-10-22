@@ -13,7 +13,10 @@
  function render(focoId){
   const lista=pedidos;
   $('pedidos').replaceChildren();$('contagem').textContent=lista.length+' pedido(s) nesta página. Página '+(paginaAtual+1)+'.'+(proximo?' Há mais registros para consultar.':' Fim dos resultados.');
-  $('paginacao').hidden=false;$('anterior').disabled=paginaAtual===0;$('proxima').disabled=!proximo;
+  $('paginacao').hidden=$('paginacaoRodape').hidden=false;
+  for(const id of ['anterior','anteriorRodape'])$(id).disabled=paginaAtual===0;
+  for(const id of ['proxima','proximaRodape'])$(id).disabled=!proximo;
+  $('paginaRodape').textContent='Página '+(paginaAtual+1)+(proximo?' — há mais registros.':' — fim dos resultados.');
   for(const p of lista){
    const sec=node('section');sec.className='pedido-card';sec.id='pedido-'+p.id;sec.append(node('h2','Pedido '+p.id));const etapaTopo=node('p',p.gestao?.status||'Recebido');etapaTopo.className='etapa-topo';etapaTopo.dataset.etapa=String(etapas.indexOf(p.gestao?.status||'Recebido'));sec.append(etapaTopo);const selo=node('p',(p.ambiente==='producao'?'Pagamento — ':'Pagamento de teste — ')+situacao(p));selo.className='selo'+(p.pagamento?.aprovado?' aprovado':'');sec.append(selo);
    const a=p.cliente.endereco,dl=node('dl');
@@ -41,9 +44,9 @@
   }
   if(focoId){const card=$('pedido-'+focoId);if(card)card.scrollIntoView({block:'start',behavior:'smooth'});}
  }
- async function carregar(cursor=null,historico=[null],indice=0){
+ async function carregar(cursor=null,historico=[null],indice=0,rolar=false){
   const atual=++sequencia;
-  for(const id of ['carregar','buscarPedidos','anterior','proxima'])$(id).disabled=true;
+  for(const id of ['carregar','buscarPedidos','anterior','proxima','anteriorRodape','proximaRodape'])$(id).disabled=true;
   aviso('Consultando pedidos no servidor…');
   try{
    const d=await api({acao:'listar',cursor,limite:20,busca:$('busca').value.trim(),filtro:$('filtro').value});
@@ -51,15 +54,17 @@
    retornos.clear();pedidos=d.pedidos;cursores=historico;paginaAtual=indice;proximo=d.cursorProximo||null;
    $('avisoAmbiente').textContent=d.teste===false?'Produção. Etapas de entrega manuais; exclusão não cancela nem estorna pagamentos.':'Ambiente de teste. Compras simuladas, sem postagem. Registros de teste expiram em 30 dias.';
    $('filtros').hidden=false;$('sair').hidden=false;render();
+   if(rolar){$('contagem').scrollIntoView({block:'start'});$('contagem').focus?.({preventScroll:true});}
    aviso('Página atualizada. A busca percorre os registros no servidor.'+(!pedidos.length&&proximo?' Continue em Próxima página para procurar nos registros mais antigos.':''));
   }catch(e){if(atual===sequencia)aviso(e.message,true);}
-  finally{if(atual===sequencia){$('carregar').disabled=false;$('buscarPedidos').disabled=false;$('anterior').disabled=paginaAtual===0;$('proxima').disabled=!proximo;}}
+  finally{if(atual===sequencia){$('carregar').disabled=false;$('buscarPedidos').disabled=false;for(const id of ['anterior','anteriorRodape'])$(id).disabled=paginaAtual===0;for(const id of ['proxima','proximaRodape'])$(id).disabled=!proximo;}}
  }
  $('acesso').addEventListener('submit',e=>{e.preventDefault();chave=$('chave').value;return carregar();});
  $('filtros').addEventListener('submit',e=>{e.preventDefault();return carregar();});
  $('filtro').addEventListener('change',()=>carregar());
- $('proxima').addEventListener('click',()=>proximo?carregar(proximo,[...cursores.slice(0,paginaAtual+1),proximo],paginaAtual+1):undefined);
- $('anterior').addEventListener('click',()=>paginaAtual?carregar(cursores[paginaAtual-1],cursores,paginaAtual-1):undefined);
+ for(const id of ['proxima','proximaRodape'])$(id).addEventListener('click',()=>proximo?carregar(proximo,[...cursores.slice(0,paginaAtual+1),proximo],paginaAtual+1,true):undefined);
+ for(const id of ['anterior','anteriorRodape'])$(id).addEventListener('click',()=>paginaAtual?carregar(cursores[paginaAtual-1],cursores,paginaAtual-1,true):undefined);
+ $('voltarTopo').addEventListener('click',()=>{$('topoPainel').scrollIntoView({block:'start'});$('topoPainel').focus?.({preventScroll:true});});
  $('imprimir').addEventListener('click',()=>window.print());
- $('sair').addEventListener('click',()=>{sequencia++;chave='';pedidos=[];cursores=[null];paginaAtual=0;proximo=null;retornos.clear();$('chave').value='';$('pedidos').replaceChildren();$('contagem').textContent='';$('filtros').hidden=true;$('paginacao').hidden=true;$('sair').hidden=true;$('carregar').disabled=false;aviso('Acesso encerrado.');});
+ $('sair').addEventListener('click',()=>{sequencia++;chave='';pedidos=[];cursores=[null];paginaAtual=0;proximo=null;retornos.clear();$('chave').value='';$('pedidos').replaceChildren();$('contagem').textContent='';$('filtros').hidden=true;$('paginacao').hidden=$('paginacaoRodape').hidden=true;$('sair').hidden=true;$('carregar').disabled=false;aviso('Acesso encerrado.');});
 })();

@@ -22,3 +22,4 @@ button.excluir{background:#b52a2a;color:#fff}
 .retorno-pedido[data-tipo="aprovado"]{background:#12351f;color:#b6f4ca;border:2px solid #58c780;font-weight:700}
 .retorno-pedido[data-tipo="pendente"]{background:#3c300c;color:#ffe28a;border:2px solid #e4b83e;font-weight:700}
 .retorno-pedido[data-tipo="recusado"],.retorno-pedido[data-tipo="erro"]{background:#401717;color:#ffc1c1;border:2px solid #ef6a6a;font-weight:700}
+.painel-paginacao:not([hidden]){display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}.painel-paginacao span{font-weight:700}.painel-paginacao button{min-height:44px}#contagem,#topoPainel{scroll-margin-top:16px}@media(max-width:600px){.painel-paginacao span{flex-basis:100%}.painel-paginacao button{flex:1 1 140px}}@media print{.painel-paginacao{display:none!important}}
