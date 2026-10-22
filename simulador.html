@@ -41,6 +41,9 @@
 <option value="3G2P">3G e 2P</option>
 <option value="3G3P">3G e 3P</option>
 </select>
+<div class="section-heading">Escolha as placas</div>
+<p class="hint">Para cada posição, escolha primeiro a categoria e depois o nome da placa correspondente.</p>
+<div id="slotPicker" aria-label="Escolha uma imagem para cada placa"></div>
 <div class="section-heading">Disposição das placas</div>
 <p class="hint">Toque em um modelo. Depois você poderá arrastar cada placa na foto.</p>
 <div id="arrangementCards" class="arrangement-cards"></div>
@@ -52,7 +55,7 @@
 <option value="diagonal">Em diagonal</option>
 <option value="free">Livre — arrastar cada placa</option>
 </select>
-<div id="slotPicker" aria-label="Escolha uma imagem para cada placa"></div>
+
 <label for="distance">Distância da câmera à parede</label><select id="distance">
 <option value="1.5">1,5 metro</option><option value="2">2 metros</option>
 <option value="3" selected>3 metros (padrão)</option><option value="4">4 metros</option><option value="5">5 metros</option>
@@ -162,22 +165,22 @@ function buildSlotPicker(){
   const container=$('slotPicker'),types=layoutTypes();
   container.replaceChildren();
   const title=document.createElement('p');title.className='hint';
-  title.textContent='Escolha uma imagem diferente para cada posição da montagem:';
+  title.textContent='Selecione a categoria e a placa para cada posição:';
   container.append(title);
   types.forEach((type,index)=>{
     const card=document.createElement('div');card.className='slot-card';
     const label=document.createElement('label');label.textContent='Placa '+(index+1)+' — '+(type==='G'?'Grande 20 × 28':'Pequena 10 × 15');
     label.htmlFor='slot-'+index;
-    const categoryLabel=document.createElement('label');categoryLabel.textContent='Coleção';categoryLabel.htmlFor='category-'+index;
+    const categoryLabel=document.createElement('label');categoryLabel.textContent='Categoria';categoryLabel.htmlFor='category-'+index;
     const categorySelect=document.createElement('select');categorySelect.id='category-'+index;
-    categorySelect.add(new Option('Selecione uma coleção',''));
+    categorySelect.add(new Option('Selecione uma categoria',''));
     for(const key of Object.keys(catalog)){
       categorySelect.add(new Option(key.replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),key));
     }
-    const productLabel=document.createElement('label');productLabel.textContent='Imagem da placa';productLabel.htmlFor='slot-'+index;
+    const productLabel=document.createElement('label');productLabel.textContent='Nome da placa';productLabel.htmlFor='slot-'+index;
     const sel=document.createElement('select');sel.id='slot-'+index;
     function fillSlotProducts(){
-      sel.replaceChildren(new Option('Escolha uma imagem',''));
+      sel.replaceChildren(new Option(categorySelect.value?'Selecione o nome da placa':'Escolha primeiro a categoria',''));
       const items=catalog[categorySelect.value]||[];
       for(const item of items){
         if(!item.imagem)continue;
