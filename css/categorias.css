@@ -410,3 +410,36 @@ body.fundo-categorias{
   .fundo-categorias .categoria-item{max-width:190px}
   .fundo-categorias .categoria-item img{max-width:145px}
 }
+
+/* Centralizar as 12 placas dentro da área de madeira, sem invadir as laterais. */
+@media(min-width:781px){
+  .fundo-categorias .categorias-container{
+    width:min(61%,760px);
+    margin-inline:auto;
+  }
+  .fundo-categorias .grade-categorias{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    column-gap:clamp(6px,.8vw,12px);
+    row-gap:clamp(8px,1vw,16px);
+    justify-items:center;
+    align-items:start;
+  }
+  .fundo-categorias .categoria-item,
+  .fundo-categorias .categoria-item.categoria-destaque{
+    max-width:150px;
+  }
+  .fundo-categorias .categoria-item img{
+    max-width:125px;
+  }
+  .fundo-categorias .categoria-info{
+    padding:4px 1px 0;
+  }
+  .fundo-categorias .categoria-info strong{
+    font-size:clamp(11px,1vw,14px);
+    margin-bottom:2px;
+  }
+  .fundo-categorias .categoria-info span{
+    font-size:clamp(9px,.78vw,11px);
+    line-height:1.22;
+  }
+}
