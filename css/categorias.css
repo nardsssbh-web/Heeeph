@@ -361,3 +361,40 @@ body.fundo-categorias{
   .fundo-categorias .grade-categorias{grid-template-columns:repeat(4,minmax(0,1fr))}
   .fundo-categorias .categoria-item img{max-width:175px;margin:0 auto}
 }
+
+/* Placas compactas: escala de quadros sobre a parede, sem alterar os links. */
+.fundo-categorias .categorias-container{width:min(86%,1180px)}
+.fundo-categorias .grade-categorias{
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  column-gap:clamp(10px,1.5vw,22px);
+  row-gap:clamp(22px,2.4vw,38px);
+}
+.fundo-categorias .categoria-item,
+.fundo-categorias .categoria-item.categoria-destaque{
+  width:100%;
+  min-width:0;
+  height:auto;
+  align-self:start;
+}
+.fundo-categorias .categoria-item img{
+  display:block;
+  width:100%;
+  max-width:145px;
+  height:auto;
+  margin-inline:auto;
+}
+.fundo-categorias .categoria-info strong{font-size:clamp(12px,1.1vw,16px)}
+.fundo-categorias .categoria-info span{font-size:clamp(10px,.9vw,12px)}
+@media(min-width:781px) and (max-width:1100px){
+  .fundo-categorias .categorias-container{width:88%}
+  .fundo-categorias .grade-categorias{grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+  .fundo-categorias .categoria-item img{max-width:125px}
+}
+@media(min-width:481px) and (max-width:780px){
+  .fundo-categorias .grade-categorias{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .fundo-categorias .categoria-item img{max-width:120px}
+}
+@media(max-width:480px){
+  .fundo-categorias .grade-categorias{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fundo-categorias .categoria-item img{max-width:135px}
+}
