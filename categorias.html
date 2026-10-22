@@ -192,6 +192,53 @@
     <img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH">
   </a>
 
+<script>
+/* Normaliza a área VISÍVEL das placas: ignora margens transparentes
+   diferentes nos PNGs, sem modificar os arquivos originais. */
+(() => {
+  const imgs = document.querySelectorAll('#gradeCategorias .categoria-item > img');
+  const normalize = (img) => {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    try {
+      const source = document.createElement('canvas');
+      source.width = img.naturalWidth;
+      source.height = img.naturalHeight;
+      const ctx = source.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0);
+      const { data, width, height } = ctx.getImageData(0, 0, source.width, source.height);
+      let left = width, top = height, right = -1, bottom = -1;
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          if (data[(y * width + x) * 4 + 3] > 24) {
+            left = Math.min(left, x);
+            top = Math.min(top, y);
+            right = Math.max(right, x);
+            bottom = Math.max(bottom, y);
+          }
+        }
+      }
+      if (right < left) return;
+      const w = right - left + 1, h = bottom - top + 1;
+      const result = document.createElement('canvas');
+      result.width = 360;
+      result.height = 300;
+      const output = result.getContext('2d');
+      if (!output) return;
+      const scale = Math.min(360 / w, 300 / h);
+      const drawWidth = w * scale, drawHeight = h * scale;
+      output.drawImage(source, left, top, w, h, (360 - drawWidth) / 2, 0, drawWidth, drawHeight);
+      img.src = result.toDataURL('image/png');
+    } catch (_) {
+      /* Se o navegador bloquear o processamento, mantém a imagem original. */
+    }
+  };
+  imgs.forEach(img => {
+    if (img.complete) normalize(img);
+    else img.addEventListener('load', () => normalize(img), { once: true });
+  });
+})();
+</script>
 <script src="js/geral.js"></script>
 
 </body>
