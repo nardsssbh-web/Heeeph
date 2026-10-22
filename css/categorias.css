@@ -559,3 +559,14 @@ body.fundo-categorias .topo{
   background:rgba(0,0,0,.96) !important;
   z-index:1000 !important;
 }
+
+/* Ajuste definitivo da posição no desktop: grade mais acima, sobre a parede. */
+@media (min-width:781px){
+  body.fundo-categorias .pagina-categorias{
+    padding-top:clamp(200px,23vw,275px) !important;
+  }
+  body.fundo-categorias .pagina-categorias .grade-categorias{
+    top:0 !important;
+    transform:none !important;
+  }
+}
