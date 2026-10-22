@@ -648,17 +648,23 @@ body.fundo-categorias .whatsapp-fixo img{
 }
 
 
-/* Coleções no celular: mantém a parede central, sem esticar a arte.
-   Regras isoladas ao mobile; o layout do computador não é alterado. */
-@media (max-width:780px){
+/* Mobile: letreiro inteiro em proporção original, parede prolongada sem esticar a arte.
+   A grade continua composta pelos 12 links HTML existentes. */
+@media(max-width:780px){
   body.fundo-categorias .pagina-categorias{
     box-sizing:border-box;
+    position:relative;
+    isolation:isolate;
     min-height:100svh;
-    padding:clamp(365px,92vw,490px) 0 110px;
-    background-image:url("../banner/colecoes-telefone.png");
-    background-size:100% 100%;
-    background-position:center top;
-    background-repeat:no-repeat;
+    padding:clamp(265px,68vw,350px) 0 100px;
+    background-color:#170d09;
+    background-image:
+      linear-gradient(to bottom,transparent 0,transparent 210px,rgba(20,10,6,.18) 270px,#170d09 470px),
+      url("../banner/colecoes-telefone.png"),
+      repeating-linear-gradient(0deg,#170c08 0px,#2c170e 5px,#140a07 13px,#361e12 24px,#160b08 36px,#24130d 52px);
+    background-size:100% 100%,100% auto,100% 120px;
+    background-position:center top,center top,center top;
+    background-repeat:no-repeat,no-repeat,repeat;
   }
   body.fundo-categorias .pagina-categorias .categorias-container{
     width:min(88%,520px);
@@ -669,7 +675,7 @@ body.fundo-categorias .whatsapp-fixo img{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
     column-gap:12px;
-    row-gap:18px;
+    row-gap:22px;
     justify-items:center;
     align-items:start;
     position:relative;
@@ -714,7 +720,7 @@ body.fundo-categorias .whatsapp-fixo img{
 }
 @media(max-width:480px){
   body.fundo-categorias .pagina-categorias{
-    padding-top:clamp(355px,94vw,440px);
+    padding-top:clamp(260px,69vw,325px);
     padding-bottom:100px;
   }
   body.fundo-categorias .pagina-categorias .categorias-container{
