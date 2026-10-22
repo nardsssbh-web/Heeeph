@@ -398,3 +398,15 @@ body.fundo-categorias{
   .fundo-categorias .grade-categorias{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fundo-categorias .categoria-item img{max-width:135px}
 }
+
+/* Grade final: quatro placas por fileira no desktop, três fileiras. */
+@media(min-width:781px){
+  .fundo-categorias .grade-categorias{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    justify-items:center;
+    column-gap:clamp(16px,2.2vw,32px);
+    row-gap:clamp(20px,2.6vw,38px);
+  }
+  .fundo-categorias .categoria-item{max-width:190px}
+  .fundo-categorias .categoria-item img{max-width:145px}
+}
