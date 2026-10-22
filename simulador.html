@@ -66,7 +66,7 @@
 <p class="fine">Escala estimada para câmera com campo horizontal de 70° e parede frontal. Para precisão real, calibre usando uma medida conhecida na foto. As placas não são deformadas.</p>
 </section></div>
 </main>
-<script src="produtos.js"></script>
+<script src="produtos.js?v=simulador-categorias-20261022b"></script>
 <script>
 (()=>{
 'use strict';
@@ -160,7 +160,10 @@ function draw(){
 }
 function setupBackground(img){background=img;const factor=Math.min(1,2200/Math.max(img.naturalWidth,img.naturalHeight));canvas.width=Math.round(img.naturalWidth*factor);canvas.height=Math.round(img.naturalHeight*factor);$('empty').hidden=true;canvas.hidden=false;position.x=.5;position.y=.5;draw()}
 room.addEventListener('change',async()=>{if(!room.files[0])return;try{setupBackground(await loadFile(room.files[0]));message('Fotografia carregada.')}catch(e){message(e.message)}});
-const catalog=(typeof PRODUTOS!=='undefined'&&PRODUTOS&&typeof PRODUTOS==='object')?PRODUTOS:{};
+const rawCatalog=(typeof PRODUTOS!=='undefined'&&PRODUTOS&&typeof PRODUTOS==='object')?PRODUTOS:{};
+const excludedCategories=new Set(['fotos-reais','fotos reais','fotos_reais','personalizados','personalizadas','personalizado','personalizada']);
+const normalizeCategory=name=>String(name).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[\s_]+/g,'-');
+const catalog=Object.fromEntries(Object.entries(rawCatalog).filter(([key])=>!excludedCategories.has(normalizeCategory(key))&&!/foto.*real|personalizad/i.test(normalizeCategory(key))));
 function buildSlotPicker(){
   const container=$('slotPicker'),types=layoutTypes();
   container.replaceChildren();
