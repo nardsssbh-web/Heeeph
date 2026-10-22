@@ -204,6 +204,14 @@ test('URL 3DS externa não é incorporada e pagamento aprovado remove desafio an
  const p=await tela({pagamento:{status:'processed',aprovado:true,autenticacao:{necessaria:true,url:'https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture'}}});assert.equal(p.autenticacaoCartao.hidden,true);assert.equal(p.desafio3ds.src,undefined);
 });
 
+test('expiração local não aprova nem libera troca enquanto o provedor mantém desafio pendente',async()=>{
+ const n=await tela({expirado:true,pagamento:{status:'action_required',detalhe:'pending_challenge',aprovado:false,trocaPermitida:false,autenticacao:{necessaria:true,url:'https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture'}}});
+ assert.equal(n.autenticacaoCartao.hidden,false);assert.equal(n.meios.hidden,true);
+ assert.equal(n.trocarPagamento.hidden,true);assert.doesNotMatch(n.statusTitulo.textContent,/aprovado/);
+ await n.consultar.click();assert.deepEqual(n.chamadas,['status','status']);
+ assert.equal(n.trocarPagamento.hidden,true);assert.equal(n.meios.hidden,true);
+});
+
 test('recupera pedido mesmo sem carrinho salvo e sempre mostra seu número',async()=>{
  const n=await tela({pagamento:{aprovado:true,status:'processed'}},{heeeph_checkout:null});
  assert.equal(n.resultado.hidden,false);assert.match(n.pedidoResumo.textContent,new RegExp(base.id));assert.doesNotMatch(n.mensagem.textContent,/Volte ao carrinho/);
@@ -238,4 +246,30 @@ test('Pix aprovado não mostra código vazio nem aviso para aguardar ou pagar ou
 test('imagem Pix do provedor com erro usa o mesmo copia e cola para gerar QR',async()=>{
  const n=await tela({pagamento:{status:'action_required',pix:{codigo:'000201TESTE',imagem:'AAAA'}}});
  n.qr.onerror();assert.match(n.qr.src,/^data:image\/gif;base64,/);assert.equal(n.qr.hidden,false);
+});
+
+test('expiração confirmada na consulta remove o Pix antigo sem liberar outra cobrança',async()=>{
+ const resposta={pagamento:{status:'action_required',pix:{codigo:'000201TESTE',imagem:''}}};
+ const n=await tela(resposta);
+ assert.equal(n.pixResultado.hidden,false);assert.equal(n.copiar.disabled,false);
+ resposta.pagamento={status:'expired',aprovado:false,trocaPermitida:false,pix:{codigo:'000201TESTE',imagem:''}};
+ await n.consultar.click();
+ assert.equal(n.statusTitulo.textContent,'Pagamento: expirado');assert.match(n.statusTexto.textContent,/provedor.*expirou/);
+ assert.equal(n.pixResultado.hidden,true);assert.equal(n.qr.hidden,true);assert.equal(n.qr.src,undefined);
+ assert.equal(n.pixCodigo.value,'');assert.equal(n.copiar.disabled,true);
+ assert.equal(n.trocarPagamento.hidden,true);assert.equal(n.meios.hidden,true);
+ assert.deepEqual(n.chamadas,['status','status']);
+});
+
+test('consulta que falha preserva o desafio; cancelamento confirmado o remove sem inferir aprovação',async()=>{
+ const resposta={pagamento:{status:'action_required',autenticacao:{necessaria:true,url:'https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture'}}},opcoes={};
+ const n=await tela(resposta,{},opcoes),url=n.desafio3ds.src;
+ opcoes.falhar=true;await n.consultar.click();
+ assert.equal(n.desafio3ds.hidden,false);assert.equal(n.desafio3ds.src,url);assert.equal(n.trocarPagamento.hidden,true);
+ opcoes.falhar=false;resposta.pagamento={status:'canceled',aprovado:false,trocaPermitida:false};
+ await n.consultar.click();
+ assert.equal(n.statusTitulo.textContent,'Pagamento: cancelado');assert.match(n.statusTexto.textContent,/pedido foi preservado/);
+ assert.equal(n.autenticacaoCartao.hidden,true);assert.equal(n.desafio3ds.hidden,true);assert.equal(n.desafio3ds.src,undefined);
+ assert.equal(n.trocarPagamento.hidden,true);assert.equal(n.meios.hidden,true);
+ assert.deepEqual(n.chamadas,['status','status','status']);
 });

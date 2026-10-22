@@ -44,15 +44,35 @@ Tokens, assinaturas e chave administrativa devem ser Secret e nunca enviados no 
 ## Pendências externas e critérios de liberação
 
 1. **3DS:** aprovação e recusa com desafio real de teste e webhook foram comprovadas no navegador integrado; aprovação também no telefone físico, conforme evidências abaixo. Recarga durante desafio comprovada em 21/10/2026 no pedido `d063209eadb2c854ca96477292af269a`: mesmo pedido e desafio restaurados; aprovação posterior, sem nova cobrança. Ainda falta expiração completa. A lista aceita apenas `www.mercadopago.com.br` no caminho de autenticação; investigar outro destino antes de ampliar.
-2. **Antifraude:** em 21/10/2026 foi acrescentado o encaminhamento transitório de `window.MP_DEVICE_SESSION_ID`, coletado pelo SDK já existente, ao header `X-meli-session-id` somente no POST de criação da order. Valores ausentes/inválidos são omitidos, sem bloquear ou reenviar uma cobrança. O identificador não integra payload, fingerprint, Redis, recibo ou logs. Testes locais cobrem envio, validação, ausência de persistência e idempotência. Ainda falta confirmar coleta e encaminhamento no ambiente integrado e conferir a qualidade da aplicação real; esses resultados não são inferidos dos testes locais ou do iframe 3DS.
-3. **Armazenamento sem custo adicional:** em 21/10/2026 o usuário escolheu manter a Vercel e preparar a destinação exclusiva do Redis gratuito à operação real após concluir as verificações. Migração para a Hostinger suspensa e proposta paga descartada. Encerrar acesso dos consumidores de teste, inclusive deployments antigos, antes de guardar dados reais. Histórico e limitações em [banco-producao.md](banco-producao.md). Sem TTL não significa backup; disponibilidade e restauração ainda precisam de validação.
+2. **Antifraude:** coleta e encaminhamento comprovados na Preview em 21/10/2026, conforme evidência abaixo. O coletor oficial `security.js` é carregado explicitamente antes do SDK, inclusive no fluxo Pix. `window.MP_DEVICE_SESSION_ID` segue transitoriamente no header `X-meli-session-id` somente no POST de criação da order. Valores ausentes/inválidos são omitidos, sem bloquear ou reenviar uma cobrança. O identificador não integra payload, fingerprint, Redis, recibo ou logs. Ainda falta conferir a qualidade/configuração da aplicação real; aprovação de teste não mede a eficácia do antifraude.
+3. **Armazenamento sem custo adicional:** em 21/10/2026 o usuário escolheu manter a Vercel e preparar a destinação exclusiva do Redis gratuito à operação real após concluir as verificações. Migração para a Hostinger suspensa e proposta paga descartada. Exportação, cópia e recuperação local comprovadas; rotina de backup e importação nativa no provedor ainda não comprovadas. Encerrar acesso dos consumidores de teste, inclusive deployments antigos, antes de guardar dados reais. Histórico e limitações em [banco-producao.md](banco-producao.md). Sem TTL não significa backup.
 4. **Mercado Pago real:** confirmar vendedor/aplicação, pares de credenciais, Pix/cartão, parcelamento e evento Order em `https://heeeph.com.br/api/mercado-pago-webhook`; validar assinatura, API e persistência. Preservar proteção geral e receptor de teste.
 5. **Operação:** revisar políticas comerciais, contato, documentos fiscais, reembolsos/contestações e postagem. Etiquetas e rastreamento automático não implementados; entrega com etapas manuais.
 6. **Autorização final:** revisar resultado antes de publicar e de qualquer validação com cobrança real. Main/Production continuam fora desta rodada.
 
 Permanece pendente confirmar no telefone a nova mensagem “Código copiado”. O comportamento foi testado localmente.
 
+### Transições finais na tela — 22/10/2026, somente local
+
+Mensagens de status expirado, cancelado e recusado agora aparecem em português. Expiração ou cancelamento informado pela API preserva o número do pedido e orienta a conciliação com a loja; isso não libera uma nova cobrança. Dois testes adicionais verificam a transição de Pix pendente para expirado, removendo código/QR antigos, e de 3DS pendente para cancelado, removendo o iframe. Falha intermediária de consulta preserva o desafio e mantém nova cobrança bloqueada. As chamadas simuladas se limitam à consulta da mesma referência.
+
+Os **39 testes da tela de pagamento passaram**, sem falhas. São respostas sintéticas, sem chamadas ao Mercado Pago ou Redis ativo. Não substituem a observação da expiração real no provedor nem a conferência visual no celular. Código permanece local na branch de preparação; nenhuma publicação nesta rodada.
+
 ## Verificação técnica
+
+### Coleta e envio do dispositivo — 21/10/2026
+
+Na Preview `1d73b9d`, o diagnóstico opcional `?diagnostico=dispositivo`, disponível somente em teste, confirmou a coleta sem exibir o identificador. O pedido fictício `7f1b076a7a93d9e4291d6983f043b36c`, R$ 59,91, gerou a única order `ORDTST01M5FFSRHN62929EE5NHFHW69F`. O cliente registrou apenas os booleanos `obtido:true` e `presente:true`. Às 12:03:12, o servidor registrou `MP_DISPOSITIVO_TESTE {"enviado":true,"http":201}` após resposta do provedor. O painel confirmou `Pix/processed/accredited` e webhook autenticado às 12:03:21; a consulta manual às 12:05:02 confirmou aprovação.
+
+A tentativa anterior `b12f415b8ac9a9498292a5efadc64f8f` havia omitido o identificador ausente com segurança, sem reenviar a cobrança. Depois do ajuste do coletor e da validação, a coleta foi confirmada antes de criar a nova tentativa. São aceitos valores ASCII sem espaços ou controles, limitados a 512 caracteres. Nenhum identificador real foi exposto nas evidências.
+
+115 testes locais passaram após o ajuste, incluindo o teste do servidor Hostinger ainda não versionado; isso não significa publicação desse servidor. `git diff --check` e revisão de segredos passaram. Main e Production permanecem inalteradas. O ensaio completo de expiração de 3DS continua pendente.
+
+Validação local adicional em 21/10/2026: três regressões cobrem sessão com 45 minutos e desafio ainda pendente, bloqueio de criação em sessão antiga sem pagamento e tela que mantém consulta sem liberar troca nem aprovação por passagem do tempo. A consulta permanece na mesma order; somente a resposta final do provedor remove o desafio. A suíte local passou com 118 testes, incluindo o servidor Hostinger não versionado. O primeiro ensaio completo foi limitado por `EACCES` na conexão de loopback do ambiente restrito; a execução autorizada fora dessa restrição passou. Esses testes usam estado/tempo sintéticos e não substituem observar a expiração real no provedor.
+
+### Exportação preventiva do banco — 21/10/2026
+
+O Redis permanece Free, custo mostrado US$ 0,00. A exportação manual `heeeph-antes-producao-20261021.rdb` ficou Ready, com 81,24 KB. Após o usuário baixar pelo navegador comum, a cópia local foi confirmada: 83.228 bytes, cabeçalho RDB e SHA-256 idêntico ao original em Downloads. A cópia preservada fica fora do checkout Git. Às 13:59 de Brasília, o ensaio local recuperou 89 chaves e 45 pedidos, todos presentes no índice. Salvamento e reinício preservaram o digest dos valores e expirações; uma sentinela sintética local sem TTL persistiu. O original não mudou e o servidor foi encerrado. Não houve conexão com Upstash, restauração online nem mudança de credencial. A importação nativa no provedor e a rotina de backup não foram comprovadas. Detalhes em [banco-producao.md](banco-producao.md).
 
 ### Recarga integrada de 3DS — 21/10/2026
 

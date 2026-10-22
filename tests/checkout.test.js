@@ -32,14 +32,15 @@ test('recusa final pelo emissor aceita montantes nominais observados na API, sem
 function fixture(){
  const db=new Map(),requests=[];const previous=global.fetch;const env={...process.env};
  Object.assign(process.env,{CHECKOUT_TESTE_ATIVO:'true',MERCADO_PAGO_ACCESS_TOKEN_TEST:'segredo-mp',MERCADO_PAGO_PUBLIC_KEY_TEST:'public-test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'segredo-db',FRETE_ATIVO:'true',MELHOR_ENVIO_AMBIENTE:'producao',MELHOR_ENVIO_TOKEN:'segredo-frete',MELHOR_ENVIO_USER_AGENT:'HEEEPH'});
- let preco=10.79,testUser=true,orders=0,timeout=false,lastOrder,recusa=false,semVendedor=false;
+ let preco=10.79,testUser=true,orders=0,timeout=false,lastOrder,recusa=false,semVendedor=false,falhaPersistencia=false;
  global.fetch=async(url,opts={})=>{
   requests.push({url,opts});const json=d=>({ok:true,json:async()=>d});
   if(url.includes('viacep.com.br'))return json({cep:'30220-060',logradouro:'Rua Teste',bairro:'Centro',localidade:'Belo Horizonte',uf:'MG'});
   if(url==='https://redis.test'||url==='https://redis-prod.test'){
+   if(falhaPersistencia&&lastOrder&&JSON.parse(opts.body)[0]==='EVAL'&&JSON.parse(opts.body)[2]===2){falhaPersistencia=false;throw Error('Redis indisponível após criar a order fictícia');}
    const [cmd,key,value,...args]=JSON.parse(opts.body);let result;
    if(cmd==='SET'){if(args.includes('NX')&&db.has(key))result=null;else{db.set(key,value);result='OK';}}
-   else if(cmd==='GET')result=db.get(key)||null;else if(cmd==='ZADD')result=1;else if(cmd==='EVAL'){const k=JSON.parse(opts.body)[3],fp=JSON.parse(opts.body)[4];result=db.get(k)===fp?Number(db.delete(k)):0;}else throw Error(cmd);
+   else if(cmd==='GET')result=db.get(key)||null;else if(cmd==='ZADD')result=1;else if(cmd==='EVAL'){const parts=JSON.parse(opts.body);if(parts[2]===2){db.set(parts[3],parts[5]);result='OK';}else{const k=parts[3],fp=parts[4];result=db.get(k)===fp?Number(db.delete(k)):0;}}else throw Error(cmd);
    return json({result});
   }
   if(url.endsWith('/users/me'))return json({id:123,tags:testUser?['test_user']:[]});
@@ -48,8 +49,20 @@ function fixture(){
   if(url.endsWith('/v1/orders')){orders++;if(recusa)return {ok:false,status:400,json:async()=>({errors:[{code:'invalid_email_for_sandbox'}]})};if(timeout)throw new Error('timeout');const payload=JSON.parse(opts.body);lastOrder={id:'ORDTEST',user_id:123,country_code:'BRA',external_reference:payload.external_reference,total_amount:payload.total_amount,total_paid_amount:payload.total_amount,status:'processed',status_detail:'accredited',transactions:{payments:[{status:'processed',status_detail:'accredited',payment_method:{id:'pix'}}]}};if(semVendedor)delete lastOrder.user_id;return json(lastOrder);}
   if(url.endsWith('/v1/orders/ORDTEST'))return json(lastOrder);throw Error(url);
  };
- return{requests,db,setPreco:v=>preco=v,setTest:v=>testUser=v,setTimeout:v=>timeout=v,setRecusa:v=>recusa=v,setSemVendedor:v=>semVendedor=v,get orders(){return orders;},close(){global.fetch=previous;process.env=env;}};
+ return{requests,db,setPreco:v=>preco=v,setTest:v=>testUser=v,setTimeout:v=>timeout=v,setRecusa:v=>recusa=v,setSemVendedor:v=>semVendedor=v,setFalhaPersistencia:v=>falhaPersistencia=v,get orders(){return orders;},close(){global.fetch=previous;process.env=env;}};
 }
+
+test('falha ao persistir após criar a order recupera pela referência sem reenviar cobrança',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body);f.setFalhaPersistencia(true);
+  await assert.rejects(()=>c.pagar(p.id,p.token,{metodo:'pix'}));
+  assert.equal(f.orders,1);assert.ok(f.db.has(c.prefixo+'tentativa:'+p.id));
+  const antes=JSON.parse(f.db.get(c.prefixo+p.id));assert.equal(antes.pagamento,undefined);
+  const recuperado=await c.status(p.id,p.token);
+  assert.equal(recuperado.pagamento.mpId,'ORDTEST');assert.equal(recuperado.pagamento.aprovado,true);assert.equal(f.orders,1);
+  assert.ok(f.requests.some(r=>r.url.includes('/v1/orders?')));
+ }finally{f.close();}
+});
 
 test('device ID é transitório, não altera idempotência nem é enviado em consultas',async()=>{
  const f=fixture();try{
@@ -91,6 +104,29 @@ test('produção bloqueia qualquer acesso ao Redis de teste antes de enviar coma
  }finally{f.close();}
 });
 
+test('reaproveitamento exige retirar vínculos de teste e continua bloqueado fora de Production',async()=>{
+ const f=fixture();try{
+  process.env.CHECKOUT_AMBIENTE='producao';process.env.VERCEL_ENV='production';
+  process.env.UPSTASH_REDIS_REST_URL_PROD='https://redis.test';
+  process.env.UPSTASH_REDIS_REST_TOKEN_PROD='credencial-rotacionada-ficticia';
+  // Mesmo com novo token, o vínculo da origem de teste ainda impede o acesso.
+  await assert.rejects(()=>c.redis(['GET','heeeph:producao:prova']),{status:503});
+  assert.equal(f.requests.length,0);
+  for(const key of ['UPSTASH_REDIS_REST_URL','UPSTASH_REDIS_REST_TOKEN','KV_REST_API_URL','KV_REST_API_TOKEN'])delete process.env[key];
+  assert.equal(c.ambiente().prefixo,'heeeph:producao:');assert.deepEqual(c.expiracao(),[]);
+  assert.equal(await c.redis(['SET',c.ambiente().prefixo+'prova','registro-sintetico']), 'OK');
+  assert.equal(f.requests.length,1);
+  assert.deepEqual(JSON.parse(f.requests[0].opts.body),['SET','heeeph:producao:prova','registro-sintetico']);
+  assert.equal(f.requests[0].opts.headers.Authorization,'Bearer credencial-rotacionada-ficticia');
+  assert.equal(f.db.has('heeeph:teste:prova'),false);
+  for(const deploy of ['preview','development',undefined]){
+   if(deploy)process.env.VERCEL_ENV=deploy;else delete process.env.VERCEL_ENV;
+   await assert.rejects(()=>c.redis(['GET','heeeph:producao:prova']),{status:503});
+  }
+  assert.equal(f.requests.length,1);
+ }finally{f.close();}
+});
+
 test('3DS é opt-in no servidor e não modifica payload Pix',()=>{
  const f=fixture();try{
   const p={id:'a'.repeat(32),total:100,cliente:c.clienteValido(body.cliente,body.cep),itens:[],frete:{centavos:100}};
@@ -112,6 +148,41 @@ test('Challenge pendente não aprova nem libera nova cobrança; URL aceita somen
 
 test('consulta administrativa de cartão não executa diagnóstico de payload Pix',async()=>{
  assert.equal(await c.conferirPayloadPix({cliente:{},itens:[{}],pagamento:{transacoes:[{metodo:'master'}]}}),null);
+});
+
+test('sessão antiga com desafio pendente continua consultável e nunca cria outra order',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body), chave=c.prefixo+p.id;
+  const guardado=JSON.parse(f.db.get(chave));
+  guardado.criadoEm=new Date(Date.now()-45*60000).toISOString();
+  guardado.pagamento={mpId:'ORDTEST',status:'action_required',aprovado:false};
+  f.db.set(chave,JSON.stringify(guardado));
+  const order={id:'ORDTEST',user_id:123,country_code:'BRA',external_reference:p.id,total_amount:'23.69',total_paid_amount:'0.00',status:'action_required',status_detail:'pending_challenge',transactions:{payments:[{amount:'23.69',paid_amount:'0.00',status:'action_required',status_detail:'pending_challenge',payment_method:{id:'master',transaction_security:{url:'https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture'}}}]}};
+  const fetchAnterior=global.fetch;
+  global.fetch=(url,opts)=>url.endsWith('/v1/orders/ORDTEST')?Promise.resolve({ok:true,json:async()=>order}):fetchAnterior(url,opts);
+  const pendente=await c.status(p.id,p.token);
+  assert.equal(pendente.expirado,true);assert.equal(pendente.pagamento.aprovado,false);
+  assert.equal(pendente.pagamento.autenticacao.necessaria,true);
+  await assert.rejects(()=>c.liberarNovaCompra(p.id,p.token),{status:409});
+  const repetido=await c.pagar(p.id,p.token,{metodo:'pix'});
+  assert.equal(repetido.pagamento.mpId,'ORDTEST');assert.equal(f.orders,0);
+  order.status='failed';order.status_detail='failed';
+  Object.assign(order.transactions.payments[0],{status:'failed',status_detail:'3ds_challenge_failed'});
+  const recusado=await c.status(p.id,p.token);
+  assert.equal(recusado.pagamento.aprovado,false);assert.equal(recusado.pagamento.autenticacao,undefined);
+  assert.equal(recusado.pagamento.trocaPermitida,true);assert.equal(f.orders,0);
+  assert.ok(f.db.has(chave));
+ }finally{f.close();}
+});
+
+test('sessão antiga sem pagamento bloqueia criação sem chamar o provedor',async()=>{
+ const f=fixture();try{
+  const p=await c.preparar(body),chave=c.prefixo+p.id;
+  const guardado=JSON.parse(f.db.get(chave));guardado.criadoEm=new Date(Date.now()-45*60000).toISOString();
+  f.db.set(chave,JSON.stringify(guardado));
+  await assert.rejects(()=>c.pagar(p.id,p.token,{metodo:'pix'}),{status:409});
+  assert.equal(f.orders,0);assert.ok(f.db.has(chave));
+ }finally{f.close();}
 });
 test('consulta Pix recupera código e ausência de imagem sem criar outra order',async()=>{
  const f=fixture();try{
@@ -344,8 +415,8 @@ test('produção usa namespace, credenciais e retenção próprios; recusa CPF i
   const b=structuredClone(body);b.cliente.email='cliente@example.com';b.cliente.cpf='52998224725';
   const p=await c.preparar(b);assert.notEqual(p.id,teste.id);assert.equal(p.teste,false);assert.equal(p.publicKey,'public-prod');
   assert.equal(c.prefixo,'heeeph:producao:');assert.deepEqual(c.expiracao(),[]);
-  const grava=f.requests.filter(r=>r.url==='https://redis-prod.test').map(r=>JSON.parse(r.opts.body)).find(cmd=>cmd[0]==='SET'&&cmd[1]===c.prefixo+p.id);
-  assert.equal(grava.includes('EX'),false);assert.ok(f.db.has('heeeph:teste:'+teste.id));
+  const grava=f.requests.filter(r=>r.url==='https://redis-prod.test').map(r=>JSON.parse(r.opts.body)).find(cmd=>cmd[0]==='EVAL'&&cmd[2]===2&&cmd[3]===c.prefixo+p.id);
+  assert.equal(grava[7],'');assert.ok(f.db.has('heeeph:teste:'+teste.id));
   assert.equal(f.requests.filter(r=>r.url.endsWith('/users/me')).at(-1).opts.headers.Authorization,'Bearer token-prod');
   assert.throws(()=>c.clienteValido({...b.cliente,cpf:'11111111111'},b.cep),/CPF/);
   assert.throws(()=>c.clienteValido({...b.cliente,cpf:'52998224726'},b.cep),/CPF/);

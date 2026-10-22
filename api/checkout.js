@@ -1,10 +1,13 @@
 const c = require('../lib/checkout');
 const {ErroCEP}=require('../lib/cep');
+const { origemPreparacao } = require('../lib/hospedagem');
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') { res.setHeader('Allow','POST'); return res.status(405).json({ mensagem:'Método não permitido.' }); }
   try {
     const origens = ['https://heeeph.com.br','https://www.heeeph.com.br'];
+    const temporaria = origemPreparacao();
+    if (temporaria) origens.push(temporaria);
     if (process.env.VERCEL_ENV === 'preview') {
       for (const host of [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL]) {
         if (/^[a-z0-9-]+\.vercel\.app$/.test(host || '')) origens.push('https://' + host);

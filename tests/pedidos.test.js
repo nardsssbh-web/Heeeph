@@ -1,7 +1,21 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const c=require('../lib/checkout'),handler=require('../api/pedidos');
 const res=()=>({setHeader(){},status(s){this.code=s;return this;},json(d){this.data=d;return this;},end(){return this;}});
-async function fixture(run){const env=process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN,old={exclusivo:c.exclusivo,buscar:c.buscar,atualizar:c.atualizar,redis:c.redis},db=new Map();process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN='a'.repeat(32);const pedido={id:'a'.repeat(32),tokenHash:'privado',cotacao:{},proximaChave:'privado',mpRecuperacao:'privado',pagamento:{aprovado:true,status:'processed'}};c.exclusivo=async(id,fn)=>fn();c.buscar=async()=>structuredClone(pedido);c.atualizar=async p=>p;c.redis=async([cmd,k,v])=>{if(cmd==='GET')return db.get(k)||null;if(cmd==='SET'){db.set(k,v);return 'OK';}if(cmd==='ZREVRANGE')return[pedido.id];throw Error(cmd);};const call=async(body,auth=true)=>{const r=res();await handler({method:'POST',headers:auth?{authorization:'Bearer '+'a'.repeat(32)}:{},body},r);return r;};try{await run({call,pedido});}finally{Object.assign(c,old);if(env===undefined)delete process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN;else process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN=env;}}
+async function fixture(run){
+ const env=process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN,old={exclusivo:c.exclusivo,buscar:c.buscar,atualizar:c.atualizar,redis:c.redis},db=new Map();
+ process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN='a'.repeat(32);
+ const pedido={id:'a'.repeat(32),tokenHash:'privado',cotacao:{},proximaChave:'privado',mpRecuperacao:'privado',pagamento:{aprovado:true,status:'processed'}};
+ c.exclusivo=async(id,fn)=>fn();c.buscar=async()=>structuredClone(pedido);c.atualizar=async p=>p;
+ c.redis=async([cmd,k,v,...rest])=>{
+  if(cmd==='GET')return db.get(k)||null;
+  if(cmd==='SET'){db.set(k,v);return 'OK';}
+  if(cmd==='ZREVRANGE')return[pedido.id];
+  if(cmd==='MGET')return[k,v,...rest].map(key=>key.includes('gestao:')?db.get(key)||null:JSON.stringify(pedido));
+  throw Error(cmd);
+ };
+ const call=async(body,auth=true)=>{const r=res();await handler({method:'POST',headers:auth?{authorization:'Bearer '+'a'.repeat(32)}:{},body},r);return r;};
+ try{await run({call,pedido});}finally{Object.assign(c,old);if(env===undefined)delete process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN;else process.env.HEEEPH_PEDIDOS_ADMIN_TOKEN=env;}
+}
 test('painel recusa acesso sem chave',()=>fixture(async({call})=>{const r=await call({acao:'listar'},false);assert.equal(r.code,401);assert.equal(r.data.pedidos,undefined);}));
 test('painel não revela URL ou capacidade do desafio 3DS em lista nem consulta',()=>fixture(async({call,pedido})=>{pedido.pagamento.autenticacao={necessaria:true,url:'https://www.mercadopago.com.br/auth/card/validation/pages/remedies/fixture?guest_token=privado'};for(const acao of ['listar','consultar']){const r=await call({acao,id:pedido.id});assert.equal(JSON.stringify(r.data).includes('guest_token'),false);assert.equal(JSON.stringify(r.data).includes('remedies'),false);}}));
 test('consulta exclui dados internos e assume Recebido para pedidos antigos',()=>fixture(async({call,pedido})=>{const r=await call({acao:'consultar',id:pedido.id});assert.equal(r.data.pedido.gestao.status,'Recebido');for(const k of ['tokenHash','cotacao','proximaChave','mpRecuperacao'])assert.equal(r.data.pedido[k],undefined);}));

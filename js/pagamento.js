@@ -224,8 +224,10 @@
     }
     $('entrega').hidden=true; $('meios').hidden=true; $('resultado').hidden=false;
     $('pedidoNumero').textContent=(p.teste!==false?'Pedido de teste: ':'Pedido: ')+p.id;
-    $('statusTitulo').textContent=pg.aprovado?(p.teste!==false?'Pagamento de teste aprovado':'Pagamento aprovado'):'Pagamento: '+(pg.status==='action_required'?'aguardando ação':pg.status==='processing'?'em análise':pg.status);
-    $('statusTexto').textContent=pg.aprovado?('O servidor confirmou o pagamento e o valor total.'+(p.teste!==false?' Este pedido é apenas um teste.':'')):pg.trocaPermitida?'O pagamento foi recusado. Você pode revisar os dados e escolher outra forma de pagamento. O pedido recusado será preservado.':'O pagamento ainda precisa de conferência. Consulte novamente antes de tentar outro pagamento.';
+    const situacoes={action_required:'aguardando ação',processing:'em análise',expired:'expirado',canceled:'cancelado',cancelled:'cancelado',failed:'recusado',rejected:'recusado'};
+    const encerramento=pg.status==='expired'?'O provedor informou que este pagamento expirou.':['canceled','cancelled'].includes(pg.status)?'O provedor informou que este pagamento foi cancelado.':'';
+    $('statusTitulo').textContent=pg.aprovado?(p.teste!==false?'Pagamento de teste aprovado':'Pagamento aprovado'):'Pagamento: '+(situacoes[pg.status]||pg.status);
+    $('statusTexto').textContent=pg.aprovado?('O servidor confirmou o pagamento e o valor total.'+(p.teste!==false?' Este pedido é apenas um teste.':'')):pg.trocaPermitida?'O pagamento foi recusado. Você pode revisar os dados e escolher outra forma de pagamento. O pedido recusado será preservado.':encerramento?encerramento+' O pedido foi preservado. Consulte a loja com o número do pedido antes de tentar outro pagamento.':'O pagamento ainda precisa de conferência. Consulte novamente antes de tentar outro pagamento.';
     avisar('');
     mostrarPix(pg);
     if(pg.autenticacao?.necessaria)$('statusTexto').textContent='O banco exige autenticação do cartão. Conclua a verificação abaixo e consulte este mesmo pagamento. Não envie outro pagamento.';

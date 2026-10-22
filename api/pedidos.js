@@ -1,5 +1,6 @@
 const crypto=require('node:crypto');
 const c=require('../lib/checkout');
+const listar=require('../lib/pedidos-lista');
 const etapas=['Recebido','Em Preparação','Saiu para entrega','Entregue'];
 async function gestao(id){const raw=await c.redis(['GET',c.prefixo+'gestao:'+id]);return raw?JSON.parse(raw):{status:'Recebido'};}
 function seguro(p,g){const {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento,respostaMP,webhookRecebido}=p;return {id,ambiente,criadoEm,cliente,itens,subtotal,total,frete,pacotes,pagamento:pagamento?{...pagamento,...(pagamento.autenticacao?{autenticacao:{necessaria:pagamento.autenticacao.necessaria}}:{})}:pagamento,respostaMP,webhookRecebido,gestao:g};}
@@ -31,10 +32,8 @@ module.exports=async(req,res)=>{
       return res.json({pedido:{...seguro(atualizado,g),payloadPix:await c.conferirPayloadPix(atualizado)},teste:c.ambiente().teste});
     }
     if(b.acao&&b.acao!=='listar')return res.status(400).json({mensagem:'Ação não permitida.'});
-    const ids=await c.redis(['ZREVRANGE',c.prefixo+'lista',0,49]);
-    const pedidos=[];
-    for(const id of ids){try{const p=await c.buscar(id); const g=await gestao(p.id);if(!g.excluido)pedidos.push(seguro(p,g));}catch(e){if(e.status!==404)throw e;}}
-    return res.json({pedidos,teste:c.ambiente().teste});
+    const pagina=await listar(b);
+    return res.json({...pagina,pedidos:pagina.pedidos.map(({p,g})=>seguro(p,g)),teste:c.ambiente().teste});
   }catch(e){return res.status(e instanceof SyntaxError?400:e.status||503).json({mensagem:'Não foi possível carregar os pedidos.'});}
 };
 

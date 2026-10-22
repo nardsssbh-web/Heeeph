@@ -2,6 +2,7 @@
  'use strict';
  const $=id=>document.getElementById(id), dinheiro=v=>(v/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
  let chave='',pedidos=[];
+ let cursores=[null],paginaAtual=0,proximo=null,sequencia=0;
  const retornos=new Map();
  const etapas=['Recebido','Em Preparação','Saiu para entrega','Entregue'];
  const recusado=p=>['failed','canceled','cancelled','expired','rejected','error'].includes(p.pagamento?.status);
@@ -10,9 +11,9 @@
  function node(tag,texto){const n=document.createElement(tag);if(texto!==undefined)n.textContent=texto;return n;}
  async function api(body){const r=await fetch('/api/pedidos',{method:'POST',headers:{Authorization:'Bearer '+chave,'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.mensagem||'Não foi possível consultar.');return d;}
  function render(focoId){
-  const termo=$('busca').value.trim().toLocaleLowerCase('pt-BR'),filtro=$('filtro').value;
-  const lista=pedidos.filter(p=>(filtro==='todos'||filtro==='aprovados'&&p.pagamento?.aprovado||filtro==='recusados'&&recusado(p)||filtro==='pendentes'&&!p.pagamento?.aprovado&&!recusado(p))&&[p.id,p.cliente.nome,p.cliente.email,...p.itens.map(i=>i.nome)].join(' ').toLocaleLowerCase('pt-BR').includes(termo));
-  $('pedidos').replaceChildren();$('contagem').textContent=lista.length+' pedido(s) exibido(s) dos '+pedidos.length+' registros carregados (até 50 mais recentes).';
+  const lista=pedidos;
+  $('pedidos').replaceChildren();$('contagem').textContent=lista.length+' pedido(s) nesta página. Página '+(paginaAtual+1)+'.'+(proximo?' Há mais registros para consultar.':' Fim dos resultados.');
+  $('paginacao').hidden=false;$('anterior').disabled=paginaAtual===0;$('proxima').disabled=!proximo;
   for(const p of lista){
    const sec=node('section');sec.className='pedido-card';sec.id='pedido-'+p.id;sec.append(node('h2','Pedido '+p.id));const etapaTopo=node('p',p.gestao?.status||'Recebido');etapaTopo.className='etapa-topo';etapaTopo.dataset.etapa=String(etapas.indexOf(p.gestao?.status||'Recebido'));sec.append(etapaTopo);const selo=node('p',(p.ambiente==='producao'?'Pagamento — ':'Pagamento de teste — ')+situacao(p));selo.className='selo'+(p.pagamento?.aprovado?' aprovado':'');sec.append(selo);
    const a=p.cliente.endereco,dl=node('dl');
@@ -40,7 +41,25 @@
   }
   if(focoId){const card=$('pedido-'+focoId);if(card)card.scrollIntoView({block:'start',behavior:'smooth'});}
  }
- $('acesso').addEventListener('submit',async e=>{e.preventDefault();chave=$('chave').value; $('carregar').disabled=true;aviso('Carregando pedidos…');try{const d=await api({acao:'listar'});retornos.clear();pedidos=d.pedidos;$('avisoAmbiente').textContent=d.teste===false?'Produção. Etapas de entrega manuais; exclusão não cancela nem estorna pagamentos.':'Ambiente de teste. Compras simuladas, sem postagem. Registros de teste expiram em 30 dias.';$('filtros').hidden=false;$('sair').hidden=false;render();aviso('Lista atualizada. Use a consulta individual para conferir o pagamento no Mercado Pago.');}catch(e){pedidos=[];$('pedidos').replaceChildren();$('contagem').textContent='';aviso(e.message,true);}finally{$('carregar').disabled=false;}});
- $('busca').addEventListener('input',render);$('filtro').addEventListener('change',render);$('imprimir').addEventListener('click',()=>window.print());
- $('sair').addEventListener('click',()=>{chave='';pedidos=[];$('chave').value='';$('pedidos').replaceChildren();$('contagem').textContent='';$('filtros').hidden=true;$('sair').hidden=true;aviso('Acesso encerrado.');});
+ async function carregar(cursor=null,historico=[null],indice=0){
+  const atual=++sequencia;
+  for(const id of ['carregar','buscarPedidos','anterior','proxima'])$(id).disabled=true;
+  aviso('Consultando pedidos no servidor…');
+  try{
+   const d=await api({acao:'listar',cursor,limite:20,busca:$('busca').value.trim(),filtro:$('filtro').value});
+   if(atual!==sequencia)return;
+   retornos.clear();pedidos=d.pedidos;cursores=historico;paginaAtual=indice;proximo=d.cursorProximo||null;
+   $('avisoAmbiente').textContent=d.teste===false?'Produção. Etapas de entrega manuais; exclusão não cancela nem estorna pagamentos.':'Ambiente de teste. Compras simuladas, sem postagem. Registros de teste expiram em 30 dias.';
+   $('filtros').hidden=false;$('sair').hidden=false;render();
+   aviso('Página atualizada. A busca percorre os registros no servidor.'+(!pedidos.length&&proximo?' Continue em Próxima página para procurar nos registros mais antigos.':''));
+  }catch(e){if(atual===sequencia)aviso(e.message,true);}
+  finally{if(atual===sequencia){$('carregar').disabled=false;$('buscarPedidos').disabled=false;$('anterior').disabled=paginaAtual===0;$('proxima').disabled=!proximo;}}
+ }
+ $('acesso').addEventListener('submit',e=>{e.preventDefault();chave=$('chave').value;return carregar();});
+ $('filtros').addEventListener('submit',e=>{e.preventDefault();return carregar();});
+ $('filtro').addEventListener('change',()=>carregar());
+ $('proxima').addEventListener('click',()=>proximo?carregar(proximo,[...cursores.slice(0,paginaAtual+1),proximo],paginaAtual+1):undefined);
+ $('anterior').addEventListener('click',()=>paginaAtual?carregar(cursores[paginaAtual-1],cursores,paginaAtual-1):undefined);
+ $('imprimir').addEventListener('click',()=>window.print());
+ $('sair').addEventListener('click',()=>{sequencia++;chave='';pedidos=[];cursores=[null];paginaAtual=0;proximo=null;retornos.clear();$('chave').value='';$('pedidos').replaceChildren();$('contagem').textContent='';$('filtros').hidden=true;$('paginacao').hidden=true;$('sair').hidden=true;$('carregar').disabled=false;aviso('Acesso encerrado.');});
 })();

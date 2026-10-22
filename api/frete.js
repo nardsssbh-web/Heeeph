@@ -1,4 +1,5 @@
 const { montarCotacao, normalizarOpcoes, ErroFrete } = require('../lib/frete.js');
+const { hospedagem } = require('../lib/hospedagem');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -15,7 +16,7 @@ module.exports = async function handler(req, res) {
     const payload = montarCotacao(body);
     const sandbox = process.env.MELHOR_ENVIO_AMBIENTE !== 'producao';
     // Cotações de teste nunca devem ser oferecidas no site público de produção.
-    if (sandbox && process.env.VERCEL_ENV === 'production') {
+    if (sandbox && (hospedagem().producao || process.env.CHECKOUT_AMBIENTE === 'producao')) {
       throw new ErroFrete('Confirme o frete deste pedido pelo WhatsApp.', 503);
     }
     const host = sandbox ? 'sandbox.melhorenvio.com.br' : 'melhorenvio.com.br';

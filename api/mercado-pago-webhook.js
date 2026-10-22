@@ -11,6 +11,6 @@ module.exports=async(req,res)=>{
     await c.notificar(req.query['data.id'],{assinaturaValidada:true});
     registrar('processado_e_persistido',200,true);
     return res.status(200).end();
-  }catch(e){const http=e.status===404?200:503;registrar(e.status===404?'recurso_nao_encontrado':'falha_na_conferencia',http,true);return res.status(http).end();}
+  }catch(e){registrar(e.status===404?'recurso_ausente_requer_conciliacao':'falha_na_conferencia',503,true);return res.status(503).end();}
 };
 
