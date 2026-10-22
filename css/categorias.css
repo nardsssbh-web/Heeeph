@@ -656,7 +656,7 @@ body.fundo-categorias .whatsapp-fixo img{
     min-height:100svh;
     padding:clamp(185px,46vw,260px) 0 110px;
     background-image:url("../banner/colecoes-heeeph.png");
-    background-size:auto 100%;
+    background-size:100% 100%;
     background-position:center top;
     background-repeat:no-repeat;
   }
