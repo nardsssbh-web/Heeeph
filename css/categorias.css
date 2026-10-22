@@ -469,3 +469,10 @@ body.fundo-categorias{
     max-width:120px;
   }
 }
+
+/* Aumentar levemente as placas sem alterar os espaços da grade. */
+@media(min-width:781px){
+  body.fundo-categorias .pagina-categorias .categoria-item img{
+    max-width:136px;
+  }
+}
