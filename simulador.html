@@ -53,7 +53,7 @@
 <option value="stack-left">Duas pequenas à esquerda, grande à direita</option>
 <option value="center">Grande no centro, uma pequena de cada lado</option>
 <option value="diagonal">Em diagonal</option>
-<option value="free">Livre — arrastar cada placa</option>
+
 </select>
 
 <label for="distance">Distância da câmera à parede</label><select id="distance">
@@ -200,10 +200,6 @@ function buildSlotPicker(){
       }catch(e){message(e.message)}
     });
     card.append(label,categoryLabel,categorySelect,productLabel,sel);
-    const own=document.createElement('label');own.textContent='Ou envie sua imagem';
-    const upload=document.createElement('input');upload.type='file';upload.accept='image/png,image/jpeg,image/webp';
-    upload.addEventListener('change',async()=>{if(!upload.files[0])return;try{slotImages[index]=await loadFile(upload.files[0]);sel.value='';draw()}catch(e){message(e.message)}});
-    card.append(own,upload);
     const resizeLabel=document.createElement('label');resizeLabel.textContent='Escala individual — '+(slotScales[index]||100)+'%';
     const resize=document.createElement('input');resize.type='range';resize.min='50';resize.max='180';resize.step='5';resize.value=slotScales[index]||100;
     resize.addEventListener('input',()=>{slotScales[index]=Number(resize.value);resizeLabel.textContent='Escala individual — '+resize.value+'%';draw()});
@@ -237,7 +233,7 @@ for(const type of ['G','P']){
  $('minus'+type).addEventListener('click',()=>changeCount(type,-1));
  $('plus'+type).addEventListener('click',()=>changeCount(type,1));
 }
-const arrangementNames={row:'Lado a lado',column:'Em coluna',grid:'Em grade','stack-right':'Grande à esquerda, 2 pequenas à direita','stack-left':'Grande à direita, 2 pequenas à esquerda',center:'Grande no centro, pequenas nas laterais',top:'Grande acima',bottom:'Grande abaixo','top-center':'Grande acima, centralizada','bottom-center':'Grande abaixo, centralizada','horizontal-right':'Grande horizontal à esquerda','horizontal-left':'Grande horizontal à direita',stair:'Escadinha',pyramid:'Pirâmide',inverted:'Pirâmide invertida',diagonal:'Diagonal',zigzag:'Zigue-zague',stagger:'Desencontradas',free:'Personalizada'};
+const arrangementNames={row:'Lado a lado',column:'Em coluna',grid:'Em grade','stack-right':'Grande à esquerda, 2 pequenas à direita','stack-left':'Grande à direita, 2 pequenas à esquerda',center:'Grande no centro, pequenas nas laterais',top:'Grande acima',bottom:'Grande abaixo','top-center':'Grande acima, centralizada','bottom-center':'Grande abaixo, centralizada','horizontal-right':'Grande horizontal à esquerda','horizontal-left':'Grande horizontal à direita',stair:'Escadinha',pyramid:'Pirâmide',inverted:'Pirâmide invertida',diagonal:'Diagonal',zigzag:'Zigue-zague',stagger:'Desencontradas'};
 function presetPoints(mode,types){
  const n=types.length;
  if(types.join('')==='GPP'){
@@ -258,7 +254,7 @@ function presetPoints(mode,types){
 }
 function renderArrangementCards(){
  const types=layoutTypes(),three=types.join('')==='GPP';
- const modes=three?['row','stack-right','stack-left','center','horizontal-right','horizontal-left','top','bottom','stair','pyramid','inverted','diagonal','zigzag','column','free']:['row','column','grid','diagonal','zigzag','stagger','free'];
+ const modes=three?['row','stack-right','stack-left','center','horizontal-right','horizontal-left','top','bottom','stair','pyramid','inverted','diagonal','zigzag','column']:['row','column','grid','diagonal','zigzag','stagger'];
  if(!modes.includes(arrangement.value))arrangement.value='row';
  const host=$('arrangementCards');host.replaceChildren();
  modes.forEach(mode=>{
