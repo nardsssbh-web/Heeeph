@@ -532,7 +532,7 @@ body.fundo-categorias{
     padding-top:clamp(650px,56vw,850px);
   }
   body.fundo-categorias .pagina-categorias .grade-categorias{
-    top:0;
+    top:clamp(150px,16.8vw,237px);
     column-gap:8px !important;
     row-gap:12px !important;
   }
