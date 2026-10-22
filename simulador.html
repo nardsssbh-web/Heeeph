@@ -175,6 +175,7 @@ function buildSlotPicker(){
     const categorySelect=document.createElement('select');categorySelect.id='category-'+index;
     categorySelect.add(new Option('Selecione uma categoria',''));
     for(const key of Object.keys(catalog)){
+      if(/fotos?[\s_-]*reais?|personalizad/i.test(key))continue;
       categorySelect.add(new Option(key.replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),key));
     }
     const productLabel=document.createElement('label');productLabel.textContent='Nome da placa';productLabel.htmlFor='slot-'+index;
