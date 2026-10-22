@@ -151,16 +151,25 @@ function buildSlotPicker(){
     const card=document.createElement('div');card.className='slot-card';
     const label=document.createElement('label');label.textContent='Placa '+(index+1)+' — '+(type==='G'?'Grande 20 × 28':'Pequena 10 × 15');
     label.htmlFor='slot-'+index;
-    const sel=document.createElement('select');sel.id='slot-'+index;
-    sel.add(new Option('Escolha uma imagem',''));
-    for(const [key,items] of Object.entries(catalog)){
-      const group=document.createElement('optgroup');group.label=key.replace(/[-_]/g,' ').toUpperCase();
-      for(const item of items){if(!item.imagem)continue;
-        const opt=new Option(item.nome||item.id||'Placa',item.imagem);
-        group.append(opt);
-      }
-      if(group.children.length)sel.append(group);
+    const categoryLabel=document.createElement('label');categoryLabel.textContent='Coleção';categoryLabel.htmlFor='category-'+index;
+    const categorySelect=document.createElement('select');categorySelect.id='category-'+index;
+    categorySelect.add(new Option('Selecione uma coleção',''));
+    for(const key of Object.keys(catalog)){
+      categorySelect.add(new Option(key.replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),key));
     }
+    const productLabel=document.createElement('label');productLabel.textContent='Imagem da placa';productLabel.htmlFor='slot-'+index;
+    const sel=document.createElement('select');sel.id='slot-'+index;
+    function fillSlotProducts(){
+      sel.replaceChildren(new Option('Escolha uma imagem',''));
+      const items=catalog[categorySelect.value]||[];
+      for(const item of items){
+        if(!item.imagem)continue;
+        sel.add(new Option(item.nome||item.id||'Placa',item.imagem));
+      }
+    }
+    categorySelect.addEventListener('change',()=>{
+      fillSlotProducts();slotImages[index]=null;draw();
+    });
     sel.addEventListener('change',async()=>{
       if(!sel.value){slotImages[index]=null;draw();return}
       const path=sel.value;
@@ -170,7 +179,7 @@ function buildSlotPicker(){
         slotImages[index]=img;draw();message('Placa '+(index+1)+' adicionada à montagem.');
       }catch(e){message(e.message)}
     });
-    card.append(label,sel);
+    card.append(label,categoryLabel,categorySelect,productLabel,sel);
     const own=document.createElement('label');own.textContent='Ou envie sua imagem';
     const upload=document.createElement('input');upload.type='file';upload.accept='image/png,image/jpeg,image/webp';
     upload.addEventListener('change',async()=>{if(!upload.files[0])return;try{slotImages[index]=await loadFile(upload.files[0]);sel.value='';draw()}catch(e){message(e.message)}});
