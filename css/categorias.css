@@ -654,7 +654,7 @@ body.fundo-categorias .whatsapp-fixo img{
   body.fundo-categorias .pagina-categorias{
     box-sizing:border-box;
     min-height:100svh;
-    padding:clamp(185px,46vw,260px) 0 110px;
+    padding:clamp(365px,92vw,490px) 0 110px;
     background-image:url("../banner/colecoes-telefone.png");
     background-size:100% 100%;
     background-position:center top;
@@ -714,7 +714,7 @@ body.fundo-categorias .whatsapp-fixo img{
 }
 @media(max-width:480px){
   body.fundo-categorias .pagina-categorias{
-    padding-top:clamp(175px,48vw,225px);
+    padding-top:clamp(355px,94vw,440px);
     padding-bottom:100px;
   }
   body.fundo-categorias .pagina-categorias .categorias-container{
