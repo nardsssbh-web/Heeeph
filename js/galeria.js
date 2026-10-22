@@ -126,6 +126,11 @@ function renderizarGaleria() {
               </button>
             `
         }
+        ${obterCategoriaAtual() !== "fotos-reais" ? `
+          <a class="btn-ver-parede" href="simulador.html?produto=${encodeURIComponent(produto.id)}" aria-label="Veja ${escaparTexto(produto.nome)} na sua parede">
+            VEJA NA SUA PAREDE
+          </a>
+        ` : ""}
       </div>
     `;
   }).join("");
