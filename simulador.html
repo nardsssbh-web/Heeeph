@@ -15,13 +15,10 @@
 <div class="layout">
 <section class="panel"><div class="stage" id="stage"><div class="placeholder" id="empty"><strong>Sua parede aqui</strong>Carregue uma fotografia para começar a simulação.</div><canvas id="canvas" hidden aria-label="Prévia da placa posicionada no ambiente"></canvas></div>
 <div class="actions"><button id="save" disabled>Salvar montagem PNG</button><button id="reset" class="secondary" disabled>Centralizar placa</button></div>
-<p class="hint">Arraste o conjunto de retângulos na parede. Escolha uma montagem, a distância e, se quiser, uma arte.</p><div id="status" role="status" aria-live="polite"></div></section>
+<p class="hint">Arraste cada placa individualmente na parede. Escolha uma disposição pronta ou personalize a posição e o tamanho de cada placa.</p><div id="status" role="status" aria-live="polite"></div></section>
 <section class="panel">
 <label for="room">1. Foto do ambiente</label><input id="room" type="file" accept="image/*">
-<label for="category">2. Coleção</label><select id="category"><option value="">Selecione uma coleção</option></select>
-<label for="product">3. Placa</label><select id="product"><option value="">Escolha uma placa</option></select>
-<label for="custom">Ou carregue uma arte própria para testar</label><input id="custom" type="file" accept="image/png,image/jpeg,image/webp">
-<label for="layout">4. Montagem na parede</label><select id="layout">
+<label for="layout">2. Montagem na parede</label><select id="layout">
 <option value="1G">1G — 1 grande</option>
 <option value="2G">2G — 2 grandes</option>
 <option value="3G">3G — 3 grandes</option>
@@ -38,8 +35,16 @@
 <option value="3G2P">3G e 2P</option>
 <option value="3G3P">3G e 3P</option>
 </select>
+<label for="arrangement">3. Disposição das placas</label><select id="arrangement">
+<option value="row">Lado a lado</option>
+<option value="stack-right">Grande à esquerda, duas pequenas à direita (uma acima da outra)</option>
+<option value="stack-left">Duas pequenas à esquerda, grande à direita</option>
+<option value="center">Grande no centro, uma pequena de cada lado</option>
+<option value="diagonal">Em diagonal</option>
+<option value="free">Livre — arrastar cada placa</option>
+</select>
 <div id="slotPicker" aria-label="Escolha uma imagem para cada placa"></div>
-<label for="distance">5. Distância da câmera à parede</label><select id="distance">
+<label for="distance">4. Distância da câmera à parede</label><select id="distance">
 <option value="1.5">1,5 metro</option><option value="2">2 metros</option>
 <option value="3" selected>3 metros (padrão)</option><option value="4">4 metros</option><option value="5">5 metros</option>
 </select>
@@ -54,38 +59,51 @@
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
-const canvas=$('canvas'),ctx=canvas.getContext('2d'),room=$('room'),custom=$('custom'),category=$('category'),product=$('product'),layout=$('layout'),distance=$('distance'),scale=$('scale'),rotation=$('rotation'),status=$('status');
-let background=null,plaque=null,selected=null,drag=null;const slotImages=[];
+const canvas=$('canvas'),ctx=canvas.getContext('2d'),room=$('room'),layout=$('layout'),arrangement=$('arrangement'),distance=$('distance'),scale=$('scale'),rotation=$('rotation'),status=$('status');
+let background=null,drag=null;const slotImages=[],slotScales=[],slotOffsets=[];
 const position={x:.5,y:.5},state={ratio:20/28};
 function message(s){status.textContent=s}
 function loadFile(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('Não foi possível abrir esta imagem.'))};img.src=url})}
 function loadAsset(path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Não foi possível carregar esta placa.'));img.src=path})}
+function layoutTypes(){
+ const m=/^(\d)G(?:(\d)P)?$|^(\d)P$/.exec(layout.value);
+ return m?[...Array(Number(m[1]||0)).fill('G'),...Array(Number(m[2]||m[3]||0)).fill('P')]:[];
+}
 function plaquesGeometry(){
-  if(!background)return [];
-  const match=/^(\d)G(?:(\d)P)?$|^(\d)P$/.exec(layout.value);
-  if(!match)return [];
-  const big=Number(match[1]||0),small=Number(match[2]||match[3]||0);
-  const orientation=state.ratio>1?'horizontal':'vertical';
-  const pxPerMeter=canvas.width/(2*Math.tan(70*Math.PI/360)*Number(distance.value));
-  const factor=Number(scale.value)/100;
-  const dimensions=type=>{
-    const large=type==='G',w=(large?20:10)/100,h=(large?28:15)/100;
-    return {w:(orientation==='horizontal'?h:w)*pxPerMeter*factor,h:(orientation==='horizontal'?w:h)*pxPerMeter*factor};
-  };
-  const types=[...Array(big).fill('G'),...Array(small).fill('P')];
-  const rows=[];for(let i=0;i<types.length;i+=3)rows.push(types.slice(i,i+3));
-  const gap=Math.max(8,canvas.width*.014);
-  const heights=rows.map(row=>Math.max(...row.map(type=>dimensions(type).h)));
-  const totalH=heights.reduce((a,b)=>a+b,0)+gap*(rows.length-1);
-  let y=position.y*canvas.height-totalH/2;
-  const items=[];
+ if(!background)return [];
+ const types=layoutTypes(),n=types.length,pxPerMeter=canvas.width/(2*Math.tan(70*Math.PI/360)*Number(distance.value));
+ const factor=Number(scale.value)/100;
+ const dims=types.map((type,i)=>{
+  const large=type==='G',mult=(slotScales[i]||100)/100*factor;
+  return {w:(large?20:10)/100*pxPerMeter*mult,h:(large?28:15)/100*pxPerMeter*mult,type};
+ });
+ const gap=Math.max(9,canvas.width*.018);
+ const places=[];
+ const mode=arrangement.value;
+ if(n===3&&types[0]==='G'&&types[1]==='P'&&types[2]==='P'&&['stack-right','stack-left','center'].includes(mode)){
+  const [g,p1,p2]=dims;
+  if(mode==='stack-right'||mode==='stack-left'){
+   const side=mode==='stack-right'?1:-1;
+   const xG=-side*(g.w/2+gap/2),xP=side*(p1.w/2+gap/2);
+   places.push([xG,0],[xP,-(p1.h+gap)/2],[xP,(p2.h+gap)/2]);
+  }else{
+   places.push([0,0],[-(g.w+p1.w)/2-gap,0],[(g.w+p2.w)/2+gap,0]);
+  }
+ }else if(mode==='diagonal'){
+  dims.forEach((d,i)=>places.push([(i-(n-1)/2)*(Math.max(...dims.map(q=>q.w))+gap),(i-(n-1)/2)*(Math.max(...dims.map(q=>q.h))*.62)]));
+ }else{
+  const rows=[];for(let i=0;i<n;i+=3)rows.push(dims.slice(i,i+3));
+  const heights=rows.map(row=>Math.max(...row.map(d=>d.h)));
+  const totalH=heights.reduce((x,y)=>x+y,0)+gap*(rows.length-1);
+  let y=-totalH/2;
   rows.forEach((row,ri)=>{
-    const totalW=row.reduce((sum,type)=>sum+dimensions(type).w,0)+gap*(row.length-1);
-    let x=position.x*canvas.width-totalW/2;
-    row.forEach(type=>{const d=dimensions(type);items.push({type,w:d.w,h:d.h,x:x+d.w/2,y:y+heights[ri]/2,a:Number(rotation.value)*Math.PI/180});x+=d.w+gap});
-    y+=heights[ri]+gap;
+   const width=row.reduce((sum,d)=>sum+d.w,0)+gap*(row.length-1);
+   let x=-width/2;
+   row.forEach(d=>{places.push([x+d.w/2,y+heights[ri]/2]);x+=d.w+gap});
+   y+=heights[ri]+gap;
   });
-  return items;
+ }
+ return dims.map((d,i)=>({...d,x:position.x*canvas.width+places[i][0]+(slotOffsets[i]?.x||0)*canvas.width,y:position.y*canvas.height+places[i][1]+(slotOffsets[i]?.y||0)*canvas.height,a:Number(rotation.value)*Math.PI/180}));
 }
 function draw(){
   if(!background)return;
@@ -112,16 +130,8 @@ function draw(){
   $('save').disabled=false;$('reset').disabled=false;
 }
 function setupBackground(img){background=img;const factor=Math.min(1,2200/Math.max(img.naturalWidth,img.naturalHeight));canvas.width=Math.round(img.naturalWidth*factor);canvas.height=Math.round(img.naturalHeight*factor);$('empty').hidden=true;canvas.hidden=false;position.x=.5;position.y=.5;draw()}
-function setPlaque(img,orientation){plaque=img;slotImages[0]=img;state.ratio=orientation==='horizontal'?28/20:20/28;position.x=.5;position.y=.5;draw();message('Primeira placa escolhida. Selecione as demais abaixo da montagem.')}
 room.addEventListener('change',async()=>{if(!room.files[0])return;try{setupBackground(await loadFile(room.files[0]));message('Fotografia carregada.')}catch(e){message(e.message)}});
 const catalog=(typeof PRODUTOS!=='undefined'&&PRODUTOS&&typeof PRODUTOS==='object')?PRODUTOS:{};
-for(const key of Object.keys(catalog)){const opt=document.createElement('option');opt.value=key;opt.textContent=key.replace(/[-_]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());category.append(opt)}
-function fillProducts(){product.replaceChildren(new Option('Escolha uma placa',''));for(const p of (catalog[category.value]||[])){if(!p.imagem)continue;product.add(new Option(p.nome||p.id||'Placa',p.id||p.imagem))}}
-category.addEventListener('change',()=>{fillProducts();selected=null});
-function layoutTypes(){
-  const m=/^(\d)G(?:(\d)P)?$|^(\d)P$/.exec(layout.value);
-  return m?[...Array(Number(m[1]||0)).fill('G'),...Array(Number(m[2]||m[3]||0)).fill('P')]:[];
-}
 function buildSlotPicker(){
   const container=$('slotPicker'),types=layoutTypes();
   container.replaceChildren();
@@ -133,7 +143,7 @@ function buildSlotPicker(){
     const label=document.createElement('label');label.textContent='Placa '+(index+1)+' — '+(type==='G'?'Grande 20 × 28':'Pequena 10 × 15');
     label.htmlFor='slot-'+index;
     const sel=document.createElement('select');sel.id='slot-'+index;
-    sel.add(new Option(index===0&&slotImages[0]?'Primeira placa já selecionada':'Escolha uma imagem',''));
+    sel.add(new Option('Escolha uma imagem',''));
     for(const [key,items] of Object.entries(catalog)){
       const group=document.createElement('optgroup');group.label=key.replace(/[-_]/g,' ').toUpperCase();
       for(const item of items){if(!item.imagem)continue;
@@ -152,31 +162,39 @@ function buildSlotPicker(){
       }catch(e){message(e.message)}
     });
     card.append(label,sel);
+    const own=document.createElement('label');own.textContent='Ou envie sua imagem';
+    const upload=document.createElement('input');upload.type='file';upload.accept='image/png,image/jpeg,image/webp';
+    upload.addEventListener('change',async()=>{if(!upload.files[0])return;try{slotImages[index]=await loadFile(upload.files[0]);sel.value='';draw()}catch(e){message(e.message)}});
+    card.append(own,upload);
+    const resizeLabel=document.createElement('label');resizeLabel.textContent='Escala individual — '+(slotScales[index]||100)+'%';
+    const resize=document.createElement('input');resize.type='range';resize.min='50';resize.max='180';resize.step='5';resize.value=slotScales[index]||100;
+    resize.addEventListener('input',()=>{slotScales[index]=Number(resize.value);resizeLabel.textContent='Escala individual — '+resize.value+'%';draw()});
+    card.append(resizeLabel,resize);
     container.append(card);
   });
 }
 buildSlotPicker();
-layout.addEventListener('change',()=>{slotImages.length=layoutTypes().length;buildSlotPicker();draw()});
-product.addEventListener('change',async()=>{selected=(catalog[category.value]||[]).find(p=>(p.id||p.imagem)===product.value);if(!selected)return;try{setPlaque(await loadAsset(selected.imagem),selected.orientacao);buildSlotPicker()}catch(e){message(e.message)}});
-custom.addEventListener('change',async()=>{if(!custom.files[0])return;try{const img=await loadFile(custom.files[0]);selected=null;setPlaque(img,img.naturalWidth>img.naturalHeight?'horizontal':'vertical');category.value='';fillProducts();buildSlotPicker()}catch(e){message(e.message)}});
+layout.addEventListener('change',()=>{slotImages.length=layoutTypes().length;slotScales.length=layoutTypes().length;slotOffsets.length=0;buildSlotPicker();draw()});arrangement.addEventListener('change',()=>{slotOffsets.length=0;draw()});
 for(const el of [scale,rotation,distance])el.addEventListener('input',()=>{$('scaleValue').textContent=scale.value+'%';$('rotationValue').textContent=rotation.value+'°';draw()});
-$('reset').addEventListener('click',()=>{position.x=.5;position.y=.5;scale.value=100;rotation.value=0;$('scaleValue').textContent='100%';$('rotationValue').textContent='0°';draw()});
+$('reset').addEventListener('click',()=>{position.x=.5;position.y=.5;scale.value=100;rotation.value=0;slotOffsets.length=0;slotScales.fill(100);buildSlotPicker();$('scaleValue').textContent='100%';$('rotationValue').textContent='0°';draw()});
 function point(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*canvas.width,y:(e.clientY-r.top)/r.height*canvas.height}}
 canvas.addEventListener('pointerdown',e=>{
-  const items=plaquesGeometry();if(!items.length)return;
-  const p=point(e);
-  const hit=items.some(g=>{
-    const dx=p.x-g.x,dy=p.y-g.y,c=Math.cos(-g.a),sn=Math.sin(-g.a);
-    return Math.abs(dx*c-dy*sn)<=g.w/2+15&&Math.abs(dx*sn+dy*c)<=g.h/2+15;
-  });
-  if(!hit)return;
-  drag={id:e.pointerId,x:p.x,y:p.y,startX:position.x,startY:position.y};
-  canvas.setPointerCapture(e.pointerId);
+ const items=plaquesGeometry(),p=point(e);
+ for(let i=items.length-1;i>=0;i--){
+  const g=items[i],dx=p.x-g.x,dy=p.y-g.y,c=Math.cos(-g.a),sn=Math.sin(-g.a);
+  if(Math.abs(dx*c-dy*sn)<=g.w/2+15&&Math.abs(dx*sn+dy*c)<=g.h/2+15){
+   drag={id:e.pointerId,index:i,x:p.x,y:p.y,offsetX:slotOffsets[i]?.x||0,offsetY:slotOffsets[i]?.y||0};
+   canvas.setPointerCapture(e.pointerId);break;
+  }
+ }
 });
-canvas.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;const p=point(e);position.x=Math.max(0,Math.min(1,drag.startX+(p.x-drag.x)/canvas.width));position.y=Math.max(0,Math.min(1,drag.startY+(p.y-drag.y)/canvas.height));draw()});
+canvas.addEventListener('pointermove',e=>{
+ if(!drag||drag.id!==e.pointerId)return;
+ const p=point(e);slotOffsets[drag.index]={x:drag.offsetX+(p.x-drag.x)/canvas.width,y:drag.offsetY+(p.y-drag.y)/canvas.height};draw();
+});
 function stop(e){if(drag&&drag.id===e.pointerId)drag=null}canvas.addEventListener('pointerup',stop);canvas.addEventListener('pointercancel',stop);
 $('save').addEventListener('click',()=>{if(!background)return;try{canvas.toBlob(blob=>{if(!blob){message('Não foi possível salvar a montagem.');return}const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='heeeph-minha-parede.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)},'image/png')}catch(e){message('Falha ao salvar a imagem.')}});
-const q=new URLSearchParams(location.search),id=q.get('produto');if(id){for(const [key,items] of Object.entries(catalog)){const match=items.find(p=>p.id===id);if(match){category.value=key;fillProducts();product.value=id;product.dispatchEvent(new Event('change'));break}}}
+const q=new URLSearchParams(location.search),id=q.get('produto');if(id){for(const items of Object.values(catalog)){const match=items.find(p=>p.id===id);if(match){loadAsset(match.imagem).then(img=>{slotImages[0]=img;draw()}).catch(e=>message(e.message));break}}}
 })();
 </script>
 </body></html>
