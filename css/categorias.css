@@ -570,3 +570,21 @@ body.fundo-categorias .topo{
     transform:translateY(180px) !important;
   }
 }
+
+/* Ampliar somente o botão flutuante do WhatsApp na página de coleções. */
+body.fundo-categorias .whatsapp-fixo img{
+  width:245px;
+  max-width:245px;
+}
+@media(max-width:780px){
+  body.fundo-categorias .whatsapp-fixo img{
+    width:185px;
+    max-width:185px;
+  }
+}
+@media(max-width:480px){
+  body.fundo-categorias .whatsapp-fixo img{
+    width:165px;
+    max-width:165px;
+  }
+}
