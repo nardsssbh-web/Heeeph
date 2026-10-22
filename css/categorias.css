@@ -168,3 +168,47 @@
     font-size:27px;
   }
 }
+
+/* Fundo da página inteira: não afeta outras páginas ou o checkout. */
+body.fundo-categorias{
+  background-color:#100a07;
+  background-image:
+    linear-gradient(rgba(0,0,0,.22), rgba(0,0,0,.42)),
+    url("../banner/banner-categorias.png");
+  background-position:center top;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-attachment:fixed;
+}
+
+/* As coleções ficam sobre o banner, com caixas de altura uniforme. */
+.fundo-categorias .categorias-card{
+  background:rgba(0,0,0,.22);
+}
+.fundo-categorias .grade-categorias{
+  align-items:stretch;
+}
+.fundo-categorias .categoria-item{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  background:rgba(10,7,6,.66);
+}
+.fundo-categorias .categoria-info{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.fundo-categorias .categoria-info span{
+  flex:1;
+}
+
+@media (max-width:780px){
+  body.fundo-categorias{
+    background-attachment:scroll;
+    background-position:center top;
+  }
+  .fundo-categorias .categorias-card{
+    background:rgba(0,0,0,.32);
+  }
+}
