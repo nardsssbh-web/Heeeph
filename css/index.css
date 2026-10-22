@@ -942,7 +942,7 @@
 
 /* Fundo de madeira exclusivo da HOME — desktop e celular. */
 body{
-  background-image:linear-gradient(rgba(0,0,0,.12),rgba(0,0,0,.28)),url("../banner/madeira.png");
+  background-image:linear-gradient(rgba(0,0,0,.12),rgba(0,0,0,.28)),url("../banner/fundo-madeira.png");
   background-position:center top;
   background-size:cover;
   background-repeat:no-repeat;
