@@ -567,6 +567,6 @@ body.fundo-categorias .topo{
   }
   body.fundo-categorias .pagina-categorias .grade-categorias{
     top:0 !important;
-    transform:translateY(90px) !important;
+    transform:translateY(135px) !important;
   }
 }
