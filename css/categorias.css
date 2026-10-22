@@ -646,3 +646,78 @@ body.fundo-categorias .whatsapp-fixo img{
     line-height:1.3;
   }
 }
+
+
+/* Coleções no celular: mantém a parede central, sem esticar a arte.
+   Regras isoladas ao mobile; o layout do computador não é alterado. */
+@media (max-width:780px){
+  body.fundo-categorias .pagina-categorias{
+    box-sizing:border-box;
+    min-height:100svh;
+    padding:clamp(185px,46vw,260px) 0 110px;
+    background-image:url("../banner/colecoes-heeeph.png");
+    background-size:auto 100%;
+    background-position:center top;
+    background-repeat:no-repeat;
+  }
+  body.fundo-categorias .pagina-categorias .categorias-container{
+    width:min(88%,520px);
+    max-width:520px;
+    margin-inline:auto;
+  }
+  body.fundo-categorias .pagina-categorias .grade-categorias{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    column-gap:12px;
+    row-gap:18px;
+    justify-items:center;
+    align-items:start;
+    position:relative;
+    top:0;
+    transform:none;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-item{
+    display:grid;
+    grid-template-rows:clamp(95px,27vw,140px) auto;
+    align-content:start;
+    justify-items:center;
+    width:100%;
+    max-width:185px;
+    min-width:0;
+    height:auto;
+    margin:0 auto;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-item img{
+    display:block;
+    width:100%;
+    height:100%;
+    max-width:160px;
+    object-fit:contain;
+    object-position:center top;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-info{
+    width:100%;
+    padding:5px 2px 0;
+    align-items:center;
+    text-align:center;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-info strong{
+    font-size:clamp(12px,3.2vw,15px);
+    line-height:1.2;
+    min-height:0;
+    margin-bottom:4px;
+  }
+  body.fundo-categorias .pagina-categorias .categoria-info span{
+    font-size:clamp(10px,2.7vw,12px);
+    line-height:1.3;
+  }
+}
+@media(max-width:480px){
+  body.fundo-categorias .pagina-categorias{
+    padding-top:clamp(175px,48vw,225px);
+    padding-bottom:100px;
+  }
+  body.fundo-categorias .pagina-categorias .categorias-container{
+    width:90%;
+  }
+}
