@@ -11,6 +11,7 @@
 html{min-height:100%;background:#1b100b}
 body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,0,.40)),url("banner/fundo-madeira.png");background-color:#1b100b;background-position:center top;background-size:cover;background-repeat:no-repeat;background-attachment:fixed}
 @media(max-width:760px){body{background-attachment:scroll}}
+.purchase-montagem{margin:18px 0 8px;padding-top:15px;border-top:1px solid #555963}.purchase-montagem button{width:100%;font-size:15px}.purchase-montagem .hint{margin:8px 0 0}
 </style>
 </head>
 <body>
@@ -49,6 +50,7 @@ body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,
 <div class="section-heading">Escolha as placas</div>
 <p class="hint">Para cada posição, escolha primeiro a categoria e depois o nome da placa correspondente.</p>
 <div id="slotPicker" aria-label="Escolha uma imagem para cada placa"></div>
+<div class="purchase-montagem"><button type="button" id="buySelected">COMPRAR PLACAS DA MONTAGEM</button><p class="hint">As placas escolhidas serão adicionadas ao carrinho nos tamanhos selecionados.</p></div>
 <div class="section-heading">Disposição das placas</div>
 <p class="hint">Toque em um modelo. Depois você poderá arrastar cada placa na foto.</p>
 <div id="arrangementCards" class="arrangement-cards"></div>
@@ -77,7 +79,7 @@ body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,
 'use strict';
 const $=id=>document.getElementById(id);
 const canvas=$('canvas'),ctx=canvas.getContext('2d'),room=$('room'),layout=$('layout'),arrangement=$('arrangement'),distance=$('distance'),scale=$('scale'),rotation=$('rotation'),status=$('status');
-let background=null,drag=null;const slotImages=[],slotScales=[],slotOffsets=[],slotOrientations=[];
+let background=null,drag=null;const slotImages=[],slotScales=[],slotOffsets=[],slotOrientations=[],slotProducts=[];
 const position={x:.5,y:.5},state={ratio:20/28};
 function message(s){status.textContent=s}
 function loadFile(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('Não foi possível abrir esta imagem.'))};img.src=url})}
@@ -196,15 +198,22 @@ function buildSlotPicker(){
         sel.add(new Option(item.nome||item.id||'Placa',item.imagem));
       }
     }
+    const previous=slotProducts[index];
+    if(previous&&catalog[previous.category]?.some(p=>p.id===previous.id)){
+      categorySelect.value=previous.category;fillSlotProducts();sel.value=previous.imagem;
+    }
     categorySelect.addEventListener('change',()=>{
-      fillSlotProducts();slotImages[index]=null;draw();
+      slotProducts[index]=null;fillSlotProducts();slotImages[index]=null;draw();
     });
     sel.addEventListener('change',async()=>{
-      if(!sel.value){slotImages[index]=null;draw();return}
+      if(!sel.value){slotProducts[index]=null;slotImages[index]=null;draw();return}
       const path=sel.value;
       try{
         const img=await loadAsset(path);
         if(sel.value!==path)return;
+        const product=(catalog[categorySelect.value]||[]).find(p=>p.imagem===path);
+        if(!product){message('Placa não encontrada no catálogo.');return}
+        slotProducts[index]={...product,category:categorySelect.value};
         slotImages[index]=img;draw();message('Placa '+(index+1)+' adicionada à montagem.');
       }catch(e){message(e.message)}
     });
@@ -291,7 +300,7 @@ function renderArrangementCards(){
  });
 }
 refreshCounts();renderArrangementCards();
-layout.addEventListener('change',()=>{slotImages.length=layoutTypes().length;slotScales.length=layoutTypes().length;slotOrientations.length=layoutTypes().length;slotOffsets.length=0;buildSlotPicker();refreshCounts();renderArrangementCards();draw()});arrangement.addEventListener('change',()=>{slotOffsets.length=0;renderArrangementCards();draw()});
+layout.addEventListener('change',()=>{slotImages.length=layoutTypes().length;slotProducts.length=layoutTypes().length;slotScales.length=layoutTypes().length;slotOrientations.length=layoutTypes().length;slotOffsets.length=0;buildSlotPicker();refreshCounts();renderArrangementCards();draw()});arrangement.addEventListener('change',()=>{slotOffsets.length=0;renderArrangementCards();draw()});
 for(const el of [scale,rotation,distance])el.addEventListener('input',()=>{$('scaleValue').textContent=scale.value+'%';$('rotationValue').textContent=rotation.value+'°';draw()});
 $('reset').addEventListener('click',()=>{position.x=.5;position.y=.5;scale.value=100;rotation.value=0;slotOffsets.length=0;slotScales.fill(100);slotOrientations.fill('vertical');buildSlotPicker();$('scaleValue').textContent='100%';$('rotationValue').textContent='0°';draw()});
 function point(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*canvas.width,y:(e.clientY-r.top)/r.height*canvas.height}}
@@ -311,7 +320,37 @@ canvas.addEventListener('pointermove',e=>{
 });
 function stop(e){if(drag&&drag.id===e.pointerId)drag=null}canvas.addEventListener('pointerup',stop);canvas.addEventListener('pointercancel',stop);
 $('save').addEventListener('click',()=>{if(!background)return;try{canvas.toBlob(blob=>{if(!blob){message('Não foi possível salvar a montagem.');return}const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='heeeph-minha-parede.png';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)},'image/png')}catch(e){message('Falha ao salvar a imagem.')}});
-const q=new URLSearchParams(location.search),id=q.get('produto');if(id){for(const items of Object.values(catalog)){const match=items.find(p=>p.id===id);if(match){loadAsset(match.imagem).then(img=>{slotImages[0]=img;draw()}).catch(e=>message(e.message));break}}}
+$('buySelected').addEventListener('click',()=>{
+  const types=layoutTypes();
+  const chosen=types.map((type,index)=>({type,index,product:slotProducts[index]}));
+  if(chosen.some(x=>!x.product)){
+    message('Escolha uma placa em cada posição antes de comprar.');
+    $('slotPicker').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  if(chosen.some(x=>/em breve/i.test(String(x.product.nome||'')))){
+    message('Há uma placa indisponível na montagem. Substitua-a para continuar.');return;
+  }
+  let cart;
+  try{const stored=JSON.parse(localStorage.getItem('heeeph_cart')||'[]');cart=Array.isArray(stored)?stored:[]}
+  catch(e){message('Não foi possível ler o carrinho.');return}
+  for(const {type,index,product} of chosen){
+    const horizontal=(slotOrientations[index]||'vertical')==='horizontal';
+    const medida=type==='G'?(horizontal?'28x20cm':'20x28cm'):(horizontal?'15x10cm':'10x15cm');
+    const preco=type==='G'?24.90:12.90;
+    const existing=cart.find(item=>item.id===product.id&&item.medida===medida);
+    if(existing){const qty=Number(existing.quantidade||existing.quantity||1)+1;existing.quantidade=qty;existing.quantity=qty}
+    else cart.push({id:product.id,nome:product.nome,imagem:product.imagem,categoria:product.category,orientacao:horizontal?'horizontal':'vertical',medida,preco,quantidade:1,quantity:1});
+  }
+  try{localStorage.setItem('heeeph_cart',JSON.stringify(cart));localStorage.setItem('ultimaPagina','simulador.html');window.location.href='carrinho.html'}
+  catch(e){message('Não foi possível salvar as placas no carrinho. Verifique o armazenamento do navegador.')}
+});
+const q=new URLSearchParams(location.search),id=q.get('produto');if(id){for(const [category,items] of Object.entries(catalog)){const match=items.find(p=>p.id===id);if(match){
+  slotProducts[0]={...match,category};
+  slotOrientations[0]=match.orientacao==='horizontal'?'horizontal':'vertical';
+  buildSlotPicker();
+  loadAsset(match.imagem).then(img=>{slotImages[0]=img;draw()}).catch(e=>message(e.message));break
+}}}
 })();
 </script>
 </body></html>
