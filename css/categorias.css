@@ -502,3 +502,13 @@ body.fundo-categorias{
     max-width:168px;
   }
 }
+
+/* Aproximar as placas do título da arte, sem alterar dimensões ou espaços. */
+@media(min-width:781px){
+  body.fundo-categorias .pagina-categorias{
+    padding-top:clamp(185px,18vw,245px);
+  }
+  body.fundo-categorias .pagina-categorias .grade-categorias{
+    top:0;
+  }
+}
