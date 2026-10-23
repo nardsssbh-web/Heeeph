@@ -22,6 +22,11 @@
    const a=p.cliente.endereco,dl=node('dl');
    const campos=[['Criado',new Date(p.criadoEm).toLocaleString('pt-BR')],['Cliente',p.cliente.nome],['Contato',p.cliente.email+' — '+p.cliente.telefone],['CPF',p.cliente.cpf],['Entrega',a.street_name+', '+a.street_number+(a.complement?' — '+a.complement:'')+' — '+a.neighborhood+' — '+a.city+'/'+a.state+' — CEP '+a.zip_code],['Frete',p.frete.transportadora+' — '+p.frete.servico+' — '+dinheiro(p.frete.centavos)],['Subtotal',dinheiro(p.subtotal)],['Total',dinheiro(p.total)],['Pagamento',(p.pagamento?.status||'Não iniciado')+' / '+(p.pagamento?.detalhe||'')],['Mercado Pago',p.pagamento?.mpId||'Ainda sem identificador'],['Última consulta',p.pagamento?.atualizadoEm?new Date(p.pagamento.atualizadoEm).toLocaleString('pt-BR'):'Ainda não consultado'],['Envio',p.ambiente==='producao'?'Etapas manuais; etiqueta e rastreio não integrados':'Pedido de teste: sem postagem ou etiqueta']];
    for(const [i,t] of (p.pagamento?.transacoes||[]).entries())campos.push(['Transação '+(i+1),[t.metodo,t.status,t.detalhe].filter(Boolean).join(' / ')||'Sem detalhe retornado']);
+   if(p.pagamento?.valoresMP){
+     const v=p.pagamento.valoresMP,valor=x=>Number.isFinite(x)?dinheiro(x):'Não informado pelo Mercado Pago';
+     campos.push(['Total pago informado pelo Mercado Pago',valor(v.totalPago)],['Valor pago da transação',valor(v.transacaoPaga)],['Valor nominal da transação',valor(v.transacaoValor)],
+       ['Elegibilidade local para cancelar Pix',p.pagamento.cancelavel===true?'Comprovada na última consulta':'Não comprovada; cancelamento não solicitado por esta validação']);
+   }
    if(p.pagamento?.aplicacao)campos.push(['Aplicação Mercado Pago',p.pagamento.aplicacao]);
    if(p.pagamento?.erros?.length)campos.push(['Erros da consulta Mercado Pago',p.pagamento.erros.join(', ')]);
    campos.push(['Webhook autenticado',p.webhookRecebido?.assinaturaValidada?new Date(p.webhookRecebido.em).toLocaleString('pt-BR')+' — '+p.webhookRecebido.status:'Sem comprovação registrada; consulta de pagamento não comprova webhook']);

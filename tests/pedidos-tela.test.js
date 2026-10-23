@@ -21,6 +21,13 @@ test('status no topo, produto destacado e consulta com retorno no próprio pedid
  assert.equal(all(card()).find(n=>n.className==='retorno-pedido').dataset.tipo,'pendente');
  p={...p,pagamento:{aprovado:true,status:'processed'}};await ids.acesso.submit({preventDefault(){}});
  assert.ok(all(card()).some(n=>n.className==='selo aprovado'));assert.equal(all(card()).some(n=>n.className==='retorno-pedido'&&/Aguardando/.test(n.textContent)),false);
+ p={...p,pagamento:{status:'action_required',cancelavel:false,valoresMP:{totalPago:0,transacaoPaga:null,transacaoValor:3490}}};
+ await all(card()).find(n=>n.textContent==='Consultar Pagamento').click();
+ const detalhes=all(card()).filter(n=>n.tag==='dt'||n.tag==='dd');
+ const valorDoCampo=nome=>detalhes[detalhes.findIndex(n=>n.textContent===nome)+1].textContent;
+ assert.match(valorDoCampo('Total pago informado pelo Mercado Pago'),/0,00/);
+ assert.equal(valorDoCampo('Valor pago da transação'),'Não informado pelo Mercado Pago');
+ assert.match(valorDoCampo('Elegibilidade local para cancelar Pix'),/Não comprovada/);
  let liberar;
  ctx.fetch=async()=>{await new Promise(r=>liberar=r);throw new Error('Falha simulada');};
  const button=all(card()).find(n=>n.textContent==='Consultar Pagamento'),consulta=button.click();

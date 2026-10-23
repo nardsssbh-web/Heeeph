@@ -68,7 +68,7 @@ test('tentativa não localizada, valor parcial, estado incompatível ou identida
    if(tipo==='divergente')f.order.external_reference='c'.repeat(32);
    if(tipo==='processing')f.order.status='processing';
    if(tipo==='sem-valor')delete f.order.total_paid_amount;
-   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.cancelamentos().length,0);assert.equal(f.ler().saida.confirmada,false);
+   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao),tipo==='sem-valor'?/Nenhum cancelamento foi solicitado/:undefined);assert.equal(f.cancelamentos().length,0);assert.equal(f.ler().saida.confirmada,false);
   }finally{f.close();}
  }
 });
