@@ -16,7 +16,8 @@
     document.querySelectorAll("[data-favorito-id]").forEach(b=>{
       const ativo=favoritos.has(b.dataset.favoritoId);
       b.setAttribute("aria-pressed",String(ativo));
-      b.textContent=(ativo?"★ Salva":"☆ Favoritar");
+      b.textContent=ativo?"★":"☆";
+      b.setAttribute("aria-label",ativo?"Remover dos favoritos":"Adicionar aos favoritos");
     });
   }
   function instalarEstrelas(){
