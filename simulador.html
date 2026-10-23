@@ -107,6 +107,37 @@ const $=id=>document.getElementById(id);
 const canvas=$('canvas'),ctx=canvas.getContext('2d'),room=$('room'),layout=$('layout'),arrangement=$('arrangement'),distance=$('distance'),scale=$('scale'),rotation=$('rotation'),status=$('status');
 let background=null,drag=null;const slotImages=[],slotScales=[],slotOffsets=[],slotOrientations=[],slotProducts=[];
 const position={x:.5,y:.5},state={ratio:20/28};
+// Rascunho local: configurações em localStorage e foto privada em IndexedDB.
+const draftKey='heeeph_parede_rascunho_v1';
+let restoringDraft=true,saveDraftTimer=null;
+function persistDraft(){
+ if(restoringDraft)return;
+ clearTimeout(saveDraftTimer);
+ saveDraftTimer=setTimeout(()=>{
+  try{localStorage.setItem(draftKey,JSON.stringify({
+   layout:layout.value,arrangement:arrangement.value,distance:distance.value,
+   scale:scale.value,rotation:rotation.value,position:{...position},
+   products:slotProducts.map(p=>p?{id:p.id,category:p.category}:null),
+   orientations:[...slotOrientations],scales:[...slotScales],
+   offsets:slotOffsets.map(p=>p?{...p}:null)
+  }))}catch(e){message('O navegador não conseguiu guardar as escolhas.')}
+ },180);
+}
+function photoStore(mode,blob){
+ return new Promise((resolve,reject)=>{
+  if(!window.indexedDB){reject(Error('Armazenamento de fotos indisponível'));return}
+  const request=indexedDB.open('heeeph-parede',1);
+  request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('arquivos'))request.result.createObjectStore('arquivos')};
+  request.onerror=()=>reject(request.error);
+  request.onsuccess=()=>{
+   const db=request.result,tx=db.transaction('arquivos',mode==='read'?'readonly':'readwrite');
+   const req=mode==='read'?tx.objectStore('arquivos').get('ambiente'):tx.objectStore('arquivos').put(blob,'ambiente');
+   req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+   tx.oncomplete=()=>db.close();tx.onerror=()=>{db.close();reject(tx.error)};
+  };
+ });
+}
+
 function message(s){status.textContent=s}
 function loadFile(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('Não foi possível abrir esta imagem.'))};img.src=url})}
 function loadAsset(path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Não foi possível carregar esta placa.'));img.src=path})}
@@ -190,9 +221,10 @@ function draw(){
     ctx.restore();
   });
   $('save').disabled=false;$('reset').disabled=false;
+  persistDraft();
 }
 function setupBackground(img){background=img;const factor=Math.min(1,2200/Math.max(img.naturalWidth,img.naturalHeight));canvas.width=Math.round(img.naturalWidth*factor);canvas.height=Math.round(img.naturalHeight*factor);$('empty').hidden=true;canvas.hidden=false;position.x=.5;position.y=.5;draw()}
-room.addEventListener('change',async()=>{if(!room.files[0])return;try{setupBackground(await loadFile(room.files[0]));message('Fotografia carregada.')}catch(e){message(e.message)}});
+room.addEventListener('change',async()=>{if(!room.files[0])return;try{const file=room.files[0];setupBackground(await loadFile(file));try{await photoStore('write',file)}catch(e){message('Foto carregada, mas não foi possível salvá-la para a próxima visita.');return}message('Fotografia carregada e salva neste aparelho.')}catch(e){message(e.message)}});
 const rawCatalog=(typeof PRODUTOS!=='undefined'&&PRODUTOS&&typeof PRODUTOS==='object')?PRODUTOS:{};
 const excludedCategories=new Set(['fotos-reais','fotos reais','fotos_reais','personalizados','personalizadas','personalizado','personalizada']);
 const normalizeCategory=name=>String(name).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[\s_]+/g,'-');
@@ -422,12 +454,54 @@ function syncFloatingPreview(){
 window.addEventListener('scroll',syncFloatingPreview,{passive:true});
 window.addEventListener('resize',syncFloatingPreview);
 syncFloatingPreview();
-const q=new URLSearchParams(location.search),id=q.get('produto');if(id){for(const [category,items] of Object.entries(catalog)){const match=items.find(p=>p.id===id);if(match){
-  slotProducts[0]={...match,category};
-  slotOrientations[0]=match.orientacao==='horizontal'?'horizontal':'vertical';
-  buildSlotPicker();
-  loadAsset(match.imagem).then(img=>{slotImages[0]=img;draw()}).catch(e=>message(e.message));break
-}}}
+async function restoreDraft(){
+ let saved=null;
+ try{saved=JSON.parse(localStorage.getItem(draftKey)||'null')}catch(e){}
+ if(saved){
+  const savedLayout=String(saved.layout||'');
+  if([...layout.options].some(o=>o.value===savedLayout))layout.value=savedLayout;
+  if(saved.distance)distance.value=saved.distance;
+  if(saved.scale)scale.value=saved.scale;
+  if(saved.rotation)rotation.value=saved.rotation;
+  if(saved.arrangement)arrangement.value=saved.arrangement;
+  const n=layoutTypes().length;
+  for(let i=0;i<n;i++){
+   const ref=saved.products?.[i],product=ref&&(catalog[ref.category]||[]).find(p=>p.id===ref.id);
+   slotProducts[i]=product?{...product,category:ref.category}:null;
+   slotOrientations[i]=saved.orientations?.[i]||product?.orientacao||'vertical';
+   slotScales[i]=Number(saved.scales?.[i])||100;
+   slotOffsets[i]=saved.offsets?.[i]||null;
+  }
+  position.x=Number.isFinite(saved.position?.x)?saved.position.x:.5;
+  position.y=Number.isFinite(saved.position?.y)?saved.position.y:.5;
+  $('scaleValue').textContent=scale.value+'%';
+  $('rotationValue').textContent=rotation.value+'°';
+  buildSlotPicker();refreshCounts();renderArrangementCards();
+  await Promise.all(slotProducts.map(async(p,i)=>{if(p)try{slotImages[i]=await loadAsset(p.imagem)}catch(e){}}));
+ }
+ try{
+  const blob=await photoStore('read');
+  if(blob){
+   const img=await loadFile(blob);
+   setupBackground(img);
+   if(saved){position.x=Number.isFinite(saved.position?.x)?saved.position.x:.5;position.y=Number.isFinite(saved.position?.y)?saved.position.y:.5}
+  }
+ }catch(e){}
+ const id=new URLSearchParams(location.search).get('produto');
+ if(id)for(const [category,items] of Object.entries(catalog)){
+  const product=items.find(p=>p.id===id);
+  if(product){
+   slotProducts[0]={...product,category};
+   slotOrientations[0]=product.orientacao==='horizontal'?'horizontal':'vertical';
+   try{slotImages[0]=await loadAsset(product.imagem)}catch(e){message(e.message)}
+   buildSlotPicker();break;
+  }
+ }
+ restoringDraft=false;
+ draw();
+ if(saved||background)message('Sua montagem anterior foi recuperada neste aparelho.');
+}
+restoreDraft();
 })();
 </script>
 </body></html>
