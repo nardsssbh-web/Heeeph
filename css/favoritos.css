@@ -57,3 +57,14 @@
 .minha-heeeph .favoritos-compra-rodape{display:flex;justify-content:center;margin:28px 0 16px}
 .minha-heeeph .favoritos-compra-rodape button{padding:15px 25px;font-size:16px;max-width:100%}
 .minha-heeeph .favoritos-compra-rodape button:disabled{opacity:.5;cursor:not-allowed}
+
+/* Miniatura de favoritas sem sair da Minha HEEEPH */
+.minha-heeeph .favoritos-item .favoritos-ver-placa{display:inline-block;margin:5px;padding:9px;background:#f0c400;color:#111;border:0;border-radius:7px;font-weight:700;cursor:pointer}
+.favoritos-modal{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;padding:20px}
+.favoritos-modal-conteudo{position:relative;max-width:min(95vw,680px);max-height:95vh;display:flex;flex-direction:column;align-items:center;gap:12px;background:#1e1e1e;border:1px solid #f0c400;border-radius:12px;padding:38px 18px 18px;color:#fff}
+.favoritos-modal-imagem{position:relative;max-width:100%;min-width:0}
+.favoritos-modal-imagem img{display:block;max-width:100%;max-height:72vh;object-fit:contain;border-radius:5px}
+.favoritos-modal-fechar{position:absolute;top:2px;right:7px;background:transparent;border:0;color:#fff;font-size:32px;cursor:pointer}
+.favoritos-modal-estrela{position:absolute;top:12px;right:12px;min-width:45px;height:45px;border-radius:50%;border:2px solid #f0c400;background:#f0c400;color:#111;font-size:28px;font-weight:900;cursor:pointer}
+.favoritos-modal-estrela[aria-pressed="false"]{background:#111;color:#f0c400}
+.favoritos-modal-nome{text-align:center}
