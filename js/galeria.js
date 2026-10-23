@@ -334,8 +334,8 @@ updateCartCount();
 /* Favoritas locais HEEEPH, sem dependência de cadastro. */
 (function carregarFavoritas(){
   const css=document.createElement("link");
-  css.rel="stylesheet";css.href="css/favoritos.css?v=6";document.head.append(css);
+  css.rel="stylesheet";css.href="css/favoritos.css?v=7";document.head.append(css);
   const app=document.createElement("script");
-  app.src="js/favoritos.js?v=11";
+  app.src="js/favoritos.js?v=12";
   document.body.append(app);
 })();
