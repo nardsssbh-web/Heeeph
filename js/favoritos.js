@@ -71,8 +71,8 @@
       emailForm.addEventListener("submit",async e=>{
         e.preventDefault();const b=emailForm.querySelector("button");b.disabled=true;
         try{const email=document.getElementById("emailConta").value.trim();
-          const {error}=await cliente.auth.signInWithOtp({email,options:{shouldCreateUser:true}});
-          if(error)throw error;codigoForm.hidden=false;msg("Enviamos um código para seu e-mail. Confira também o spam.");
+          const {error}=await cliente.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+"/minha-heeeph.html"}});
+          if(error)throw error;codigoForm.hidden=false;msg("Confira seu e-mail: abra o link de acesso ou informe o código, se recebido. Veja também o spam.");
         }catch(e){msg("Não foi possível enviar o código. Confira o e-mail e tente novamente.");}
         finally{b.disabled=false;}
       });
