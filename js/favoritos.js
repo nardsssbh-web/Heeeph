@@ -66,23 +66,19 @@
     const el=document.getElementById("contaConteudo");if(!el)return;
     if(!cliente){el.innerHTML="<p>O cadastro ainda não foi configurado. Nenhuma conta pode ser criada por enquanto.</p>";return;}
     if(!usuario){
-      el.innerHTML='<form id="formEmail"><label for="emailConta">Seu e-mail</label><input id="emailConta" type="email" autocomplete="email" required maxlength="254" placeholder="voce@exemplo.com"><button type="submit">Receber código</button></form><form id="formCodigo" hidden><label for="codigoConta">Código recebido por e-mail</label><input id="codigoConta" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,8}" required placeholder="Código"><button type="submit">Entrar</button></form>';
-      const emailForm=document.getElementById("formEmail"),codigoForm=document.getElementById("formCodigo");
-      emailForm.addEventListener("submit",async e=>{
-        e.preventDefault();const b=emailForm.querySelector("button");b.disabled=true;
-        try{const email=document.getElementById("emailConta").value.trim();
+      el.innerHTML='<form id="formEmail"><label for="emailConta">Seu e-mail</label><input id="emailConta" type="email" autocomplete="email" required maxlength="254" placeholder="voce@exemplo.com"><button type="submit">Enviar link de acesso</button></form><p>Você receberá um link para entrar na sua conta. Não precisa de senha nem código.</p>';
+      document.getElementById("formEmail").addEventListener("submit",async e=>{
+        e.preventDefault();
+        const b=e.currentTarget.querySelector("button");
+        b.disabled=true;
+        try{
+          const email=document.getElementById("emailConta").value.trim();
           const {error}=await cliente.auth.signInWithOtp({email,options:{shouldCreateUser:true,emailRedirectTo:location.origin+"/minha-heeeph.html"}});
-          if(error)throw error;codigoForm.hidden=false;msg("Confira seu e-mail: abra o link de acesso ou informe o código, se recebido. Veja também o spam.");
-        }catch(e){msg("Não foi possível enviar o código. Confira o e-mail e tente novamente.");}
-        finally{b.disabled=false;}
-      });
-      codigoForm.addEventListener("submit",async e=>{
-        e.preventDefault();const b=codigoForm.querySelector("button");b.disabled=true;
-        try{const email=document.getElementById("emailConta").value.trim(),token=document.getElementById("codigoConta").value.trim();
-          const {error}=await cliente.auth.verifyOtp({email,token,type:"email"});if(error)throw error;
-          msg("Acesso confirmado.");
-        }catch(e){msg("Código inválido ou expirado. Solicite outro.");}
-        finally{b.disabled=false;}
+          if(error)throw error;
+          msg("Link enviado! Abra o e-mail e clique em Confirmar acesso. Confira também o spam.");
+        }catch(e){
+          msg("Não foi possível enviar o link agora. Aguarde um pouco e tente novamente.");
+        }finally{b.disabled=false;}
       });
       return;
     }
@@ -104,14 +100,16 @@
       const conf=await resposta.json();
       if(!conf.configured||!window.supabase)throw new Error("Não configurado");
       cliente=window.supabase.createClient(conf.url,conf.key,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}});
-      const {data:{user}}=await cliente.auth.getUser();usuario=user;
+      const {data:{session},error:sessionError}=await cliente.auth.getSession();
+      if(sessionError)throw sessionError;
+      usuario=session?.user||null;
       if(usuario)await buscar();
       cliente.auth.onAuthStateChange((_event,session)=>{
         const novo=session?.user||null;
         if(novo?.id!==usuario?.id){usuario=novo;favoritos.clear();atualizarEstrelas();mostrarConta();if(usuario)buscar().then(mostrarConta).catch(()=>msg("Erro ao carregar favoritas."));}
       });
       mostrarConta();
-    }catch(e){mostrarConta();}
+    }catch(e){mostrarConta();msg("Não foi possível conectar a conta neste endereço. Abra a versão atualizada da HEEEPH.");}
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",iniciar);else iniciar();
 })();
