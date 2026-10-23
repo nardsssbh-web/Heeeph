@@ -330,3 +330,12 @@ if (paginaAtualGaleria) {
 criarModaisSeNaoExistirem();
 renderizarGaleria();
 updateCartCount();
+
+/* Favoritas locais HEEEPH, sem dependência de cadastro. */
+(function carregarFavoritas(){
+  const css=document.createElement("link");
+  css.rel="stylesheet";css.href="css/favoritos.css?v=5";document.head.append(css);
+  const app=document.createElement("script");
+  app.src="js/favoritos.js?v=10";
+  document.body.append(app);
+})();
