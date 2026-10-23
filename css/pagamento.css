@@ -2,6 +2,8 @@ body{background:#111;color:#eee;font-family:Arial,sans-serif;margin:0}.checkout{
 
 /* Erros visíveis sem confundir avisos de progresso com falhas. */
 #pedidoResumo,#pedidoNumero,#cepConferencia{overflow-wrap:anywhere}
+#confirmacaoSaida{background:#302900;border:2px solid #b49c23;border-radius:10px;padding:18px;margin:16px 0;line-height:1.6;scroll-margin-top:20px}
+#confirmacaoSaida h2{margin-top:0}#manterPedido{background:#454545}
 #mensagem:empty{display:none}
 #mensagem[data-tipo="erro"]{color:#ffb4b4;background:#3b1515;border:2px solid #ff6262;border-radius:8px;padding:16px;font-size:20px;font-weight:700;line-height:1.5}
 .erro-campo{display:block;color:#ffb4b4;font-size:17px;font-weight:700;line-height:1.5;margin-top:8px}

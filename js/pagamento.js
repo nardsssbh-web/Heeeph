@@ -69,6 +69,53 @@
     return d;
   }
   const chaveRecuperacao='heeeph_pedido_recuperavel';
+  let motivoSaida;
+  function ocultarPagamentoAntigo(){
+    $('pixResultado').hidden=true;$('qr').hidden=true;$('qr').removeAttribute('src');$('pixCodigo').value='';$('copiar').disabled=true;
+    $('autenticacaoCartao').hidden=true;$('desafio3ds').hidden=true;$('desafio3ds').removeAttribute('src');
+    $('meios').hidden=true;$('recuperarPix').hidden=true;
+  }
+  function voltarParaEscolha(motivo){
+    // Só depois de confirmação persistida no servidor: invalidar a cotação e a preparação antigas.
+    sessionStorage.removeItem('heeeph_checkout');sessionStorage.removeItem('heeeph_preparacao');sessionStorage.removeItem('heeeph_pedido_teste');
+    localStorage.removeItem(chaveRecuperacao);
+    if(pedido?.id)localStorage.setItem('heeeph_ultimo_pedido_encerrado',JSON.stringify({id:pedido.id,em:Date.now()}));
+    ocultarPagamentoAntigo();
+    window.location.href=motivo==='alterar'?'carrinho.html':'index.html';
+  }
+  async function concluirSaida(){
+    if(emPagamento)return;
+    emPagamento=true;$('confirmarSaida').disabled=true;$('conferir').disabled=true;
+    try{
+      // Uma preparação cuja resposta se perdeu precisa ser recuperada, nunca descartada às cegas.
+      if(!pedido&&lerSessao('heeeph_preparacao'))pedido=await preparar();
+      if(!pedido){const recibo=reciboSalvo();if(recibo)pedido=recibo;}
+      if(pedido){
+        ocultarPagamentoAntigo();
+        const p=await api({acao:'abandonarPedido',id:pedido.id,motivo:motivoSaida,confirmado:true},true);
+        guardar(p);
+        if(p.edicaoLiberada!==true||p.saida?.confirmada!==true)throw new Error('O encerramento não foi confirmado. Consulte este pedido antes de iniciar outra cobrança.');
+      }
+      voltarParaEscolha(motivoSaida);
+    }catch(e){
+      ocultarPagamentoAntigo();
+      avisar(e.message+' Nenhuma nova cobrança foi iniciada.');
+      $('mensagemSaida').textContent='Não foi possível liberar a compra. Consulte o pagamento ou tente confirmar novamente. O pedido e seu histórico foram preservados.';
+    }finally{emPagamento=false;$('confirmarSaida').disabled=false;}
+  }
+  function solicitarSaida(motivo){
+    if(emPagamento)return;
+    motivoSaida=motivo;
+    if(!pedido&&!reciboSalvo()&&!lerSessao('heeeph_preparacao'))return concluirSaida();
+    $('confirmacaoSaida').hidden=false;
+    $('mensagemSaida').textContent='Vamos consultar o Mercado Pago. Se houver Pix pendente elegível, solicitaremos seu cancelamento. Você só poderá continuar após a confirmação. Pagamento aprovado não será cancelado. O histórico será preservado; alterações exigem novo cálculo de frete.';
+    $('confirmacaoSaida').scrollIntoView({block:'center'});
+  }
+  $('alterarPedido').addEventListener('click',()=>solicitarSaida('alterar'));
+  $('desistirCompra').addEventListener('click',()=>solicitarSaida('desistir'));
+  $('confirmarSaida').addEventListener('click',concluirSaida);
+  $('manterPedido').addEventListener('click',()=>{$('confirmacaoSaida').hidden=true;});
+  document.querySelectorAll?.('a[href="carrinho.html"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();solicitarSaida('alterar');}));
   function lerSessao(chave){try{return sessionStorage.getItem(chave);}catch(_){return null;}}
   function reciboSalvo() {
     try {
@@ -114,7 +161,7 @@
     avisar('Consultando o pedido anterior antes de conferir outro carrinho…','info');
     try{
       const anterior=await api({acao:'status',id:pedido.id},true);
-      if(anterior.tentativa || (anterior.pagamento && !anterior.pagamento.aprovado && !anterior.pagamento.trocaPermitida)){
+      if(anterior.saida || anterior.tentativa || (anterior.pagamento && !anterior.pagamento.aprovado && !anterior.pagamento.trocaPermitida)){
         resultado(anterior);
         avisar('O pedido anterior ainda precisa de confirmação. Ele foi retomado; outra compra não foi preparada.','info');return;
       }
@@ -207,6 +254,14 @@
     if(p.teste!==false)console.info('CHECKOUT_DISPOSITIVO_TESTE '+JSON.stringify({fase:'consulta',obtido:typeof window.MP_DEVICE_SESSION_ID==='string',presente:dispositivoValido(window.MP_DEVICE_SESSION_ID)}));
     ambienteTela(p.teste !== false);
     guardar(p); resumo(p); $('pedidoResumo').textContent='Pedido '+p.id; const pg=p.pagamento;
+    if(p.saida){
+      ocultarPagamentoAntigo();$('entrega').hidden=true;$('resultado').hidden=false;$('trocarPagamento').hidden=true;
+      $('statusTitulo').textContent=p.saida.confirmada?'Tentativa encerrada':'Encerramento em conferência';
+      $('statusTexto').textContent=p.saida.confirmada?'O histórico foi preservado. Use Alterar meu pedido para voltar ao carrinho e calcular o frete novamente.':'Uma nova cobrança permanece bloqueada. Consulte o pagamento e confirme novamente a alteração ou desistência.';
+      $('pedidoNumero').textContent='Pedido: '+p.id;
+      if(pg?.aprovado){$('statusTitulo').textContent='Pagamento aprovado';$('statusTexto').textContent='A compra foi preservada. Para alterações, procure a loja.';}
+      return;
+    }
     mostrarAutenticacao(pg);
     $('trocarPagamento').hidden=!pg?.trocaPermitida;
     $('recuperarPix').hidden = !p.recuperarPix || Boolean(pg);
@@ -250,6 +305,7 @@
     await $('consultar').click();
   });
   async function pagar(metodo, formData, tipo) {
+    if(pedido?.saida){avisar('Esta tentativa está encerrada ou em conferência. Consulte o pedido antes de continuar.');return;}
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
     avisar('Enviando o pagamento. Aguarde a confirmação desta tentativa…', 'info');
     try {
@@ -262,7 +318,9 @@
   }
   $('entrega').addEventListener('submit',async e=>{
     e.preventDefault();
+    if(emPagamento)return;
     if(!entrada?.itens?.length){avisar('Volte ao carrinho e confira o frete antes de continuar.');return;}
+    emPagamento=true;
     limparErros(); $('conferir').disabled=true; avisar('Conferindo produtos e frete…', 'info');
     const f=new FormData(e.target), cliente={nome:f.get('nome'),email:f.get('email'),cpf:f.get('cpf'),telefone:f.get('telefone'),termos:f.get('termos')==='on',endereco:{}};
     for(const k of ['rua','numero','complemento','bairro','cidade','uf']) cliente.endereco[k]=f.get(k);
@@ -273,7 +331,7 @@
       pedido=await preparar({...entrada,cliente});resultado(pedido);avisar('Pedido '+pedido.id+' guardado. Confira o total e escolha o pagamento.', 'info');$('meios').scrollIntoView({block:'start'});
     }
     catch(e){avisar(e.message,'erro',e.dados?.campo);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
-    finally{$('conferir').disabled=false;}
+    finally{emPagamento=false;$('conferir').disabled=false;}
   });
   $('pix').addEventListener('click',()=>pagar('pix').catch(()=>{}));
   $('trocarPagamento').addEventListener('click',async()=>{

@@ -1,8 +1,38 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
+test('alterar após Pix exige confirmação, mantém carrinho e invalida cotação somente após encerramento confirmado',async()=>{
+ const n=await tela({pagamento:{status:'action_required',pix:{codigo:'PIX_ANTIGO'}}},{heeeph_preparacao:'anterior'},{recibos:{heeeph_cart:'itens preservados'},api:async()=>({ok:true,json:async()=>({...base,saida:{confirmada:true},edicaoLiberada:true})})});
+ await n.alterarPedido.click();assert.equal(n.confirmacaoSaida.hidden,false);assert.deepEqual(n.chamadas,['status']);assert.equal(n.pixCodigo.value,'PIX_ANTIGO');
+ await n.manterPedido.click();assert.equal(n.confirmacaoSaida.hidden,true);assert.deepEqual(n.chamadas,['status']);
+ await n.alterarPedido.click();await n.confirmarSaida.click();
+ assert.deepEqual(n.chamadas,['status','abandonarPedido']);assert.equal(n.enviados.at(-1).confirmado,true);assert.equal(n.enviados.at(-1).motivo,'alterar');
+ assert.equal(n.location.href,'carrinho.html');assert.equal(n.values.heeeph_checkout,undefined);assert.equal(n.values.heeeph_preparacao,undefined);assert.equal(n.values.heeeph_pedido_teste,undefined);
+ assert.equal(n.recibos.heeeph_pedido_recuperavel,undefined);assert.equal(n.recibos.heeeph_cart,'itens preservados');assert.equal(n.pixCodigo.value,'');assert.equal(n.pixResultado.hidden,true);
+});
+test('desistir com cancelamento inconclusivo preserva referência e bloqueia redirecionamento e Pix antigo',async()=>{
+ const n=await tela({pagamento:{status:'action_required',pix:{codigo:'PIX_ANTIGO'}}},{},{api:async()=>({ok:false,status:409,json:async()=>({mensagem:'Cancelamento não confirmado. Nova cobrança bloqueada.'})})});
+ await n.desistirCompra.click();await n.confirmarSaida.click();assert.equal(n.location.href,'https://loja.test/pagamento.html');
+ assert.ok(n.values.heeeph_pedido_teste);assert.ok(n.recibos.heeeph_pedido_recuperavel);assert.match(n.mensagem.textContent,/não confirmado/);assert.equal(n.pixCodigo.value,'');assert.equal(n.meios.hidden,true);
+ assert.equal(n.enviados.at(-1).motivo,'desistir');assert.equal(n.chamadas.includes('pagar'),false);
+});
+test('recarregar tentativa encerrada ou incerta não reapresenta QR nem permite enviar Pix',async()=>{
+ for(const confirmada of [true,false]){
+  const n=await tela({saida:{confirmada},pagamento:{status:'action_required',pix:{codigo:'PIX_ANTIGO'}}});
+  assert.equal(n.pixResultado.hidden,true);assert.equal(n.pixCodigo.value,'');assert.equal(n.meios.hidden,true);assert.equal(n.recuperarPix.hidden,true);
+  await n.pix.click();assert.deepEqual(n.chamadas,['status']);
+ }
+});
+test('antes de preparar pedido editar é livre e desistir preserva o carrinho sem API financeira',async()=>{
+ for(const motivo of ['alterar','desistir']){
+  const n=await tela({}, {heeeph_pedido_teste:null},{recibos:{heeeph_cart:'preservado'}});
+  await (motivo==='alterar'?n.alterarPedido:n.desistirCompra).click();
+  assert.equal(n.location.href,motivo==='alterar'?'carrinho.html':'index.html');assert.equal(n.recibos.heeeph_cart,'preservado');assert.equal(n.values.heeeph_checkout,undefined);assert.deepEqual(n.chamadas,['configuracao','cep']);
+ }
+});
 async function tela(resposta,armazenamento={},opcoes={}){
  const nodes={},chamadas=[];const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
  for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','cepConferencia','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento','confirmarCartao'])nodes[id]=el();
+ for(const id of ['alterarPedido','desistirCompra','confirmacaoSaida','mensagemSaida','confirmarSaida','manterPedido'])nodes[id]=Object.assign(el(),{hidden:id==='confirmacaoSaida'});
  for(const k of ['nome','email','cpf','telefone','rua','numero','complemento','bairro','cidade','uf','termos'])nodes.entrega.elements[k]=Object.assign(el(),{name:k,value:opcoes.campos?.[k]||'',focus(){},closest(){return {append(){}};}});
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
@@ -21,6 +51,8 @@ async function tela(resposta,armazenamento={},opcoes={}){
  ctx.fetch=async(url,opts)=>{if(url==='/api/checkout')enviados.push(JSON.parse(opts.body));return fetchOriginal(url,opts);};
  ctx.window.MP_DEVICE_SESSION_ID=opcoes.deviceId;nodes.enviados=enviados;
  ctx.window.location={href:opcoes.url||'https://loja.test/pagamento.html'};
+ nodes.location=ctx.window.location;nodes.values=values;
+ if(opcoes.api){const original=ctx.fetch;ctx.fetch=async(url,opts)=>{if(url==='/api/checkout'&&JSON.parse(opts.body).acao==='abandonarPedido'){const b=JSON.parse(opts.body);enviados.push(b);chamadas.push(b.acao);return opcoes.api(b);}return original(url,opts);};}
  nodes.diagnosticoDispositivo=Object.assign(el(),{hidden:true});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;nodes.recibos=recibos;return nodes;
 }

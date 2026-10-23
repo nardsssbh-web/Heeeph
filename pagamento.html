@@ -5,6 +5,8 @@
 <p id="mensagem" role="status" aria-live="polite"></p>
 <p id="persistenciaAviso" role="status" aria-live="polite" hidden></p>
 <p id="diagnosticoDispositivo" role="status" aria-live="polite" hidden></p>
+<section aria-label="Opções da compra"><button id="alterarPedido" type="button">Alterar meu pedido</button><button id="desistirCompra" type="button">Desistir da compra</button></section>
+<section id="confirmacaoSaida" hidden aria-label="Confirmar alteração ou desistência"><h2>Antes de continuar</h2><p id="mensagemSaida" role="status"></p><button id="confirmarSaida" type="button">Confirmar e consultar pagamento</button><button id="manterPedido" type="button">Continuar neste pedido</button></section>
 <section id="retomada" hidden aria-label="Retomar pedido"><p id="retomadaTexto"></p><button id="retomarPedido" type="button">Retomar este pedido sem gerar outro pagamento</button><button id="novoCarrinho" type="button" hidden>Conferir novo carrinho</button></section>
 <div class="colunas"><section><form id="entrega"><h2>Dados de entrega</h2><p id="cep"></p><p id="cepConferencia" role="status" aria-live="polite"></p>
 <label>Nome completo<input name="nome" autocomplete="name" required maxlength="100"></label>
