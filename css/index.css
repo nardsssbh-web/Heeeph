@@ -952,3 +952,7 @@ body{
 @media(max-width:760px){
   body{background-attachment:scroll;background-position:center top;background-size:cover;}
 }
+
+/* Acesso ao simulador abaixo de Comprar Agora no destaque da Home */
+.info-placa .btn-ver-parede-home{display:flex;margin:10px auto 0;text-decoration:none;background:linear-gradient(180deg,#35383d,#17191c);color:#ffd34f;border:1px solid #d9a510;min-width:240px;max-width:100%;font-size:14px}
+.info-placa .btn-ver-parede-home:hover{filter:brightness(1.15);transform:translateY(-2px)}
