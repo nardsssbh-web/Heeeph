@@ -727,3 +727,9 @@ body.fundo-categorias .whatsapp-fixo img{
     width:90%;
   }
 }
+
+/* Acesso ao simulador na página Coleções, sem modificar os botões das categorias. */
+.acesso-simulador-colecoes{position:relative;z-index:3;display:flex;justify-content:center;margin:0 0 24px}
+.acesso-simulador-colecoes a{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:13px 26px;border:2px solid #f4bd28;border-radius:12px;background:linear-gradient(180deg,#f7d24d,#dba614);color:#17120b;text-decoration:none;font-weight:900;font-size:clamp(14px,1.5vw,19px);box-shadow:0 5px 18px rgba(0,0,0,.5);text-align:center}
+.acesso-simulador-colecoes a:hover,.acesso-simulador-colecoes a:focus-visible{filter:brightness(1.12);transform:translateY(-2px)}
+@media(max-width:780px){.acesso-simulador-colecoes{margin-bottom:18px}.acesso-simulador-colecoes a{width:min(100%,340px)}}
