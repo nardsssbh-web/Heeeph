@@ -30,3 +30,8 @@
 .item-placa .favorito-imagem-wrap button.favorito-estrela{display:flex;align-items:center;justify-content:center;font-family:Arial,"Segoe UI Symbol",sans-serif;font-size:29px!important;font-weight:900;line-height:1!important;padding:0!important;color:#ffd32a!important;text-shadow:0 1px 2px #000}
 .item-placa .favorito-imagem-wrap button.favorito-estrela::before{content:none!important}
 .item-placa .favorito-imagem-wrap button.favorito-estrela[aria-pressed="true"]{color:#151515!important;text-shadow:none}
+
+/* Contador de placas favoritas na estrela do menu Minha HEEEPH. */
+.heeeph-estrela-menu{position:relative;display:inline-flex;align-items:center;justify-content:center;font-size:23px;line-height:1;color:#f0c400;margin-right:4px}
+.heeeph-contador-favoritas{position:absolute;top:-8px;right:-10px;min-width:17px;height:17px;padding:0 3px;box-sizing:border-box;border-radius:999px;background:#d82222;color:#fff;font-size:10px;font-weight:900;line-height:17px;text-align:center;border:1px solid #fff}
+.heeeph-contador-favoritas[hidden]{display:none}
