@@ -42,6 +42,24 @@
    const retorno=node('p');retorno.className='retorno-pedido';retorno.setAttribute('role','status');retorno.setAttribute('aria-live','polite');const anterior=retornos.get(p.id);if(anterior){retorno.textContent=anterior.texto;retorno.dataset.tipo=anterior.cor||(anterior.erro?'erro':'info');}sec.append(retorno);
    function responder(texto,erro=false,cor){const tipo=cor||(erro?'erro':'info');retornos.set(p.id,{texto,erro,cor:tipo});retorno.textContent=texto;retorno.dataset.tipo=tipo;}
    const button=node('button','Consultar Pagamento');button.type='button';button.addEventListener('click',async()=>{button.disabled=true;button.textContent='Consultando…';responder('Consultando a situação do pagamento…');try{const d=await api({acao:'consultar',id:p.id});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Consulta realizada às '+new Date().toLocaleTimeString('pt-BR')+'. Pagamento: '+situacao(d.pedido)+'.'+(!d.pedido.pagamento?' Nenhum pagamento confirmado para este pedido.':''),false,d.pedido.pagamento?.aprovado?'aprovado':recusado(d.pedido)?'recusado':d.pedido.pagamento?'pendente':'info');render(p.id);}catch(e){responder(e.message,true);}finally{button.disabled=false;button.textContent='Consultar Pagamento';}});sec.append(button);
+   if(p.id==='83891a67a9028883fed00b55b64db215'&&p.ambiente==='teste'){
+     const emitir=node('button','Recuperar checkout expirado de teste');emitir.type='button';
+     const area=node('div');area.hidden=true;let versaoQR=0;
+     emitir.addEventListener('click',async()=>{
+       if(!window.confirm('Criar acesso temporário de uso único, por até 5 minutos, somente para consultar e desistir deste pedido expirado? Não permite pagar. Não compartilhe o acesso.'))return;
+       const versao=++versaoQR;emitir.disabled=true;area.replaceChildren();area.hidden=true;
+       try{
+         const r=await api({acao:'recuperarCheckoutTeste',id:p.id,confirmacao:p.id});
+         if(!/^[a-f0-9]{64}$/.test(r.acessoTemporario||'')||!Number.isFinite(r.expiraEm))throw Error('Acesso temporário não confirmado.');
+         const url=new URL('retomar-teste.html',window.location.href);url.hash='acesso='+r.acessoTemporario;
+         const aviso=node('p','Acesso válido até '+new Date(r.expiraEm).toLocaleTimeString('pt-BR')+'. Aponte a câmera do celular para este QR. Ele é uma chave temporária: não compartilhe nem fotografe para enviar ao chat. O prazo é do acesso, não do Pix.');area.append(aviso);
+         if(typeof qrcode!=='function')throw Error('Não foi possível mostrar o QR. Solicite outro acesso após atualizar o painel.');
+         const codigo=qrcode(0,'M');codigo.addData(url.href);codigo.make();
+         const img=node('img');img.alt='Acesso privado temporário ao pedido de teste';img.src=codigo.createDataURL(5,8);img.style.maxWidth='100%';area.append(img);area.hidden=false;
+         setTimeout(()=>{if(versao===versaoQR){area.replaceChildren();area.hidden=true;}},Math.max(0,r.expiraEm-Date.now()));
+       }catch(e){responder(e.message,true);}finally{emitir.disabled=false;}
+     });sec.append(emitir,area);
+   }
    const label=node('label','Status do pedido'),select=node('select');select.setAttribute('aria-label','Status do pedido '+p.id);
    for(const etapa of etapas){const o=node('option',etapa);o.value=etapa;select.append(o);}select.value=p.gestao?.status||'Recebido';label.append(select);sec.append(label);
    const salvar=node('button','Salvar status');salvar.type='button';salvar.addEventListener('click',async()=>{salvar.disabled=true;select.disabled=true;try{const d=await api({acao:'etapa',id:p.id,status:select.value});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Status salvo: '+d.pedido.gestao.status+'.');render(p.id);}catch(e){responder(e.message,true);}finally{salvar.disabled=false;select.disabled=false;}});sec.append(salvar);

@@ -12,6 +12,10 @@ module.exports=async(req,res)=>{
   if(!esperado||esperado.length<32||!crypto.timingSafeEqual(Buffer.from(c.hash(esperado)),Buffer.from(c.hash(recebido))))return res.status(401).json({mensagem:'Acesso não autorizado.'});
   try{
     const b=typeof req.body==='string'?JSON.parse(req.body):req.body||{};
+    if(b.acao==='recuperarCheckoutTeste'){
+      if(b.confirmacao!==b.id)return res.status(400).json({mensagem:'Confirme o pedido de teste.'});
+      return res.json(await require('../lib/checkout-recuperacao').emitir(b.id));
+    }
     if(['etapa','excluir'].includes(b.acao)){
       return await c.exclusivo(b.id,async()=>{
       const p=await c.buscar(b.id);

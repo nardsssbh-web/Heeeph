@@ -18,6 +18,7 @@ module.exports = async (req, res) => {
     if (!b || JSON.stringify(b).length > 20000) throw new c.ErroCheckout('Confira os dados do pedido.');
     const token = String(req.headers.authorization || '').replace(/^Bearer /, '');
     if (b.acao === 'configuracao') return res.json({ teste:c.ambiente().teste });
+    if (b.acao === 'resgatarCheckoutTeste') return res.json(await require('../lib/checkout-recuperacao').resgatar(b.acessoTemporario));
     if (b.acao === 'preparar') return res.json(await c.preparar(b));
     if (b.acao === 'pagar') return res.json(await c.pagar(b.id, token, b));
     if (b.acao === 'recuperarPix') return res.json(await c.recuperarPix(b.id, token));

@@ -1,5 +1,21 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
+test('sessão recuperada permite só desistência, sem substituir recibo original ou criar pagamento',async()=>{
+ const id='83891a67a9028883fed00b55b64db215',temporario={id,token:'d'.repeat(64),expiraEm:Date.now()+60000,recuperacaoTeste:true};
+ const original=JSON.stringify({id:'e'.repeat(32),token:'f'.repeat(64),guardadoEm:Date.now()});
+ const p={...temporario,pagamento:{status:'canceled',detalhe:'expired'},saida:{confirmada:true}};
+ const n=await tela(p,{heeeph_recuperacao_teste:JSON.stringify(temporario)},{recibos:{heeeph_pedido_recuperavel:original},api:async()=>({ok:true,json:async()=>({...base,...p,edicaoLiberada:true})})});
+ assert.deepEqual(n.chamadas,['status']);assert.equal(n.alterarPedido.hidden,true);assert.equal(n.meios.hidden,true);
+ assert.match(n.statusTexto.textContent,/Use Desistir da compra/);assert.doesNotMatch(n.statusTexto.textContent,/Use Alterar/);
+ assert.equal(n.recibos.heeeph_pedido_recuperavel,original);await n.pix.click();assert.deepEqual(n.chamadas,['status']);
+ await n.alterarPedido.click();assert.match(n.mensagem.textContent,/apenas consultar e desistir/);
+ await n.desistirCompra.click();await n.confirmarSaida.click();assert.equal(n.location.href,'index.html');assert.equal(n.values.heeeph_recuperacao_teste,undefined);
+ assert.equal(n.recibos.heeeph_pedido_recuperavel,original);assert.deepEqual(n.chamadas,['status','abandonarPedido']);
+});
+test('sessão temporária expirada não inicia pedido nem reaproveita preparação antiga',async()=>{
+ const n=await tela({}, {heeeph_recuperacao_teste:JSON.stringify({id:'83891a67a9028883fed00b55b64db215',token:'d'.repeat(64),recuperacaoTeste:true,expiraEm:Date.now()-1}),heeeph_preparacao:'pendente'});
+ assert.deepEqual(n.chamadas,[]);assert.match(n.mensagem.textContent,/temporário expirou/);assert.equal(n.entrega.hidden,true);assert.equal(n.values.heeeph_recuperacao_teste,undefined);
+});
 test('alterar após Pix exige confirmação, mantém carrinho e invalida cotação somente após encerramento confirmado',async()=>{
  const n=await tela({pagamento:{status:'action_required',pix:{codigo:'PIX_ANTIGO'}}},{heeeph_preparacao:'anterior'},{recibos:{heeeph_cart:'itens preservados'},api:async()=>({ok:true,json:async()=>({...base,saida:{confirmada:true},edicaoLiberada:true})})});
  await n.alterarPedido.click();assert.equal(n.confirmacaoSaida.hidden,false);assert.deepEqual(n.chamadas,['status']);assert.equal(n.pixCodigo.value,'PIX_ANTIGO');

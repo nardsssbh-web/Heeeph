@@ -76,6 +76,9 @@
     $('meios').hidden=true;$('recuperarPix').hidden=true;
   }
   function voltarParaEscolha(motivo){
+    if(pedido?.recuperacaoTeste){
+      sessionStorage.removeItem('heeeph_recuperacao_teste');ocultarPagamentoAntigo();window.location.href='index.html';return;
+    }
     // Só depois de confirmação persistida no servidor: invalidar a cotação e a preparação antigas.
     sessionStorage.removeItem('heeeph_checkout');sessionStorage.removeItem('heeeph_preparacao');sessionStorage.removeItem('heeeph_pedido_teste');
     localStorage.removeItem(chaveRecuperacao);
@@ -105,10 +108,11 @@
   }
   function solicitarSaida(motivo){
     if(emPagamento)return;
+    if(pedido?.recuperacaoTeste&&motivo!=='desistir'){avisar('Este acesso temporário permite apenas consultar e desistir deste pedido expirado.');return;}
     motivoSaida=motivo;
     if(!pedido&&!reciboSalvo()&&!lerSessao('heeeph_preparacao'))return concluirSaida();
     $('confirmacaoSaida').hidden=false;
-    $('mensagemSaida').textContent='Vamos consultar o Mercado Pago. Se houver Pix pendente elegível, solicitaremos seu cancelamento. Você só poderá continuar após a confirmação. Pagamento aprovado não será cancelado. O histórico será preservado; alterações exigem novo cálculo de frete.';
+    $('mensagemSaida').textContent=pedido?.recuperacaoTeste?'Vamos confirmar novamente a expiração deste pedido de teste e concluir a desistência. Não será gerado Pix nem solicitado cancelamento de cobrança pendente. O histórico será preservado.':'Vamos consultar o Mercado Pago. Se houver Pix pendente elegível, solicitaremos seu cancelamento. Você só poderá continuar após a confirmação. Pagamento aprovado não será cancelado. O histórico será preservado; alterações exigem novo cálculo de frete.';
     $('confirmacaoSaida').scrollIntoView({block:'center'});
   }
   $('alterarPedido').addEventListener('click',()=>solicitarSaida('alterar'));
@@ -128,6 +132,14 @@
   }
   function guardar(p) {
     pedido={...pedido,...p};
+    if(pedido.recuperacaoTeste){
+      const r={id:pedido.id,token:pedido.token,expiraEm:pedido.expiraEm,recuperacaoTeste:true};
+      sessionStorage.setItem('heeeph_recuperacao_teste',JSON.stringify(r));
+      $('retomada').hidden=true;$('alterarPedido').hidden=true;$('novoCarrinho').hidden=true;
+      document.querySelectorAll?.('a[href="carrinho.html"]').forEach(a=>{a.hidden=true;});
+      $('persistenciaAviso').hidden=false;$('persistenciaAviso').textContent='Acesso temporário de teste: somente consultar e desistir. Expira às '+new Date(r.expiraEm).toLocaleTimeString('pt-BR')+'. Não permite gerar pagamentos.';
+      return;
+    }
     const recibo={id:pedido.id,token:pedido.token};
     // Somente a referência de acesso, sem nome, CPF, endereço ou dados de cartão.
     let persistido=false;
@@ -258,6 +270,7 @@
       ocultarPagamentoAntigo();$('entrega').hidden=true;$('resultado').hidden=false;$('trocarPagamento').hidden=true;
       $('statusTitulo').textContent=p.saida.confirmada?'Tentativa encerrada':'Encerramento em conferência';
       $('statusTexto').textContent=p.saida.confirmada?'O histórico foi preservado. Use Alterar meu pedido para voltar ao carrinho e calcular o frete novamente.':'Uma nova cobrança permanece bloqueada. Consulte o pagamento e confirme novamente a alteração ou desistência.';
+      if(p.recuperacaoTeste)$('statusTexto').textContent='O histórico foi preservado. Use Desistir da compra para concluir este teste e voltar à loja, sem gerar pagamento.';
       $('pedidoNumero').textContent='Pedido: '+p.id;
       if(pg?.aprovado){$('statusTitulo').textContent='Pagamento aprovado';$('statusTexto').textContent='A compra foi preservada. Para alterações, procure a loja.';}
       return;
@@ -305,6 +318,7 @@
     await $('consultar').click();
   });
   async function pagar(metodo, formData, tipo) {
+    if(pedido?.recuperacaoTeste){avisar('Acesso temporário sem permissão para pagar.');return;}
     if(pedido?.saida){avisar('Esta tentativa está encerrada ou em conferência. Consulte o pedido antes de continuar.');return;}
     if(emPagamento) return; emPagamento=true; $('pix').disabled=$('cartao').disabled=true;
     avisar('Enviando o pagamento. Aguarde a confirmação desta tentativa…', 'info');
@@ -443,6 +457,13 @@
   for(const uf of ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']){const o=document.createElement('option');o.value=o.textContent=uf;$('entrega').elements.uf.append(o);}
   (async()=>{
     try{
+      const temporario=JSON.parse(lerSessao('heeeph_recuperacao_teste'));
+      if(temporario){
+        if(temporario.recuperacaoTeste!==true||temporario.id!=='83891a67a9028883fed00b55b64db215'||!Number.isFinite(temporario.expiraEm)||temporario.expiraEm<=Date.now()){
+          sessionStorage.removeItem('heeeph_recuperacao_teste');$('entrega').hidden=true;throw new Error('O acesso temporário expirou. Solicite outro no painel; não gere outro pedido.');
+        }
+        pedido=temporario;$('entrega').hidden=true;resultado(await api({acao:'status',id:pedido.id},true));return;
+      }
       let anterior;
       try{anterior=JSON.parse(lerSessao('heeeph_pedido_teste'));}catch(_){}
       if(anterior?.id&&anterior.token){pedido=anterior;resultado(await api({acao:'status',id:pedido.id},true));return;}
