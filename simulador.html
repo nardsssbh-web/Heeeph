@@ -29,6 +29,15 @@ body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,
   .stage.preview-floating .placeholder{padding:18px 8px;font-size:12px}
   .stage.preview-floating .placeholder strong{font-size:14px}
 }
+
+/* Miniaturas reais das placas na etapa de seleção. */
+.slot-thumbnails{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;max-height:260px;overflow-y:auto;margin:10px 0;padding:4px;border:1px solid #4d5058;border-radius:9px;background:#14161a}
+.slot-thumbnail{min-width:0;padding:5px;background:#252830;color:#eee;border:2px solid transparent;border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.slot-thumbnail img{display:block;width:100%;height:84px;object-fit:contain;border-radius:4px;background:#101114}
+.slot-thumbnail span{font-size:10px;line-height:1.2;overflow-wrap:anywhere;font-weight:600}
+.slot-thumbnail[aria-pressed="true"]{border-color:var(--gold);background:#40331c;color:#ffdf92}
+.slot-thumbnail:focus-visible{outline:2px solid #fff;outline-offset:1px}
+@media(max-width:440px){.slot-thumbnails{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -207,6 +216,25 @@ function buildSlotPicker(){
     }
     const productLabel=document.createElement('label');productLabel.textContent='Nome da placa';productLabel.htmlFor='slot-'+index;
     const sel=document.createElement('select');sel.id='slot-'+index;
+    const thumbnails=document.createElement('div');thumbnails.className='slot-thumbnails';thumbnails.setAttribute('aria-label','Prévia das placas disponíveis');
+    function updateThumbnailSelection(){
+      thumbnails.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.path===sel.value)));
+    }
+    function fillThumbnails(){
+      thumbnails.replaceChildren();
+      const items=(catalog[categorySelect.value]||[]).filter(item=>item.imagem);
+      for(const item of items){
+        const button=document.createElement('button');button.type='button';button.className='slot-thumbnail';button.dataset.path=item.imagem;
+        button.setAttribute('aria-label','Selecionar '+(item.nome||'placa'));
+        const img=document.createElement('img');img.src=item.imagem;img.alt=item.nome||'Placa';img.loading='lazy';
+        const name=document.createElement('span');name.textContent=item.nome||'Placa';
+        button.append(img,name);
+        button.addEventListener('click',()=>{sel.value=item.imagem;sel.dispatchEvent(new Event('change'));updateThumbnailSelection()});
+        thumbnails.append(button);
+      }
+      thumbnails.hidden=items.length===0;
+      updateThumbnailSelection();
+    }
     function fillSlotProducts(){
       sel.replaceChildren(new Option(categorySelect.value?'Selecione o nome da placa':'Escolha primeiro a categoria',''));
       const items=catalog[categorySelect.value]||[];
@@ -214,6 +242,7 @@ function buildSlotPicker(){
         if(!item.imagem)continue;
         sel.add(new Option(item.nome||item.id||'Placa',item.imagem));
       }
+      fillThumbnails();
     }
     const previous=slotProducts[index];
     if(previous&&catalog[previous.category]?.some(p=>p.id===previous.id)){
@@ -223,6 +252,7 @@ function buildSlotPicker(){
       slotProducts[index]=null;slotOrientations[index]='vertical';orientation.value='vertical';fillSlotProducts();slotImages[index]=null;draw();
     });
     sel.addEventListener('change',async()=>{
+      updateThumbnailSelection();
       if(!sel.value){slotProducts[index]=null;slotImages[index]=null;draw();return}
       const path=sel.value;
       try{
@@ -236,7 +266,8 @@ function buildSlotPicker(){
         slotImages[index]=img;draw();message('Placa '+(index+1)+' adicionada à montagem.');
       }catch(e){message(e.message)}
     });
-    card.append(label,categoryLabel,categorySelect,productLabel,sel);
+    card.append(label,categoryLabel,categorySelect,productLabel,sel,thumbnails);
+    if(categorySelect.value)fillThumbnails();
     const resizeLabel=document.createElement('label');resizeLabel.textContent='Escala individual — '+(slotScales[index]||100)+'%';
     const resize=document.createElement('input');resize.type='range';resize.min='50';resize.max='180';resize.step='5';resize.value=slotScales[index]||100;
     resize.addEventListener('input',()=>{slotScales[index]=Number(resize.value);resizeLabel.textContent='Escala individual — '+resize.value+'%';draw()});
