@@ -99,7 +99,7 @@ body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,
 <div class="purchase-montagem"><button type="button" id="buySelected">COMPRAR PLACAS DA MONTAGEM</button><p class="hint">As placas escolhidas serão adicionadas ao carrinho nos tamanhos selecionados.</p></div>
 </section></div>
 </main>
-<script src="produtos.js?v=simulador-categorias-20261022b"></script>
+<script src="produtos.js?v=orientacoes-20261023"></script>
 <script>
 (()=>{
 'use strict';
@@ -141,6 +141,7 @@ function photoStore(mode,blob){
 function message(s){status.textContent=s}
 function loadFile(file){return new Promise((resolve,reject)=>{const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};img.onerror=()=>{URL.revokeObjectURL(url);reject(Error('Não foi possível abrir esta imagem.'))};img.src=url})}
 function loadAsset(path){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(Error('Não foi possível carregar esta placa.'));img.src=path})}
+function orientationFromImage(img,product){const w=img.naturalWidth,h=img.naturalHeight;return w>h*1.08?'horizontal':h>w*1.08?'vertical':(product?.orientacao==='horizontal'?'horizontal':'vertical')}
 function layoutTypes(){
  const m=/^(\d+)G(?:(\d+)P)?$|^(\d+)P$/.exec(layout.value);
  return m?[...Array(Number(m[1]||0)).fill('G'),...Array(Number(m[2]||m[3]||0)).fill('P')]:[];
@@ -293,7 +294,7 @@ function buildSlotPicker(){
         const product=(catalog[categorySelect.value]||[]).find(p=>p.imagem===path);
         if(!product){message('Placa não encontrada no catálogo.');return}
         slotProducts[index]={...product,category:categorySelect.value};
-        slotOrientations[index]=product.orientacao==='horizontal'?'horizontal':'vertical';
+        slotOrientations[index]=orientationFromImage(img,product);
         orientation.value=slotOrientations[index];
         slotImages[index]=img;draw();message('Placa '+(index+1)+' adicionada à montagem.');
       }catch(e){message(e.message)}
@@ -477,7 +478,8 @@ async function restoreDraft(){
   $('scaleValue').textContent=scale.value+'%';
   $('rotationValue').textContent=rotation.value+'°';
   buildSlotPicker();refreshCounts();renderArrangementCards();
-  await Promise.all(slotProducts.map(async(p,i)=>{if(p)try{slotImages[i]=await loadAsset(p.imagem)}catch(e){}}));
+  await Promise.all(slotProducts.map(async(p,i)=>{if(p)try{slotImages[i]=await loadAsset(p.imagem);slotOrientations[i]=orientationFromImage(slotImages[i],p)}catch(e){}}));
+  buildSlotPicker();
  }
  try{
   const blob=await photoStore('read');
@@ -493,7 +495,7 @@ async function restoreDraft(){
   if(product){
    slotProducts[0]={...product,category};
    slotOrientations[0]=product.orientacao==='horizontal'?'horizontal':'vertical';
-   try{slotImages[0]=await loadAsset(product.imagem)}catch(e){message(e.message)}
+   try{slotImages[0]=await loadAsset(product.imagem);slotOrientations[0]=orientationFromImage(slotImages[0],product)}catch(e){message(e.message)}
    buildSlotPicker();break;
   }
  }
