@@ -25,3 +25,8 @@
 .item-placa .favorito-imagem-wrap .favorito-estrela{font-size:0}\n.item-placa .favorito-imagem-wrap .favorito-estrela::before{content:"☆";font-size:26px}\n.item-placa .favorito-imagem-wrap .favorito-estrela[aria-pressed="true"]::before{content:"★"}
 .item-placa .favorito-imagem-wrap .favorito-estrela[aria-pressed="true"]{background:#f0c400;color:#111}
 .item-placa .favorito-imagem-wrap .favorito-estrela:hover{transform:scale(1.08)}
+
+/* Correção: símbolo visível em vez do círculo vazio. */
+.item-placa .favorito-imagem-wrap button.favorito-estrela{display:flex;align-items:center;justify-content:center;font-family:Arial,"Segoe UI Symbol",sans-serif;font-size:29px!important;font-weight:900;line-height:1!important;padding:0!important;color:#ffd32a!important;text-shadow:0 1px 2px #000}
+.item-placa .favorito-imagem-wrap button.favorito-estrela::before{content:none!important}
+.item-placa .favorito-imagem-wrap button.favorito-estrela[aria-pressed="true"]{color:#151515!important;text-shadow:none}
