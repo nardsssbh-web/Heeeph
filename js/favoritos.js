@@ -48,6 +48,16 @@
     atualizarEstrelas();
     mostrarConta();
   }
+  function removerTodasFavoritas() {
+    if (!favoritos.size) return;
+    if (!window.confirm("Remover todas as " + favoritos.size + " placas favoritas? Esta ação não pode ser desfeita.")) return;
+    const anteriores = new Set(favoritos);
+    favoritos.clear();
+    if (!salvar()) { favoritos = anteriores; return; }
+    selecao.clear();
+    atualizarEstrelas();
+    mostrarConta();
+  }
   function indisponivel(p) { return !p || !String(p.imagem || "").trim() || /em breve/i.test(String(p.nome || "")); }
   function instalarEstrelas() {
     document.querySelectorAll(".item-placa[id^='produto-']").forEach(card => {
@@ -134,10 +144,11 @@
         '<button type="button" data-remover="' + esc(id) + '">Remover ★</button></article>';
     }).join("");
     el.innerHTML = '<h2>Minhas favoritas (' + disponiveis.length + ')</h2>' +
-      (cards ? '<div class="favoritos-acoes"><label><input type="checkbox" id="selecionarTodas"> Selecionar todas</label></div><div class="favoritos-grade">' + cards + '</div><div class="favoritos-compra-rodape"><button type="button" id="comprarFavoritas" disabled>Adicionar selecionadas ao carrinho (0)</button></div>' :
+      (cards ? '<div class="favoritos-acoes"><label><input type="checkbox" id="selecionarTodas"> Selecionar todas</label><button type="button" class="favoritos-limpar-todas" id="removerTodasFavoritas">Remover todas as estrelas</button></div><div class="favoritos-grade">' + cards + '</div><div class="favoritos-compra-rodape"><button type="button" id="comprarFavoritas" disabled>Adicionar selecionadas ao carrinho (0)</button></div>' :
       '<p>Você ainda não salvou placas disponíveis. <a href="categorias.html">Explorar coleções</a></p>') +
       '<p>As favoritas ficam guardadas somente neste navegador. Não é necessário cadastro.</p>';
     el.querySelectorAll("[data-remover]").forEach(b => b.addEventListener("click", () => alternar(b.dataset.remover)));
+    el.querySelector("#removerTodasFavoritas")?.addEventListener("click", removerTodasFavoritas);
     el.querySelectorAll("[data-ver-placa]").forEach(b => b.addEventListener("click", () => abrirPreviaFavorita(b.dataset.verPlaca)));
     const checks = [...el.querySelectorAll("[data-selecionar]")];
     const todas = el.querySelector("#selecionarTodas");
