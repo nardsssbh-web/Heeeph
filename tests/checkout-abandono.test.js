@@ -109,7 +109,7 @@ test('retorno real do sandbox: Pix expirado com total nominal e paid_amount ause
 });
 test('total nominal isolado não libera Pix pendente nem estados ou respostas inconsistentes',async()=>{
  const variantes=[
-  d=>{d.status='action_required';d.status_detail='waiting_transfer';Object.assign(d.transactions.payments[0],{status:'action_required',status_detail:'waiting_transfer'});},
+  d=>{d.status='action_required';d.status_detail='waiting_capture';Object.assign(d.transactions.payments[0],{status:'action_required',status_detail:'waiting_transfer'});},
   d=>{d.transactions.payments[0].paid_amount='0.01';},
   d=>{d.transactions.payments[0].paid_amount='34.50';},
   d=>{d.total_paid_amount='0.01';},
@@ -142,5 +142,79 @@ test('aprovação e recebimento anteriores continuam bloqueando após resposta p
 test('exceção do total nominal expirado é restrita ao ambiente de testes',()=>{
  const f=fixture();try{expirarPix(f);process.env.CHECKOUT_AMBIENTE='producao';const p={...f.p,ambiente:'producao'};
   const pg=c.conferirPagamento(p,f.order);assert.equal(pg.pixExpiradoConfirmado,false);assert.equal(pg.encerradoSemPagamento,false);
+ }finally{f.close();}
+});
+
+function pendenteNominalPreview(f){
+ process.env.VERCEL_ENV='preview';process.env.VERCEL_GIT_COMMIT_REF='codex/preparacao-vendas';
+ f.order.total_paid_amount='34.50';delete f.order.transactions.payments[0].paid_amount;
+}
+test('Pix pendente nominal no Preview só libera após POST idempotente, GET cancelado e persistência',async()=>{
+ for(const motivo of ['alterar','desistir']){
+  const f=fixture();try{pendenteNominalPreview(f);
+   const antes=await c.status(id,token);assert.equal(antes.pagamento.cancelavel,true);assert.equal(antes.pagamento.encerradoSemPagamento,false);
+   const r=await c.abandonarPedido(id,token,{motivo,confirmado:true});
+   assert.equal(r.edicaoLiberada,true);assert.equal(r.pagamento.status,'canceled');assert.equal(r.pagamento.detalhe,'canceled');
+   assert.equal(r.pagamento.encerradoSemPagamento,true);assert.equal(r.pagamento.aprovado,false);
+   assert.equal(r.pagamento.valoresMP.totalPago,3450);assert.equal(r.pagamento.valoresMP.transacaoPaga,null);
+   assert.equal(f.cancelamentos().length,1);assert.equal(f.cancelamentos()[0].opts.method,'POST');
+   const i=f.requests.findIndex(r=>r.url.endsWith('/cancel'));
+   assert.ok(f.requests.slice(i+1).some(r=>r.url.endsWith('/ORDTEST')&&r.opts.method==='GET'));
+   const salvo=f.ler();assert.equal(salvo.saida.confirmada,true);assert.equal(salvo.tokenHash,f.p.tokenHash);
+   assert.deepEqual(salvo.itens,f.p.itens);assert.deepEqual(salvo.webhookRecebido,f.p.webhookRecebido);
+   const recarregado=await c.status(id,token);assert.equal(recarregado.saida.confirmada,true);
+   await c.abandonarPedido(id,token,{motivo,confirmado:true});assert.equal(f.cancelamentos().length,1);
+   await assert.rejects(()=>c.pagar(id,token,{metodo:'pix'}),/encerrada/);
+   assert.equal(f.requests.some(r=>r.url.endsWith('/v1/orders')&&r.opts.method==='POST'),false);
+  }finally{f.close();}
+ }
+});
+test('nominal pendente mantém bloqueio diante de pagamento concorrente, timeout, falha ou falta de confirmação',async()=>{
+ for(const modo of ['aprovado','timeout','pendente','consulta-falhou']){
+  const f=fixture();try{pendenteNominalPreview(f);f.modo=modo;
+   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.ler().saida.confirmada,false);
+   assert.notEqual(f.ler().pagamento.status,'canceled');await assert.rejects(()=>c.pagar(id,token,{metodo:'pix'}),/encerrada/);
+  }finally{f.close();}
+ }
+ const f=fixture();try{pendenteNominalPreview(f);f.modo='timeout-confirmado';
+  assert.equal((await c.abandonarPedido(id,token,confirmacao)).edicaoLiberada,true);assert.equal(f.cancelamentos().length,1);
+ }finally{f.close();}
+ const g=fixture();try{pendenteNominalPreview(g);g.falhaSalvar=true;
+  await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(g.ler().saida.confirmada,false);
+  g.falhaSalvar=false;assert.equal((await c.abandonarPedido(id,token,confirmacao)).edicaoLiberada,true);assert.equal(g.cancelamentos().length,1);
+ }finally{g.close();}
+});
+test('nominal pendente não é autorização isolada: contexto, estados, identidade, montantes e histórico devem conferir',async()=>{
+ const variantes=[
+  f=>{delete process.env.VERCEL_ENV;},f=>{process.env.VERCEL_ENV='production';},
+  f=>{process.env.VERCEL_GIT_COMMIT_REF='main';},f=>{process.env.CHECKOUT_AMBIENTE='producao';},
+  f=>{f.order.status='processing';},f=>{f.order.status_detail='waiting_capture';},
+  f=>{f.order.transactions.payments[0].status='processing';},f=>{f.order.transactions.payments[0].status_detail='unknown';},
+  f=>{f.order.transactions.payments[0].payment_method.id='master';},
+  f=>{f.order.transactions.payments[0].paid_amount='0.01';},f=>{f.order.transactions.payments[0].paid_amount='34.50';},
+  f=>{f.order.transactions.payments[0].paid_amount='inválido';},
+  f=>{f.order.total_paid_amount='1.00';},f=>{delete f.order.total_paid_amount;},f=>{f.order.total_paid_amount='inválido';},
+  f=>{f.order.transactions.payments[0].amount='1.00';},f=>{delete f.order.user_id;},f=>{f.order.user_id=999;},
+  f=>{f.order.external_reference='c'.repeat(32);},f=>{f.order.total_amount='1.00';},f=>{f.order.country_code='ARG';},
+  f=>{f.order.transactions.payments.push(structuredClone(f.order.transactions.payments[0]));},
+  f=>{f.order.errors=[{code:'inconsistent_payment'}];},
+  f=>{f.p.pagamento.aprovado=true;f.salvarP();},
+  f=>{f.p.pagamento.impedimentoEncerramento=true;f.salvarP();},
+  f=>{f.p.pagamento.transacoes=[{metodo:'pix',status:'processed'}];f.salvarP();},
+  f=>{f.p.pagamento.transacoes=[{metodo:'pix',status:'action_required'}];f.p.pagamento.valoresMP={transacaoPaga:1};f.salvarP();}
+ ];
+ for(const variar of variantes){const f=fixture();try{pendenteNominalPreview(f);variar(f);
+  await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.cancelamentos().length,0);assert.notEqual(JSON.parse(f.db.get('heeeph:teste:'+id)).saida?.confirmada,true);
+ }finally{f.close();}}
+});
+test('nominal cancelado só é terminal quando ambos os níveis confirmam cancelamento no Preview autorizado',()=>{
+ const f=fixture();try{pendenteNominalPreview(f);
+  Object.assign(f.order,{status:'canceled',status_detail:'canceled'});Object.assign(f.order.transactions.payments[0],{status:'canceled',status_detail:'canceled'});
+  assert.equal(c.conferirPagamento(f.p,f.order).encerradoSemPagamento,true);
+  const variantes=[d=>{d.status_detail='unknown';},d=>{d.transactions.payments[0].status='action_required';},
+   d=>{d.transactions.payments[0].status_detail='waiting_transfer';},d=>{d.transactions.payments[0].paid_amount='0.01';}];
+  for(const variar of variantes){const d=structuredClone(f.order);variar(d);assert.equal(c.conferirPagamento(f.p,d).encerradoSemPagamento,false);}
+  process.env.VERCEL_ENV='production';assert.equal(c.conferirPagamento(f.p,f.order).encerradoSemPagamento,false);
+  process.env.VERCEL_ENV='preview';process.env.CHECKOUT_AMBIENTE='producao';assert.equal(c.conferirPagamento({...f.p,ambiente:'producao'},f.order).encerradoSemPagamento,false);
  }finally{f.close();}
 });
