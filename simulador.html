@@ -41,6 +41,10 @@ body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,
 <p class="hint">Arraste cada placa individualmente na parede. Escolha uma disposição pronta ou personalize a posição e o tamanho de cada placa.</p><div id="status" role="status" aria-live="polite"></div></section>
 <section class="panel">
 <label for="room">1. Foto do ambiente</label><input id="room" type="file" accept="image/*">
+<label for="distance">Distância da câmera à parede</label><select id="distance">
+<option value="1.5">1,5 metro</option><option value="2">2 metros</option>
+<option value="3" selected>3 metros (padrão)</option><option value="4">4 metros</option><option value="5">5 metros</option>
+</select>
 <div class="section-heading">Montagem na parede</div>
 <p class="hint">Escolha quantas placas deseja combinar. As imagens serão selecionadas abaixo.</p>
 <div class="count-controls">
@@ -67,7 +71,6 @@ body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,
 <div class="section-heading">Escolha as placas</div>
 <p class="hint">Para cada posição, escolha primeiro a categoria e depois o nome da placa correspondente.</p>
 <div id="slotPicker" aria-label="Escolha uma imagem para cada placa"></div>
-<div class="purchase-montagem"><button type="button" id="buySelected">COMPRAR PLACAS DA MONTAGEM</button><p class="hint">As placas escolhidas serão adicionadas ao carrinho nos tamanhos selecionados.</p></div>
 <div class="section-heading">Disposição das placas</div>
 <p class="hint">Toque em um modelo. Depois você poderá arrastar cada placa na foto.</p>
 <div id="arrangementCards" class="arrangement-cards"></div>
@@ -80,14 +83,11 @@ body{min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.22),rgba(0,0,
 
 </select>
 
-<label for="distance">Distância da câmera à parede</label><select id="distance">
-<option value="1.5">1,5 metro</option><option value="2">2 metros</option>
-<option value="3" selected>3 metros (padrão)</option><option value="4">4 metros</option><option value="5">5 metros</option>
-</select>
 <p class="hint">G = 20 × 28 cm; P = 10 × 15 cm. Os retângulos mostram a composição antes de escolher as placas.</p>
 <label for="scale">Ajuste fino da escala — <span id="scaleValue">100%</span></label><input id="scale" type="range" min="20" max="250" value="100">
 <label for="rotation">Girar — <span id="rotationValue">0°</span></label><input id="rotation" type="range" min="-45" max="45" value="0">
 <p class="fine">Escala estimada para câmera com campo horizontal de 70° e parede frontal. Para precisão real, calibre usando uma medida conhecida na foto. As placas não são deformadas.</p>
+<div class="purchase-montagem"><button type="button" id="buySelected">COMPRAR PLACAS DA MONTAGEM</button><p class="hint">As placas escolhidas serão adicionadas ao carrinho nos tamanhos selecionados.</p></div>
 </section></div>
 </main>
 <script src="produtos.js?v=simulador-categorias-20261022b"></script>
