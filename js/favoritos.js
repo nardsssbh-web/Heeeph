@@ -82,6 +82,37 @@
     horizontal: [{medida:"15x10cm",preco:12.90},{medida:"28x20cm",preco:24.90}]
   };
   const selecao = new Set();
+  function abrirPreviaFavorita(id) {
+    const p = catalogo().get(id);
+    if (indisponivel(p)) return;
+    let modal = document.getElementById("modalFavorita");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "modalFavorita";
+      modal.className = "favoritos-modal";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute("aria-label", "Visualizar placa favorita");
+      modal.innerHTML = '<div class="favoritos-modal-conteudo"><button type="button" class="favoritos-modal-fechar" aria-label="Fechar visualização">×</button><div class="favoritos-modal-imagem"><img alt=""><button type="button" class="favoritos-modal-estrela" aria-label="Desmarcar favorita" aria-pressed="true">★</button></div><strong class="favoritos-modal-nome"></strong></div>';
+      document.body.append(modal);
+      modal.querySelector(".favoritos-modal-fechar").addEventListener("click", () => modal.remove());
+      modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+      modal.querySelector(".favoritos-modal-estrela").addEventListener("click", () => {
+        alternar(modal.dataset.produto);
+        modal.remove();
+      });
+    }
+    modal.dataset.produto = id;
+    modal.querySelector("img").src = p.imagem;
+    modal.querySelector("img").alt = p.nome;
+    modal.querySelector(".favoritos-modal-nome").textContent = p.nome;
+    const estrela = modal.querySelector(".favoritos-modal-estrela");
+    estrela.textContent = favoritos.has(id) ? "★" : "☆";
+    estrela.setAttribute("aria-pressed", String(favoritos.has(id)));
+    estrela.setAttribute("aria-label", favoritos.has(id) ? "Desmarcar favorita" : "Marcar favorita");
+    modal.querySelector(".favoritos-modal-fechar").focus();
+  }
+
   function mostrarConta() {
     const el = document.getElementById("contaConteudo");
     if (!el) return;
@@ -99,7 +130,7 @@
         '<fieldset class="favoritos-tamanhos"><legend>Escolha o tamanho</legend>' +
         OPCOES[orientacao].map((o, i) => '<label class="favoritos-opcao"><input type="radio" name="tamanho-' + esc(id) + '" data-tamanho="' + esc(id) + '" value="' + esc(o.medida) + '"' + (i === 0 ? ' checked' : '') + '><span>' + esc(o.medida) + '<small>' + o.preco.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}) + '</small></span></label>').join("") +
         '</fieldset>' +
-        '<a href="' + esc(url) + '">Ver placa</a>' +
+        '<button type="button" class="favoritos-ver-placa" data-ver-placa="' + esc(id) + '">Ver placa</button>' +
         '<button type="button" data-remover="' + esc(id) + '">Remover ★</button></article>';
     }).join("");
     el.innerHTML = '<h2>Minhas favoritas (' + disponiveis.length + ')</h2>' +
@@ -107,6 +138,7 @@
       '<p>Você ainda não salvou placas disponíveis. <a href="categorias.html">Explorar coleções</a></p>') +
       '<p>As favoritas ficam guardadas somente neste navegador. Não é necessário cadastro.</p>';
     el.querySelectorAll("[data-remover]").forEach(b => b.addEventListener("click", () => alternar(b.dataset.remover)));
+    el.querySelectorAll("[data-ver-placa]").forEach(b => b.addEventListener("click", () => abrirPreviaFavorita(b.dataset.verPlaca)));
     const checks = [...el.querySelectorAll("[data-selecionar]")];
     const todas = el.querySelector("#selecionarTodas");
     const comprar = el.querySelector("#comprarFavoritas");
@@ -148,6 +180,7 @@
     atualizar();
   }
   function iniciar() {
+    document.addEventListener("keydown", e => { if (e.key === "Escape") document.getElementById("modalFavorita")?.remove(); });
     linkMenu();
     atualizarContador();
     instalarEstrelas();
