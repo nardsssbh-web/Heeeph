@@ -68,3 +68,7 @@
 .favoritos-modal-estrela{position:absolute;top:12px;right:12px;min-width:45px;height:45px;border-radius:50%;border:2px solid #f0c400;background:#f0c400;color:#111;font-size:28px;font-weight:900;cursor:pointer}
 .favoritos-modal-estrela[aria-pressed="false"]{background:#111;color:#f0c400}
 .favoritos-modal-nome{text-align:center}
+
+/* Remoção de todas as estrelas, separada da seleção de compra. */
+.minha-heeeph .favoritos-acoes .favoritos-limpar-todas{margin-left:auto;background:#292929;color:#ffdddd;border:1px solid #d35b5b;font-size:14px;padding:10px 14px}
+.minha-heeeph .favoritos-acoes .favoritos-limpar-todas:hover{background:#552424;color:#fff}
