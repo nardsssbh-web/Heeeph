@@ -333,10 +333,10 @@ updateCartCount();
 
 /* Favoritas carregadas de forma independente do carrinho e do checkout. */
 (function carregarFavoritas(){
-  const css=document.createElement("link");css.rel="stylesheet";css.href="css/favoritos.css?v=2";document.head.append(css);
+  const css=document.createElement("link");css.rel="stylesheet";css.href="css/favoritos.css?v=3";document.head.append(css);
   const sdk=document.createElement("script");
   sdk.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";
-  sdk.onload=()=>{const app=document.createElement("script");app.src="js/favoritos.js?v=2";document.body.append(app);};
+  sdk.onload=()=>{const app=document.createElement("script");app.src="js/favoritos.js?v=3";document.body.append(app);};
   sdk.onerror=()=>{const app=document.createElement("script");app.src="js/favoritos.js?v=1";document.body.append(app);};
   document.body.append(sdk);
 })();
