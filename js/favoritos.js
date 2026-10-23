@@ -77,7 +77,8 @@
           if(error)throw error;
           msg("Link enviado! Abra o e-mail e clique em Confirmar acesso. Confira também o spam.");
         }catch(e){
-          msg("Não foi possível enviar o link agora. Aguarde um pouco e tente novamente.");
+          const limite=e?.status===429 || /rate limit|too many requests|email rate/i.test(String(e?.message||""));
+          msg(limite?"Limite temporário de e-mails atingido. Aguarde antes de solicitar outro link. Sua conta continua cadastrada.":"Não foi possível enviar o link agora. Confira a conexão e tente novamente mais tarde.");
         }finally{b.disabled=false;}
       });
       return;
