@@ -40,15 +40,22 @@
     atualizarEstrelas();
     mostrarConta();
   }
+  function indisponivel(p) { return !p || !String(p.imagem || "").trim() || /em breve/i.test(String(p.nome || "")); }
   function instalarEstrelas() {
     document.querySelectorAll(".item-placa[id^='produto-']").forEach(card => {
       if (card.querySelector("[data-favorito-id]")) return;
       const id = card.id.slice("produto-".length);
+      const p = catalogo().get(id);
+      if (indisponivel(p) || card.querySelector(".placa-indisponivel")) return;
+      const foto = card.querySelector(".img-box img");
+      if (!foto) return;
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "favorito-estrela";
       btn.dataset.favoritoId = id;
       btn.addEventListener("click", () => alternar(id));
+      foto.addEventListener("error", () => btn.remove());
+      if (foto.complete && foto.naturalWidth === 0) return;
       const imagem = card.querySelector(".img-box");
       if (imagem) { imagem.classList.add("favorito-imagem-wrap"); imagem.append(btn); }
       else card.append(btn);
@@ -68,7 +75,7 @@
     const mapa = catalogo();
     const cards = [...favoritos].map(id => {
       const p = mapa.get(id);
-      if (!p) return "";
+      if (indisponivel(p)) return "";
       const url = p.categoria + ".html?produto=" + encodeURIComponent(id);
       return '<article class="favoritos-item"><img src="' + esc(p.imagem) + '" alt="' + esc(p.nome) + '" loading="lazy"><strong>' + esc(p.nome) + '</strong><a href="' + esc(url) + '">Ver placa</a><button type="button" data-remover="' + esc(id) + '">Remover ★</button></article>';
     }).join("");
