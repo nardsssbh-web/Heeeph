@@ -96,14 +96,14 @@
         '<label class="favoritos-selecionar"><input type="checkbox" data-selecionar="' + esc(id) + '"' + (selecao.has(id) ? ' checked' : '') + '> Selecionar para comprar</label>' +
         '<img src="' + esc(p.imagem) + '" alt="' + esc(p.nome) + '" loading="lazy">' +
         '<strong>' + esc(p.nome) + '</strong>' +
-        '<label class="favoritos-tamanho">Tamanho <select data-tamanho="' + esc(id) + '">' +
-        OPCOES[orientacao].map(o => '<option value="' + esc(o.medida) + '">' + esc(o.medida) + ' — ' + o.preco.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}) + '</option>').join("") +
-        '</select></label>' +
+        '<fieldset class="favoritos-tamanhos"><legend>Escolha o tamanho</legend>' +
+        OPCOES[orientacao].map((o, i) => '<label class="favoritos-opcao"><input type="radio" name="tamanho-' + esc(id) + '" data-tamanho="' + esc(id) + '" value="' + esc(o.medida) + '"' + (i === 0 ? ' checked' : '') + '><span>' + esc(o.medida) + '<small>' + o.preco.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}) + '</small></span></label>').join("") +
+        '</fieldset>' +
         '<a href="' + esc(url) + '">Ver placa</a>' +
         '<button type="button" data-remover="' + esc(id) + '">Remover ★</button></article>';
     }).join("");
     el.innerHTML = '<h2>Minhas favoritas (' + disponiveis.length + ')</h2>' +
-      (cards ? '<div class="favoritos-acoes"><label><input type="checkbox" id="selecionarTodas"> Selecionar todas</label><button type="button" id="comprarFavoritas" disabled>Adicionar selecionadas ao carrinho (0)</button></div><div class="favoritos-grade">' + cards + '</div>' :
+      (cards ? '<div class="favoritos-acoes"><label><input type="checkbox" id="selecionarTodas"> Selecionar todas</label></div><div class="favoritos-grade">' + cards + '</div><div class="favoritos-compra-rodape"><button type="button" id="comprarFavoritas" disabled>Adicionar selecionadas ao carrinho (0)</button></div>' :
       '<p>Você ainda não salvou placas disponíveis. <a href="categorias.html">Explorar coleções</a></p>') +
       '<p>As favoritas ficam guardadas somente neste navegador. Não é necessário cadastro.</p>';
     el.querySelectorAll("[data-remover]").forEach(b => b.addEventListener("click", () => alternar(b.dataset.remover)));
@@ -125,7 +125,7 @@
       const itens = checks.filter(ch => ch.checked).map(ch => {
         const p = mapa.get(ch.dataset.selecionar);
         const orientacao = p.orientacao === "horizontal" ? "horizontal" : "vertical";
-        const seletor = [...el.querySelectorAll("[data-tamanho]")].find(s => s.dataset.tamanho === p.id);
+        const seletor = [...el.querySelectorAll("[data-tamanho]")].find(s => s.dataset.tamanho === p.id && s.checked);
         const opcao = OPCOES[orientacao].find(o => o.medida === seletor.value);
         return {id:p.id,nome:p.nome,imagem:p.imagem,categoria:p.categoria,orientacao:p.orientacao || "",medida:opcao.medida,preco:opcao.preco,quantidade:1,quantity:1};
       });
