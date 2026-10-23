@@ -1,0 +1,47 @@
+.heeeph-conta-link{display:inline-flex;align-items:center;gap:5px;color:#f0c400!important;font-weight:800;white-space:nowrap;font-size:12px;text-decoration:none}
+.heeeph-conta-link:hover{text-decoration:underline}
+.favorito-estrela{margin:8px 0 0;border:1px solid #f0c400;border-radius:9px;background:#151515;color:#f0c400;padding:8px 13px;font-weight:800;cursor:pointer;min-height:39px}
+.favorito-estrela[aria-pressed="true"]{background:#f0c400;color:#151515}
+.favorito-estrela:disabled{opacity:.55;cursor:wait}
+.minha-heeeph{max-width:1080px;margin:30px auto 60px;padding:22px;background:rgba(0,0,0,.88);border:1px solid #7d641d;border-radius:16px;min-height:320px}
+.minha-heeeph h1{color:#f0c400;margin-bottom:15px}
+.minha-heeeph p{line-height:1.5;margin:10px 0}
+.minha-heeeph input{width:min(100%,390px);padding:12px;border:1px solid #777;border-radius:8px;font-size:16px;background:#fff;color:#111}
+.minha-heeeph button{padding:12px 16px;background:#f0c400;border:0;border-radius:8px;font-weight:800;cursor:pointer;color:#111}
+.minha-heeeph button:disabled{opacity:.6}
+.minha-heeeph form{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+.minha-heeeph .estado{color:#ffdb65;min-height:22px}
+.minha-heeeph .favoritos-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px;margin-top:22px}
+.minha-heeeph .favoritos-item{background:#222;border:1px solid #4d431e;border-radius:12px;padding:12px;text-align:center}
+.minha-heeeph .favoritos-item img{width:100%;height:175px;object-fit:contain;background:#fff;border-radius:8px}
+.minha-heeeph .favoritos-item strong{display:block;margin:10px 0;min-height:36px}
+.minha-heeeph .favoritos-item a{display:inline-block;margin:5px;padding:9px;background:#f0c400;color:#111;border-radius:7px;font-weight:700}
+.minha-heeeph .favoritos-item button{margin:5px;background:#333;color:#fff;border:1px solid #aaa}
+@media(max-width:600px){.minha-heeeph{margin:16px 10px;padding:16px}.heeeph-conta-link{font-size:10px}}
+
+/* Estrela sobre a foto da placa, no canto superior direito. */
+.item-placa .favorito-imagem-wrap{position:relative;overflow:hidden}
+.item-placa .favorito-imagem-wrap .favorito-estrela{position:absolute;top:9px;right:9px;z-index:2;margin:0;min-height:40px;min-width:40px;padding:6px 9px;border:2px solid #f0c400;border-radius:50%;background:rgba(0,0,0,.86);color:#f0c400;font-size:0;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.item-placa .favorito-imagem-wrap .favorito-estrela{font-size:0}\n.item-placa .favorito-imagem-wrap .favorito-estrela::before{content:"☆";font-size:26px}\n.item-placa .favorito-imagem-wrap .favorito-estrela[aria-pressed="true"]::before{content:"★"}
+.item-placa .favorito-imagem-wrap .favorito-estrela[aria-pressed="true"]{background:#f0c400;color:#111}
+.item-placa .favorito-imagem-wrap .favorito-estrela:hover{transform:scale(1.08)}
+
+/* Correção: símbolo visível em vez do círculo vazio. */
+.item-placa .favorito-imagem-wrap button.favorito-estrela{display:flex;align-items:center;justify-content:center;font-family:Arial,"Segoe UI Symbol",sans-serif;font-size:29px!important;font-weight:900;line-height:1!important;padding:0!important;color:#ffd32a!important;text-shadow:0 1px 2px #000}
+.item-placa .favorito-imagem-wrap button.favorito-estrela::before{content:none!important}
+.item-placa .favorito-imagem-wrap button.favorito-estrela[aria-pressed="true"]{color:#151515!important;text-shadow:none}
+
+/* Contador de placas favoritas na estrela do menu Minha HEEEPH. */
+.heeeph-estrela-menu{position:relative;display:inline-flex;align-items:center;justify-content:center;font-size:23px;line-height:1;color:#f0c400;margin-right:4px}
+.heeeph-contador-favoritas{position:absolute;top:-8px;right:-10px;min-width:17px;height:17px;padding:0 3px;box-sizing:border-box;border-radius:999px;background:#d82222;color:#fff;font-size:10px;font-weight:900;line-height:17px;text-align:center;border:1px solid #fff}
+.heeeph-contador-favoritas[hidden]{display:none}
+
+/* Compra de várias favoritas */
+.minha-heeeph .favoritos-acoes{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin:20px 0}
+.minha-heeeph .favoritos-acoes label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.minha-heeeph .favoritos-acoes input,.minha-heeeph .favoritos-selecionar input{width:19px;height:19px;accent-color:#f0c400}
+.minha-heeeph .favoritos-acoes button{background:#f0c400;color:#111}
+.minha-heeeph .favoritos-acoes button:disabled{opacity:.5;cursor:not-allowed}
+.minha-heeeph .favoritos-selecionar{display:flex;gap:8px;align-items:center;text-align:left;cursor:pointer;margin-bottom:12px}
+.minha-heeeph .favoritos-tamanho{display:block;text-align:left;margin:12px 0}
+.minha-heeeph .favoritos-tamanho select{display:block;width:100%;margin-top:5px;padding:9px;background:#fff;color:#111;border-radius:6px;font-size:14px}
