@@ -90,3 +90,57 @@ test('pagamento já aprovado não solicita cancelamento; expiração confirmada 
   }finally{f.close();}
  }
 });
+function expirarPix(f){
+ Object.assign(f.order,{status:'canceled',status_detail:'expired',total_paid_amount:'34.50'});
+ Object.assign(f.order.transactions.payments[0],{status:'expired',status_detail:'expired'});
+ delete f.order.transactions.payments[0].paid_amount;
+}
+test('retorno real do sandbox: Pix expirado com total nominal e paid_amount ausente libera alteração e desistência sem cancelar',async()=>{
+ for(const motivo of ['alterar','desistir']){
+  const f=fixture();try{expirarPix(f);
+   const r=await c.abandonarPedido(id,token,{...confirmacao,motivo});
+   assert.equal(r.edicaoLiberada,true);assert.equal(r.pagamento.pixExpiradoConfirmado,true);assert.equal(r.pagamento.aprovado,false);
+   assert.equal(r.pagamento.valoresMP.totalPago,3450);assert.equal(r.pagamento.valoresMP.transacaoPaga,null);
+   assert.equal(f.ler().saida.confirmada,true);assert.equal(f.ler().pagamento.detalhe,'expired');assert.equal(f.cancelamentos().length,0);
+   assert.deepEqual(f.ler().itens,f.p.itens);await assert.rejects(()=>c.recuperarPix(id,token),/encerrada/);
+   await assert.rejects(()=>c.pagar(id,token,{metodo:'pix'}),/encerrada/);
+  }finally{f.close();}
+ }
+});
+test('total nominal isolado não libera Pix pendente nem estados ou respostas inconsistentes',async()=>{
+ const variantes=[
+  d=>{d.status='action_required';d.status_detail='waiting_transfer';Object.assign(d.transactions.payments[0],{status:'action_required',status_detail:'waiting_transfer'});},
+  d=>{d.transactions.payments[0].paid_amount='0.01';},
+  d=>{d.transactions.payments[0].paid_amount='34.50';},
+  d=>{d.total_paid_amount='0.01';},
+  d=>{d.total_paid_amount='35.00';},
+  d=>{d.total_paid_amount='0.00';d.transactions.payments[0].paid_amount='0.00';d.status_detail='unknown';},
+  d=>{delete d.total_paid_amount;},
+  d=>{d.transactions.payments[0].paid_amount='inválido';},
+  d=>{d.transactions.payments[0].amount='1.00';},
+  d=>{d.transactions.payments[0].status='processed';d.transactions.payments[0].status_detail='accredited';},
+  d=>{d.status='processing';},d=>{d.status_detail='unknown';},
+  d=>{d.transactions.payments[0].status_detail='unknown';},
+  d=>{d.transactions.payments.push(structuredClone(d.transactions.payments[0]));},
+  d=>{delete d.user_id;},d=>{d.user_id=999;},d=>{d.total_amount='1.00';},
+  d=>{d.external_reference='c'.repeat(32);},
+  d=>{d.errors=[{code:'inconsistent_payment'}];}
+ ];
+ for(const variar of variantes){const f=fixture();try{expirarPix(f);variar(f.order);
+  await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.ler().saida.confirmada,false);assert.equal(f.cancelamentos().length,0);
+ }finally{f.close();}}
+});
+test('aprovação e recebimento anteriores continuam bloqueando após resposta posterior de expiração',async()=>{
+ for(const anterior of [{aprovado:true,status:'processed'},{aprovado:false,status:'processing',transacoes:[{status:'processed'}]},
+  {aprovado:false,status:'canceled',transacoes:[{status:'expired',metodo:'pix'}],valoresMP:{transacaoPaga:1}}]){
+  const f=fixture();try{f.p.pagamento={mpId:'ORDTEST',...anterior};f.salvarP();expirarPix(f);
+   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.ler().pagamento.impedimentoEncerramento,true);
+   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.ler().saida.confirmada,false);assert.equal(f.cancelamentos().length,0);
+  }finally{f.close();}
+ }
+});
+test('exceção do total nominal expirado é restrita ao ambiente de testes',()=>{
+ const f=fixture();try{expirarPix(f);process.env.CHECKOUT_AMBIENTE='producao';const p={...f.p,ambiente:'producao'};
+  const pg=c.conferirPagamento(p,f.order);assert.equal(pg.pixExpiradoConfirmado,false);assert.equal(pg.encerradoSemPagamento,false);
+ }finally{f.close();}
+});
