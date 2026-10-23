@@ -3,11 +3,11 @@
 Implementação inicial **não publicada em main**. O cadastro não funcionará até concluir a configuração abaixo.
 
 ## Dependência de autenticação
-1. Criar um projeto Supabase para HEEEPH (ambiente de teste primeiro).
-2. No SQL Editor, executar `config/contas-favoritos.sql`. A tabela tem RLS: cada usuário só pode ver/alterar suas próprias favoritas.
-3. Ativar Supabase Auth > Email. Para usar **código numérico**, configurar o modelo de e-mail OTP com `{{ .Token }}` (o template padrão pode enviar magic link).
+1. **Concluído:** projeto Supabase `heeeph-clientes` (São Paulo) conectado à branch de testes.
+2. **Concluído:** tabela `public.favoritos` criada com RLS; verificação de segurança sem alertas.
+3. **Pendente, manual no painel:** Supabase > Authentication > Email Templates > Magic Link. Substituir o link do template por um código `{{ .Token }}` de 6 dígitos e salvar. Verificar que o provedor Email está habilitado. Se preferir manter o link, configurar em Auth > URL Configuration a URL exata do Preview na allow list.
 4. Configurar proteção antiabuso/rate limits, CAPTCHA e envio SMTP confiável antes de abrir cadastros públicos.
-5. Configurar no Vercel Preview: `SUPABASE_URL` e `SUPABASE_ANON_KEY` (chave **pública** anon/publishable). **NUNCA** usar service_role/secret. O endpoint `/api/auth-config` retorna somente esses dois valores públicos.
+5. **Concluído nesta branch Preview:** `api/auth-config.js` possui fallback com URL e chave **publishable pública** do Supabase `heeeph-clientes`; não exige acesso às variáveis Vercel para testar. `SUPABASE_URL` e `SUPABASE_ANON_KEY` podem substituir o fallback por ambiente. **Nunca** usar service_role/secret. Antes de mesclar na `main`, revisar a configuração de produção.
 6. Testar: cadastro por e-mail, código, logout, favoritos em dois navegadores, conta A não enxerga dados da conta B, sem sessão estrela direciona para login.
 7. Validar política de privacidade, finalidade e retenção de dados (LGPD) antes de lançar.
 
