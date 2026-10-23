@@ -28,7 +28,8 @@
       btn.type="button";btn.className="favorito-estrela";btn.dataset.favoritoId=id;
       btn.setAttribute("aria-label","Adicionar ou remover dos favoritos");
       btn.addEventListener("click",()=>alternar(id,btn));
-      card.append(btn);
+      const imagem=card.querySelector(".img-box");
+      if(imagem){imagem.classList.add("favorito-imagem-wrap");imagem.append(btn);}else{card.append(btn);}
     });
     atualizarEstrelas();
   }
