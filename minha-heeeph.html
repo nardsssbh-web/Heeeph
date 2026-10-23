@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Minha HEEEPH | Favoritas</title>
-<link rel="stylesheet" href="css/geral.css"><link rel="stylesheet" href="css/favoritos.css?v=8">
+<link rel="stylesheet" href="css/geral.css"><link rel="stylesheet" href="css/favoritos.css?v=9">
 </head><body>
-<header class="topo"><div class="wrap"><div class="logo"><a href="index.html">HEEEPH</a></div><div class="menu-area"><nav class="menu"><a href="index.html">HOME</a><a href="categorias.html">COLEÇÃO</a></nav><a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho"><img src="botoes/botao-carrinho.png" alt="Carrinho"></a></div></div></header>
-<main class="minha-heeeph"><h1>⭐ Minha HEEEPH</h1>
+<header class="topo"><div class="wrap"><div class="logo"><a href="index.html">HEEEPH</a></div><div class="menu-area"><nav class="menu"><a href="index.html">HOME</a><a href="categorias.html">COLEÇÃO</a></nav><a href="carrinho.html" class="cart-link" aria-label="Abrir carrinho"><img src="botoes/botao-carrinho.png" alt="Carrinho"><span class="cart-count" id="cartCount">0</span></a></div></div></header>
+<main class="minha-heeeph"><h1>⭐ Minha HEEEPH</h1><nav class="favoritos-atalhos" aria-label="Acessos rápidos"><a href="index.html">⌂ Home</a><a href="carrinho.html">🛒 Ver carrinho</a></nav>
 <p>Marque a estrela nas placas que gostar. Suas favoritas ficam salvas neste navegador, sem cadastro e sem e-mail.</p>
 <p class="aviso-favoritas" role="note"><strong>Importante:</strong> suas favoritas ficam salvas apenas neste navegador. Elas não são sincronizadas com outros aparelhos ou navegadores e podem ser perdidas se você limpar os cookies e dados do site.</p>
 <div id="contaConteudo"><p>Carregando favoritas...</p></div>
 <p id="contaEstado" class="estado" role="status" aria-live="polite"></p>
 </main>
+<a class="whatsapp-fixo" href="https://wa.me/5511998302901" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp"><img src="botoes/whatsapp.png" alt="WhatsApp HEEEPH"></a>
 <script src="produtos.js"></script>
-<script src="js/favoritos.js?v=13" defer></script>
+<script src="js/favoritos.js?v=14" defer></script>
+<script>try{const itens=JSON.parse(localStorage.getItem("heeeph_cart")||"[]");document.getElementById("cartCount").textContent=Array.isArray(itens)?itens.reduce((s,i)=>s+(Number(i.quantidade||i.quantity||1)||1),0):0}catch(_){document.getElementById("cartCount").textContent="0"}</script>
 </body></html>
