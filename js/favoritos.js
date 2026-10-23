@@ -145,7 +145,7 @@
     }).join("");
     el.innerHTML = '<h2>Minhas favoritas (' + disponiveis.length + ')</h2>' +
       (cards ? '<div class="favoritos-acoes"><label><input type="checkbox" id="selecionarTodas"> Selecionar todas</label><button type="button" class="favoritos-limpar-todas" id="removerTodasFavoritas">Remover todas as estrelas</button></div><div class="favoritos-grade">' + cards + '</div><div class="favoritos-compra-rodape"><button type="button" id="comprarFavoritas" disabled>Adicionar selecionadas ao carrinho (0)</button></div>' :
-      '<p>Você ainda não salvou placas disponíveis. <a href="categorias.html">Explorar coleções</a></p>') +
+      '<div class="favoritos-vazio" role="status"><strong>Você ainda não salvou placas favoritas.</strong><p>Encontre suas placas preferidas e marque a estrela para guardá-las aqui.</p><a class="favoritos-explorar" href="categorias.html">★ Explorar coleções</a></div>') +
       '<p>As favoritas ficam guardadas somente neste navegador. Não é necessário cadastro.</p>';
     el.querySelectorAll("[data-remover]").forEach(b => b.addEventListener("click", () => alternar(b.dataset.remover)));
     el.querySelector("#removerTodasFavoritas")?.addEventListener("click", removerTodasFavoritas);
