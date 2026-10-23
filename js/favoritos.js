@@ -21,11 +21,19 @@
       const a = document.createElement("a");
       a.href = "minha-heeeph.html";
       a.className = "heeeph-conta-link";
-      a.textContent = "⭐ MINHA HEEEPH";
+      a.innerHTML = '<span class="heeeph-estrela-menu" aria-hidden="true">★<span class="heeeph-contador-favoritas"></span></span><span>MINHA HEEEPH</span>';
       menu.append(a);
     }
   }
+  function atualizarContador() {
+    document.querySelectorAll(".heeeph-contador-favoritas").forEach(el => {
+      el.textContent = String(favoritos.size);
+      el.hidden = favoritos.size === 0;
+    });
+    document.querySelectorAll(".heeeph-conta-link").forEach(a => a.setAttribute("aria-label", "Minha HEEEPH: " + favoritos.size + " placas favoritas"));
+  }
   function atualizarEstrelas() {
+    atualizarContador();
     document.querySelectorAll("[data-favorito-id]").forEach(b => {
       const ativo = favoritos.has(b.dataset.favoritoId);
       b.setAttribute("aria-pressed", String(ativo));
@@ -86,6 +94,7 @@
   }
   function iniciar() {
     linkMenu();
+    atualizarContador();
     instalarEstrelas();
     mostrarConta();
     window.addEventListener("storage", e => {
