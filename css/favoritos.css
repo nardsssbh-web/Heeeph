@@ -72,3 +72,13 @@
 /* Remoção de todas as estrelas, separada da seleção de compra. */
 .minha-heeeph .favoritos-acoes .favoritos-limpar-todas{margin-left:auto;background:#292929;color:#ffdddd;border:1px solid #d35b5b;font-size:14px;padding:10px 14px}
 .minha-heeeph .favoritos-acoes .favoritos-limpar-todas:hover{background:#552424;color:#fff}
+
+/* Alinhamento da estrela e remoção do sublinhado no menu. */
+.topo .menu a.heeeph-conta-link,.topo .menu a.heeeph-conta-link:hover,.topo .menu a.heeeph-conta-link:focus,.topo .menu a.heeeph-conta-link:visited{text-decoration:none!important;border-bottom:0!important;box-shadow:none!important;display:inline-flex;align-items:center;justify-content:center;gap:9px;vertical-align:middle;line-height:1.2;color:#f0c400!important}
+.topo .menu .heeeph-conta-link .heeeph-estrela-menu{position:relative;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex:0 0 24px;width:24px;height:28px;font-size:24px;line-height:1;margin:0}
+.topo .menu .heeeph-conta-link>span:last-child{display:inline-flex;align-items:center;line-height:28px;text-decoration:none!important}
+.topo .menu .heeeph-conta-link .heeeph-contador-favoritas{top:-5px;right:-9px;line-height:17px}
+.minha-heeeph .favoritos-atalhos{display:flex;flex-wrap:wrap;gap:12px;margin:6px 0 20px}
+.minha-heeeph .favoritos-atalhos a{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;border:1px solid #f0c400;border-radius:8px;background:#222;color:#f0c400;font-size:14px;font-weight:800;text-decoration:none}
+.minha-heeeph .favoritos-atalhos a:hover{background:#f0c400;color:#111}
+@media(max-width:780px){.topo .menu a.heeeph-conta-link{gap:4px;font-size:9px}.topo .menu .heeeph-conta-link .heeeph-estrela-menu{flex-basis:20px;width:20px;height:24px;font-size:20px}.topo .menu .heeeph-conta-link>span:last-child{line-height:24px}}
