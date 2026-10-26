@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Administração | HEEEPH</title><link rel="stylesheet" href="css/pagamento.css"><style>
+.admin-topo[hidden],.admin-abas[hidden]{display:none!important}
 .admin-topo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px;padding:16px 20px;background:#1b1b1b;border:1px solid #5a4800;border-radius:12px}
 .admin-topo strong{color:#ffd700;font-size:1.45rem;letter-spacing:.04em}
 .admin-topo span{color:#ddd;font-size:.85rem;text-align:right}
@@ -8,11 +9,19 @@
 .admin-abas button[aria-selected="true"]{background:#ffd700;color:#171717;border-color:#ffd700;font-weight:700}
 .admin-abas button:focus-visible{outline:3px solid #00a6dc;outline-offset:2px}
 .admin-area[hidden]{display:none!important}
+.admin-card{background:#161616;border:1px solid #49402b;border-radius:10px;padding:14px;margin:12px 0;color:#f3f3f3;overflow-wrap:anywhere}
+.admin-card h3{color:#ffd700;margin:0 0 12px}
+.admin-card p{margin:7px 0;line-height:1.5}
+.admin-card small{display:block;color:#ccc;margin-top:12px}
+.admin-indicadores{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.admin-futuro table{width:100%;border-collapse:collapse}
+.admin-futuro td,.admin-futuro th{padding:10px;border-bottom:1px solid #4c4637;text-align:left}
+#admin-sair button{background:#383838;color:#fff;border:1px solid #777;border-radius:7px;padding:8px 12px;cursor:pointer}
 .admin-futuro{padding:20px;border:1px solid #5a4800;border-radius:10px;background:#211e13;color:#eee}
 @media(max-width:480px){.admin-topo{padding:12px}.admin-topo strong{font-size:1.15rem}.admin-topo span{font-size:.72rem}}
 </style></head>
-<body><main class="checkout"><header class="admin-topo"><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste</span></header>
-<nav class="admin-abas" role="tablist" aria-label="Áreas administrativas">
+<body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
+<nav class="admin-abas" id="admin-abas" hidden role="tablist" aria-label="Áreas administrativas">
 <button type="button" role="tab" id="aba-pedidos" aria-controls="area-pedidos" aria-selected="true">Pedidos</button>
 <button type="button" role="tab" id="aba-envios" aria-controls="area-envios" aria-selected="false" tabindex="-1">Envios</button>
 <button type="button" role="tab" id="aba-produtos" aria-controls="area-produtos" aria-selected="false" tabindex="-1">Produtos</button>
@@ -22,29 +31,7 @@
 <form id="acesso"><label>Chave de acesso do administrador<input id="chave" type="password" autocomplete="off" minlength="32" required></label><button id="carregar">Carregar / atualizar pedidos</button><button type="button" id="sair" hidden>Sair</button></form>
 <p id="mensagem" role="status" aria-live="polite"></p><form id="filtros" class="painel-filtros" hidden><input id="busca" type="search" maxlength="100" aria-label="Buscar pedido ou cliente" placeholder="Número, nome, e-mail ou produto"><select id="filtro" aria-label="Situação do pagamento"><option value="todos">Todos os pagamentos</option><option value="aprovados">Aprovados</option><option value="pendentes">Pendentes / não iniciados</option><option value="recusados">Recusados / cancelados</option></select><button id="buscarPedidos" type="submit">Buscar no servidor</button><button type="button" id="imprimir">Imprimir página exibida</button></form><p id="contagem" role="status" tabindex="-1"></p><nav id="paginacao" class="painel-paginacao" aria-label="Páginas de pedidos no início" hidden><button id="anterior" type="button">Página anterior</button><button id="proxima" type="button">Próxima página</button></nav><div id="pedidos"></div>
 <nav id="paginacaoRodape" class="painel-paginacao" aria-label="Páginas de pedidos no final" hidden><span id="paginaRodape"></span><button id="anteriorRodape" type="button">Página anterior</button><button id="proximaRodape" type="button">Próxima página</button><button id="voltarTopo" type="button">Voltar ao topo</button></nav></section>
-<section id="area-envios" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-envios" hidden><h2>Envios</h2><p>Área em preparação. Futuramente, reunirá a organização dos envios e as informações de entrega dos pedidos. Nenhuma etiqueta ou postagem é gerada nesta aba.</p></section>
-<section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden><h2>Produtos</h2><p>Área reservada para a futura gestão do catálogo. Nenhum produto é alterado nesta aba.</p></section>
-<section id="area-financeiro" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-financeiro" hidden><h2>Financeiro</h2><p>Área reservada para futuros resumos financeiros. Os pagamentos continuam sendo consultados na aba Pedidos.</p></section>
-</main><script src="js/vendor/qrcode-generator-1.4.4.js"></script><script src="js/pedidos.js"></script><script>
-(() => {
- const abas=[...document.querySelectorAll('.admin-abas [role="tab"]')];
- function ativar(aba){
-  for(const item of abas){
-   const selecionada=item===aba;
-   item.setAttribute('aria-selected',String(selecionada));
-   item.tabIndex=selecionada?0:-1;
-   document.getElementById(item.getAttribute('aria-controls')).hidden=!selecionada;
-  }
- }
- for(const aba of abas){
-  aba.addEventListener('click',()=>ativar(aba));
-  aba.addEventListener('keydown',e=>{
-   if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
-   e.preventDefault();
-   const indice=abas.indexOf(aba);
-   const alvo=e.key==='Home'?0:e.key==='End'?abas.length-1:(indice+(e.key==='ArrowRight'?1:-1)+abas.length)%abas.length;
-   ativar(abas[alvo]);abas[alvo].focus();
-  });
- }
-})();
-</script></body></html>
+<section id="area-envios" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-envios" hidden><h2>Envios</h2><p>Área em preparação. Futuramente, reunirá a organização dos envios e as informações de entrega dos pedidos. Nenhuma etiqueta ou postagem é gerada nesta aba.</p><div id="resumo-envios"></div></section>
+<section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden><h2>Produtos</h2><p>Área reservada para a futura gestão do catálogo. Nenhum produto é alterado nesta aba.</p><div id="resumo-produtos"></div></section>
+<section id="area-financeiro" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-financeiro" hidden><h2>Financeiro</h2><p>Área reservada para futuros resumos financeiros. Os pagamentos continuam sendo consultados na aba Pedidos.</p><div id="resumo-financeiro"></div></section>
+</main><script src="js/vendor/qrcode-generator-1.4.4.js"></script><script src="js/pedidos.js"></script><script src="js/admin-painel.js"></script></body></html>
