@@ -12,6 +12,26 @@ module.exports=async(req,res)=>{
   if(!esperado||esperado.length<32||!crypto.timingSafeEqual(Buffer.from(c.hash(esperado)),Buffer.from(c.hash(recebido))))return res.status(401).json({mensagem:'Acesso não autorizado.'});
   try{
     const b=typeof req.body==='string'?JSON.parse(req.body):req.body||{};
+    if(b.acao==='contarPendentes'){
+      // Consulta global independente da página e dos filtros do painel.
+      const indice=c.prefixo+'lista';
+      const total=Number(await c.redis(['ZCARD',indice]))||0;
+      const maximo=2000;
+      let pendentes=0;
+      for(let inicio=0;inicio<Math.min(total,maximo);inicio+=100){
+        const ids=await c.redis(['ZREVRANGE',indice,inicio,Math.min(inicio+99,total-1,maximo-1)]);
+        if(!ids?.length)break;
+        const valores=await c.redis(['MGET',...ids.flatMap(id=>[c.prefixo+id,c.prefixo+'gestao:'+id])]);
+        for(let i=0;i<ids.length;i++){
+          if(!valores[2*i])continue;
+          const p=JSON.parse(valores[2*i]);
+          const g=valores[2*i+1]?JSON.parse(valores[2*i+1]):{status:'Recebido'};
+          if(p.id!==ids[i]||(p.ambiente||'teste')!==c.ambiente().nome||g.excluido||!p.pagamento?.aprovado)continue;
+          if(!['Saiu para entrega','Entregue'].includes(g.status||'Recebido'))pendentes++;
+        }
+      }
+      return res.json({pendentes,completo:total<=maximo,consultados:Math.min(total,maximo)});
+    }
     if(b.acao==='recuperarCheckoutTeste'){
       if(b.confirmacao!==b.id)return res.status(400).json({mensagem:'Confirme o pedido de teste.'});
       return res.json(await require('../lib/checkout-recuperacao').emitir(b.id));
