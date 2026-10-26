@@ -79,7 +79,7 @@ function obterProdutosDaCategoria() {
 
 function renderizarGaleria() {
   const grade = document.getElementById("gradePlacas");
-  const produtos = obterProdutosDaCategoria();
+  const produtos = obterProdutosDaCategoria().filter(p=>!window.heeephOcultos?.has(p.id));
 
   if (!grade) return;
 
@@ -185,7 +185,7 @@ function fecharZoom() {
 
 function abrirModalTamanho(idProduto) {
   const produtos = obterProdutosDaCategoria();
-  produtoSelecionado = produtos.find(produto => produto.id === idProduto);
+  produtoSelecionado = produtos.find(produto => produto.id === idProduto && !window.heeephOcultos?.has(produto.id));
 
   if (!produtoSelecionado) {
     alert("Produto não encontrado.");
@@ -333,6 +333,7 @@ updateCartCount();
   if(!resposta.ok)return;
   const dados=await resposta.json();
   if(!Array.isArray(dados.produtos))return;
+  window.heeephOcultos=new Set(Array.isArray(dados.ocultos)?dados.ocultos:[]);
   const categoria=obterCategoriaAtual();
   if(!categoria||typeof PRODUTOS==='undefined'||!Array.isArray(PRODUTOS[categoria]))return;
   const existentes=new Set(PRODUTOS[categoria].map(p=>p.id));
