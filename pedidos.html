@@ -46,7 +46,7 @@
 <p id="mensagem" role="status" aria-live="polite"></p><form id="filtros" class="painel-filtros" hidden><input id="busca" type="search" maxlength="100" aria-label="Buscar pedido ou cliente" placeholder="Número, nome, e-mail ou produto"><select id="filtro" aria-label="Situação do pagamento"><option value="todos">Todos os pagamentos</option><option value="aprovados">Aprovados</option><option value="pendentes">Pendentes / não iniciados</option><option value="recusados">Recusados / cancelados</option></select><button id="buscarPedidos" type="submit">Buscar no servidor</button><button type="button" id="imprimir">Imprimir página exibida</button></form><p id="contagem" role="status" tabindex="-1"></p><nav id="paginacao" class="painel-paginacao" aria-label="Páginas de pedidos no início" hidden><button id="anterior" type="button">Página anterior</button><button id="proxima" type="button">Próxima página</button></nav><div id="pedidos"></div>
 <nav id="paginacaoRodape" class="painel-paginacao" aria-label="Páginas de pedidos no final" hidden><span id="paginaRodape"></span><button id="anteriorRodape" type="button">Página anterior</button><button id="proximaRodape" type="button">Próxima página</button><button id="voltarTopo" type="button">Voltar ao topo</button></nav></section>
 <section id="area-envios" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-envios" hidden><h2>Envios</h2><p>Área em preparação. Futuramente, reunirá a organização dos envios e as informações de entrega dos pedidos. Nenhuma etiqueta ou postagem é gerada nesta aba.</p><div id="resumo-envios"></div></section>
-<section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden><h2>Produtos</h2><p>Área reservada para a futura gestão do catálogo. Nenhum produto é alterado nesta aba.</p><div id="cadastro-placas" class="admin-cadastro" hidden>
+<section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden><h2>Produtos</h2><h3>Relatório de produtos</h3><p>Resumo dos produtos encontrados nos pedidos carregados nesta página.</p><div id="resumo-produtos"></div><div id="cadastro-placas" class="admin-cadastro" hidden>
 <h3>Cadastro de placas</h3><p>Cadastre novas placas na coleção do Preview. Os preços permanecem fixos em R$ 12,90 (pequena) e R$ 24,90 (grande). A imagem enviada será uma miniatura para a galeria, não o arquivo original de impressão.</p>
 <button type="button" id="placa-novo">+ Adicionar placa</button>
 <form id="form-placa" style="margin-top:18px">
@@ -62,6 +62,6 @@
 </form>
 <p id="cadastro-mensagem" role="status" aria-live="polite"></p>
 <h3>Placas cadastradas pelo painel</h3><p id="total-placas"></p><div id="lista-placas"></div>
-</div><div id="resumo-produtos"></div></section>
+</div></section>
 <section id="area-financeiro" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-financeiro" hidden><h2>Financeiro</h2><p>Área reservada para futuros resumos financeiros. Os pagamentos continuam sendo consultados na aba Pedidos.</p><div id="resumo-financeiro"></div></section>
 </main><script src="js/vendor/qrcode-generator-1.4.4.js"></script><script src="js/pedidos.js"></script><script src="js/admin-painel.js"></script><script src="js/admin-catalogo.js"></script></body></html>
