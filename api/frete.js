@@ -13,7 +13,9 @@ module.exports = async function handler(req, res) {
       throw new ErroFrete('O cálculo automático ainda não está disponível. Confirme o frete pelo WhatsApp.', 503);
     }
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-    const payload = montarCotacao(body);
+    const {getTodosOsProdutos}=require('../produtos');
+    const extras=await require('./catalogo').catalogo();
+    const payload = montarCotacao(body,[...getTodosOsProdutos(),...extras]);
     const sandbox = process.env.MELHOR_ENVIO_AMBIENTE !== 'producao';
     // Cotações de teste nunca devem ser oferecidas no site público de produção.
     if (sandbox && (hospedagem().producao || process.env.CHECKOUT_AMBIENTE === 'producao')) {
