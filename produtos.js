@@ -351,6 +351,6 @@ function contarItensCarrinho() {
 
 // O servidor usa o mesmo catalogo para validar os produtos na cotacao de frete.
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getTodosOsProdutos };
+  module.exports = { getTodosOsProdutos, getProdutosPorCategoria };
 }
 
