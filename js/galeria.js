@@ -327,3 +327,19 @@ if (paginaAtualGaleria) {
 criarModaisSeNaoExistirem();
 renderizarGaleria();
 updateCartCount();
+(async()=>{
+ try{
+  const resposta=await fetch('/api/catalogo',{cache:'no-store'});
+  if(!resposta.ok)return;
+  const dados=await resposta.json();
+  if(!Array.isArray(dados.produtos))return;
+  const categoria=obterCategoriaAtual();
+  if(!categoria||typeof PRODUTOS==='undefined'||!Array.isArray(PRODUTOS[categoria]))return;
+  const existentes=new Set(PRODUTOS[categoria].map(p=>p.id));
+  for(const p of dados.produtos){
+   if(p.categoria!==categoria||!/^custom-[0-9a-f-]{36}$/.test(p.id)||existentes.has(p.id))continue;
+   PRODUTOS[categoria].push(p);existentes.add(p.id);
+  }
+  renderizarGaleria();
+ }catch(e){console.warn('Catálogo adicional indisponível; galeria original preservada.');}
+})();
