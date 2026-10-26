@@ -82,6 +82,21 @@
   }catch(e){if(atual===sequencia)aviso(e.message,true);}
   finally{if(atual===sequencia){$('carregar').disabled=false;$('buscarPedidos').disabled=false;for(const id of ['anterior','anteriorRodape'])$(id).disabled=paginaAtual===0;for(const id of ['proxima','proximaRodape'])$(id).disabled=!proximo;}}
  }
+ const campoSenha=$('chave');
+ const olho=document.createElement('button');
+ olho.type='button';
+ olho.textContent='👁';
+ olho.title='Mostrar senha';
+ olho.setAttribute('aria-label','Mostrar senha');
+ olho.setAttribute('aria-pressed','false');
+ campoSenha.insertAdjacentElement('afterend',olho);
+ olho.addEventListener('click',()=>{
+  const mostrar=campoSenha.type==='password';
+  campoSenha.type=mostrar?'text':'password';
+  olho.title=mostrar?'Ocultar senha':'Mostrar senha';
+  olho.setAttribute('aria-label',olho.title);
+  olho.setAttribute('aria-pressed',String(mostrar));
+ });
  $('acesso').addEventListener('submit',e=>{e.preventDefault();chave=$('chave').value;return carregar();});
  $('filtros').addEventListener('submit',e=>{e.preventDefault();return carregar();});
  $('filtro').addEventListener('change',()=>carregar());
