@@ -30,7 +30,8 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify(payload), signal: AbortSignal.timeout(10000)
     });
     if (!resposta.ok) throw new ErroFrete('Não foi possível consultar o frete agora. Tente novamente ou fale pelo WhatsApp.', 502);
-    const opcoes = normalizarOpcoes(await resposta.json());
+    let dados;try{dados=await resposta.json();}catch{throw new ErroFrete('O serviço de frete retornou uma resposta inválida. Tente novamente.',502);}
+    const opcoes = normalizarOpcoes(dados);
     return res.status(200).json({ opcoes, teste: sandbox });
   } catch (erro) {
     if (erro instanceof SyntaxError) return res.status(400).json({ mensagem: 'Confira os dados do pedido.' });

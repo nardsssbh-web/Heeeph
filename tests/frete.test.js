@@ -35,6 +35,33 @@ test('usa tarifa customizada, aceita frete zero e filtra serviços indisponívei
   assert.equal(opcoes[1].preco, 24.53);
   assert.equal(opcoes[1].prazo, 4);
 });
+
+test('frete não aceita coerção de preço, fração de centavo ou modalidade ambígua',()=>{
+ const invalidos=[true,false,[],{},'0x10','1e2',' ','1.001',1.001,Infinity,Number.MAX_SAFE_INTEGER];
+ const resultado=invalidos.map((price,i)=>({id:i+1,name:'Inválido',price}));
+ resultado.push({id:99,name:'PAC',price:'10.00'},{id:99,name:'Outra modalidade',price:'20.00'},{id:100,name:'Válido',price:'10.79'});
+ assert.deepEqual(normalizarOpcoes(resultado).map(o=>({id:o.id,preco:o.preco})),[{id:'100',preco:10.79}]);
+ assert.throws(()=>montarCotacao({...body,cep:'00000000'},catalogo,config),/CEP/);
+ assert.throws(()=>montarCotacao(body,catalogo,{cepOrigem:'00000000'}),{status:503});
+});
+
+test('API diferencia JSON inválido do cliente de falha do provedor; só consulta calculate',async()=>{
+ const env={...process.env},original=global.fetch;let chamadas=0;
+ const res=()=>({setHeader(){},status(n){this.code=n;return this;},json(d){this.data=d;}});
+ Object.assign(process.env,{FRETE_ATIVO:'true',MELHOR_ENVIO_TOKEN:'ficticio',MELHOR_ENVIO_USER_AGENT:'HEEEPH local',MELHOR_ENVIO_AMBIENTE:'producao'});
+ const req={method:'POST',body:{cep:'30220060',itens:[{id:'bandas-accept',medida:'20x28cm',quantidade:1}]}};
+ try{
+  for(const modo of ['json','timeout','http','indisponivel']){
+   global.fetch=async(url,opts)=>{chamadas++;assert.equal(url,'https://melhorenvio.com.br/api/v2/me/shipment/calculate');assert.equal(opts.method,'POST');
+    if(modo==='timeout')throw Object.assign(Error('segredo-ficticio'),{name:'TimeoutError'});
+    return {ok:modo!=='http',json:async()=>{if(modo==='json')throw SyntaxError('segredo-ficticio');return [{id:1,error:'indisponivel'}];}};
+   };
+   const r=res();await handler(req,r);assert.equal(r.code,modo==='indisponivel'?200:502);assert.doesNotMatch(JSON.stringify(r.data),/segredo-ficticio/);
+   if(modo==='indisponivel')assert.deepEqual(r.data.opcoes,[]);
+  }
+  const antes=chamadas;for(const body of ['{',{...req.body,cep:'00000000'}]){const r=res();await handler({...req,body},r);assert.equal(r.code,400);}assert.equal(chamadas,antes);
+ }finally{global.fetch=original;process.env=env;}
+});
 test('endpoint desligado não chama o Melhor Envio nem expõe credenciais', async () => {
   const original = process.env.FRETE_ATIVO;
   process.env.FRETE_ATIVO = 'false';

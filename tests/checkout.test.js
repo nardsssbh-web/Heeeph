@@ -32,7 +32,7 @@ test('recusa final pelo emissor aceita montantes nominais observados na API, sem
 function fixture(){
  const db=new Map(),requests=[];const previous=global.fetch;const env={...process.env};
  Object.assign(process.env,{CHECKOUT_TESTE_ATIVO:'true',MERCADO_PAGO_ACCESS_TOKEN_TEST:'segredo-mp',MERCADO_PAGO_PUBLIC_KEY_TEST:'public-test',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'segredo-db',FRETE_ATIVO:'true',MELHOR_ENVIO_AMBIENTE:'producao',MELHOR_ENVIO_TOKEN:'segredo-frete',MELHOR_ENVIO_USER_AGENT:'HEEEPH'});
- let preco=10.79,testUser=true,orders=0,timeout=false,lastOrder,recusa=false,semVendedor=false,falhaPersistencia=false;
+ let preco=10.79,testUser=true,orders=0,timeout=false,lastOrder,recusa=false,semVendedor=false,falhaPersistencia=false,freteFalha=null;
  global.fetch=async(url,opts={})=>{
   requests.push({url,opts});const json=d=>({ok:true,json:async()=>d});
   if(url.includes('viacep.com.br'))return json({cep:'30220-060',logradouro:'Rua Teste',bairro:'Centro',localidade:'Belo Horizonte',uf:'MG'});
@@ -44,12 +44,17 @@ function fixture(){
    return json({result});
   }
   if(url.endsWith('/users/me'))return json({id:123,tags:testUser?['test_user']:[]});
-  if(url.includes('melhorenvio'))return json([{id:1,company:{name:'JeT'},name:'Standard',price:preco,delivery_time:4}]);
+  if(url.includes('melhorenvio')){
+   if(freteFalha==='timeout')throw Object.assign(new Error('Timeout fictício do frete'),{name:'TimeoutError'});
+   if(freteFalha==='http')return {ok:false,status:503};
+   if(freteFalha==='json')return {ok:true,json:async()=>{throw new SyntaxError('Resposta fictícia inválida');}};
+   return json(freteFalha==='ausente'?[]:[{id:1,company:{name:'JeT'},name:'Standard',price:preco,delivery_time:4}]);
+  }
   if(url.includes('/v1/orders?'))return json({data:lastOrder?[lastOrder]:[]});
   if(url.endsWith('/v1/orders')){orders++;if(recusa)return {ok:false,status:400,json:async()=>({errors:[{code:'invalid_email_for_sandbox'}]})};if(timeout)throw new Error('timeout');const payload=JSON.parse(opts.body);lastOrder={id:'ORDTEST',user_id:123,country_code:'BRA',external_reference:payload.external_reference,total_amount:payload.total_amount,total_paid_amount:payload.total_amount,status:'processed',status_detail:'accredited',transactions:{payments:[{status:'processed',status_detail:'accredited',payment_method:{id:'pix'}}]}};if(semVendedor)delete lastOrder.user_id;return json(lastOrder);}
   if(url.endsWith('/v1/orders/ORDTEST'))return json(lastOrder);throw Error(url);
  };
- return{requests,db,setPreco:v=>preco=v,setTest:v=>testUser=v,setTimeout:v=>timeout=v,setRecusa:v=>recusa=v,setSemVendedor:v=>semVendedor=v,setFalhaPersistencia:v=>falhaPersistencia=v,get orders(){return orders;},close(){global.fetch=previous;process.env=env;}};
+ return{requests,db,setPreco:v=>preco=v,setTest:v=>testUser=v,setTimeout:v=>timeout=v,setRecusa:v=>recusa=v,setSemVendedor:v=>semVendedor=v,setFalhaPersistencia:v=>falhaPersistencia=v,setFreteFalha:v=>freteFalha=v,get orders(){return orders;},close(){global.fetch=previous;process.env=env;}};
 }
 
 test('falha ao persistir após criar a order recupera pela referência sem reenviar cobrança',async()=>{
@@ -283,6 +288,30 @@ test('pedido persistente, token protegido, idempotência e status consultado no 
 });
 test('frete muda antes de pagar: nenhuma cobrança é criada',async()=>{
  const f=fixture();try{const p=await c.preparar(body);f.setPreco(11);await assert.rejects(()=>c.pagar(p.id,p.token,{metodo:'pix'}),{status:409});assert.equal(f.orders,0);}finally{f.close();}
+});
+
+test('falha de cotação não prepara pedido nem deixa tentativa de pagamento',async()=>{
+ for(const modo of ['timeout','http','json','ausente']){
+  const f=fixture();try{
+   f.setFreteFalha(modo);await assert.rejects(()=>c.preparar(body));
+   assert.equal(f.orders,0,modo);assert.equal(f.db.size,0,modo);
+   assert.equal(f.requests.some(r=>r.url.includes('/v1/orders')),false,modo);
+  }finally{f.close();}
+ }
+});
+
+test('falha de frete antes da cobrança preserva pedido e permite retomar após recuperação da cotação',async()=>{
+ for(const modo of ['timeout','http','json','ausente']){
+  const f=fixture();try{
+   const p=await c.preparar(body),antes=f.db.get(c.prefixo+p.id);
+   f.setFreteFalha(modo);await assert.rejects(()=>c.pagar(p.id,p.token,{metodo:'pix'}));
+   assert.equal(f.orders,0,modo);assert.equal(f.db.get(c.prefixo+p.id),antes,modo);
+   assert.equal(f.db.has(c.prefixo+'tentativa:'+p.id),false,modo);
+   assert.equal(f.db.has(c.prefixo+'lock:'+p.id),false,modo);
+   f.setFreteFalha(null);const retomado=await c.pagar(p.id,p.token,{metodo:'pix'});
+   assert.equal(retomado.id,p.id);assert.equal(retomado.pagamento.aprovado,true);assert.equal(f.orders,1,modo);
+  }finally{f.close();}
+ }
 });
 test('conta real é bloqueada mesmo se a variável se chama TEST',async()=>{
  const f=fixture();try{f.setTest(false);await assert.rejects(()=>c.preparar(body),{status:503});assert.equal(f.orders,0);}finally{f.close();}

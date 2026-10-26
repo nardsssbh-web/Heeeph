@@ -18,3 +18,16 @@ test('diagnóstico da assinatura distingue ausência e divergência sem revelar 
  req.query['data.id']='ORDTEST';req.headers['x-signature']='ts=1792160000,v1='+crypto.createHmac('sha256',segredo).update('id:ORDTEST;ts:1792160000;').digest('hex');
  assert.equal(assinaturaValida(req,segredo),true);
 });
+
+test('assinatura recusa headers ambíguos, múltiplos valores e manifesto malformado sem lançar erro',()=>{
+ const secret='segredo-ficticio',ts='1792160000',rid='req-local';
+ const v1=crypto.createHmac('sha256',secret).update(`id:ORDTEST;request-id:${rid};ts:${ts};`).digest('hex');
+ const assinatura=`ts=${ts},v1=${v1}`;
+ for(const header of [[assinatura],`${assinatura},ts=${ts}`,`${assinatura},V1=${v1}`,`${assinatura}=extra`,`${assinatura},`,7]){
+  assert.equal(assinaturaValida({query:{'data.id':'ORDTEST'},headers:{'x-signature':header,'x-request-id':rid}},secret),false);
+ }
+ for(const requestId of ['a;ts:123','a\nb','a'.repeat(201),['req-local']]){
+  assert.equal(assinaturaValida({query:{'data.id':'ORDTEST'},headers:{'x-signature':assinatura,'x-request-id':requestId}},secret),false);
+ }
+ assert.equal(assinaturaValida({},secret),false);assert.equal(assinaturaValida({query:{'data.id':['ORDTEST']},headers:{}},secret),false);
+});

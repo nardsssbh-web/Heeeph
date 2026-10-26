@@ -1,5 +1,67 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
+
+test('entrega interrompida é recuperada somente na sessão sem cartão, termos, carrinho ou cobrança novos',async()=>{
+ const campos={nome:'Cliente Fictício',email:'test@testuser.com',cpf:'19119119100',telefone:'11999999999',rua:'Praça da Sé',numero:'123',complemento:'Apto 2',bairro:'Sé',cidade:'São Paulo',uf:'SP',termos:'on'};
+ const n=await tela({}, {heeeph_pedido_teste:null},{campos});
+ await n.entrega.input({target:n.entrega.elements.nome});
+ const salvo=n.values.heeeph_entrega_rascunho;assert.ok(salvo);assert.equal(n.recibos.heeeph_entrega_rascunho,undefined);
+ const r=JSON.parse(salvo);assert.equal(r.campos.numero,'123');assert.equal(r.campos.termos,undefined);assert.equal(r.campos.token,undefined);
+ const volta=await tela({}, {heeeph_pedido_teste:null,heeeph_entrega_rascunho:salvo});
+ for(const k of Object.keys(campos).filter(k=>k!=='termos'))assert.equal(volta.entrega.elements[k].value,campos[k]);
+ assert.equal(volta.entrega.elements.termos.value,'');assert.deepEqual(volta.chamadas,['configuracao','cep']);
+ assert.equal(volta.values.heeeph_checkout,n.values.heeeph_checkout);
+});
+
+test('entrega vencida não retorna; outro CEP não reutiliza endereço e armazenamento negado não impede preenchimento',async()=>{
+ const r={em:Date.now(),cep:'30220060',campos:{nome:'Pessoa Teste',numero:'999',complemento:'Antigo',rua:'Rua Antiga',uf:'MG'}};
+ const n=await tela({}, {heeeph_pedido_teste:null,heeeph_entrega_rascunho:JSON.stringify(r)});
+ assert.equal(n.entrega.elements.nome.value,'Pessoa Teste');assert.equal(n.entrega.elements.rua.value,'Praça da Sé');assert.equal(n.entrega.elements.numero.value,'');assert.equal(n.entrega.elements.complemento.value,'');
+ for(const em of [Date.now()-1800001,Date.now()+60000]){
+  const vencido=await tela({}, {heeeph_pedido_teste:null,heeeph_entrega_rascunho:JSON.stringify({...r,em})});
+  assert.equal(vencido.entrega.elements.nome.value,'');assert.equal(vencido.values.heeeph_entrega_rascunho,undefined);
+ }
+ const bloqueado=await tela({}, {heeeph_pedido_teste:null},{sessaoBloqueada:true});
+ await bloqueado.entrega.input({target:bloqueado.entrega.elements.nome});assert.equal(bloqueado.chamadas.includes('pagar'),false);
+});
+
+test('voltar pelo navegador consulta a mesma tentativa e mantém valor e frete do servidor em cada estado',async()=>{
+ for(const [pagamento,mensagem] of [
+  [{status:'action_required',detalhe:'waiting_transfer',pix:{codigo:'PIX_EXISTENTE'}},/pendente ou em análise/],
+  [{status:'processing'},/pendente ou em análise/],
+  [{status:'processed',aprovado:true},/Pagamento aprovado/],
+  [{status:'failed',trocaPermitida:true},/Pagamento recusado/],
+  [{status:'canceled',detalhe:'canceled'},/Pagamento cancelado/],
+  [{status:'canceled',detalhe:'expired'},/Pagamento expirado/]
+ ]){
+  let consultas=0;const r={...base,total:3926,subtotal:2490,frete:{centavos:1436,servico:'Standard',transportadora:'Teste'}};
+  const n=await tela({}, {},{statusAPI:async()=>({ok:true,json:async()=>({...r,pagamento:++consultas===1?null:pagamento})})});
+  const checkout=n.values.heeeph_checkout;await n.eventos.pageshow({persisted:true});
+  assert.deepEqual(n.chamadas,['status','status']);assert.equal(n.enviados.every(x=>x.id===base.id),true);
+  assert.equal(n.values.heeeph_checkout,checkout);assert.match(n.total.textContent,/39,26/);assert.match(n.mensagem.textContent,mensagem);
+  assert.equal(n.pixResultado.hidden,pagamento.status!=='action_required');
+ }
+});
+
+test('retorno com consulta indisponível remove Pix antigo e bloqueia pagamento até recuperação confirmada',async()=>{
+ let consultas=0;let falha=true;const n=await tela({}, {},{statusAPI:async()=>{
+  consultas++;return consultas===1?{ok:true,json:async()=>({...base,pagamento:{status:'action_required',pix:{codigo:'PIX_ANTIGO'}}})}:
+   falha?{ok:false,status:503,json:async()=>({mensagem:'Consulta indisponível. Tente novamente.'})}:{ok:true,json:async()=>({...base,pagamento:{status:'canceled',detalhe:'canceled'}})};
+ }});
+ await n.eventos.pageshow({persisted:true});assert.equal(n.pixCodigo.value,'');assert.equal(n.pixResultado.hidden,true);
+ await n.pix.click();await n.cartao.click();await n.recuperarPix.click();await n.trocarPagamento.click();await n.entrega.submit({preventDefault(){}});assert.deepEqual(n.chamadas,['status','status']);
+ assert.match(n.mensagem.textContent,/Consulte o pedido/);assert.ok(n.values.heeeph_pedido_teste);
+ falha=false;await n.consultar.click();assert.deepEqual(n.chamadas,['status','status','status']);assert.match(n.mensagem.textContent,/Pagamento cancelado/);
+});
+
+test('sair do formulário de cartão permite reabrir após voltar sem tokenizar nem pagar',async()=>{
+ let aberturas=0,fechamentos=0;
+ function sdk(){return {bricks:()=>({create:async(_,__,config)=>{aberturas++;config.callbacks.onReady();return {unmount(){fechamentos++;}};}})};}
+ const n=await tela({}, {},{sdk});await n.cartao.click();assert.equal(aberturas,1);
+ n.eventos.pagehide();assert.equal(fechamentos,1);assert.equal(n.confirmarCartao.hidden,true);
+ await n.eventos.pageshow({persisted:true});await n.cartao.click();assert.equal(aberturas,2);
+ assert.deepEqual(n.chamadas,['status','status']);
+});
 test('sessão recuperada permite só desistência, sem substituir recibo original ou criar pagamento',async()=>{
  const id='83891a67a9028883fed00b55b64db215',temporario={id,token:'d'.repeat(64),expiraEm:Date.now()+60000,recuperacaoTeste:true};
  const original=JSON.stringify({id:'e'.repeat(32),token:'f'.repeat(64),guardadoEm:Date.now()});
@@ -49,7 +111,7 @@ async function tela(resposta,armazenamento={},opcoes={}){
  const nodes={},chamadas=[];const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
  for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','cepConferencia','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento','confirmarCartao'])nodes[id]=el();
  for(const id of ['alterarPedido','desistirCompra','confirmacaoSaida','mensagemSaida','confirmarSaida','manterPedido'])nodes[id]=Object.assign(el(),{hidden:id==='confirmacaoSaida'});
- for(const k of ['nome','email','cpf','telefone','rua','numero','complemento','bairro','cidade','uf','termos'])nodes.entrega.elements[k]=Object.assign(el(),{name:k,value:opcoes.campos?.[k]||'',focus(){},closest(){return {append(){}};}});
+ for(const k of ['nome','email','cpf','telefone','rua','numero','complemento','bairro','cidade','uf','termos'])nodes.entrega.elements[k]=Object.assign(el(),{name:k,value:opcoes.campos?.[k]||'',hasAttribute(){return false;},focus(){},closest(){return {append(){}};}});
  const values={heeeph_checkout:JSON.stringify({cep:'01001000',itens:[{id:'x'}]}),heeeph_pedido_teste:JSON.stringify({id:base.id,token:'b'.repeat(64)})};
  Object.assign(values,armazenamento);
  const ctx=vm.createContext({console,setTimeout,clearTimeout,FormData:class{constructor(form){this.form=form;}get(k){return this.form.elements[k].value;}},EnderecosHEEEPH:require('../js/enderecos'),MercadoPago:opcoes.sdk,qrcode:require('../js/vendor/qrcode-generator-1.4.4'),fetch:async(url,opts)=>{if(url.startsWith('/api/cep?')){chamadas.push('cep');return {ok:!opcoes.cepFalha,json:async()=>opcoes.cepFalha?{mensagem:'CEP indisponível. Dados preservados.'}:{cep:'01001000',rua:'Praça da Sé',bairro:'Sé',cidade:'São Paulo',uf:'SP'}};}chamadas.push(JSON.parse(opts.body).acao);return {ok:!opcoes.falhar,status:opcoes.falhar?403:200,json:async()=>({...base,...resposta})};},document:{getElementById:id=>nodes[id],createElement:el},window:{addEventListener(){}},navigator:{},sessionStorage:{getItem:k=>values[k]||null,setItem:(k,v)=>values[k]=v,removeItem:k=>delete values[k]}});
@@ -69,6 +131,7 @@ async function tela(resposta,armazenamento={},opcoes={}){
  ctx.window.location={href:opcoes.url||'https://loja.test/pagamento.html'};
  nodes.location=ctx.window.location;nodes.values=values;
  if(opcoes.api){const original=ctx.fetch;ctx.fetch=async(url,opts)=>{if(url==='/api/checkout'&&JSON.parse(opts.body).acao==='abandonarPedido'){const b=JSON.parse(opts.body);enviados.push(b);chamadas.push(b.acao);return opcoes.api(b);}return original(url,opts);};}
+ if(opcoes.statusAPI){const original=ctx.fetch;ctx.fetch=async(url,opts)=>{if(url==='/api/checkout'&&JSON.parse(opts.body).acao==='status'){const b=JSON.parse(opts.body);enviados.push(b);chamadas.push(b.acao);return opcoes.statusAPI(b);}return original(url,opts);};}
  nodes.diagnosticoDispositivo=Object.assign(el(),{hidden:true});
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;nodes.recibos=recibos;return nodes;
 }

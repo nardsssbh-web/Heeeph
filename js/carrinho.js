@@ -7,6 +7,12 @@ let freteEmTeste = false;
 let consultaFrete = 0;
 let controleFrete = null;
 let subtotalAtual = 0;
+let referenciaFrete = null;
+
+function referenciaCarrinhoFrete() {
+  return JSON.stringify({cep: (document.getElementById('cepFrete')?.value || '').replace(/\D/g, ''),
+    itens: obterCarrinhoSeguro().map(item => ({id:item.id,medida:item.medida,quantidade:Number(item.quantidade || item.quantity || 1)}))});
+}
 
 function escaparHtml(valor) {
   return String(valor ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
@@ -112,6 +118,7 @@ function resumoPacotes() {
 }
 
 function invalidarFrete() {
+  referenciaFrete = null;
   consultaFrete += 1;
   if (controleFrete) controleFrete.abort();
   controleFrete = null;
@@ -188,6 +195,7 @@ async function calcularFrete() {
     id: item.id, medida: item.medida, quantidade: Number(item.quantidade || item.quantity || 1)
   }));
   if (!pedido.length) return;
+  const referencia = referenciaCarrinhoFrete();
   const consulta = consultaFrete;
   const botao = document.getElementById("calcularFreteBtn");
   controleFrete = new AbortController();
@@ -203,11 +211,17 @@ async function calcularFrete() {
     });
     const resultado = await resposta.json();
     if (consulta !== consultaFrete) return;
+    if (referencia !== referenciaCarrinhoFrete()) {
+      invalidarFrete();
+      mensagem.textContent = 'O carrinho ou o CEP mudou. Calcule o frete novamente.';
+      return;
+    }
     if (!resposta.ok) throw new Error(resultado.mensagem || "Não foi possível calcular o frete.");
     opcoesFrete = Array.isArray(resultado.opcoes) ? resultado.opcoes.filter(opcao =>
       opcao && typeof opcao.preco === "number" && Number.isFinite(opcao.preco) && opcao.preco >= 0
     ) : [];
     freteEmTeste = resultado.teste === true;
+    referenciaFrete = referencia;
     mensagem.textContent = opcoesFrete.length
       ? (freteEmTeste ? "Simulação de teste. Escolha uma opção para conferir o total; confirme o frete real pelo WhatsApp." : "Escolha a entrega. Os prazos são estimados após a postagem.")
       : "Não encontramos entrega disponível para este pedido. Consulte pelo WhatsApp.";
@@ -305,6 +319,11 @@ function finalizarCheckoutTeste() {
 
   if (!opcaoFreteAtual || freteEmTeste) {
     alert("Calcule o frete e escolha uma entrega antes de continuar.");
+    return;
+  }
+  if (referenciaFrete !== referenciaCarrinhoFrete()) {
+    invalidarFrete();
+    alert('O carrinho ou o CEP mudou. Calcule o frete novamente antes de continuar.');
     return;
   }
   sessionStorage.setItem('heeeph_checkout', JSON.stringify({
@@ -527,6 +546,11 @@ function reaplicarFreteSeJaHouverCEP() {
 
 window.addEventListener("storage", event => {
   if (event.key === "heeeph_cart" || event.key === "cepFreteSalvo" || event.key === null) renderCarrinho();
+});
+
+// O cache de navegação pode restaurar uma entrega selecionada antes de editar as placas.
+window.addEventListener('pageshow', event => {
+  if (event.persisted) renderCarrinho();
 });
 
 renderCarrinho();

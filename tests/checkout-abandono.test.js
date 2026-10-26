@@ -22,7 +22,7 @@ function fixture(){
   if(url.endsWith('/cancel')){
    if(modo==='timeout')throw Error('timeout');
    if(modo==='aprovado'){order.status='processed';order.status_detail='accredited';order.total_paid_amount='34.50';Object.assign(order.transactions.payments[0],{paid_amount:'34.50',status:'processed',status_detail:'accredited'});}
-   if(['ok','timeout-confirmado'].includes(modo)){order.status='canceled';order.status_detail='canceled';Object.assign(order.transactions.payments[0],{status:'canceled',status_detail:'canceled'});}
+   if(['ok','timeout-confirmado','cancelado-real'].includes(modo)){order.status='canceled';order.status_detail='canceled';Object.assign(order.transactions.payments[0],{status:'canceled',status_detail:modo==='cancelado-real'?'canceled_transaction':'canceled'});}
    if(modo==='timeout-confirmado')throw Error('Resposta perdida');
    return json(order);
   }
@@ -217,4 +217,30 @@ test('nominal cancelado só é terminal quando ambos os níveis confirmam cancel
   process.env.VERCEL_ENV='production';assert.equal(c.conferirPagamento(f.p,f.order).encerradoSemPagamento,false);
   process.env.VERCEL_ENV='preview';process.env.CHECKOUT_AMBIENTE='producao';assert.equal(c.conferirPagamento({...f.p,ambiente:'producao'},f.order).encerradoSemPagamento,false);
  }finally{f.close();}
+});
+
+test('resposta real canceled_transaction confirma cancelamento e repetição não solicita outro POST',async()=>{
+ const f=fixture();try{pendenteNominalPreview(f);f.modo='cancelado-real';
+  const r=await c.abandonarPedido(id,token,{motivo:'desistir',confirmado:true});
+  assert.equal(r.edicaoLiberada,true);assert.equal(r.pagamento.status,'canceled');
+  assert.equal(r.pagamento.transacoes[0].detalhe,'canceled_transaction');assert.equal(f.ler().saida.confirmada,true);
+  assert.equal(f.cancelamentos().length,1);await c.abandonarPedido(id,token,{motivo:'desistir',confirmado:true});assert.equal(f.cancelamentos().length,1);
+ }finally{f.close();}
+});
+test('pedido já cancelado com canceled_transaction libera sem novo cancelamento; divergências continuam bloqueadas',async()=>{
+ for(const detalheOrder of ['canceled','canceled_transaction']){
+  const f=fixture();try{pendenteNominalPreview(f);
+   Object.assign(f.order,{status:'canceled',status_detail:detalheOrder});Object.assign(f.order.transactions.payments[0],{status:'canceled',status_detail:'canceled_transaction'});
+   assert.equal((await c.abandonarPedido(id,token,confirmacao)).edicaoLiberada,true);assert.equal(f.cancelamentos().length,0);
+   assert.equal((await c.status(id,token)).saida.confirmada,true);
+  }finally{f.close();}
+ }
+ for(const variar of [f=>{f.order.status='processed';},f=>{f.order.status_detail='unknown';},
+  f=>{f.order.transactions.payments[0].status='action_required';},f=>{f.order.transactions.payments[0].paid_amount='0.01';},
+  f=>{f.p.pagamento.impedimentoEncerramento=true;f.salvarP();},f=>{process.env.VERCEL_ENV='production';}]){
+  const f=fixture();try{pendenteNominalPreview(f);Object.assign(f.order,{status:'canceled',status_detail:'canceled'});
+   Object.assign(f.order.transactions.payments[0],{status:'canceled',status_detail:'canceled_transaction'});variar(f);
+   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.cancelamentos().length,0);assert.equal(f.ler().saida.confirmada,false);
+  }finally{f.close();}
+ }
 });
