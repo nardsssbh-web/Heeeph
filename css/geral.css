@@ -250,51 +250,82 @@ button{
 
 @media (max-width: 780px){
   :root{
-    --topo-altura:56px;
+    --topo-altura:144px;
   }
 
   .topo .wrap{
-    flex-direction:row;
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) 44px;
     align-items:center;
     justify-content:space-between;
-    gap:8px;
-    padding:8px 10px 8px;
-    min-height:54px;
-    flex-wrap:nowrap;
+    gap:0;
+    padding:4px 10px;
+    min-height:140px;
   }
 
   .logo a{
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
     font-size:18px;
     letter-spacing:1px;
   }
 
   .menu-area{
-    width:auto;
-    margin-left:auto;
-    gap:8px;
-    flex-wrap:nowrap;
-    min-width:0;
-    flex:1 1 auto;
-    justify-content:flex-end;
+    display:contents;
   }
 
   .menu{
-    display:flex;
+    grid-column:1 / -1;
+    grid-row:2;
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
     align-items:center;
-    justify-content:flex-end;
-    gap:8px;
-    flex-wrap:nowrap;
+    justify-content:center;
+    gap:0 6px;
     min-width:0;
-    overflow:hidden;
+    overflow:visible;
   }
 
   .menu a{
-    font-size:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:44px;
+    padding:6px 4px;
+    font-size:13px;
+    line-height:16px;
+    white-space:normal;
+    text-align:center;
+  }
+
+  /* Também acomoda o atalho existente de Minha HEEEPH sem cortar os links. */
+  .topo .wrap .menu a.heeeph-conta-link{
+    gap:4px;
+    min-width:0;
+    font-size:12px;
+    white-space:normal;
+  }
+
+  .topo .wrap .menu .heeeph-conta-link .heeeph-estrela-menu{
+    flex:0 0 20px;
+    width:20px;
+    height:24px;
+    font-size:20px;
+  }
+
+  .topo .wrap .menu .heeeph-conta-link > span:last-child{
+    display:block;
+    min-width:0;
+    line-height:16px;
+    white-space:normal;
   }
 
   .cart-link{
-    width:34px;
-    height:34px;
+    grid-column:2;
+    grid-row:1;
+    width:44px;
+    height:44px;
   }
 
   .cart-link img{
@@ -338,25 +369,11 @@ button{
 
 @media (max-width: 480px){
   .topo .wrap{
-    padding:8px 8px 8px;
-    gap:6px;
-  }
-
-  .logo a{
-    font-size:16px;
+    padding:4px 8px;
   }
 
   .menu{
-    gap:6px;
-  }
-
-  .menu a{
-    font-size:8px;
-  }
-
-  .cart-link{
-    width:30px;
-    height:30px;
+    gap:0 4px;
   }
 
   .cart-link img{
