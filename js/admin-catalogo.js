@@ -2,7 +2,7 @@
  'use strict';
  const $=id=>document.getElementById(id);
  const categorias={bandas:'Bandas',bebidas:'Bebidas',games:'Games',garage:'Garage',infantil:'Infantil',motos:'Motos',musica:'Música',rpg:'RPG',street:'Street',trip:'Trip'};
- const estado={produtos:[],imagem:null,id:null,aberto:false};
+ const estado={produtos:[],originais:[],imagem:null,id:null,aberto:false};
  const el=(tag,text)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;return x;};
  function mensagem(texto,erro=false){const n=$('cadastro-mensagem');n.textContent=texto;n.dataset.tipo=erro?'erro':'info';}
  async function api(body){
@@ -27,9 +27,31 @@
    return data;
   }finally{bitmap.close();}
  }
+ function renderOriginais(){
+  const lista=$('galeria-originais');if(!lista)return;lista.replaceChildren();
+  const categoria=$('filtrar-originais').value;
+  const filtro=$('buscar-originais').value.trim().toLocaleLowerCase('pt-BR');
+  const produtos=estado.originais.filter(p=>(!categoria||p.categoria===categoria)&&(!filtro||p.nome.toLocaleLowerCase('pt-BR').includes(filtro)));
+  $('total-originais').textContent=produtos.length+' placa(s) encontradas. Ocultar retira a placa da galeria de teste, sem apagar a arte original.';
+  if(!produtos.length){lista.append(el('p','Nenhuma placa encontrada.'));return;}
+  for(const p of produtos){
+   const card=el('article');card.className='admin-card admin-miniatura';
+   const img=el('img');img.src=p.imagem;img.alt='Miniatura de '+p.nome;img.loading='lazy';
+   const nome=el('strong',p.nome);const detalhe=el('small',(categorias[p.categoria]||p.categoria)+' · '+(p.oculto?'Oculta':'Disponível'));
+   const botao=el('button',p.oculto?'Restaurar':'Excluir da galeria');botao.type='button';
+   botao.addEventListener('click',async()=>{
+    if(!p.oculto&&!confirm('Retirar "'+p.nome+'" da galeria de teste? A arte será preservada e poderá ser restaurada.'))return;
+    botao.disabled=true;
+    try{await api({acao:p.oculto?'restaurarOriginal':'ocultarOriginal',id:p.id});await carregar();mensagem('Galeria de teste atualizada.');}
+    catch(e){mensagem(e.message,true);}finally{botao.disabled=false;}
+   });
+   card.append(img,nome,detalhe,botao);lista.append(card);
+  }
+ }
  function render(){
   const lista=$('lista-placas');lista.replaceChildren();
   $('total-placas').textContent=estado.produtos.length+' placa(s) cadastrada(s) neste ambiente de teste.';
+  renderOriginais();
   if(!estado.produtos.length){lista.append(el('p','Nenhuma placa cadastrada pelo painel ainda.'));return;}
   for(const p of estado.produtos){
    const card=el('article');card.className='admin-card admin-placa';
@@ -64,8 +86,10 @@
   $('form-placa').scrollIntoView({behavior:'smooth',block:'start'});
  }
  async function carregar(){
-  const d=await api({acao:'listar'});estado.produtos=d.produtos||[];render();
+  const d=await api({acao:'listar'});estado.produtos=d.produtos||[];estado.originais=d.originais||[];render();
  }
+ $('filtrar-originais').addEventListener('change',renderOriginais);
+ $('buscar-originais').addEventListener('input',renderOriginais);
  $('placa-novo').addEventListener('click',()=>{limpar();$('placa-nome').focus();});
  $('placa-imagem').addEventListener('change',async e=>{
   estado.imagem=null;const file=e.target.files?.[0];if(!file)return;
@@ -85,5 +109,5 @@
   try{await carregar();mensagem('Cadastro de placas pronto para usar no Preview.');}
   catch(e){mensagem(e.message,true);}
  });
- document.addEventListener('heeeph:sair',()=>{estado.produtos=[];limpar();$('lista-placas').replaceChildren();$('cadastro-placas').hidden=true;mensagem('');});
+ document.addEventListener('heeeph:sair',()=>{estado.produtos=[];estado.originais=[];limpar();$('lista-placas').replaceChildren();$('cadastro-placas').hidden=true;mensagem('');});
 })();
