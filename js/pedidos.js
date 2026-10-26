@@ -32,6 +32,20 @@
   }
   if(focoId){const card=$('pedido-'+focoId);if(card)card.scrollIntoView({block:'start',behavior:'smooth'});}
  }
+ const campoSenha=$('chave');
+ const alternarSenha=document.createElement('button');
+ alternarSenha.type='button';
+ alternarSenha.textContent='Mostrar senha';
+ alternarSenha.setAttribute('aria-label','Mostrar senha de acesso');
+ alternarSenha.setAttribute('aria-pressed','false');
+ campoSenha.insertAdjacentElement('afterend',alternarSenha);
+ alternarSenha.addEventListener('click',()=>{
+   const visivel=campoSenha.type==='password';
+   campoSenha.type=visivel?'text':'password';
+   alternarSenha.textContent=visivel?'Ocultar senha':'Mostrar senha';
+   alternarSenha.setAttribute('aria-label',visivel?'Ocultar senha de acesso':'Mostrar senha de acesso');
+   alternarSenha.setAttribute('aria-pressed',String(visivel));
+ });
  $('acesso').addEventListener('submit',async e=>{e.preventDefault();chave=$('chave').value; $('carregar').disabled=true;aviso('Carregando pedidos…');try{const d=await api({acao:'listar'});pedidos=d.pedidos;$('filtros').hidden=false;$('sair').hidden=false;render();aviso('Lista atualizada. Use a consulta individual para conferir o pagamento no Mercado Pago.');}catch(e){pedidos=[];$('pedidos').replaceChildren();$('contagem').textContent='';aviso(e.message,true);}finally{$('carregar').disabled=false;}});
  $('busca').addEventListener('input',render);$('filtro').addEventListener('change',render);$('imprimir').addEventListener('click',()=>window.print());
  $('sair').addEventListener('click',()=>{chave='';pedidos=[];$('chave').value='';$('pedidos').replaceChildren();$('contagem').textContent='';$('filtros').hidden=true;$('sair').hidden=true;aviso('Acesso encerrado.');});
