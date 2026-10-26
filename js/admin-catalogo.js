@@ -3,6 +3,23 @@
  const $=id=>document.getElementById(id);
  const categorias={bandas:'Bandas',bebidas:'Bebidas',games:'Games',garage:'Garage',infantil:'Infantil',motos:'Motos',musica:'Música',rpg:'RPG',street:'Street',trip:'Trip'};
  const estado={produtos:[],originais:[],imagem:null,id:null,aberto:false};
+ const subabas=[...document.querySelectorAll('.produto-subabas [role="tab"]')];
+ function selecionarSubaba(tab){
+  for(const t of subabas){
+   const ativo=t===tab;t.setAttribute('aria-selected',String(ativo));t.tabIndex=ativo?0:-1;
+   $(t.getAttribute('aria-controls')).hidden=!ativo;
+  }
+ }
+ for(const [i,tab] of subabas.entries()){
+  tab.addEventListener('click',()=>selecionarSubaba(tab));
+  tab.addEventListener('keydown',e=>{
+   if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key))return;
+   e.preventDefault();
+   const next=e.key==='Home'?0:e.key==='End'?subabas.length-1:(i+(e.key==='ArrowRight'?1:-1)+subabas.length)%subabas.length;
+   selecionarSubaba(subabas[next]);subabas[next].focus();
+  });
+ }
+
  const el=(tag,text)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;return x;};
  function mensagem(texto,erro=false){const n=$('cadastro-mensagem');n.textContent=texto;n.dataset.tipo=erro?'erro':'info';}
  async function api(body){
@@ -75,6 +92,7 @@
   }
  }
  function editarPlaca(p){
+  selecionarSubaba($('produto-aba-adicionar'));
   estado.id=p.id;estado.imagem=null;
   $('placa-id').textContent='Editando: '+p.nome;
   $('placa-nome').value=p.nome;$('placa-categoria').value=p.categoria;
@@ -105,9 +123,9 @@
   }catch(err){mensagem(err.message,true);}finally{btn.disabled=false;}
  });
  document.addEventListener('heeeph:autenticado',async()=>{
-  $('cadastro-placas').hidden=false;
+  $('cadastro-placas').hidden=false;selecionarSubaba($('produto-aba-relatorio'));
   try{await carregar();mensagem('Cadastro de placas pronto para usar no Preview.');}
   catch(e){mensagem(e.message,true);}
  });
- document.addEventListener('heeeph:sair',()=>{estado.produtos=[];estado.originais=[];limpar();$('lista-placas').replaceChildren();$('cadastro-placas').hidden=true;mensagem('');});
+ document.addEventListener('heeeph:sair',()=>{estado.produtos=[];estado.originais=[];selecionarSubaba($('produto-aba-relatorio'));limpar();$('lista-placas').replaceChildren();$('cadastro-placas').hidden=true;mensagem('');});
 })();
