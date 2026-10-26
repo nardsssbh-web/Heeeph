@@ -42,6 +42,12 @@
 .admin-miniatura button:disabled{opacity:.5}
 .admin-filtros{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
 .admin-filtros input,.admin-filtros select{padding:10px;min-width:170px;flex:1;background:#fff;color:#111;border-radius:6px}
+
+.produto-subabas{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 22px}
+.produto-subabas button{flex:1 1 175px;padding:12px;border:1px solid #806a29;background:#171717;color:#fff;border-radius:8px;font:inherit;cursor:pointer}
+.produto-subabas button[aria-selected="true"]{background:#ffd700;color:#111;font-weight:700}
+.produto-subabas button:focus-visible{outline:3px solid #00a6dc;outline-offset:2px}
+#cadastro-placas [hidden]{display:none!important}
 </style></head>
 <body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
 <nav class="admin-abas" id="admin-abas" hidden role="tablist" aria-label="Áreas administrativas">
@@ -55,15 +61,16 @@
 <p id="mensagem" role="status" aria-live="polite"></p><form id="filtros" class="painel-filtros" hidden><input id="busca" type="search" maxlength="100" aria-label="Buscar pedido ou cliente" placeholder="Número, nome, e-mail ou produto"><select id="filtro" aria-label="Situação do pagamento"><option value="todos">Todos os pagamentos</option><option value="aprovados">Aprovados</option><option value="pendentes">Pendentes / não iniciados</option><option value="recusados">Recusados / cancelados</option></select><button id="buscarPedidos" type="submit">Buscar no servidor</button><button type="button" id="imprimir">Imprimir página exibida</button></form><p id="contagem" role="status" tabindex="-1"></p><nav id="paginacao" class="painel-paginacao" aria-label="Páginas de pedidos no início" hidden><button id="anterior" type="button">Página anterior</button><button id="proxima" type="button">Próxima página</button></nav><div id="pedidos"></div>
 <nav id="paginacaoRodape" class="painel-paginacao" aria-label="Páginas de pedidos no final" hidden><span id="paginaRodape"></span><button id="anteriorRodape" type="button">Página anterior</button><button id="proximaRodape" type="button">Próxima página</button><button id="voltarTopo" type="button">Voltar ao topo</button></nav></section>
 <section id="area-envios" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-envios" hidden><h2>Envios</h2><p>Área em preparação. Futuramente, reunirá a organização dos envios e as informações de entrega dos pedidos. Nenhuma etiqueta ou postagem é gerada nesta aba.</p><div id="resumo-envios"></div></section>
-<section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden><h2>Produtos</h2><h3>Relatório de produtos</h3><p>Resumo dos produtos encontrados nos pedidos carregados nesta página.</p><div id="resumo-produtos"></div><div id="cadastro-placas" class="admin-cadastro" hidden>
-<h3>Galeria de placas existentes</h3>
-<p>Miniaturas das placas já presentes no site. Você pode retirar uma placa da galeria de teste e restaurá-la depois. Nenhum arquivo original será apagado.</p>
-<div class="admin-filtros">
-<label>Buscar placa<input id="buscar-originais" type="search" placeholder="Digite o nome da placa"></label>
-<label>Categoria<select id="filtrar-originais"><option value="">Todas as categorias</option><option value="bandas">Bandas</option><option value="bebidas">Bebidas</option><option value="games">Games</option><option value="garage">Garage</option><option value="infantil">Infantil</option><option value="motos">Motos</option><option value="musica">Música</option><option value="rpg">RPG</option><option value="street">Street</option><option value="trip">Trip</option></select></label>
-</div><p id="total-originais"></p><div id="galeria-originais" class="admin-galeria-miniaturas"></div>
-<hr style="margin:28px 0;border:0;border-top:1px solid #665326">
-<h3>Cadastro de placas</h3><p>Cadastre novas placas na coleção do Preview. Os preços permanecem fixos em R$ 12,90 (pequena) e R$ 24,90 (grande). A imagem enviada será uma miniatura para a galeria, não o arquivo original de impressão.</p>
+<section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden>
+<h2>Produtos</h2>
+<div id="cadastro-placas" hidden>
+<nav class="produto-subabas" role="tablist" aria-label="Gerenciamento de produtos">
+<button type="button" role="tab" id="produto-aba-relatorio" aria-controls="produto-painel-relatorio" aria-selected="true">Relatório</button>
+<button type="button" role="tab" id="produto-aba-adicionar" aria-controls="produto-painel-adicionar" aria-selected="false" tabindex="-1">+ Adicionar placa</button>
+<button type="button" role="tab" id="produto-aba-galeria" aria-controls="produto-painel-galeria" aria-selected="false" tabindex="-1">Galeria de placas</button>
+</nav>
+<div id="produto-painel-relatorio" role="tabpanel" aria-labelledby="produto-aba-relatorio"><h3>Relatório de produtos</h3><p>Resumo dos produtos encontrados nos pedidos carregados nesta página.</p><div id="resumo-produtos"></div></div>
+<div id="produto-painel-adicionar" class="admin-cadastro" role="tabpanel" aria-labelledby="produto-aba-adicionar" hidden><h3>Cadastro de placas</h3><p>Cadastre novas placas na coleção do Preview. Os preços permanecem fixos em R$ 12,90 (pequena) e R$ 24,90 (grande). A imagem enviada será uma miniatura para a galeria, não o arquivo original de impressão.</p>
 <button type="button" id="placa-novo">+ Adicionar placa</button>
 <form id="form-placa" style="margin-top:18px">
 <strong class="largura-total" id="placa-id">Nova placa</strong>
@@ -78,6 +85,14 @@
 </form>
 <p id="cadastro-mensagem" role="status" aria-live="polite"></p>
 <h3>Placas cadastradas pelo painel</h3><p id="total-placas"></p><div id="lista-placas"></div>
+</div>
+<div id="produto-painel-galeria" class="admin-cadastro" role="tabpanel" aria-labelledby="produto-aba-galeria" hidden><h3>Galeria de placas existentes</h3>
+<p>Miniaturas das placas já presentes no site. Você pode retirar uma placa da galeria de teste e restaurá-la depois. Nenhum arquivo original será apagado.</p>
+<div class="admin-filtros">
+<label>Buscar placa<input id="buscar-originais" type="search" placeholder="Digite o nome da placa"></label>
+<label>Categoria<select id="filtrar-originais"><option value="">Todas as categorias</option><option value="bandas">Bandas</option><option value="bebidas">Bebidas</option><option value="games">Games</option><option value="garage">Garage</option><option value="infantil">Infantil</option><option value="motos">Motos</option><option value="musica">Música</option><option value="rpg">RPG</option><option value="street">Street</option><option value="trip">Trip</option></select></label>
+</div><p id="total-originais"></p><div id="galeria-originais" class="admin-galeria-miniaturas"></div>
+</div>
 </div></section>
 <section id="area-financeiro" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-financeiro" hidden><h2>Financeiro</h2><p>Área reservada para futuros resumos financeiros. Os pagamentos continuam sendo consultados na aba Pedidos.</p><div id="resumo-financeiro"></div></section>
 </main><script src="js/vendor/qrcode-generator-1.4.4.js"></script><script src="js/pedidos.js"></script><script src="js/admin-painel.js"></script><script src="js/admin-catalogo.js"></script></body></html>
