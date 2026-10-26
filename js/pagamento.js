@@ -71,6 +71,36 @@
     avisar('', 'info');
   });
   function linha(texto) { const p = document.createElement('p'); p.className='item'; p.textContent=texto; $('resumo').append(p); }
+  function resumoCarrinho() {
+    if(pedido?.id)return;
+    $('resumo').replaceChildren();$('total').textContent='';
+    try {
+      const catalogo=getTodosOsProdutos();
+      if(!Array.isArray(entrada?.itens)||!entrada.itens.length)throw new Error('Carrinho vazio');
+      let subtotal=0;
+      const itens=entrada.itens.map(item=>{
+        const encontrados=catalogo.filter(p=>p.id===item.id);
+        if(encontrados.length!==1||!Number.isInteger(item.quantidade)||item.quantidade<1||item.quantidade>50)throw new Error('Item inválido');
+        const produto=encontrados[0],tipo=EmbalagensHEEEPH.tamanho(item.medida);
+        const medida=String(item.medida).toLowerCase().replace(/\s/g,'').replace(/×/g,'x').replace(/cm$/,'');
+        const permitidas=produto.orientacao==='vertical'?['10x15','20x28']:produto.orientacao==='horizontal'?['15x10','28x20']:[];
+        if(!permitidas.includes(medida)||/em breve/i.test(produto.nome))throw new Error('Produto indisponível');
+        const unitario=Math.round(EmbalagensHEEEPH.precos[tipo]*100),total=unitario*item.quantidade;
+        subtotal+=total;
+        return `${item.quantidade} × ${produto.nome} — ${item.medida} — ${preco(unitario)} cada — ${preco(total)}`;
+      });
+      EmbalagensHEEEPH.agrupar(entrada.itens);
+      itens.forEach(linha);linha('Subtotal: '+preco(subtotal));
+      const frete=Math.round(entrada.frete*100);
+      const cotado=typeof entrada.frete==='number'&&Number.isFinite(entrada.frete)&&entrada.frete>=0&&Number.isSafeInteger(frete)&&Math.abs(entrada.frete*100-frete)<0.000001&&Boolean(entrada.servico);
+      linha(cotado?'Frete selecionado: '+preco(frete):'Frete: a confirmar no carrinho.');
+      $('total').textContent=cotado?'Total previsto: '+preco(subtotal+frete):'Subtotal: '+preco(subtotal)+' (frete a confirmar)';
+      linha('Produtos e frete serão conferidos no servidor antes de criar o pedido. Nenhum pedido ou pagamento foi iniciado.');
+    } catch(_) {
+      $('resumo').replaceChildren();
+      linha('Não foi possível exibir os itens. Volte ao carrinho para conferir produtos, tamanhos e frete.');
+    }
+  }
   function resumo(p) {
     $('resumo').replaceChildren();
     p.itens.forEach(i=>linha(`${i.quantidade} × ${i.nome} — ${i.medida} — ${preco(i.centavos*i.quantidade)}`));
@@ -203,7 +233,7 @@
       $('retomada').hidden=$('resultado').hidden=$('meios').hidden=$('pixResultado').hidden=true;
       $('persistenciaAviso').hidden=true;
       $('entrega').hidden=false;$('resumo').replaceChildren();$('total').textContent='';
-      restaurarEntrega();
+      restaurarEntrega();resumoCarrinho();
       $('pedidoResumo').textContent='Pedido anterior preservado: '+recibo.id;
       $('cep').textContent='CEP de entrega: '+entrada.cep;
       $('conferir').disabled=false;
@@ -366,7 +396,7 @@
       if(erro){avisar(erro.mensagem,'erro',erro.campo);return;}
       pedido=await preparar({...entrada,cliente});resultado(pedido);avisar('Pedido '+pedido.id+' guardado. Confira o total e escolha o pagamento.', 'info');$('meios').scrollIntoView({block:'start'});
     }
-    catch(e){avisar(e.message,'erro',e.dados?.campo);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
+    catch(e){avisar(e.message,'erro',e.dados?.campo);if(e.dados?.frete){entrada.frete=e.dados.frete.preco; sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada)); resumoCarrinho();avisar(`${e.message} Novo frete: ${preco(Math.round(entrada.frete*100))}. Clique novamente para confirmar esse valor.`);}}
     finally{emPagamento=false;$('conferir').disabled=false;}
   });
   $('pix').addEventListener('click',()=>pagar('pix').catch(()=>{}));
@@ -381,7 +411,7 @@
       entrada=d.checkout;sessionStorage.setItem('heeeph_checkout',JSON.stringify(entrada));
       sessionStorage.removeItem('heeeph_pedido_teste');sessionStorage.removeItem('heeeph_preparacao');pedido=null;
       $('resultado').hidden=$('meios').hidden=true;$('entrega').hidden=false;
-      restaurarEntrega();
+      restaurarEntrega();resumoCarrinho();
       $('conferir').disabled=false;
       $('pedidoResumo').textContent='Revise os dados para preparar um novo pedido.';
       $('cep').textContent='CEP de entrega: '+entrada.cep;
@@ -520,7 +550,7 @@
       }
       entrada=JSON.parse(sessionStorage.getItem('heeeph_checkout'));if(!entrada?.itens?.length)throw new Error('Volte ao carrinho, escolha o frete e clique em Ir para pagamento.');
       $('cep').textContent='CEP de entrega: '+entrada.cep;
-      restaurarEntrega();
+      restaurarEntrega();resumoCarrinho();
       $('conferir').disabled=false;
       avisar('Preencha os dados para conferir o pedido.', 'info');
       try{await conferirCEP(true);}catch(e){$('cepConferencia').textContent=e.message;avisar(e.message);}

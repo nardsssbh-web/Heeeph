@@ -1,6 +1,35 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
 const base={id:'a'.repeat(32),teste:true,itens:[],pacotes:[],subtotal:0,frete:{centavos:0,servico:'PAC',transportadora:'Correios'},total:100,publicKey:'publica',pagamento:null,tentativa:false};
 
+test('resumo antes do pedido usa catálogo e preços compartilhados, exibe quantidades e frete sem preparar ou pagar',async()=>{
+ const entrada={cep:'01001000',servico:'1',frete:10.11,itens:[{id:'bandas-acdc-bb',medida:'15x10cm',quantidade:2,nome:'ADULTERADO',preco:0.01},{id:'bandas-angra',medida:'20x28cm',quantidade:1}]};
+ const n=await tela({}, {heeeph_pedido_teste:null,heeeph_checkout:JSON.stringify(entrada)});
+ const linhas=n.resumo.children.map(x=>x.textContent).join('\n');
+ assert.match(linhas,/2 × AC\/DC.*12,90 cada.*25,80/);assert.match(linhas,/1 × Angra-Angels Cry.*24,90/);
+ assert.match(linhas,/Subtotal:.*50,70/);assert.match(linhas,/Frete selecionado:.*10,11/);assert.match(n.total.textContent,/Total previsto:.*60,81/);
+ assert.doesNotMatch(linhas,/ADULTERADO|0,01/);assert.match(linhas,/serão conferidos no servidor/);
+ assert.deepEqual(n.chamadas,['configuracao','cep']);assert.equal(n.values.heeeph_pedido_teste,null);
+});
+
+test('resumo sem cotação válida não anuncia total com frete zero; carrinho inválido não mostra valores parciais',async()=>{
+ for(const frete of [undefined,-1,'10.11',10.111]){
+  const entrada={cep:'01001000',servico:'1',frete,itens:[{id:'bandas-angra',medida:'20x28cm',quantidade:1}]};
+  const n=await tela({}, {heeeph_pedido_teste:null,heeeph_checkout:JSON.stringify(entrada)});
+  assert.match(n.resumo.children.map(x=>x.textContent).join('\n'),/Frete: a confirmar/);assert.match(n.total.textContent,/24,90.*frete a confirmar/);
+  assert.deepEqual(n.chamadas,['configuracao','cep']);
+ }
+ for(const item of [{id:'inexistente',medida:'20x28cm',quantidade:1},{id:'bandas-angra',medida:'15x10cm',quantidade:1},{id:'bandas-angra',medida:'20x28cm',quantidade:0}]){
+  const n=await tela({}, {heeeph_pedido_teste:null,heeeph_checkout:JSON.stringify({cep:'01001000',itens:[item]})});
+  assert.equal(n.total.textContent,'');assert.match(n.resumo.children[0].textContent,/Volte ao carrinho/);assert.deepEqual(n.chamadas,['configuracao','cep']);
+ }
+});
+
+test('pedido recuperado mantém resumo e valores autoritativos em vez de valores prévios do carrinho',async()=>{
+ const n=await tela({itens:[{nome:'Produto do pedido',medida:'20x28cm',quantidade:1,centavos:2490}],total:3926,frete:{centavos:1436,servico:'Standard',transportadora:'Teste'}});
+ assert.match(n.resumo.children.map(x=>x.textContent).join('\n'),/Produto do pedido.*24,90/);assert.match(n.total.textContent,/Total:.*39,26/);
+ assert.doesNotMatch(n.total.textContent,/previsto/);assert.deepEqual(n.chamadas,['status']);
+});
+
 test('entrega interrompida é recuperada somente na sessão sem cartão, termos, carrinho ou cobrança novos',async()=>{
  const campos={nome:'Cliente Fictício',email:'test@testuser.com',cpf:'19119119100',telefone:'11999999999',rua:'Praça da Sé',numero:'123',complemento:'Apto 2',bairro:'Sé',cidade:'São Paulo',uf:'SP',termos:'on'};
  const n=await tela({}, {heeeph_pedido_teste:null},{campos});
@@ -108,7 +137,7 @@ test('antes de preparar pedido editar é livre e desistir preserva o carrinho se
  }
 });
 async function tela(resposta,armazenamento={},opcoes={}){
- const nodes={},chamadas=[];const el=()=>({hidden:false,disabled:false,textContent:'',dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(){},append(){},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
+ const nodes={},chamadas=[];const el=()=>({hidden:false,disabled:false,textContent:'',children:[],dataset:{},elements:{uf:{append(){}}},querySelectorAll:()=>[],addEventListener(n,fn){this[n]=fn;},replaceChildren(...items){this.children=items;},append(...items){this.children.push(...items);},setAttribute(){},removeAttribute(n){delete this[n];},scrollIntoView(){}});
  for(const id of ['entrega','mensagem','resumo','total','meios','resultado','pedidoNumero','statusTitulo','statusTexto','pixResultado','pixCodigo','qr','pix','cartao','conferir','consultar','copiar','cep','cepConferencia','recuperarPix','pedidoResumo','avisoAmbiente','meiosTitulo','meiosTexto','envioAviso','trocarPagamento','confirmarCartao'])nodes[id]=el();
  for(const id of ['alterarPedido','desistirCompra','confirmacaoSaida','mensagemSaida','confirmarSaida','manterPedido'])nodes[id]=Object.assign(el(),{hidden:id==='confirmacaoSaida'});
  for(const k of ['nome','email','cpf','telefone','rua','numero','complemento','bairro','cidade','uf','termos'])nodes.entrega.elements[k]=Object.assign(el(),{name:k,value:opcoes.campos?.[k]||'',hasAttribute(){return false;},focus(){},closest(){return {append(){}};}});
@@ -133,6 +162,7 @@ async function tela(resposta,armazenamento={},opcoes={}){
  if(opcoes.api){const original=ctx.fetch;ctx.fetch=async(url,opts)=>{if(url==='/api/checkout'&&JSON.parse(opts.body).acao==='abandonarPedido'){const b=JSON.parse(opts.body);enviados.push(b);chamadas.push(b.acao);return opcoes.api(b);}return original(url,opts);};}
  if(opcoes.statusAPI){const original=ctx.fetch;ctx.fetch=async(url,opts)=>{if(url==='/api/checkout'&&JSON.parse(opts.body).acao==='status'){const b=JSON.parse(opts.body);enviados.push(b);chamadas.push(b.acao);return opcoes.statusAPI(b);}return original(url,opts);};}
  nodes.diagnosticoDispositivo=Object.assign(el(),{hidden:true});
+ ctx.getTodosOsProdutos=require('../produtos').getTodosOsProdutos;ctx.EmbalagensHEEEPH=require('../js/embalagens');
  vm.runInContext(fs.readFileSync('js/pagamento.js','utf8'),ctx);await new Promise(setImmediate);nodes.chamadas=chamadas;nodes.recibos=recibos;return nodes;
 }
 
