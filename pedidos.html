@@ -33,6 +33,15 @@
 .admin-placa{display:grid;grid-template-columns:90px minmax(0,1fr);gap:14px;align-items:start}
 .admin-placa>img{width:90px;height:115px;object-fit:contain}
 .admin-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.admin-galeria-miniaturas{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px}
+.admin-miniatura{display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;margin:0;min-width:0}
+.admin-miniatura img{width:100%;height:135px;object-fit:contain}
+.admin-miniatura strong{font-size:.9rem;overflow-wrap:anywhere}
+.admin-miniatura small{margin:0}
+.admin-miniatura button{margin-top:auto;width:100%;padding:9px;background:#ffd700;color:#111;border:0;border-radius:6px;cursor:pointer;font-weight:600}
+.admin-miniatura button:disabled{opacity:.5}
+.admin-filtros{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.admin-filtros input,.admin-filtros select{padding:10px;min-width:170px;flex:1;background:#fff;color:#111;border-radius:6px}
 </style></head>
 <body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
 <nav class="admin-abas" id="admin-abas" hidden role="tablist" aria-label="Áreas administrativas">
@@ -47,6 +56,13 @@
 <nav id="paginacaoRodape" class="painel-paginacao" aria-label="Páginas de pedidos no final" hidden><span id="paginaRodape"></span><button id="anteriorRodape" type="button">Página anterior</button><button id="proximaRodape" type="button">Próxima página</button><button id="voltarTopo" type="button">Voltar ao topo</button></nav></section>
 <section id="area-envios" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-envios" hidden><h2>Envios</h2><p>Área em preparação. Futuramente, reunirá a organização dos envios e as informações de entrega dos pedidos. Nenhuma etiqueta ou postagem é gerada nesta aba.</p><div id="resumo-envios"></div></section>
 <section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden><h2>Produtos</h2><h3>Relatório de produtos</h3><p>Resumo dos produtos encontrados nos pedidos carregados nesta página.</p><div id="resumo-produtos"></div><div id="cadastro-placas" class="admin-cadastro" hidden>
+<h3>Galeria de placas existentes</h3>
+<p>Miniaturas das placas já presentes no site. Você pode retirar uma placa da galeria de teste e restaurá-la depois. Nenhum arquivo original será apagado.</p>
+<div class="admin-filtros">
+<label>Buscar placa<input id="buscar-originais" type="search" placeholder="Digite o nome da placa"></label>
+<label>Categoria<select id="filtrar-originais"><option value="">Todas as categorias</option><option value="bandas">Bandas</option><option value="bebidas">Bebidas</option><option value="games">Games</option><option value="garage">Garage</option><option value="infantil">Infantil</option><option value="motos">Motos</option><option value="musica">Música</option><option value="rpg">RPG</option><option value="street">Street</option><option value="trip">Trip</option></select></label>
+</div><p id="total-originais"></p><div id="galeria-originais" class="admin-galeria-miniaturas"></div>
+<hr style="margin:28px 0;border:0;border-top:1px solid #665326">
 <h3>Cadastro de placas</h3><p>Cadastre novas placas na coleção do Preview. Os preços permanecem fixos em R$ 12,90 (pequena) e R$ 24,90 (grande). A imagem enviada será uma miniatura para a galeria, não o arquivo original de impressão.</p>
 <button type="button" id="placa-novo">+ Adicionar placa</button>
 <form id="form-placa" style="margin-top:18px">
