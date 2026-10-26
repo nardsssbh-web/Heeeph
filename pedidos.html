@@ -48,10 +48,12 @@
 .produto-subabas button[aria-selected="true"]{background:#ffd700;color:#111;font-weight:700}
 .produto-subabas button:focus-visible{outline:3px solid #00a6dc;outline-offset:2px}
 #cadastro-placas [hidden]{display:none!important}
+.pedidos-alerta{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 6px;margin-left:6px;background:#d82727;color:#fff;border-radius:999px;font-size:.85rem;font-weight:800;vertical-align:middle}
+.pedidos-alerta[hidden]{display:none!important}
 </style></head>
 <body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
 <nav class="admin-abas" id="admin-abas" hidden role="tablist" aria-label="Áreas administrativas">
-<button type="button" role="tab" id="aba-pedidos" aria-controls="area-pedidos" aria-selected="true">Pedidos</button>
+<button type="button" role="tab" id="aba-pedidos" aria-controls="area-pedidos" aria-selected="true">Pedidos <span id="pedidos-alerta" class="pedidos-alerta" hidden aria-live="polite"></span></button>
 <button type="button" role="tab" id="aba-envios" aria-controls="area-envios" aria-selected="false" tabindex="-1">Envios</button>
 <button type="button" role="tab" id="aba-produtos" aria-controls="area-produtos" aria-selected="false" tabindex="-1">Produtos</button>
 <button type="button" role="tab" id="aba-financeiro" aria-controls="area-financeiro" aria-selected="false" tabindex="-1">Financeiro</button>
@@ -95,4 +97,4 @@
 </div>
 </div></section>
 <section id="area-financeiro" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-financeiro" hidden><h2>Financeiro</h2><p>Área reservada para futuros resumos financeiros. Os pagamentos continuam sendo consultados na aba Pedidos.</p><div id="resumo-financeiro"></div></section>
-</main><script src="js/vendor/qrcode-generator-1.4.4.js"></script><script src="js/pedidos.js"></script><script src="js/admin-painel.js"></script><script src="js/admin-catalogo.js"></script></body></html>
+</main><script src="js/vendor/qrcode-generator-1.4.4.js"></script><script src="js/pedidos.js"></script><script src="js/admin-painel.js"></script><script src="js/admin-catalogo.js"></script><script src="js/admin-alertas.js"></script></body></html>
