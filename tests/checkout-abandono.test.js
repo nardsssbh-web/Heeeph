@@ -1,15 +1,16 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const c=require('../lib/checkout');
 const id='a'.repeat(32),token='b'.repeat(64),confirmacao={motivo:'alterar',confirmado:true};
-function fixture(){
+function fixture({producao=false}={}){
  const env={...process.env},fetch=global.fetch,db=new Map(),requests=[];
  Object.assign(process.env,{CHECKOUT_AMBIENTE:'teste',MERCADO_PAGO_ACCESS_TOKEN_TEST:'ficticio',MERCADO_PAGO_PUBLIC_KEY_TEST:'ficticia',UPSTASH_REDIS_REST_URL:'https://redis.test',UPSTASH_REDIS_REST_TOKEN:'ficticio'});
+ if(producao)Object.assign(process.env,{CHECKOUT_AMBIENTE:'producao',VERCEL_ENV:'production',CHECKOUT_CANCELAMENTO_PRODUCAO_ATIVO:'true',MERCADO_PAGO_ACCESS_TOKEN_PROD:'ficticio-prod',MERCADO_PAGO_PUBLIC_KEY_PROD:'ficticia-prod',MERCADO_PAGO_WEBHOOK_SECRET_PROD:'ficticio-hmac',MERCADO_PAGO_VENDEDOR_ID_PROD:'123',UPSTASH_REDIS_REST_URL_PROD:'https://redis-prod.test',UPSTASH_REDIS_REST_TOKEN_PROD:'ficticio-prod'});
  let order={id:'ORDTEST',external_reference:id,user_id:123,country_code:'BRA',total_amount:'34.50',total_paid_amount:'0.00',status:'action_required',status_detail:'waiting_transfer',transactions:{payments:[{amount:'34.50',paid_amount:'0.00',status:'action_required',status_detail:'waiting_transfer',payment_method:{id:'pix',qr_code:'PIX_ANTIGO'}}]}};
- const p={id,tokenHash:c.hash(token),ambiente:'teste',criadoEm:new Date().toISOString(),vendedor:'123',total:3450,itens:[{id:'placa',quantidade:1}],pagamento:{mpId:'ORDTEST'},webhookRecebido:{assinaturaValidada:true}};
+ const p={id,tokenHash:c.hash(token),ambiente:producao?'producao':'teste',criadoEm:new Date().toISOString(),vendedor:'123',total:3450,itens:[{id:'placa',quantidade:1}],pagamento:{mpId:'ORDTEST'},webhookRecebido:{assinaturaValidada:true}};
  db.set(c.prefixo+id,JSON.stringify(p));let modo='ok',falhaSalvar=false;
  global.fetch=async(url,opts={})=>{
   requests.push({url,opts});const json=d=>({ok:true,status:200,json:async()=>structuredClone(d)});
-  if(url==='https://redis.test'){
+  if(url===(producao?'https://redis-prod.test':'https://redis.test')){
    const a=JSON.parse(opts.body);let result;
    if(a[0]==='GET')result=db.get(a[1])||null;
    else if(a[0]==='SET'){result=a.includes('NX')&&db.has(a[1])?null:'OK';if(result)db.set(a[1],a[2]);}
@@ -17,7 +18,7 @@ function fixture(){
    else if(a[0]==='EVAL'){result=db.get(a[3])===a[4]?Number(db.delete(a[3])):0;}
    else throw Error('Comando inesperado');return json({result});
   }
-  if(url.endsWith('/users/me'))return json({id:123,tags:['test_user']});
+  if(url.endsWith('/users/me'))return json({id:123,tags:producao?[]:['test_user']});
   if(url.includes('/v1/orders?'))return json({data:[]});
   if(url.endsWith('/cancel')){
    if(modo==='timeout')throw Error('timeout');
@@ -243,4 +244,80 @@ test('pedido já cancelado com canceled_transaction libera sem novo cancelamento
    await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.cancelamentos().length,0);assert.equal(f.ler().saida.confirmada,false);
   }finally{f.close();}
  }
+});
+
+test('produção simulada: cancelamento requer opt-in próprio e nunca funciona em Preview',async()=>{
+ for(const modo of ['sem-opt-in','preview']){
+  const f=fixture({producao:true});try{
+   if(modo==='sem-opt-in')delete process.env.CHECKOUT_CANCELAMENTO_PRODUCAO_ATIVO;
+   else process.env.VERCEL_ENV='preview';
+   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));
+   assert.equal(f.cancelamentos().length,0);
+   assert.equal(f.requests.some(r=>r.url.includes('api.mercadopago.com')),false);
+  }finally{f.close();}
+ }
+});
+test('produção simulada: Pix zerado cancela com confirmação persistida, histórico e idempotência',async()=>{
+ for(const motivo of ['alterar','desistir']){
+  const f=fixture({producao:true});try{
+   f.modo='cancelado-real';
+   const r=await c.abandonarPedido(id,token,{motivo,confirmado:true});
+   assert.equal(r.edicaoLiberada,true);assert.equal(r.teste,false);
+   assert.equal(r.pagamento.encerradoSemPagamento,true);assert.equal(r.pagamento.aprovado,false);
+   assert.equal(r.pagamento.transacoes[0].detalhe,'canceled_transaction');
+   assert.equal(f.ler().saida.confirmada,true);assert.deepEqual(f.ler().itens,f.p.itens);
+   assert.deepEqual(f.ler().webhookRecebido,f.p.webhookRecebido);
+   assert.equal(f.ler().total,3450);assert.equal(f.cancelamentos().length,1);
+   const i=f.requests.findIndex(r=>r.url.endsWith('/cancel'));
+   assert.ok(f.requests.slice(i+1).some(r=>r.url.endsWith('/ORDTEST')&&r.opts.method==='GET'));
+   await c.abandonarPedido(id,token,{motivo,confirmado:true});assert.equal(f.cancelamentos().length,1);
+   await assert.rejects(()=>c.pagar(id,token,{metodo:'pix'}),/encerrada/);
+   await assert.rejects(()=>c.recuperarPix(id,token),/encerrada/);
+   assert.equal(f.requests.some(r=>r.url.endsWith('/v1/orders')&&r.opts.method==='POST'),false);
+  }finally{f.close();}
+ }
+});
+test('produção simulada: pagamento recebido, campos ausentes e estados incertos não permitem cancelamento',async()=>{
+ const variantes=[
+  f=>{f.order.total_paid_amount='34.50';delete f.order.transactions.payments[0].paid_amount;},
+  f=>{f.order.transactions.payments[0].paid_amount='0.01';},
+  f=>{delete f.order.total_paid_amount;},
+  f=>{f.order.status_detail='waiting_capture';},
+  f=>{f.order.transactions.payments[0].status_detail='unknown';},
+  f=>{f.order.transactions.payments[0].payment_method.id='master';},
+  f=>{f.p.pagamento.aprovado=true;f.salvarP();},
+  f=>{f.order.external_reference='c'.repeat(32);}
+ ];
+ for(const variar of variantes){const f=fixture({producao:true});try{
+  variar(f);await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));
+  assert.equal(f.cancelamentos().length,0);assert.equal(f.ler().saida.confirmada,false);
+ }finally{f.close();}}
+});
+test('produção simulada: aprovação concorrente, falhas ou resposta pendente mantêm saída bloqueada',async()=>{
+ for(const modo of ['aprovado','timeout','pendente','consulta-falhou']){
+  const f=fixture({producao:true});try{f.modo=modo;
+   await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(f.ler().saida.confirmada,false);
+   await assert.rejects(()=>c.pagar(id,token,{metodo:'pix'}),/encerrada/);
+   if(modo==='aprovado')assert.equal(f.ler().pagamento.aprovado,true);
+  }finally{f.close();}
+ }
+});
+test('produção simulada: timeout só libera após GET terminal e gravação confirmada',async()=>{
+ const f=fixture({producao:true});try{f.modo='timeout-confirmado';
+  assert.equal((await c.abandonarPedido(id,token,confirmacao)).edicaoLiberada,true);
+ }finally{f.close();}
+ const g=fixture({producao:true});try{g.falhaSalvar=true;
+  await assert.rejects(()=>c.abandonarPedido(id,token,confirmacao));assert.equal(g.ler().saida.confirmada,false);
+  g.falhaSalvar=false;assert.equal((await c.abandonarPedido(id,token,confirmacao)).edicaoLiberada,true);
+  assert.equal(g.cancelamentos().length,1);
+ }finally{g.close();}
+});
+test('produção simulada: expiração comprovada e pedido sem tentativa encerram sem POST financeiro',async()=>{
+ for(const semTentativa of [true,false]){const f=fixture({producao:true});try{
+  if(semTentativa){delete f.p.pagamento;f.salvarP();}
+  else{Object.assign(f.order,{status:'canceled',status_detail:'expired'});Object.assign(f.order.transactions.payments[0],{status:'expired',status_detail:'expired'});}
+  assert.equal((await c.abandonarPedido(id,token,confirmacao)).edicaoLiberada,true);
+  assert.equal(f.cancelamentos().length,0);
+  assert.equal(f.requests.some(r=>r.url.includes('api.mercadopago.com')&&r.opts.method==='POST'),false);
+ }finally{f.close();}}
 });

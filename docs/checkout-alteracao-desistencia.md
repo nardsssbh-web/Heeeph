@@ -31,3 +31,13 @@ Aprovação/processamento detectado ou valor Pix recebido na transação ficam r
 Documentação de estados: https://www.mercadopago.com.br/developers/pt/docs/checkout-api-orders/payment-management/status/order-status e https://www.mercadopago.com.br/developers/pt/docs/checkout-api-orders/payment-management/status/transaction-status
 
 Referência oficial: https://www.mercadopago.com.br/developers/en/reference/online-payments/checkout-api/cancel-order/post
+
+### Preparação local de 27/10/2026 — sem ativação
+
+O Preview continua exclusivamente em teste. Não foram alteradas variáveis nem publicações. A preparação futura de cancelamento fora do sandbox exige, além das verificações existentes de hospedagem/vendedor/banco/assinatura, `CHECKOUT_CANCELAMENTO_PRODUCAO_ATIVO=true` exclusivamente em Production. Ausente por padrão: não cadastrar agora. A flag de novas cobranças não ativa esse recurso, e um Preview nunca pode cancelar um pagamento real. A flag de cancelamento é independente da de novas cobranças para permitir atendimento seguro quando novas vendas estiverem suspensas.
+
+Para Pix real, somente estados `action_required/waiting_transfer` coerentes na order e na transação, montantes pagos explicitamente zerados, uma única transação e identidade/valores corretos permitem solicitar o POST idempotente de cancelamento. Estados desconhecidos, valor ausente ou indício de recebimento bloqueiam. Após o POST, um GET precisa confirmar o encerramento e a gravação precisa concluir antes de liberar o carrinho. Aceito `canceled_transaction` como detalhe terminal da transação com order cancelada e valores zerados. Exceções nominais do sandbox continuam restritas ao teste. Nenhum reembolso ou cancelamento automático de cartão foi implementado.
+
+Testes novos cobrem opt-in/hospedagem, alteração e desistência, repetição idempotente, aprovação concorrente, montantes ausentes/parciais, estados incertos, timeout, falha de persistência, expiração e ausência de tentativa. Todos usam fetch/Redis simulados; não validam cancelamento no provedor real.
+
+Próxima validação de Preview: usar somente um Pix fictício pendente, confirmar a saída e conferir GET final, histórico no painel e carrinho com frete invalidado. Não reutilizar o pedido aprovado `5d7f69d0fe12972b5b9c27cd0d164938` para cancelar. Se não houver tentativa pendente reutilizável, definir uma única nova tentativa de teste antes da execução. Um único Preview futuro requer autorização de push/deploy; nenhuma publicação faz parte desta preparação local.
