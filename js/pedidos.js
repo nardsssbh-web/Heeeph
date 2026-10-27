@@ -18,7 +18,7 @@
   for(const id of ['proxima','proximaRodape'])$(id).disabled=!proximo;
   $('paginaRodape').textContent='Página '+(paginaAtual+1)+(proximo?' — há mais registros.':' — fim dos resultados.');
   for(const p of lista){
-   const sec=node('section');sec.className='pedido-card';sec.id='pedido-'+p.id;sec.append(node('h2','Pedido '+p.id));const etapaTopo=node('p',p.gestao?.status||'Recebido');etapaTopo.className='etapa-topo';etapaTopo.dataset.etapa=String(etapas.indexOf(p.gestao?.status||'Recebido'));sec.append(etapaTopo);const selo=node('p',(p.ambiente==='producao'?'Pagamento — ':'Pagamento de teste — ')+situacao(p));selo.className='selo'+(p.pagamento?.aprovado?' aprovado':'');sec.append(selo);
+   const sec=node('section');sec.className='pedido-card';sec.id='pedido-'+p.id;sec.append(node('h2','Pedido '+p.id));const etapaTopo=node('p',p.pagamento?.aprovado?(p.gestao?.status||'Recebido'):'Aguardando pagamento');etapaTopo.className='etapa-topo';if(p.pagamento?.aprovado)etapaTopo.dataset.etapa=String(etapas.indexOf(p.gestao?.status||'Recebido'));sec.append(etapaTopo);const selo=node('p',(p.ambiente==='producao'?'Pagamento — ':'Pagamento de teste — ')+situacao(p));selo.className='selo'+(p.pagamento?.aprovado?' aprovado':'');sec.append(selo);
    const a=p.cliente.endereco,dl=node('dl');
    const campos=[['Criado',new Date(p.criadoEm).toLocaleString('pt-BR')],['Cliente',p.cliente.nome],['Contato',p.cliente.email+' — '+p.cliente.telefone],['CPF',p.cliente.cpf],['Entrega',a.street_name+', '+a.street_number+(a.complement?' — '+a.complement:'')+' — '+a.neighborhood+' — '+a.city+'/'+a.state+' — CEP '+a.zip_code],['Frete',p.frete.transportadora+' — '+p.frete.servico+' — '+dinheiro(p.frete.centavos)],['Subtotal',dinheiro(p.subtotal)],['Total',dinheiro(p.total)],['Pagamento',(p.pagamento?.status||'Não iniciado')+' / '+(p.pagamento?.detalhe||'')],['Mercado Pago',p.pagamento?.mpId||'Ainda sem identificador'],['Última consulta',p.pagamento?.atualizadoEm?new Date(p.pagamento.atualizadoEm).toLocaleString('pt-BR'):'Ainda não consultado'],['Envio',p.ambiente==='producao'?'Etapas manuais; etiqueta e rastreio não integrados':'Pedido de teste: sem postagem ou etiqueta']];
    for(const [i,t] of (p.pagamento?.transacoes||[]).entries())campos.push(['Transação '+(i+1),[t.metodo,t.status,t.detalhe].filter(Boolean).join(' / ')||'Sem detalhe retornado']);
@@ -34,14 +34,14 @@
    if(p.payloadPix){campos.push(['Conferência do payload Pix',p.payloadPix.conferido?'Corresponde à impressão digital da tentativa enviada':'Não foi possível comprovar o payload enviado']);if(p.payloadPix.conferido)campos.push(['payer.first_name = APRO',p.payloadPix.primeiroNomeAPRO?'Sim':'Não'],['payer.email = test@testuser.com',p.payloadPix.emailTeste?'Sim':'Não']);}
    if(p.pagamento?.pix)campos.push(['Pix copia e cola',p.pagamento.pix.codigo?'Retornado pelo Mercado Pago':'Não retornado'],['Imagem QR do Mercado Pago',p.pagamento.pix.imagem?'Retornada':'Não retornada (o checkout pode gerar o QR a partir do copia e cola)']);
    if(p.pagamento&&!p.pagamento.transacoes)campos.push(['Diagnóstico','Clique em Consultar Pagamento para atualizar os detalhes da tentativa existente.']);
-   campos.push(['Status do pedido',p.gestao?.status||'Recebido']);
+   campos.push(['Status do pedido',p.pagamento?.aprovado?(p.gestao?.status||'Recebido'):'Aguardando pagamento']);
    for(const [k,v]of campos)dl.append(node('dt',k),node('dd',v));sec.append(dl);
    const produtos=node('div');produtos.className='produtos-destaque';produtos.append(node('h3','Produtos deste pedido'));const table=node('table'),head=node('tr');for(const t of ['Produto / tamanho','Qtd.','Valor'])head.append(node('th',t));table.append(head);
    for(const i of p.itens){const tr=node('tr');for(const t of [i.nome+' — '+i.medida,i.quantidade,dinheiro(i.centavos*i.quantidade)])tr.append(node('td',t));table.append(tr);}produtos.append(table);sec.insertBefore(produtos,dl);
    p.pacotes.forEach((x,i)=>sec.append(node('p',`Pacote ${i+1}: ${x.grandes} grande(s), ${x.pequenas} pequena(s) — ${x.gramas} g — ${x.length} × ${x.width} × ${x.height} cm${x.estimado?' (peso estimado)':''}`)));
    const retorno=node('p');retorno.className='retorno-pedido';retorno.setAttribute('role','status');retorno.setAttribute('aria-live','polite');const anterior=retornos.get(p.id);if(anterior){retorno.textContent=anterior.texto;retorno.dataset.tipo=anterior.cor||(anterior.erro?'erro':'info');}sec.append(retorno);
    function responder(texto,erro=false,cor){const tipo=cor||(erro?'erro':'info');retornos.set(p.id,{texto,erro,cor:tipo});retorno.textContent=texto;retorno.dataset.tipo=tipo;}
-   const button=node('button','Consultar Pagamento');button.type='button';button.addEventListener('click',async()=>{button.disabled=true;button.textContent='Consultando…';responder('Consultando a situação do pagamento…');try{const d=await api({acao:'consultar',id:p.id});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Consulta realizada às '+new Date().toLocaleTimeString('pt-BR')+'. Pagamento: '+situacao(d.pedido)+'.'+(!d.pedido.pagamento?' Nenhum pagamento confirmado para este pedido.':''),false,d.pedido.pagamento?.aprovado?'aprovado':recusado(d.pedido)?'recusado':d.pedido.pagamento?'pendente':'info');render(p.id);}catch(e){responder(e.message,true);}finally{button.disabled=false;button.textContent='Consultar Pagamento';}});sec.append(button);
+   const button=node('button','Consultar Pagamento');button.type='button';button.addEventListener('click',async()=>{button.disabled=true;button.textContent='Consultando…';responder('Consultando a situação do pagamento…');try{const d=await api({acao:'consultar',id:p.id});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Consulta realizada às '+new Date().toLocaleTimeString('pt-BR')+'. Pagamento: '+situacao(d.pedido)+'.'+(!d.pedido.pagamento?' Nenhum pagamento confirmado para este pedido.':''),false,d.pedido.pagamento?.aprovado?'aprovado':recusado(d.pedido)?'recusado':d.pedido.pagamento?'pendente':'info');render(p.id);document.dispatchEvent(new Event('heeeph:atualizar-contadores'));await carregar();}catch(e){responder(e.message,true);}finally{button.disabled=false;button.textContent='Consultar Pagamento';}});sec.append(button);
    if(p.id==='83891a67a9028883fed00b55b64db215'&&p.ambiente==='teste'){
      const emitir=node('button','Recuperar checkout expirado de teste');emitir.type='button';
      const area=node('div');area.hidden=true;let versaoQR=0;
@@ -61,8 +61,8 @@
      });sec.append(emitir,area);
    }
    const label=node('label','Status do pedido'),select=node('select');select.setAttribute('aria-label','Status do pedido '+p.id);
-   for(const etapa of etapas){const o=node('option',etapa);o.value=etapa;select.append(o);}select.value=p.gestao?.status||'Recebido';label.append(select);sec.append(label);
-   const salvar=node('button','Salvar status');salvar.type='button';salvar.addEventListener('click',async()=>{salvar.disabled=true;select.disabled=true;try{const d=await api({acao:'etapa',id:p.id,status:select.value});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Status salvo: '+d.pedido.gestao.status+'.');render(p.id);document.dispatchEvent(new Event('heeeph:atualizar-contadores'));if($('filtro-etapa').value!=='todos')await carregar();}catch(e){responder(e.message,true);}finally{salvar.disabled=false;select.disabled=false;}});sec.append(salvar);
+   for(const etapa of etapas){const o=node('option',etapa);o.value=etapa;select.append(o);}select.value=p.gestao?.status||'Recebido';select.disabled=!p.pagamento?.aprovado;label.append(select);sec.append(label);
+   const salvar=node('button','Salvar status');salvar.type='button';salvar.disabled=!p.pagamento?.aprovado;salvar.title=p.pagamento?.aprovado?'Salvar etapa do pedido':'Disponível somente após aprovação do pagamento';salvar.addEventListener('click',async()=>{salvar.disabled=true;select.disabled=true;try{const d=await api({acao:'etapa',id:p.id,status:select.value});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Status salvo: '+d.pedido.gestao.status+'.');render(p.id);document.dispatchEvent(new Event('heeeph:atualizar-contadores'));await carregar();}catch(e){responder(e.message,true);}finally{salvar.disabled=false;select.disabled=false;}});sec.append(salvar);
    const excluir=node('button','Excluir');excluir.type='button';excluir.className='excluir';excluir.addEventListener('click',async()=>{if(!window.confirm('Excluir o pedido '+p.id+' do painel? Esta ação não cancela nem estorna pagamentos no Mercado Pago.'))return;excluir.disabled=true;try{await api({acao:'excluir',id:p.id,confirmacao:p.id});pedidos=pedidos.filter(x=>x.id!==p.id);render();document.dispatchEvent(new Event('heeeph:atualizar-contadores'));aviso('Pedido excluído do painel. O pagamento não foi alterado.');}catch(e){aviso(e.message,true);}finally{excluir.disabled=false;}});sec.append(excluir);$('pedidos').append(sec);
   }
   document.dispatchEvent(new CustomEvent('heeeph:pedidos',{detail:{pedidos:pedidos.slice(),pagina:paginaAtual+1,mais:!!proximo}}));
@@ -110,7 +110,7 @@
   botao.addEventListener('click',()=>{
    $('filtro').value=botao.dataset.pagamento;
    marcarFiltro('data-pagamento',botao.dataset.pagamento);
-
+   if(botao.dataset.pagamento!=='aprovados'&&botao.dataset.pagamento!=='todos'){$('filtro-etapa').value='todos';marcarFiltro('data-etapa','todos');}
    carregar();
   });
  }
@@ -118,7 +118,7 @@
   botao.addEventListener('click',()=>{
    $('filtro-etapa').value=botao.dataset.etapa;
    marcarFiltro('data-etapa',botao.dataset.etapa);
-
+   if(botao.dataset.etapa!=='todos'){$('filtro').value='aprovados';marcarFiltro('data-pagamento','aprovados');}
    carregar();
   });
  }
