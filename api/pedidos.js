@@ -18,6 +18,7 @@ module.exports=async(req,res)=>{
       const maximo=2000;
       const pagamentos={todos:0,aprovados:0,pendentes:0,recusados:0};
       const etapasContagem={'Recebido':0,'Em Preparação':0,'Saiu para entrega':0,'Entregue':0};
+      let pagosNaoEncaminhados=0;
       const recusados=new Set(['failed','canceled','cancelled','expired','rejected','error']);
       for(let inicio=0;inicio<Math.min(total,maximo);inicio+=100){
         const ids=await c.redis(['ZREVRANGE',indice,inicio,Math.min(inicio+99,total-1,maximo-1)]);
@@ -31,12 +32,12 @@ module.exports=async(req,res)=>{
           pagamentos.todos++;
           const etapa=Object.prototype.hasOwnProperty.call(etapasContagem,g.status||'Recebido')?(g.status||'Recebido'):'Recebido';
           etapasContagem[etapa]++;
-          if(p.pagamento?.aprovado)pagamentos.aprovados++;
+          if(p.pagamento?.aprovado){pagamentos.aprovados++;if(etapa==='Recebido'||etapa==='Em Preparação')pagosNaoEncaminhados++;}
           else if(recusados.has(p.pagamento?.status))pagamentos.recusados++;
           else pagamentos.pendentes++;
         }
       }
-      return res.json({pendentes:0,pagamentos,etapas:etapasContagem,completo:total<=maximo,consultados:Math.min(total,maximo)});
+      return res.json({pendentes:pagosNaoEncaminhados,pagamentos,etapas:etapasContagem,completo:total<=maximo,consultados:Math.min(total,maximo)});
     }
     if(b.acao==='recuperarCheckoutTeste'){
       if(b.confirmacao!==b.id)return res.status(400).json({mensagem:'Confirme o pedido de teste.'});
