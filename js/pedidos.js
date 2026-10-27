@@ -110,7 +110,7 @@
   botao.addEventListener('click',()=>{
    $('filtro').value=botao.dataset.pagamento;
    marcarFiltro('data-pagamento',botao.dataset.pagamento);
-   if(botao.dataset.pagamento!=='aprovados'){$('filtro-etapa').value='todos';marcarFiltro('data-etapa','todos');}
+
    carregar();
   });
  }
@@ -118,9 +118,7 @@
   botao.addEventListener('click',()=>{
    $('filtro-etapa').value=botao.dataset.etapa;
    marcarFiltro('data-etapa',botao.dataset.etapa);
-   if(botao.dataset.etapa!=='todos'&&$('filtro').value!=='aprovados'){
-    $('filtro').value='aprovados';marcarFiltro('data-pagamento','aprovados');
-   }
+
    carregar();
   });
  }
