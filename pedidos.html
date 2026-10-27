@@ -79,6 +79,22 @@
 .pedido-detalhes dl{padding:4px 14px;margin:12px 0}
 .pedido-detalhes>div{padding:0 14px}
 
+/* Cartões compactos: independentes do zoom usado para visualizar vários pedidos. */
+.pedido-card .pedido-titulo{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:0 0 10px;font-size:clamp(16px,2vw,20px);overflow-wrap:anywhere}
+.pedido-copiar{background:#353535;color:#fff;border:1px solid #777;border-radius:6px;padding:6px 9px;margin:0;font-size:12px;line-height:1.3}
+.pedido-acoes{display:flex;align-items:end;flex-wrap:wrap;gap:8px 12px;margin:10px 0}
+.pedido-acoes>button{margin:0;padding:10px 12px;font-size:14px;min-height:40px}
+.pedido-acoes>label{display:flex;flex-direction:column;gap:4px;min-width:150px;max-width:240px;flex:1 1 150px;margin:0;font-size:13px}
+.pedido-acoes select{margin:0;padding:9px 10px;font-size:14px;min-height:40px}
+.pedido-card .etapa-topo{font-size:16px;padding:8px 12px;margin:0 8px 6px 0}
+.pedido-card .selo{display:inline-block;margin:0 0 8px}
+.pedido-card .produtos-destaque{padding:10px 12px;margin:10px 0}
+.pedido-card .produtos-destaque h3{font-size:16px;margin-bottom:6px}
+.pedido-card .produtos-destaque td:first-child{font-size:16px}
+.pedido-card .produtos-destaque td,.pedido-card .produtos-destaque th{padding:6px}
+@media(max-width:520px){.pedido-acoes>label{flex-basis:100%;max-width:none}.pedido-acoes>button{flex:1 1 140px}.pedido-card .pedido-titulo{font-size:16px}}
+
+
 </style></head>
 <body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
 <nav class="admin-abas" id="admin-abas" hidden role="tablist" aria-label="Áreas administrativas">
