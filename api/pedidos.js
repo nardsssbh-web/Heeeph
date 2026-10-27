@@ -13,11 +13,12 @@ module.exports=async(req,res)=>{
   try{
     const b=typeof req.body==='string'?JSON.parse(req.body):req.body||{};
     if(b.acao==='contarPendentes'){
-      // Consulta global independente da página e dos filtros do painel.
       const indice=c.prefixo+'lista';
       const total=Number(await c.redis(['ZCARD',indice]))||0;
       const maximo=2000;
-      let pendentes=0;
+      const pagamentos={todos:0,aprovados:0,pendentes:0,recusados:0};
+      const etapasContagem={'Recebido':0,'Em Preparação':0,'Saiu para entrega':0,'Entregue':0};
+      const recusados=new Set(['failed','canceled','cancelled','expired','rejected','error']);
       for(let inicio=0;inicio<Math.min(total,maximo);inicio+=100){
         const ids=await c.redis(['ZREVRANGE',indice,inicio,Math.min(inicio+99,total-1,maximo-1)]);
         if(!ids?.length)break;
@@ -26,11 +27,17 @@ module.exports=async(req,res)=>{
           if(!valores[2*i])continue;
           const p=JSON.parse(valores[2*i]);
           const g=valores[2*i+1]?JSON.parse(valores[2*i+1]):{status:'Recebido'};
-          if(p.id!==ids[i]||(p.ambiente||'teste')!==c.ambiente().nome||g.excluido||!p.pagamento?.aprovado)continue;
-          if(!['Saiu para entrega','Entregue'].includes(g.status||'Recebido'))pendentes++;
+          if(p.id!==ids[i]||(p.ambiente||'teste')!==c.ambiente().nome||g.excluido)continue;
+          pagamentos.todos++;
+          if(p.pagamento?.aprovado){
+            pagamentos.aprovados++;
+            const etapa=etapasContagem[g.status||'Recebido']!==undefined?g.status||'Recebido':'Recebido';
+            etapasContagem[etapa]++;
+          }else if(recusados.has(p.pagamento?.status))pagamentos.recusados++;
+          else pagamentos.pendentes++;
         }
       }
-      return res.json({pendentes,completo:total<=maximo,consultados:Math.min(total,maximo)});
+      return res.json({pendentes:etapasContagem.Recebido+etapasContagem['Em Preparação'],pagamentos,etapas:etapasContagem,completo:total<=maximo,consultados:Math.min(total,maximo)});
     }
     if(b.acao==='recuperarCheckoutTeste'){
       if(b.confirmacao!==b.id)return res.status(400).json({mensagem:'Confirme o pedido de teste.'});
