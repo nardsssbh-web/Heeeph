@@ -50,6 +50,14 @@
 #cadastro-placas [hidden]{display:none!important}
 .pedidos-alerta{display:inline-flex;align-items:center;justify-content:center;min-width:23px;height:23px;padding:0 6px;margin-left:6px;background:#d82727;color:#fff;border-radius:999px;font-size:.85rem;font-weight:800;vertical-align:middle}
 .pedidos-alerta[hidden]{display:none!important}
+.filtro-secoes{flex-basis:100%;width:100%;margin:10px 0}
+.filtro-legenda{font-weight:700;margin:12px 0 8px}
+.pedidos-filtro-abas{display:flex;gap:8px;flex-wrap:wrap}
+.pedidos-filtro-abas button{display:inline-flex;align-items:center;gap:5px;background:#252525;border:1px solid #666;color:#fff;padding:9px 12px;border-radius:8px;cursor:pointer;font:inherit}
+.pedidos-filtro-abas button[aria-pressed="true"]{background:#ffd700;color:#111;border-color:#ffd700;font-weight:700}
+.filtro-contador{background:#c92929;color:#fff;min-width:22px;height:22px;padding:2px 6px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800}
+.filtro-contador[hidden]{display:none!important}
+#filtro[hidden]{display:none!important}
 </style></head>
 <body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
 <nav class="admin-abas" id="admin-abas" hidden role="tablist" aria-label="Áreas administrativas">
@@ -60,7 +68,25 @@
 </nav>
 <section id="area-pedidos" class="admin-area" role="tabpanel" aria-labelledby="aba-pedidos"><h1 id="topoPainel" tabindex="-1">Painel de pedidos</h1><p id="avisoAmbiente" class="aviso">Ambiente de teste. As compras são simuladas e não devem ser postadas. Registros mantidos por 30 dias.</p>
 <form id="acesso"><label>Chave de acesso do administrador<input id="chave" type="password" autocomplete="off" minlength="32" required></label><button id="carregar">Carregar / atualizar pedidos</button><button type="button" id="sair" hidden>Sair</button></form>
-<p id="mensagem" role="status" aria-live="polite"></p><form id="filtros" class="painel-filtros" hidden><input id="busca" type="search" maxlength="100" aria-label="Buscar pedido ou cliente" placeholder="Número, nome, e-mail ou produto"><select id="filtro" aria-label="Situação do pagamento"><option value="todos">Todos os pagamentos</option><option value="aprovados">Aprovados</option><option value="pendentes">Pendentes / não iniciados</option><option value="recusados">Recusados / cancelados</option></select><button id="buscarPedidos" type="submit">Buscar no servidor</button><button type="button" id="imprimir">Imprimir página exibida</button></form><p id="contagem" role="status" tabindex="-1"></p><nav id="paginacao" class="painel-paginacao" aria-label="Páginas de pedidos no início" hidden><button id="anterior" type="button">Página anterior</button><button id="proxima" type="button">Próxima página</button></nav><div id="pedidos"></div>
+<p id="mensagem" role="status" aria-live="polite"></p><form id="filtros" class="painel-filtros" hidden><input id="busca" type="search" maxlength="100" aria-label="Buscar pedido ou cliente" placeholder="Número, nome, e-mail ou produto"><div class="filtro-secoes">
+<div class="filtro-legenda">Situação do pagamento</div>
+<div class="pedidos-filtro-abas" role="group" aria-label="Filtrar pagamentos">
+<button type="button" data-pagamento="todos" aria-pressed="true">Todos <span class="filtro-contador" data-contador-pagamento="todos" hidden></span></button>
+<button type="button" data-pagamento="aprovados" aria-pressed="false">Aprovados <span class="filtro-contador" data-contador-pagamento="aprovados" hidden></span></button>
+<button type="button" data-pagamento="pendentes" aria-pressed="false">Pendentes <span class="filtro-contador" data-contador-pagamento="pendentes" hidden></span></button>
+<button type="button" data-pagamento="recusados" aria-pressed="false">Recusados <span class="filtro-contador" data-contador-pagamento="recusados" hidden></span></button>
+</div>
+<div class="filtro-legenda">Etapa do pedido pago</div>
+<div class="pedidos-filtro-abas" role="group" aria-label="Filtrar etapa do pedido">
+<button type="button" data-etapa="todos" aria-pressed="true">Todas as etapas</button>
+<button type="button" data-etapa="Recebido" aria-pressed="false">Recebido <span class="filtro-contador" data-contador-etapa="Recebido" hidden></span></button>
+<button type="button" data-etapa="Em Preparação" aria-pressed="false">Em preparação <span class="filtro-contador" data-contador-etapa="Em Preparação" hidden></span></button>
+<button type="button" data-etapa="Saiu para entrega" aria-pressed="false">Saiu para entrega <span class="filtro-contador" data-contador-etapa="Saiu para entrega" hidden></span></button>
+<button type="button" data-etapa="Entregue" aria-pressed="false">Entregue <span class="filtro-contador" data-contador-etapa="Entregue" hidden></span></button>
+</div>
+<select id="filtro" aria-label="Situação do pagamento" hidden><option value="todos">Todos os pagamentos</option><option value="aprovados">Aprovados</option><option value="pendentes">Pendentes / não iniciados</option><option value="recusados">Recusados / cancelados</option></select>
+<input id="filtro-etapa" type="hidden" value="todos">
+</div><button id="buscarPedidos" type="submit">Buscar no servidor</button><button type="button" id="imprimir">Imprimir página exibida</button></form><p id="contagem" role="status" tabindex="-1"></p><nav id="paginacao" class="painel-paginacao" aria-label="Páginas de pedidos no início" hidden><button id="anterior" type="button">Página anterior</button><button id="proxima" type="button">Próxima página</button></nav><div id="pedidos"></div>
 <nav id="paginacaoRodape" class="painel-paginacao" aria-label="Páginas de pedidos no final" hidden><span id="paginaRodape"></span><button id="anteriorRodape" type="button">Página anterior</button><button id="proximaRodape" type="button">Próxima página</button><button id="voltarTopo" type="button">Voltar ao topo</button></nav></section>
 <section id="area-envios" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-envios" hidden><h2>Envios</h2><p>Área em preparação. Futuramente, reunirá a organização dos envios e as informações de entrega dos pedidos. Nenhuma etiqueta ou postagem é gerada nesta aba.</p><div id="resumo-envios"></div></section>
 <section id="area-produtos" class="admin-area admin-futuro" role="tabpanel" aria-labelledby="aba-produtos" hidden>
