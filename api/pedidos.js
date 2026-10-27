@@ -29,15 +29,14 @@ module.exports=async(req,res)=>{
           const g=valores[2*i+1]?JSON.parse(valores[2*i+1]):{status:'Recebido'};
           if(p.id!==ids[i]||(p.ambiente||'teste')!==c.ambiente().nome||g.excluido)continue;
           pagamentos.todos++;
-          if(p.pagamento?.aprovado){
-            pagamentos.aprovados++;
-            const etapa=etapasContagem[g.status||'Recebido']!==undefined?g.status||'Recebido':'Recebido';
-            etapasContagem[etapa]++;
-          }else if(recusados.has(p.pagamento?.status))pagamentos.recusados++;
+          const etapa=Object.prototype.hasOwnProperty.call(etapasContagem,g.status||'Recebido')?(g.status||'Recebido'):'Recebido';
+          etapasContagem[etapa]++;
+          if(p.pagamento?.aprovado)pagamentos.aprovados++;
+          else if(recusados.has(p.pagamento?.status))pagamentos.recusados++;
           else pagamentos.pendentes++;
         }
       }
-      return res.json({pendentes:etapasContagem.Recebido+etapasContagem['Em Preparação'],pagamentos,etapas:etapasContagem,completo:total<=maximo,consultados:Math.min(total,maximo)});
+      return res.json({pendentes:0,pagamentos,etapas:etapasContagem,completo:total<=maximo,consultados:Math.min(total,maximo)});
     }
     if(b.acao==='recuperarCheckoutTeste'){
       if(b.confirmacao!==b.id)return res.status(400).json({mensagem:'Confirme o pedido de teste.'});
