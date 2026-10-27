@@ -4,6 +4,7 @@
  let chave='',pedidos=[];
  let cursores=[null],paginaAtual=0,proximo=null,sequencia=0;
  const retornos=new Map();
+ const detalhesAbertos=new Set();
  const etapas=['Recebido','Em Preparação','Saiu para entrega','Entregue'];
  const recusado=p=>['failed','canceled','cancelled','expired','rejected','error'].includes(p.pagamento?.status);
  const situacao=p=>p.pagamento?.aprovado?'Aprovado':recusado(p)?'Recusado / cancelado':p.pagamento?'Aguardando confirmação':'Não iniciado / em conferência';
@@ -35,10 +36,20 @@
    if(p.pagamento?.pix)campos.push(['Pix copia e cola',p.pagamento.pix.codigo?'Retornado pelo Mercado Pago':'Não retornado'],['Imagem QR do Mercado Pago',p.pagamento.pix.imagem?'Retornada':'Não retornada (o checkout pode gerar o QR a partir do copia e cola)']);
    if(p.pagamento&&!p.pagamento.transacoes)campos.push(['Diagnóstico','Clique em Consultar Pagamento para atualizar os detalhes da tentativa existente.']);
    campos.push(['Status do pedido',p.pagamento?.aprovado?(p.gestao?.status||'Recebido'):recusado(p)?'CANCELADO':'Aguardando pagamento']);
-   for(const [k,v]of campos)dl.append(node('dt',k),node('dd',v));sec.append(dl);
+   const resumo=node('div');resumo.className='pedido-resumo';
+   for(const [titulo,valor] of [['Cliente',p.cliente.nome],['Criado',new Date(p.criadoEm).toLocaleString('pt-BR')],['Total',dinheiro(p.total)]]){
+     const item=node('div');item.append(node('strong',titulo+': '),node('span',valor));resumo.append(item);
+   }
+   sec.append(resumo);
+   for(const [k,v]of campos)dl.append(node('dt',k),node('dd',v));
+   const detalhes=node('details');detalhes.className='pedido-detalhes';detalhes.open=detalhesAbertos.has(p.id);
+   detalhes.append(node('summary','Ver detalhes do pedido'),dl);
+   detalhes.addEventListener('toggle',()=>{if(detalhes.open)detalhesAbertos.add(p.id);else detalhesAbertos.delete(p.id);});
+   sec.append(detalhes);
    const produtos=node('div');produtos.className='produtos-destaque';produtos.append(node('h3','Produtos deste pedido'));const table=node('table'),head=node('tr');for(const t of ['Produto / tamanho','Qtd.','Valor'])head.append(node('th',t));table.append(head);
-   for(const i of p.itens){const tr=node('tr');for(const t of [i.nome+' — '+i.medida,i.quantidade,dinheiro(i.centavos*i.quantidade)])tr.append(node('td',t));table.append(tr);}produtos.append(table);sec.insertBefore(produtos,dl);
-   p.pacotes.forEach((x,i)=>sec.append(node('p',`Pacote ${i+1}: ${x.grandes} grande(s), ${x.pequenas} pequena(s) — ${x.gramas} g — ${x.length} × ${x.width} × ${x.height} cm${x.estimado?' (peso estimado)':''}`)));
+   for(const i of p.itens){const tr=node('tr');for(const t of [i.nome+' — '+i.medida,i.quantidade,dinheiro(i.centavos*i.quantidade)])tr.append(node('td',t));table.append(tr);}produtos.append(table);sec.insertBefore(produtos,detalhes);
+   const pacotesDetalhes=node('div');detalhes.append(pacotesDetalhes);
+   p.pacotes.forEach((x,i)=>pacotesDetalhes.append(node('p',`Pacote ${i+1}: ${x.grandes} grande(s), ${x.pequenas} pequena(s) — ${x.gramas} g — ${x.length} × ${x.width} × ${x.height} cm${x.estimado?' (peso estimado)':''}`)));
    const retorno=node('p');retorno.className='retorno-pedido';retorno.setAttribute('role','status');retorno.setAttribute('aria-live','polite');const anterior=retornos.get(p.id);if(anterior){retorno.textContent=anterior.texto;retorno.dataset.tipo=anterior.cor||(anterior.erro?'erro':'info');}sec.append(retorno);
    function responder(texto,erro=false,cor){const tipo=cor||(erro?'erro':'info');retornos.set(p.id,{texto,erro,cor:tipo});retorno.textContent=texto;retorno.dataset.tipo=tipo;}
    const button=node('button','Consultar Pagamento');button.type='button';button.addEventListener('click',async()=>{button.disabled=true;button.textContent='Consultando…';responder('Consultando a situação do pagamento…');try{const d=await api({acao:'consultar',id:p.id});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Consulta realizada às '+new Date().toLocaleTimeString('pt-BR')+'. Pagamento: '+situacao(d.pedido)+'.'+(!d.pedido.pagamento?' Nenhum pagamento confirmado para este pedido.':''),false,d.pedido.pagamento?.aprovado?'aprovado':recusado(d.pedido)?'recusado':d.pedido.pagamento?'pendente':'info');render(p.id);document.dispatchEvent(new Event('heeeph:atualizar-contadores'));await carregar();}catch(e){responder(e.message,true);}finally{button.disabled=false;button.textContent='Consultar Pagamento';}});sec.append(button);
