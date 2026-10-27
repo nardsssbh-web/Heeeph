@@ -62,7 +62,7 @@
    }
    const label=node('label','Status do pedido'),select=node('select');select.setAttribute('aria-label','Status do pedido '+p.id);
    for(const etapa of etapas){const o=node('option',etapa);o.value=etapa;select.append(o);}select.value=p.gestao?.status||'Recebido';label.append(select);sec.append(label);
-   const salvar=node('button','Salvar status');salvar.type='button';salvar.addEventListener('click',async()=>{salvar.disabled=true;select.disabled=true;try{const d=await api({acao:'etapa',id:p.id,status:select.value});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Status salvo: '+d.pedido.gestao.status+'.');render(p.id);}catch(e){responder(e.message,true);}finally{salvar.disabled=false;select.disabled=false;}});sec.append(salvar);
+   const salvar=node('button','Salvar status');salvar.type='button';salvar.addEventListener('click',async()=>{salvar.disabled=true;select.disabled=true;try{const d=await api({acao:'etapa',id:p.id,status:select.value});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Status salvo: '+d.pedido.gestao.status+'.');render(p.id);document.dispatchEvent(new Event('heeeph:atualizar-contadores'));if($('filtro-etapa').value!=='todos')await carregar();}catch(e){responder(e.message,true);}finally{salvar.disabled=false;select.disabled=false;}});sec.append(salvar);
    const excluir=node('button','Excluir');excluir.type='button';excluir.className='excluir';excluir.addEventListener('click',async()=>{if(!window.confirm('Excluir o pedido '+p.id+' do painel? Esta ação não cancela nem estorna pagamentos no Mercado Pago.'))return;excluir.disabled=true;try{await api({acao:'excluir',id:p.id,confirmacao:p.id});pedidos=pedidos.filter(x=>x.id!==p.id);render();aviso('Pedido excluído do painel. O pagamento não foi alterado.');}catch(e){aviso(e.message,true);}finally{excluir.disabled=false;}});sec.append(excluir);$('pedidos').append(sec);
   }
   document.dispatchEvent(new CustomEvent('heeeph:pedidos',{detail:{pedidos:pedidos.slice(),pagina:paginaAtual+1,mais:!!proximo}}));
@@ -73,7 +73,7 @@
   for(const id of ['carregar','buscarPedidos','anterior','proxima','anteriorRodape','proximaRodape'])$(id).disabled=true;
   aviso('Consultando pedidos no servidor…');
   try{
-   const d=await api({acao:'listar',cursor,limite:20,busca:$('busca').value.trim(),filtro:$('filtro').value});
+   const d=await api({acao:'listar',cursor,limite:20,busca:$('busca').value.trim(),filtro:$('filtro').value,etapa:$('filtro-etapa').value});
    if(atual!==sequencia)return;
    retornos.clear();pedidos=d.pedidos;cursores=historico;paginaAtual=indice;proximo=d.cursorProximo||null;
    $('avisoAmbiente').textContent=d.teste===false?'Produção. Etapas de entrega manuais; exclusão não cancela nem estorna pagamentos.':'Ambiente de teste. Compras simuladas, sem postagem. Registros de teste expiram em 30 dias.';
@@ -101,7 +101,29 @@
  });
  $('acesso').addEventListener('submit',e=>{e.preventDefault();chave=$('chave').value;return carregar();});
  $('filtros').addEventListener('submit',e=>{e.preventDefault();return carregar();});
- $('filtro').addEventListener('change',()=>carregar());
+ function marcarFiltro(atributo,valor){
+  for(const botao of document.querySelectorAll('.pedidos-filtro-abas button['+atributo+']')){
+   botao.setAttribute('aria-pressed',String(botao.getAttribute(atributo)===valor));
+  }
+ }
+ for(const botao of document.querySelectorAll('[data-pagamento]')){
+  botao.addEventListener('click',()=>{
+   $('filtro').value=botao.dataset.pagamento;
+   marcarFiltro('data-pagamento',botao.dataset.pagamento);
+   carregar();
+  });
+ }
+ for(const botao of document.querySelectorAll('[data-etapa]')){
+  botao.addEventListener('click',()=>{
+   $('filtro-etapa').value=botao.dataset.etapa;
+   marcarFiltro('data-etapa',botao.dataset.etapa);
+   if(botao.dataset.etapa!=='todos'&&$('filtro').value!=='aprovados'){
+    $('filtro').value='aprovados';marcarFiltro('data-pagamento','aprovados');
+   }
+   carregar();
+  });
+ }
+
  for(const id of ['proxima','proximaRodape'])$(id).addEventListener('click',()=>proximo?carregar(proximo,[...cursores.slice(0,paginaAtual+1),proximo],paginaAtual+1,true):undefined);
  for(const id of ['anterior','anteriorRodape'])$(id).addEventListener('click',()=>paginaAtual?carregar(cursores[paginaAtual-1],cursores,paginaAtual-1,true):undefined);
  $('voltarTopo').addEventListener('click',()=>{$('topoPainel').scrollIntoView({block:'start'});$('topoPainel').focus?.({preventScroll:true});});
