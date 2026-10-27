@@ -122,6 +122,31 @@ test('desistir com cancelamento inconclusivo preserva referência e bloqueia red
  assert.ok(n.values.heeeph_pedido_teste);assert.ok(n.recibos.heeeph_pedido_recuperavel);assert.match(n.mensagem.textContent,/não confirmado/);assert.equal(n.pixCodigo.value,'');assert.equal(n.meios.hidden,true);
  assert.equal(n.enviados.at(-1).motivo,'desistir');assert.equal(n.chamadas.includes('pagar'),false);
 });
+test('alterar pedido recuperado reconstitui carrinho ausente, vazio ou inválido somente após saída confirmada',async()=>{
+ const itens=[{id:'bandas-acdc-bb',nome:'AC/DC',medida:'15x10cm',quantidade:2,centavos:1290}];
+ for(const salvo of [undefined,'[]','inválido']){
+  const n=await tela({itens,pagamento:{status:'canceled'}},{},{recibos:{heeeph_cart:salvo},api:async()=>({ok:true,json:async()=>({...base,itens,saida:{confirmada:true},edicaoLiberada:true})})});
+  await n.alterarPedido.click();assert.equal(n.recibos.heeeph_cart,salvo);
+  await n.confirmarSaida.click();const cart=JSON.parse(n.recibos.heeeph_cart);
+  assert.equal(n.location.href,'carrinho.html');assert.equal(cart.length,1);assert.equal(cart[0].id,itens[0].id);
+  assert.equal(cart[0].quantidade,2);assert.equal(cart[0].medida,'15x10cm');assert.equal(cart[0].preco,12.90);
+  assert.equal(cart[0].nome,'AC/DC');assert.ok(cart[0].imagem);
+  assert.equal(n.values.heeeph_checkout,undefined);assert.equal(n.recibos.heeeph_pedido_recuperavel,undefined);
+  assert.deepEqual(n.chamadas,['status','abandonarPedido']);assert.equal(JSON.stringify(cart).includes('PIX_ANTIGO'),false);
+ }
+});
+test('carrinho já editado não é sobrescrito pelos itens do pedido encerrado',async()=>{
+ const salvo=JSON.stringify([{id:'outro',medida:'20x28cm',quantidade:3,preco:24.90}]);
+ const itens=[{id:'bandas-acdc-bb',nome:'AC/DC',medida:'15x10cm',quantidade:2,centavos:1290}];
+ const n=await tela({itens},{},{recibos:{heeeph_cart:salvo},api:async()=>({ok:true,json:async()=>({...base,itens,saida:{confirmada:true},edicaoLiberada:true})})});
+ await n.alterarPedido.click();await n.confirmarSaida.click();assert.equal(n.recibos.heeeph_cart,salvo);assert.equal(n.location.href,'carrinho.html');
+});
+test('falha ao salvar carrinho impede redirecionamento e preserva referência do pedido encerrado',async()=>{
+ const itens=[{id:'bandas-acdc-bb',nome:'AC/DC',medida:'15x10cm',quantidade:2,centavos:1290}];
+ const n=await tela({itens},{},{storageBloqueado:true,api:async()=>({ok:true,json:async()=>({...base,itens,saida:{confirmada:true},edicaoLiberada:true})})});
+ await n.alterarPedido.click();await n.confirmarSaida.click();assert.equal(n.location.href,'https://loja.test/pagamento.html');
+ assert.ok(n.values.heeeph_pedido_teste);assert.match(n.mensagem.textContent,/salvar os produtos/);assert.equal(n.chamadas.includes('pagar'),false);
+});
 test('recarregar tentativa encerrada ou incerta não reapresenta QR nem permite enviar Pix',async()=>{
  for(const confirmada of [true,false]){
   const n=await tela({saida:{confirmada},pagamento:{status:'action_required',pix:{codigo:'PIX_ANTIGO'}}});

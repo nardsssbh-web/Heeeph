@@ -125,6 +125,26 @@
     if(pedido?.recuperacaoTeste){
       sessionStorage.removeItem('heeeph_recuperacao_teste');ocultarPagamentoAntigo();window.location.href='index.html';return;
     }
+    if(motivo==='alterar'&&pedido?.itens?.length){
+      // A recuperação do pedido pode existir mesmo sem o carrinho desta origem.
+      // Reconstituir os itens antes de remover o recibo; nunca reaproveitar Pix ou frete.
+      let atual;
+      try{atual=JSON.parse(localStorage.getItem('heeeph_cart'));}catch(_){}
+      if(!Array.isArray(atual)||!atual.length){
+        const catalogo=typeof getTodosOsProdutos==='function'?getTodosOsProdutos():[];
+        const itens=pedido.itens.map(i=>{
+          if(!i.id||!i.medida||!Number.isInteger(i.quantidade)||i.quantidade<1||i.quantidade>50||!Number.isInteger(i.centavos)||i.centavos<0)
+            throw new Error('Não foi possível recuperar os produtos. O histórico do pedido foi preservado.');
+          return {id:i.id,nome:i.nome,medida:i.medida,quantidade:i.quantidade,preco:i.centavos/100,
+            imagem:catalogo.find(p=>p.id===i.id)?.imagem||''};
+        });
+        const salvo=JSON.stringify(itens);
+        try{
+          localStorage.setItem('heeeph_cart',salvo);
+          if(localStorage.getItem('heeeph_cart')!==salvo)throw new Error('Gravação não confirmada');
+        }catch(_){throw new Error('Não foi possível salvar os produtos no carrinho deste navegador. O pedido foi preservado; mantenha esta página aberta.');}
+      }
+    }
     // Só depois de confirmação persistida no servidor: invalidar a cotação e a preparação antigas.
     sessionStorage.removeItem('heeeph_checkout');sessionStorage.removeItem('heeeph_preparacao');sessionStorage.removeItem('heeeph_pedido_teste');
     localStorage.removeItem(chaveRecuperacao);
