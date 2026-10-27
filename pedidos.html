@@ -57,6 +57,16 @@
 .pedidos-filtro-abas button[aria-pressed="true"]{background:#ffd700;color:#111;border-color:#ffd700;font-weight:700}
 .filtro-contador{background:#c92929;color:#fff;min-width:22px;height:22px;padding:2px 6px;border-radius:99px;display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800}
 .filtro-contador[hidden]{display:none!important}
+.pedidos-filtro-abas button[data-pagamento="aprovados"]{border-color:#16834b;color:#a8f0c3}
+.pedidos-filtro-abas button[data-pagamento="aprovados"][aria-pressed="true"]{background:#16834b;border-color:#16834b;color:#fff}
+.pedidos-filtro-abas button[data-pagamento="pendentes"]{border-color:#147ebc;color:#a8dcff}
+.pedidos-filtro-abas button[data-pagamento="pendentes"][aria-pressed="true"]{background:#087cbd;border-color:#087cbd;color:#fff}
+.pedidos-filtro-abas button[data-pagamento="recusados"]{border-color:#b52b36;color:#ffc4c8}
+.pedidos-filtro-abas button[data-pagamento="recusados"][aria-pressed="true"]{background:#bd2433;border-color:#bd2433;color:#fff}
+.pedidos-filtro-abas button[data-pagamento="aprovados"] .filtro-contador{background:#16834b;color:#fff}
+.pedidos-filtro-abas button[data-pagamento="pendentes"] .filtro-contador{background:#087cbd;color:#fff}
+.pedidos-filtro-abas button[data-pagamento="recusados"] .filtro-contador{background:#bd2433;color:#fff}
+
 #filtro[hidden]{display:none!important}
 </style></head>
 <body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
