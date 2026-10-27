@@ -63,7 +63,7 @@
    const label=node('label','Status do pedido'),select=node('select');select.setAttribute('aria-label','Status do pedido '+p.id);
    for(const etapa of etapas){const o=node('option',etapa);o.value=etapa;select.append(o);}select.value=p.gestao?.status||'Recebido';label.append(select);sec.append(label);
    const salvar=node('button','Salvar status');salvar.type='button';salvar.addEventListener('click',async()=>{salvar.disabled=true;select.disabled=true;try{const d=await api({acao:'etapa',id:p.id,status:select.value});pedidos=pedidos.map(x=>x.id===p.id?d.pedido:x);responder('Status salvo: '+d.pedido.gestao.status+'.');render(p.id);document.dispatchEvent(new Event('heeeph:atualizar-contadores'));if($('filtro-etapa').value!=='todos')await carregar();}catch(e){responder(e.message,true);}finally{salvar.disabled=false;select.disabled=false;}});sec.append(salvar);
-   const excluir=node('button','Excluir');excluir.type='button';excluir.className='excluir';excluir.addEventListener('click',async()=>{if(!window.confirm('Excluir o pedido '+p.id+' do painel? Esta ação não cancela nem estorna pagamentos no Mercado Pago.'))return;excluir.disabled=true;try{await api({acao:'excluir',id:p.id,confirmacao:p.id});pedidos=pedidos.filter(x=>x.id!==p.id);render();aviso('Pedido excluído do painel. O pagamento não foi alterado.');}catch(e){aviso(e.message,true);}finally{excluir.disabled=false;}});sec.append(excluir);$('pedidos').append(sec);
+   const excluir=node('button','Excluir');excluir.type='button';excluir.className='excluir';excluir.addEventListener('click',async()=>{if(!window.confirm('Excluir o pedido '+p.id+' do painel? Esta ação não cancela nem estorna pagamentos no Mercado Pago.'))return;excluir.disabled=true;try{await api({acao:'excluir',id:p.id,confirmacao:p.id});pedidos=pedidos.filter(x=>x.id!==p.id);render();document.dispatchEvent(new Event('heeeph:atualizar-contadores'));aviso('Pedido excluído do painel. O pagamento não foi alterado.');}catch(e){aviso(e.message,true);}finally{excluir.disabled=false;}});sec.append(excluir);$('pedidos').append(sec);
   }
   document.dispatchEvent(new CustomEvent('heeeph:pedidos',{detail:{pedidos:pedidos.slice(),pagina:paginaAtual+1,mais:!!proximo}}));
   if(focoId){const card=$('pedido-'+focoId);if(card)card.scrollIntoView({block:'start',behavior:'smooth'});}
@@ -110,6 +110,7 @@
   botao.addEventListener('click',()=>{
    $('filtro').value=botao.dataset.pagamento;
    marcarFiltro('data-pagamento',botao.dataset.pagamento);
+   if(botao.dataset.pagamento!=='aprovados'){$('filtro-etapa').value='todos';marcarFiltro('data-etapa','todos');}
    carregar();
   });
  }
