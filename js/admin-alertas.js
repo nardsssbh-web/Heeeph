@@ -4,7 +4,16 @@
  const tab=document.getElementById('aba-pedidos');
  if(!badge||!tab)return;
  let ativo=false,intervalo=null,sequencia=0,emConsulta=false,pendente=false;
- function limpar(){badge.hidden=true;badge.textContent='';tab.removeAttribute('aria-label');}
+ function limpar(){
+  badge.hidden=true;badge.textContent='';tab.removeAttribute('aria-label');
+  for(const n of document.querySelectorAll('.filtro-contador')){n.hidden=true;n.textContent='';}
+ }
+ function preencher(atributo,contagens){
+  for(const n of document.querySelectorAll('['+atributo+']')){
+   const valor=Number(contagens?.[n.getAttribute(atributo)]||0);
+   n.hidden=valor===0;n.textContent=valor>0?String(valor):'';
+  }
+ }
  async function atualizar(){
   if(!ativo)return;
   if(emConsulta){pendente=true;return;}
@@ -18,6 +27,8 @@
    const dados=await resposta.json();
    if(!ativo||atual!==sequencia)return;
    if(!dados.completo){limpar();tab.setAttribute('aria-label','Pedidos — contador indisponível para catálogo grande');return;}
+   preencher('data-contador-pagamento',dados.pagamentos);
+   preencher('data-contador-etapa',dados.etapas);
    const n=Number(dados.pendentes)||0;
    badge.hidden=n===0;
    badge.textContent=n>0?String(n):'';
@@ -33,6 +44,7 @@
   intervalo=setInterval(()=>{if(!document.hidden)atualizar();},60000);
  });
  document.addEventListener('heeeph:pedidos',()=>{if(ativo)atualizar();});
+ document.addEventListener('heeeph:atualizar-contadores',()=>{if(ativo)atualizar();});
  document.addEventListener('heeeph:sair',()=>{
   ativo=false;sequencia++;pendente=false;
   if(intervalo){clearInterval(intervalo);intervalo=null;}
