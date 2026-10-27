@@ -31,8 +31,7 @@ module.exports=async(req,res)=>{
           if(p.id!==ids[i]||(p.ambiente||'teste')!==c.ambiente().nome||g.excluido)continue;
           pagamentos.todos++;
           const etapa=Object.prototype.hasOwnProperty.call(etapasContagem,g.status||'Recebido')?(g.status||'Recebido'):'Recebido';
-          etapasContagem[etapa]++;
-          if(p.pagamento?.aprovado){pagamentos.aprovados++;if(etapa==='Recebido'||etapa==='Em Preparação')pagosNaoEncaminhados++;}
+          if(p.pagamento?.aprovado){etapasContagem[etapa]++;pagamentos.aprovados++;if(etapa==='Recebido'||etapa==='Em Preparação')pagosNaoEncaminhados++;}
           else if(recusados.has(p.pagamento?.status))pagamentos.recusados++;
           else pagamentos.pendentes++;
         }
@@ -47,6 +46,7 @@ module.exports=async(req,res)=>{
       return await c.exclusivo(b.id,async()=>{
       const p=await c.buscar(b.id);
       if(b.acao==='etapa'&&!etapas.includes(b.status))return res.status(400).json({mensagem:'Status do pedido inválido.'});
+      if(b.acao==='etapa'&&!p.pagamento?.aprovado)return res.status(409).json({mensagem:'Não é possível preparar ou entregar um pedido sem pagamento aprovado.'});
       if(b.acao==='excluir'&&b.confirmacao!==p.id)return res.status(400).json({mensagem:'Confirme o pedido que deseja excluir.'});
       const g=await gestao(p.id);
       if(g.excluido)return res.status(404).json({mensagem:'Pedido excluído do painel.'});
