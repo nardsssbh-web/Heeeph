@@ -117,6 +117,20 @@
 #area-pedidos .pedido-acoes select{font-size:12px;padding:6px 8px;min-height:32px}
 #area-pedidos .pedido-detalhes summary{font-size:12px;padding:8px 10px}
 @media(max-width:600px){#area-pedidos .pedidos-filtro-abas button{font-size:12px;padding:6px 8px}#area-pedidos .pedido-card{padding:10px}}
+
+/* Texto de todo o cartão segue a situação financeira: verde, azul ou vermelho. */
+#area-pedidos .pedido-card[data-situacao="aprovado"]{--cor-situacao:#6be39a}
+#area-pedidos .pedido-card[data-situacao="pendente"]{--cor-situacao:#70caff}
+#area-pedidos .pedido-card[data-situacao="cancelado"]{--cor-situacao:#ff777f}
+#area-pedidos .pedido-card[data-situacao] :is(h2,h3,p,span,strong,dt,dd,th,td,summary,label){color:var(--cor-situacao)}
+#area-pedidos .pedido-card[data-situacao] .pedido-titulo,
+#area-pedidos .pedido-card[data-situacao] .pedido-titulo span{color:var(--cor-situacao)}
+#area-pedidos .pedido-card[data-situacao] .etapa-topo{color:#fff}
+#area-pedidos .pedido-card[data-situacao] .pedido-resumo strong{color:var(--cor-situacao)}
+#area-pedidos .pedido-card[data-situacao] .produtos-destaque td:first-child{color:var(--cor-situacao)}
+#area-pedidos .pedido-card[data-situacao] .pedido-copiar{color:#fff}
+#area-pedidos .pedido-card[data-situacao] .pedido-acoes select{color:#111}
+#area-pedidos .pedido-card[data-situacao] .retorno-pedido[data-tipo="erro"]{color:#ffc1c1}
 </style></head>
 <body><main class="checkout"><header class="admin-topo" id="admin-topo" hidden><strong>HEEEPH</strong><span>Central Administrativa · Ambiente de teste <span id="admin-sair"></span></span></header>
 <nav class="admin-abas" id="admin-abas" hidden role="tablist" aria-label="Áreas administrativas">
